@@ -4,9 +4,5 @@
   "version": "0.0.1",
   "author": "Aleksey V Zapparov <ixti@member.fsf.org> (http://ixti.ru)",
   "repository": "git://github.com/nodeca/nodeca-core",
-  "main": "index.js",
-  "dependencies":
-  {
-    "nodeca-lib": "https://github.com/nodeca/nodeca-lib/tarball/master"
-  }
+  "main": "index.js"
 }
