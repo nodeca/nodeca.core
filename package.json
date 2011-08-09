@@ -7,9 +7,6 @@
   "main": "index.js",
   "dependencies":
   {
-    "nodeca-lib": "https://github.com/nodeca/nodeca-lib/tarball/master",
-  },
-  "dev-dependencies":
-  {
+    "nodeca-lib": "https://github.com/nodeca/nodeca-lib/tarball/master"
   }
 }
