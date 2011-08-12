@@ -1,10 +1,6 @@
-var nodeca = require('nodeca');
-
+var ActionController = require('nodeca-lib').ExpressRailer.Controller;
 
 module.exports = function (app, callback) {
-  var ActionController = nodeca.require('express-railer').ActionController;
-
-
   var WelcomeController = function WelcomeController() {
     ActionController.call(this);
 
