@@ -32,36 +32,30 @@ module.exports = (function (app, callback) {
 
 
   store.setter = function (data, callback) {
-    app.model('usergroup')
-    .where('_id').in(Object.keys(data))
-    .select('settings')
-    .exec(function (err, orig) {
-      if (err) {
-        callback(err);
-        return;
+    var joint = new Promise.Join(),
+        UserGroup = app.model('usergroup');
+
+    // TODO: recheck if Model.update allows to specify multi-object update
+    $$.each(data, function (id, data) {
+      $$.each(data, function (key, val) {
+        var obj = {};
+        obj['setting.' + key] = val;
+        UserGroup.update({ _id: id }, obj, joint.promise().resolve);
+      });
+    });
+
+    // wait for all changes to be complete
+    joint.wait().done(function (err) {
+      var i;
+
+      for (i = 1; i < arguments.length; i++) {
+        if (arguments[i][0]) { // err
+          callback(arguments[i][0]);
+          return;
+        }
       }
 
-      var joint = new Promise.Join();
-
-      // updates settings of each group
-      orig.forEach(function (group) {
-        group.settings = $$.deepMerge(group.settings, data[group._id]);
-        group.save(joint.promise().resolve);
-      });
-
-      // wait for all changes to be complete
-      joint.wait().done(function (err) {
-        var i;
-
-        for (i = 1; i < arguments.length; i++) {
-          if (arguments[i][0]) { // err
-            callback(arguments[i][0]);
-            return;
-          }
-        }
-
-        callback();
-      });
+      callback();
     });
   };
 
