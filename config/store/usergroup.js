@@ -18,9 +18,8 @@ module.exports = (function (app, callback) {
     if ('number' === typeof env.groups[0]) {
       app.model('usergroup')
       .where('_id').in(env.groups)
-      .select('settings')
       .exec(function (err, groups) {
-        env.groups = groups || env.groups;
+        env.groups = groups;
         callback(err);
       });
       return;
@@ -31,17 +30,15 @@ module.exports = (function (app, callback) {
   };
 
 
-  store.setter = function (data, callback) {
-    var joint = new Promise.Join(),
+  store.setter = function (key, val, env, callback) {
+    var joint = new Promise.Joint(),
+        settings = {},
         UserGroup = app.model('usergroup');
 
-    // TODO: recheck if Model.update allows to specify multi-object update
-    $$.each(data, function (id, data) {
-      $$.each(data, function (key, val) {
-        var obj = {};
-        obj['setting.' + key] = val;
-        UserGroup.update({ _id: id }, obj, joint.promise().resolve);
-      });
+    settings['settings.' + key] = val;
+
+    env.groups.forEach(function (g) {
+      UserGroup.update({ _id: g._id }, settings, joint.promise().resolve);
     });
 
     // wait for all changes to be complete
@@ -57,6 +54,11 @@ module.exports = (function (app, callback) {
 
       callback();
     });
+  };
+
+
+  store.getter = function (key, env, callback) {
+    callback(null, $$.map(env.groups, function (g) { return g.settings[key]; }));
   };
 
 
