@@ -1,3 +1,6 @@
+var $$ = require('nodeca-lib').Utilities;
+
+
 module.exports = (function (app, callback) {
   var store = {};
 
@@ -30,13 +33,15 @@ module.exports = (function (app, callback) {
   };
 
 
-  store.setter = function (key, val, env, callback) {
-    var joint = new Promise.Joint(),
-        settings = {},
-        UserGroup = app.model('usergroup');
+  store.setter = function (data, env, callback) {
+    var UserGroup = app.model('usergroup'),
+        joint = new Promise.Joint(),
+        settings = {};
 
-    settings['settings.' + key] = val;
+    // prepare data to be set
+    $$.each(data, function (key, val) { settings['settings.' + key] = val; });
 
+    // call update for each group
     env.groups.forEach(function (g) {
       UserGroup.update({ _id: g._id }, settings, joint.promise().resolve);
     });
@@ -45,7 +50,9 @@ module.exports = (function (app, callback) {
     joint.wait().done(function (err) {
       var i;
 
+      // loop through promise results
       for (i = 1; i < arguments.length; i++) {
+        // first argument (idx = 0) means error
         if (arguments[i][0]) { // err
           callback(arguments[i][0]);
           return;
@@ -57,8 +64,16 @@ module.exports = (function (app, callback) {
   };
 
 
-  store.getter = function (key, env, callback) {
-    callback(null, $$.map(env.groups, function (g) { return g.settings[key]; }));
+  store.getter = function (keys, env, callback) {
+    var result = {};
+
+    $$.each(keys, function(key, val) {
+      results[key] = $$.map(env.groups, function (grp) {
+        return grp.settings[key];
+      });
+    });
+
+    callback(null, result);
   };
 
 
