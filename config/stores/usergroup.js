@@ -70,10 +70,22 @@ module.exports = (function (app, callback) {
     this.__.getter = function (keys, env, callback) {
       var result = {};
 
-      $$.each(keys, function(key, val) {
-        results[key] = $$.map(env[STORE_KEY], function (grp) {
-          return grp.settings[key];
-        });
+      keys.forEach(function (key) {
+        // TODO: rework to support non-boolean vals as well
+        result[key] = {value: false, strict: false};
+
+        result[key].value = 0 < $$.select(env[STORE_KEY], function (grp) {
+          return !grp.settings[key].strict && grp.settings[key].value;
+        }).length;
+
+        if (result[key].value) {
+          $$.select(env[STORE_KEY], function (grp) {
+            return !grp.settings[key].strict && grp.settings[key].value;
+          }).forEach(function (grp) {
+            result[key].value = result[key].value && grp.settings[key].value;
+            result[key].strict = true;
+          });
+        }
       });
 
       callback(null, result);
