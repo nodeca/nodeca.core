@@ -3,13 +3,13 @@ module.exports = (function (app, callback) {
       ObjectId = Schema.ObjectId;
   
   
-  var SettingsSchema = new Schema({
-    app:      { type: String },
+  var AppSettingsSchema = new Schema({
+    app_name: { type: String },
     settings: { type: Schema.Types.Mixed, default: {}}
   });  
 
 
-  callback(null, SettingsSchema);
+  callback(null, AppSettingsSchema);
 });
   
 
