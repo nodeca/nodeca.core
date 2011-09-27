@@ -36,32 +36,13 @@ module.exports = (function (app, callback) {
 
 
     this.__.setter = function (data, env, callback) {
-      var joint = new Promise.Joint(),
-          settings = {};
+      var settings = {};
 
-      // prepare data to be set
-      $$.each(data, function (key, val) { settings['settings.' + key] = val; });
-
-      // call update for each group
-      env[STORE_KEY].forEach(function (g) {
-        UserGroup.update({ _id: g._id }, settings, joint.promise().resolve);
+      $$.each(data, function (key, val) {
+        settings['settings.' + key] = val;
       });
 
-      // wait for all changes to be complete
-      joint.wait().done(function (err) {
-        var i;
-
-        // loop through promise results
-        for (i = 1; i < arguments.length; i++) {
-          // first argument (idx = 0) means error
-          if (arguments[i][0]) { // err
-            callback(arguments[i][0]);
-            return;
-          }
-        }
-
-        callback();
-      });
+      UserGroup.update({_id: {$in: env[STORE_KEY]}}, settings, callback);
     };
 
 
