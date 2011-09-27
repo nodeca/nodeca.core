@@ -11,7 +11,8 @@ module.exports = (function (app, callback) {
     Store.call(this);
 
 
-    var STORE_KEY = '__usergroup_store__';
+    var STORE_KEY = '__usergroup_store__',
+        UserGroup = app.model('UserGroup');
 
 
     this.__.preloader = function (env, callback) {
@@ -27,9 +28,7 @@ module.exports = (function (app, callback) {
         return;
       }
 
-      app.model('usergroup')
-      .where('_id').in(env.groups)
-      .exec(function (err, groups) {
+      UserGroup.find({_id: {$in: env.groups}}, function (err, groups) {
         env[STORE_KEY] = groups;
         callback(err);
       });
@@ -37,8 +36,7 @@ module.exports = (function (app, callback) {
 
 
     this.__.setter = function (data, env, callback) {
-      var UserGroup = app.model('usergroup'),
-          joint = new Promise.Joint(),
+      var joint = new Promise.Joint(),
           settings = {};
 
       // prepare data to be set
