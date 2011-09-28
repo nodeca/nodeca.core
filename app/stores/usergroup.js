@@ -82,11 +82,7 @@ module.exports = (function (app, callback) {
         if (0 == chains.OR.length) {
           result[key].value = !($$.includes(chains.AND, false));
         } else {
-          result[key].value = (
-            ($$.includes(chains.OR, true))
-            &&
-            !($$.includes(chains.AND, false))
-          );
+          result[key].value = $$.includes(chains.OR, true) && !($$.includes(chains.AND, false));
         }
       });
 
