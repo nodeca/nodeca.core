@@ -50,20 +50,32 @@ module.exports = (function (app, callback) {
       var result = {};
 
       keys.forEach(function (key) {
+        var chains;
+
+        if (1 == env[STORE_KEY].length) {
+          result[key] = env[STORE_KEY].settings[key];
+          return;
+        }
+
         // TODO: rework to support non-boolean vals as well
-        result[key] = {value: false, strict: false};
 
-        result[key].value = 0 < $$.select(env[STORE_KEY], function (grp) {
-          return !grp.settings[key].strict && grp.settings[key].value;
-        }).length;
+        // separate strict and non-strict values
+        chains = {OR: [], AND: []};
+        env[STORE_KEY].forEach(function (g) {
+          var op = g.settings[key].strict ? 'AND' : 'OR';
+          chains[op].push(g.settings[key].value);
+        });
 
-        if (result[key].value) {
-          $$.select(env[STORE_KEY], function (grp) {
-            return !grp.settings[key].strict && grp.settings[key].value;
-          }).forEach(function (grp) {
-            result[key].value = result[key].value && grp.settings[key].value;
-            result[key].strict = true;
-          });
+        result[key] = {strict: (0 < chains.AND.length)};
+
+        if (0 == chains.OR.length) {
+          result[key].value = (0 == $$.reject(chains.AND, function (v) { !!v; }).length);
+        } else {
+          result[key].value = (
+            (0 < $$.select(chains.OR, function (v) { !!v; }).length)
+            &&
+            (0 == $$.reject(chains.AND, function (v) { !!v; }).length)
+          );
         }
       });
 
