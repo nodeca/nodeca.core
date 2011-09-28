@@ -73,15 +73,27 @@ module.exports = (function (app, callback) {
           chains[op].push(g.settings[key].value);
         });
 
-        result[key] = {strict: (0 < chains.AND.length)};
+        result[key] = {strict: false, value: false};
+
+        if (0 < chains.AND.length) {
+          result[key].strict = true;
+        }
 
         if (0 == chains.OR.length) {
-          result[key].value = (0 == $$.reject(chains.AND, function (v) { !!v; }).length);
+          // we have ONLY restrictive permissions
+          // make sure ALL values are TRUE: removing all TRUE values
+          // from an array, so if all values are true - array will be empty
+          result[key].value = (0 == $$.reject(chains.AND, function (v) {
+            return !!v;
+          }).length);
         } else {
           result[key].value = (
-            (0 < $$.select(chains.OR, function (v) { !!v; }).length)
+            // in opposite to restrictive - select all TRUE values and make sure
+            // we have at least one TRUE
+            (0 < $$.select(chains.OR, function (v) { return !!v; }).length)
             &&
-            (0 == $$.reject(chains.AND, function (v) { !!v; }).length)
+            // see above
+            (0 == $$.reject(chains.AND, function (v) { return !!v; }).length)
           );
         }
       });
