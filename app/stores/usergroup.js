@@ -38,11 +38,18 @@ module.exports = (function (app, callback) {
     this.__.setter = function (data, env, callback) {
       var settings = {};
 
+      // Getter works with multiple groups.
+      // Seetter NEVER work with moe than one for integrity reasons.
+      if (1 != env.groups.length) {
+        callback(Error("Can't set on multiple groups"));
+        return;
+      }
+
       $$.each(data, function (key, val) {
         settings['settings.' + key] = val;
       });
 
-      UserGroup.update({_id: {$in: env[STORE_KEY]}}, settings, callback);
+      UserGroup.update({_id: env.groups[0]}, settings, callback);
     };
 
 
