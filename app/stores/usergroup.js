@@ -22,7 +22,7 @@ module.exports = (function (app, callback) {
         return;
       }
 
-      // env.grous was neither specified directly nor found in user
+      // env.groups was neither specified directly nor found in user
       if (!Array.isArray(env.groups) || 0 == env.groups.length) {
         callback(Error("Can't find list of groups"));
         return;
@@ -83,9 +83,9 @@ module.exports = (function (app, callback) {
           // we have ONLY restrictive permissions
           // make sure ALL values are TRUE: removing all TRUE values
           // from an array, so if all values are true - array will be empty
-          result[key].value = (0 == $$.reject(chains.AND, function (v) {
-            return !!v;
-          }).length);
+          result[key].value = (
+            (0 == $$.reject(chains.AND, function (v) { return !!v; }).length)
+          );
         } else {
           result[key].value = (
             // in opposite to restrictive - select all TRUE values and make sure
