@@ -70,7 +70,7 @@ module.exports = (function (app, callback) {
         chains = {OR: [], AND: []};
         env[STORE_KEY].forEach(function (g) {
           var op = g.settings[key].strict ? 'AND' : 'OR';
-          chains[op].push(g.settings[key].value);
+          chains[op].push(!!g.settings[key].value);
         });
 
         result[key] = {strict: false, value: false};
@@ -80,20 +80,12 @@ module.exports = (function (app, callback) {
         }
 
         if (0 == chains.OR.length) {
-          // we have ONLY restrictive permissions
-          // make sure ALL values are TRUE: removing all TRUE values
-          // from an array, so if all values are true - array will be empty
-          result[key].value = (
-            (0 == $$.reject(chains.AND, function (v) { return !!v; }).length)
-          );
+          result[key].value = (false == $$.includes(chains.AND, false));
         } else {
           result[key].value = (
-            // in opposite to restrictive - select all TRUE values and make sure
-            // we have at least one TRUE
-            (0 < $$.select(chains.OR, function (v) { return !!v; }).length)
+            (true == $$.includes(chains.OR, true))
             &&
-            // see above
-            (0 == $$.reject(chains.AND, function (v) { return !!v; }).length)
+            (false == $$.includes(chains.AND, false))
           );
         }
       });
