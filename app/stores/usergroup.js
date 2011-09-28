@@ -39,7 +39,7 @@ module.exports = (function (app, callback) {
       var settings = {};
 
       // Getter works with multiple groups.
-      // Seetter NEVER work with moe than one for integrity reasons.
+      // Setter NEVER work with moe than one for integrity reasons.
       if (1 != env.groups.length) {
         callback(Error("Can't set on multiple groups"));
         return;
