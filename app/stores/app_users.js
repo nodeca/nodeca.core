@@ -14,8 +14,8 @@ module.exports = (function (app, callback) {
 
 
     this.__.preloader = function (env, callback) {
-      if (!env.app) {
-        callback(Error("Can't find app"));
+      if (!env.app || !env.app.name) {
+        callback(Error("Can't find app name"));
         return;
       }
 
@@ -25,7 +25,7 @@ module.exports = (function (app, callback) {
       }
 
       // environment was preloaded before
-      if (env[STORE_KEY] && env[STORE_KEY][env.app]) {
+      if (env[STORE_KEY] && env[STORE_KEY][env.app.name]) {
         callback();
         return;
       }
@@ -34,12 +34,12 @@ module.exports = (function (app, callback) {
         env[STORE_KEY] = {};
       }
 
-      AppSettings.findOne({app: env.app}, function (err, data) {
+      AppSettings.findOne({app: env.app.name}, function (err, data) {
         self.keys.forEach(function (k) {
           data.settings[k] = data.settings[k] || [];
         });
 
-        env[STORE_KEY][env.app] = {
+        env[STORE_KEY][env.app.name] = {
           uid: env.user._id,
           settings: data.settings
         };
@@ -50,7 +50,7 @@ module.exports = (function (app, callback) {
 
 
     this.__.setter = function (data, env, callback) {
-      var curr = env[STORE_KEY][env.app],
+      var curr = env[STORE_KEY][env.app.name],
           settings = {};
 
       // prepare data to be set
@@ -60,12 +60,12 @@ module.exports = (function (app, callback) {
         settings['settings.' + key] = tmp;
       });
 
-      Settings.update({app: env.app}, settings, callback);
+      Settings.update({app: env.app.name}, settings, callback);
     };
 
 
     this.__.getter = function (keys, env, callback) {
-      var result = {}, data = env[STORE_KEY][env.app];
+      var result = {}, data = env[STORE_KEY][env.app.name];
 
       keys.forEach(function (key) {
         result[key] = {
