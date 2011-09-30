@@ -1,6 +1,6 @@
 var nodeca = require('nodeca-lib'),
     Store = nodeca.Settings.Store,
-    $$ = nodeca.Utilities;
+    _ = nodeca.Underscore;
 
 
 module.exports = (function (app, callback) {
@@ -54,8 +54,8 @@ module.exports = (function (app, callback) {
           settings = {};
 
       // prepare data to be set
-      $$.each(data, function (key, val) {
-        var tmp = $$.reject(curr.settings[key], curr.uid);
+      _.each(data, function (val, key) {
+        var tmp = _.without(curr.settings[key], curr.uid);
         if (val) { tmp.push(curr.uid); }
         settings['settings.' + key] = tmp;
       });
@@ -70,7 +70,7 @@ module.exports = (function (app, callback) {
       keys.forEach(function (key) {
         result[key] = {
           strict: false,
-          value: $$.includes(data.settings[key], data.uid)
+          value: _.include(data.settings[key], data.uid)
         };
       });
 

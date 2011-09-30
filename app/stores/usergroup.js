@@ -1,6 +1,6 @@
 var nodeca = require('nodeca-lib'),
     Store = nodeca.Settings.Store,
-    $$ = nodeca.Utilities;
+    _ = nodeca.Underscore;
 
 
 var Promise = require('simple-promise');
@@ -45,7 +45,7 @@ module.exports = (function (app, callback) {
         return;
       }
 
-      $$.each(data, function (key, val) {
+      _.each(data, function (val, key) {
         settings['settings.' + key] = val;
       });
 
@@ -80,9 +80,9 @@ module.exports = (function (app, callback) {
         }
 
         if (0 == chains.OR.length) {
-          result[key].value = !($$.includes(chains.AND, false));
+          result[key].value = !_.include(chains.AND, false));
         } else {
-          result[key].value = $$.includes(chains.OR, true) && !($$.includes(chains.AND, false));
+          result[key].value = _.include(chains.OR, true) && !_.includes(chains.AND, false);
         }
       });
 
