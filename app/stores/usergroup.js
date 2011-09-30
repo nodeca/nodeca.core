@@ -46,6 +46,10 @@ module.exports = (function (app, callback) {
       }
 
       _.each(data, function (val, key) {
+        // remove strict flag as we keep it in usergroup
+        if ('object' === typeof val) {
+          delete val.strict;
+        }
         settings['settings.' + key] = val;
       });
 
@@ -61,6 +65,7 @@ module.exports = (function (app, callback) {
 
         if (1 == env[STORE_KEY].length) {
           result[key] = env[STORE_KEY].settings[key];
+          result[key].strict = env[STORE_KEY][0].restrictive;
           return;
         }
 
@@ -69,7 +74,7 @@ module.exports = (function (app, callback) {
         // separate strict and non-strict values
         chains = {OR: [], AND: []};
         env[STORE_KEY].forEach(function (g) {
-          var op = g.settings[key].strict ? 'AND' : 'OR';
+          var op = g.restrictive ? 'AND' : 'OR';
           chains[op].push(!!g.settings[key].value);
         });
 
@@ -80,7 +85,7 @@ module.exports = (function (app, callback) {
         }
 
         if (0 == chains.OR.length) {
-          result[key].value = !_.include(chains.AND, false));
+          result[key].value = !_.include(chains.AND, false);
         } else {
           result[key].value = _.include(chains.OR, true) && !_.includes(chains.AND, false);
         }
