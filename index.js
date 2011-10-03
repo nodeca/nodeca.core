@@ -1,4 +1,7 @@
-module.exports = new (require('nodeca-lib').Application)(__dirname);
+module.exports = new (require('nodeca-lib').Application)({
+  root: __dirname,
+  name: 'core'
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////
