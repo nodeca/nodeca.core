@@ -11,7 +11,8 @@ module.exports = (function (app, callback) {
     Store.call(this);
 
 
-    var STORE_KEY = '__usergroup_store__',
+    var self = this,
+        STORE_KEY = '__usergroup_store__',
         UserGroup = app.model('UserGroup');
 
 
@@ -74,7 +75,18 @@ module.exports = (function (app, callback) {
         // separate strict and non-strict values
         chains = {OR: [], AND: []};
         env[STORE_KEY].forEach(function (g) {
-          var op = g.restrictive ? 'AND' : 'OR';
+          var op;
+
+          // get default value of key if group have no setting for it
+          if (!g.settings[key] || undefined === g.settings[key].value) {
+            g.settings[key] = {value: self.getDefaultsFor(key)};
+            // invert default value on restricive groups
+            if (g.restrictive) {
+              g.settings[key] = !g.settings[key];
+            }
+          }
+
+          op = g.restrictive ? 'AND' : 'OR';
           chains[op].push(!!g.settings[key].value);
         });
 
