@@ -10,7 +10,7 @@ module.exports = (function (app, callback) {
 
     var self = this,
         STORE_KEY = '__app_users_store__',
-        AppSettings = app.model('AppSettings');
+        AppSettings = app.getModel('AppSettings');
 
 
     this.__.preloader = function (env, callback) {

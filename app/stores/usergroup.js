@@ -1,9 +1,7 @@
 var nodeca = require('nodeca-lib'),
+    Promise = nodeca.Promise,
     Store = nodeca.Settings.Store,
     _ = nodeca.Underscore;
-
-
-var Promise = require('simple-promise');
 
 
 module.exports = (function (app, callback) {
@@ -13,7 +11,7 @@ module.exports = (function (app, callback) {
 
     var self = this,
         STORE_KEY = '__usergroup_store__',
-        UserGroup = app.model('UserGroup');
+        UserGroup = app.getModel('UserGroup');
 
 
     this.__.preloader = function (env, callback) {
