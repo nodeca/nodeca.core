@@ -43,7 +43,7 @@ global.nodeca.hooks.init.after('bundles', function (next) {
 
 
 global.nodeca.hooks.init.after('initialization', function (next) {
-  nodeca.runtime.http_server = connect.createServer();
+  var http_server = connect.createServer();
   next();
 });
 
