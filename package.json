@@ -1,8 +1,13 @@
 {
-  "name": "nodeca-core",
-  "description": "Core nodeca app",
-  "version": "0.0.1",
-  "author": "Aleksey V Zapparov <ixti@member.fsf.org> (http://ixti.ru)",
-  "repository": "git://github.com/nodeca/nodeca-core",
-  "main": "index.js"
+  "name"            : "nodeca.core",
+  "description"     : "Core nodeca app",
+  "version"         : "0.0.1",
+  "author"          : "Aleksey V Zapparov <ixti@member.fsf.org> (http://ixti.net/)",
+  "repository"      : {
+                        "type": "git",
+                        "url" : "git://github.com/nodeca/nodeca.core"
+                      },
+  "main"            : "./index.js",
+  "dependencies"    : { "static-lulz": "git://github.com/nodeca/static-lulz.git" },
+  "devDependencies" : { "vows": "0.6.0" }
 }
