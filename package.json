@@ -8,6 +8,9 @@
                         "url" : "git://github.com/nodeca/nodeca.core"
                       },
   "main"            : "./index.js",
-  "dependencies"    : { "static-lulz": "git://github.com/nodeca/static-lulz.git" },
+  "dependencies"    : {
+                        "static-lulz" : "git://github.com/nodeca/static-lulz.git",
+                        "connect"     : "git://github.com/senchalabs/connect.git"
+                      },
   "devDependencies" : { "vows": "0.6.0" }
 }
