@@ -13,6 +13,7 @@ var NLib = require('nlib');
 var StaticLulz = require('static-lulz');
 var FsTools = NLib.Vendor.FsTools;
 var Async = NLib.Vendor.Async;
+var Connect = require('connect');
 
 
 module.exports = NLib.Application.create({
@@ -43,7 +44,14 @@ global.nodeca.hooks.init.after('bundles', function (next) {
 
 
 global.nodeca.hooks.init.after('initialization', function (next) {
-  var http_server = connect.createServer();
+  var app = Connect();
+
+  app.use("/", function (req, res) {
+    nodeca.logger.error('got request');
+    res.end('Hello World');
+  });
+
+  require('http').createServer(app).listen(3000);
   next();
 });
 
