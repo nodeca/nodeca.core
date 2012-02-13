@@ -1,3 +1,6 @@
+'use strict';
+
+
 var ActionController = require('nodeca-lib').ExpressRailer.Controller;
 
 module.exports = function (app, callback) {
@@ -6,11 +9,11 @@ module.exports = function (app, callback) {
 
 
     this.error = function index(req, res, next) {
-      var error = req.error || Error('Direct acces to error controller');
+      var error = req.error || new Error('Direct acces to error controller');
 
       res.local('error', error);
 
-      if (error.code && 404 == error.code) {
+      if (error.code && 404 === error.code) {
           res.render('errors/404', {status: 404, description: 'Not Found'});
           return;
       }

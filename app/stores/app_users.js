@@ -1,11 +1,13 @@
-var nodeca = require('nodeca-lib'),
-    Store = nodeca.Settings.Store,
-    _ = nodeca.Underscore;
+'use strict';
 
 
-module.exports = (function (app, callback) {
+var NLib = require('nlib');
+var Underscore = NLib.Vendor.Underscore;
+
+
+module.exports = function (app, callback) {
   var AppUsersStore = function AppUsersStore() {
-    Store.call(this);
+    NLib.Settings.Store.call(this);
 
 
     var self = this,
@@ -15,12 +17,12 @@ module.exports = (function (app, callback) {
 
     this.__.preloader = function (env, callback) {
       if (!env.app || !env.app.name) {
-        callback(Error("Can't find app name"));
+        callback(new Error("Can't find app name"));
         return;
       }
 
       if (!env.user || !env.user._id) {
-        callback(Error("Can't user id"));
+        callback(new Error("Can't user id"));
         return;
       }
 
@@ -54,13 +56,13 @@ module.exports = (function (app, callback) {
           settings = {};
 
       // prepare data to be set
-      _.each(data, function (val, key) {
-        var tmp = _.without(curr.settings[key], curr.uid);
+      Underscore.each(data, function (val, key) {
+        var tmp = Underscore.without(curr.settings[key], curr.uid);
         if (val) { tmp.push(curr.uid); }
         settings['settings.' + key] = tmp;
       });
 
-      Settings.update({app: env.app.name}, settings, callback);
+      NLib.Settings.update({app: env.app.name}, settings, callback);
     };
 
 
@@ -70,7 +72,7 @@ module.exports = (function (app, callback) {
       keys.forEach(function (key) {
         result[key] = {
           strict: false,
-          value: _.include(data.settings[key], data.uid)
+          value: Underscore.include(data.settings[key], data.uid)
         };
       });
 
@@ -79,11 +81,11 @@ module.exports = (function (app, callback) {
   };
 
 
-  Store.adopts(AppUsersStore);
+  NLib.Settings.Store.adopts(AppUsersStore);
 
 
   callback(null, new AppUsersStore());
-});
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////

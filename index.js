@@ -13,7 +13,7 @@ var NLib = require('nlib');
 var StaticLulz = require('static-lulz');
 var FsTools = NLib.Vendor.FsTools;
 var Async = NLib.Vendor.Async;
-var Connect = require('connect');
+var connect = require('connect');
 
 
 module.exports = NLib.Application.create({
@@ -26,7 +26,10 @@ module.exports = NLib.Application.create({
 });
 
 
-global.nodeca.hooks.init.after('bundles', function (next) {
+var nodeca = global.nodeca;
+
+
+nodeca.hooks.init.after('bundles', function (next) {
   nodeca.runtime.assets_server = new StaticLulz();
 
   FsTools.walk(nodeca.runtime.assets_path, function (file, stats, next_file) {
@@ -43,8 +46,8 @@ global.nodeca.hooks.init.after('bundles', function (next) {
 });
 
 
-global.nodeca.hooks.init.after('initialization', function (next) {
-  var app = Connect();
+nodeca.hooks.init.after('initialization', function (next) {
+  var app = connect();
 
   app.use("/", function (req, res) {
     nodeca.logger.error('got request');

@@ -1,10 +1,12 @@
-var nodeca = require('nodeca-lib'),
-    Promise = nodeca.Promise,
-    Store = nodeca.Settings.Store,
-    _ = nodeca.Underscore;
+'use strict';
 
 
-module.exports = (function (app, callback) {
+var NLib = require('nlib'),
+    Store = NLib.Settings.Store,
+    Underscore = NLib.Underscore;
+
+
+module.exports = function (app, callback) {
   var UserGroupStore = function UserGroupStore() {
     Store.call(this);
 
@@ -22,8 +24,8 @@ module.exports = (function (app, callback) {
       }
 
       // env.groups was neither specified directly nor found in user
-      if (!Array.isArray(env.groups) || 0 == env.groups.length) {
-        callback(Error("Can't find list of groups"));
+      if (!Array.isArray(env.groups) || 0 === env.groups.length) {
+        callback(new Error("Can't find list of groups"));
         return;
       }
 
@@ -39,12 +41,12 @@ module.exports = (function (app, callback) {
 
       // Getter works with multiple groups.
       // Setter NEVER work with moe than one for integrity reasons.
-      if (1 != env.groups.length) {
-        callback(Error("Can't set on multiple groups"));
+      if (1 !== env.groups.length) {
+        callback(new Error("Can't set on multiple groups"));
         return;
       }
 
-      _.each(data, function (val, key) {
+      Underscore.each(data, function (val, key) {
         // remove strict flag as we keep it in usergroup
         if ('object' === typeof val) {
           delete val.strict;
@@ -62,7 +64,7 @@ module.exports = (function (app, callback) {
       keys.forEach(function (key) {
         var chains;
 
-        if (1 == env[STORE_KEY].length) {
+        if (1 === env[STORE_KEY].length) {
           result[key] = env[STORE_KEY].settings[key];
           result[key].strict = env[STORE_KEY][0].restrictive;
           return;
@@ -94,10 +96,10 @@ module.exports = (function (app, callback) {
           result[key].strict = true;
         }
 
-        if (0 == chains.OR.length) {
-          result[key].value = !_.include(chains.AND, false);
+        if (0 === chains.OR.length) {
+          result[key].value = !Underscore.include(chains.AND, false);
         } else {
-          result[key].value = _.include(chains.OR, true) && !_.includes(chains.AND, false);
+          result[key].value = Underscore.include(chains.OR, true) && !Underscore.includes(chains.AND, false);
         }
       });
 
@@ -110,7 +112,7 @@ module.exports = (function (app, callback) {
 
 
   callback(null, new UserGroupStore());
-});
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,3 +1,5 @@
+'use strict';
+
 var ActionController = require('nodeca-lib').ExpressRailer.Controller;
 
 module.exports = function (app, callback) {
@@ -16,8 +18,3 @@ module.exports = function (app, callback) {
 
   callback(null, new WelcomeController);
 };
-
-
-////////////////////////////////////////////////////////////////////////////////
-// vim:ts=2:sw=2
-////////////////////////////////////////////////////////////////////////////////
