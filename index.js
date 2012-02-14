@@ -49,6 +49,8 @@ nodeca.hooks.init.after('bundles', function (next) {
 nodeca.hooks.init.after('initialization', function (next) {
   var app = connect();
 
+  app.use("/assets/", nodeca.runtime.assets_server.middleware);
+
   app.use("/", function (req, res) {
     nodeca.logger.error('got request');
     res.end('Hello World');
@@ -57,8 +59,3 @@ nodeca.hooks.init.after('initialization', function (next) {
   require('http').createServer(app).listen(3000);
   next();
 });
-
-
-////////////////////////////////////////////////////////////////////////////////
-// vim:ts=2:sw=2
-////////////////////////////////////////////////////////////////////////////////
