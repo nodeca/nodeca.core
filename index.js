@@ -51,9 +51,10 @@ nodeca.hooks.init.after('initialization', function (next) {
 
   app.use("/assets/", nodeca.runtime.assets_server.middleware);
 
-  app.use("/", function (req, res) {
-    nodeca.logger.error('got request');
-    res.end('Hello World');
+  app.use("/", function (req, res, next) {
+    nodeca.server.admin.dashboard.call(req, function (err) {
+      res.end(nodeca.runtime.views['core-desktop']['en-US'].admin.dashboard());
+    });
   });
 
   require('http').createServer(app).listen(3000);
