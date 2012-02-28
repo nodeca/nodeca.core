@@ -1,3 +1,6 @@
 routes:
-  "/admin/dashboard":
-    to: admin.dashboard
+  admin.dashboard:
+    "/dashboard"
+
+mount:
+  admin: /admin

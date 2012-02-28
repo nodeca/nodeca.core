@@ -1,2 +1,3 @@
----
-name: Desktop Core
+theme_schemas:
+  core-desktop:
+    name: Default Default Theme

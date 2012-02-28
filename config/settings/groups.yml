@@ -1,19 +1,18 @@
----
-usergroup:  #
+setting_schemas:
 
-  # Group name
+  usergroup:
 
-  group_name:
-    type: string
-    group: Common
-    validators:
-      required: true
-    priority: 0
+    # Group name
+    group_name:
+      type: string
+      group: Common
+      validators:
+        required: true
+      priority: 0
 
-  # Are members searcheable & counted in stat?
-
-  group_visible:
-    type: boolean
-    default: true
-    group: Common
-    priority: 0
+    # Are members searcheable & counted in stat?
+    group_visible:
+      type: boolean
+      default: true
+      group: Common
+      priority: 0
