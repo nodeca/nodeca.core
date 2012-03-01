@@ -18,6 +18,8 @@
                       },
 
   "dependencies"    : {
+                        "redis"       : "0.7.1",
+                        "mongoose"    : "2.5.9",
                         "static-lulz" : "git://github.com/nodeca/static-lulz.git",
                         "connect"     : "git://github.com/senchalabs/connect.git"
                       },

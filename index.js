@@ -13,6 +13,8 @@ var NLib = require('nlib');
 var StaticLulz = require('static-lulz');
 var FsTools = NLib.Vendor.FsTools;
 var Async = NLib.Vendor.Async;
+var Redis = require('redis');
+var Mongoose = require('mongoose');
 var connect = require('connect');
 
 
@@ -27,6 +29,25 @@ module.exports = NLib.Application.create({
 
 
 var nodeca = global.nodeca;
+
+
+nodeca.hooks.init.before('initialization', function (next) {
+  var cfg = nodeca.config.database;
+
+  if (!cfg) {
+    next(new Error('No database configuration'));
+    return;
+  }
+
+  // TODO: Respect redis index
+  nodeca.runtime.redis = Redis.createClient(cfg.redis.port, cfg.redis.host);
+
+  // TODO: Respect user/pass
+  nodeca.runtime.mongoose = Mongoose;
+  Mongoose.connect(cfg.mongo.host, cfg.mongo.database, cfg.mongo.port);
+
+  next(null);
+});
 
 
 nodeca.hooks.init.after('bundles', function (next) {
