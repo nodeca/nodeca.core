@@ -31,22 +31,56 @@ module.exports = NLib.Application.create({
 var nodeca = global.nodeca;
 
 
+// connect to redis
 nodeca.hooks.init.before('initialization', function (next) {
-  var cfg = nodeca.config.database;
+  var cfg = (nodeca.config.database || {}).redis;
 
   if (!cfg) {
-    next(new Error('No database configuration'));
+    next(new Error('No Redis configuration'));
     return;
   }
 
   // TODO: Respect redis index
-  nodeca.runtime.redis = Redis.createClient(cfg.redis.port, cfg.redis.host);
+  try {
+    nodeca.runtime.redis = Redis.createClient(cfg.port, cfg.host);
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
-  // TODO: Respect user/pass
+
+// connect to mongoose
+nodeca.hooks.init.before('initialization', function (next) {
+  var cfg = (nodeca.config.database || {}).mongo, uri = 'mongodb://';
+
+  if (!cfg) {
+    next(new Error('No MongoDB configuration'));
+    return;
+  }
+
+  // build mongodb connection uri
+  if (cfg.user) {
+    uri += cfg.user;
+
+    if (cfg.pass) {
+      uri += ':' + cfg.pass;
+    }
+
+    uri += '@';
+  }
+
+  uri += cfg.host;
+
+  if (cfg.port) {
+    uri += ':' + cfg.port;
+  }
+
+  uri += '/' + cfg.database;
+
+  // connect to database
   nodeca.runtime.mongoose = Mongoose;
-  Mongoose.connect(cfg.mongo.host, cfg.mongo.database, cfg.mongo.port);
-
-  next(null);
+  Mongoose.connect(uri, next);
 });
 
 
