@@ -2,8 +2,3 @@ i18n:
   en-US:
     core:
       title: Nodeca core application
-    admin:
-      dashboard:
-        registration_stats: >
-          Since your last visit on #{last_visit} there were #{noobs_count}
-          new %{user|users}:noobs_count. Please, review #{noobs_review_link}.
