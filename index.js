@@ -53,7 +53,7 @@ nodeca.hooks.init.after('initialization', function (next) {
 
   app.use("/", function (req, res, next) {
     nodeca.server.admin.dashboard.call(req, function (err) {
-      res.end(nodeca.runtime.views['core-desktop']['en-US'].admin.dashboard());
+      res.end(nodeca.runtime.views['core-desktop'].admin.dashboard['en-US']());
     });
   });
 
