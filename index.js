@@ -42,13 +42,13 @@ nodeca.hooks.init.before('initialization', function (next) {
 
   nodeca.runtime.redis = Redis.createClient(cfg.port, cfg.host);
 
-  // assign handlers
   nodeca.runtime.redis.once('error', next);
   nodeca.runtime.redis.once('connect', function () {
     nodeca.runtime.redis.removeListener('error', next);
 
     if (!cfg.index) {
       next();
+      return;
     }
 
     nodeca.runtime.redis.send_command('SELECT', [cfg.index], function (err) {
