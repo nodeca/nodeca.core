@@ -40,14 +40,20 @@ nodeca.hooks.init.before('initialization', function (next) {
     return;
   }
 
-  // TODO: Respect redis index
   nodeca.runtime.redis = Redis.createClient(cfg.port, cfg.host);
 
   // assign handlers
   nodeca.runtime.redis.once('error', next);
-  nodeca.runtime.redis.once('success', function () {
+  nodeca.runtime.redis.once('connect', function () {
     nodeca.runtime.redis.removeListener('error', next);
-    next();
+
+    if (!cfg.index) {
+      next();
+    }
+
+    nodeca.runtime.redis.send_command('SELECT', [cfg.index], function (err) {
+      next(err);
+    });
   });
 });
 
