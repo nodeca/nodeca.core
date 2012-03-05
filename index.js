@@ -13,6 +13,7 @@ var NLib = require('nlib');
 var StaticLulz = require('static-lulz');
 var FsTools = NLib.Vendor.FsTools;
 var Async = NLib.Vendor.Async;
+var _ = NLib.Vendor.Underscore;
 var Redis = require('redis');
 var Mongoose = require('mongoose');
 var connect = require('connect');
@@ -109,14 +110,107 @@ nodeca.hooks.init.after('bundles', function (next) {
 });
 
 
+function execute_handler(api_path, func, env, params, callback) {
+  // TODO: respect all api_path parents
+  nodeca.filters.run(api_path, params, func, callback, env);
+}
+
+
+function find_view(scope, api_path) {
+  var parts = api_path.split('.');
+
+  while (scope && parts.length) {
+    scope = scope[parts.shift()];
+  }
+
+  return scope;
+}
+
+
 nodeca.hooks.init.after('initialization', function (next) {
   var app = connect();
 
   app.use("/assets/", nodeca.runtime.assets_server.middleware);
 
-  app.use("/", function (req, res, next) {
-    nodeca.server.admin.dashboard.call(req, function (err) {
-      res.end(nodeca.runtime.views['core-desktop'].admin.dashboard['en-US']());
+  // middlewares
+  app.use(connect.query());
+
+  // main worker
+  app.use(function (req, res) {
+    var host = req.headers.host, env, match, method, params;
+
+    // remove port part if it's 80
+    if ('80' === host.split(':')[1]) {
+      host = host.split(':')[0];
+    }
+
+    match = nodeca.runtime.router.match('//' + host + req.url.split('?').shift());
+
+    if (!match) {
+      // TODO: Fix not found handling
+      res.statusCode = 500;
+      res.end('Not found');
+      return;
+    }
+
+    // resolve API name and function
+    method = match.handler();
+
+    if (!method.func) {
+      // TODO: Fix method not found
+      res.statusCode = 500;
+      res.end('Method ' + method.name + ' not found');
+      return;
+    }
+
+    // prefill environment
+    env = {
+      request: {
+        origin: 'HTTP',
+        method: method.name
+      },
+      response: {
+        err: {
+          code: null,
+          message: null
+        },
+        data: null,
+        // TODO: respect layout
+        //layout: null,
+        view: method.name
+      }
+    };
+
+    params = _.extend(req.query || {}, match.params || {});
+    execute_handler(method.name, method.func, env, params, function (err) {
+      var view;
+
+      if (err && err.redirect) {
+        res.statusCode = err.redirect[0];
+        res.setHeader('Location', err.redirect[1]);
+        res.end();
+        return;
+      } else if (err) {
+        // TODO: Fix error handling
+        res.statusCode = 500;
+        res.end(err.toString());
+        return;
+      }
+
+      // TODO: respect session theme id
+      // TODO: respect session lang id
+
+      view = find_view(nodeca.runtime.views['core-desktop'], env.response.view);
+
+      if (!view) {
+        // TODO: Fix view not found handling
+        res.statusCode = 500;
+        res.end('View ' + env.response.view + ' not found');
+        return;
+      }
+
+      // success render view
+      res.end(view['en-US'](env.data));
     });
   });
 
