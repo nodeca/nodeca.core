@@ -1,6 +1,7 @@
-routes:
-  admin.dashboard:
-    "/dashboard"
+router:
+  map:
+    admin.dashboard:
+      "/dashboard": ~
 
-mount:
-  admin: /admin
+  mount:
+    admin: /admin
