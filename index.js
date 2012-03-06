@@ -111,7 +111,7 @@ nodeca.hooks.init.after('bundles', function (next) {
 
 
 function execute_handler(api_path, func, env, params, callback) {
-  var parts = api_path.split('.').slice(0, -1), stack, more;
+  var parts = api_path.split('.'), stack, more;
 
   //  We need to call before/after filters of all api_path parents.
   //  For this purpose we need to each parent filter run should nest child
