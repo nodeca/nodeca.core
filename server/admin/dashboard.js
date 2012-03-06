@@ -1,7 +1,7 @@
 'use strict';
 
 
-module.exports = function (next) {
+module.exports = function (params, next) {
   // TBD
   next();
 };
