@@ -2,6 +2,6 @@
 
 
 module.exports = function (params, next) {
-  // TBD
+  this.data = {now: (new Date).toString()};
   next();
 };
