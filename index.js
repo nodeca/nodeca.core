@@ -227,15 +227,14 @@ nodeca.hooks.init.after('initialization', function (next) {
           message: null
         },
         data: null,
-        // TODO: respect layout
-        layout: null,
+        layout: 'default',
         view: method.name
       }
     };
 
     params = _.extend(req.query || {}, match.params || {});
     execute_handler(method.name, method.func, env, params, function (err) {
-      var view;
+      var data, view, layout, response;
 
       if (err && err.redirect) {
         res.statusCode = err.redirect[0];
@@ -252,7 +251,9 @@ nodeca.hooks.init.after('initialization', function (next) {
       // TODO: respect session theme id
       // TODO: respect session lang id
 
+      layout = nodeca.runtime.views['core-desktop'].layouts[env.response.layout];
       view = find_view(nodeca.runtime.views['core-desktop'], env.response.view);
+      data = env.response.data || {};
 
       if (!view) {
         // TODO: Fix view not found handling
@@ -262,7 +263,14 @@ nodeca.hooks.init.after('initialization', function (next) {
       }
 
       // success render view
-      res.end(view['en-US'](env.response.data));
+      response = view['en-US'](data);
+
+      if (layout) {
+        data.content = response;
+        response = layout['en-US'](data);
+      }
+
+      res.end(response);
     });
   });
 
