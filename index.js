@@ -262,7 +262,7 @@ nodeca.hooks.init.after('initialization', function (next) {
       }
 
       // success render view
-      res.end(view['en-US'](env.data));
+      res.end(view['en-US'](env.response.data));
     });
   });
 

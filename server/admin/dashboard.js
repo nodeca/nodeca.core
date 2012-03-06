@@ -5,7 +5,7 @@ var nodeca = global.nodeca;
 
 
 module.exports = function (params, next) {
-  this.data = {now: (new Date).toString()};
+  this.response.data = {now: (new Date).toString()};
   next();
 };
 
