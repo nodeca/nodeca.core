@@ -11,16 +11,31 @@ module.exports = function (params, next) {
 
 
 nodeca.filters.before('::admin', function (params, next) {
-  console.log('::admin fired');
+  console.log('before ::admin fired');
+  next();
+});
+
+nodeca.filters.after('::admin', function (params, next) {
+  console.log('after ::admin fired');
   next();
 });
 
 nodeca.filters.before('::admin.dashboard', function (params, next) {
-  console.log('::admin.dashboard fired');
+  console.log('before ::admin.dashboard fired');
+  next();
+});
+
+nodeca.filters.after('::admin.dashboard', function (params, next) {
+  console.log('after ::admin.dashboard fired');
   next();
 });
 
 nodeca.filters.before('@', function (params, next) {
-  console.log('@ fired');
+  console.log('before @ fired');
+  next();
+});
+
+nodeca.filters.after('@', function (params, next) {
+  console.log('after @ fired');
   next();
 });
