@@ -110,64 +110,6 @@ nodeca.hooks.init.after('bundles', function (next) {
 });
 
 
-function execute_handler(api_path, func, env, params, callback) {
-  var parts = api_path.split('.'), stack, more;
-
-  //  We need to call before/after filters of all api_path parents.
-  //  For this purpose we need to each parent filter run should nest child
-  //  execution and the most bottom child is `func` itself (block).
-  //  In other words we are doing something like `reduce` (or `inject`).
-  //
-  //  ##### Visual Explanation
-  //
-  //    api_path = "forum.posts.show"
-  //
-  //  Stack is filled from func, and up to the top most parent:
-  //
-  //    - stack: func
-  //    - stack: filter('forum.posts.show') -> stack
-  //    - stack: filter('forum.posts') -> stack
-  //    - stack: filter('forum') -> stack
-  //
-  //  After filling the stack it's execution will be something like this:
-  //
-  //    - filter.before('forum')                  -> stack = filter('forum')
-  //      - filter.before('forum.posts')          -> stack = filter('forum.posts')
-  //        - filter.before('forum.posts.show')   -> stack = filter('forum.posts.show')
-  //          - func                              -> stack = func
-  //        - filter.after('forum.posts.show')
-  //      - filter.after('forum.posts')
-  //    - filter.after('forum')
-
-  // initial memo
-  stack = func;
-
-  // helper wrap `nest` with parent filter execution
-  more = function (hook_name) {
-    // save current stack in current closure
-    var curr = stack;
-
-    // reassign stack with caller of `hook_name`,
-    // using previous stack as `block` of hook chain
-    stack = function () {
-      // we care only about `next` callback here,
-      // which is always the last one
-      var next = arguments[arguments.length - 1];
-      nodeca.filters.run(hook_name, params, curr, next, env);
-    };
-  };
-
-  // fill the stack
-  while (parts.length) {
-    more(parts.join('.'));
-    parts.pop();
-  }
-
-  // run stack
-  stack(callback);
-}
-
-
 function find_view(scope, api_path) {
   var parts = api_path.split('.');
 
@@ -225,7 +167,7 @@ nodeca.hooks.init.after('init-complete', function (next) {
     // mix GET QUERY params (part after ? in URL) and params from router
     // params from router tke precedence
     params = _.extend(req.query || {}, match.params || {});
-    execute_handler(match.meta.name, match.meta.func, env, params, function (err) {
+    nodeca.filters.run(match.meta.name, params, match.meta.func, function (err) {
       var data, view, layout, response;
 
       if (err && err.redirect) {
@@ -263,7 +205,7 @@ nodeca.hooks.init.after('init-complete', function (next) {
       }
 
       res.end(response);
-    });
+    }, env); // nodeca.filters.run
   });
 
   require('http').createServer(app).listen(nodeca.config.listen.port);
