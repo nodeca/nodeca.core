@@ -33,7 +33,7 @@ var nodeca = global.nodeca;
 
 
 // connect to redis
-nodeca.hooks.init.before('initialization', function (next) {
+nodeca.hooks.init.before('init-start', function (next) {
   var cfg = (nodeca.config.database || {}).redis;
 
   if (!cfg) {
@@ -60,7 +60,7 @@ nodeca.hooks.init.before('initialization', function (next) {
 
 
 // connect to mongoose
-nodeca.hooks.init.before('initialization', function (next) {
+nodeca.hooks.init.before('init-start', function (next) {
   var cfg = (nodeca.config.database || {}).mongo, uri = 'mongodb://';
 
   if (!cfg) {
@@ -179,7 +179,7 @@ function find_view(scope, api_path) {
 }
 
 
-nodeca.hooks.init.after('initialization', function (next) {
+nodeca.hooks.init.after('init-finish', function (next) {
   var app = connect();
 
   app.use("/assets/", nodeca.runtime.assets_server.middleware);
