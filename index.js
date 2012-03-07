@@ -179,7 +179,7 @@ function find_view(scope, api_path) {
 }
 
 
-nodeca.hooks.init.after('init-finish', function (next) {
+nodeca.hooks.init.after('init-complete', function (next) {
   var app = connect();
 
   app.use("/assets/", nodeca.runtime.assets_server.middleware);
@@ -189,7 +189,7 @@ nodeca.hooks.init.after('init-finish', function (next) {
 
   // main worker
   app.use(function (req, res) {
-    var host = req.headers.host, env, match, method, params;
+    var host = req.headers.host, env, match, params;
 
     // remove port part if it's 80
     if ('80' === host.split(':')[1]) {
@@ -200,18 +200,8 @@ nodeca.hooks.init.after('init-finish', function (next) {
 
     if (!match) {
       // TODO: Fix not found handling
-      res.statusCode = 500;
+      res.statusCode = 404;
       res.end('Not found');
-      return;
-    }
-
-    // resolve API name and function
-    method = match.handler();
-
-    if (!method.func) {
-      // TODO: Fix method not found
-      res.statusCode = 500;
-      res.end('Method ' + method.name + ' not found');
       return;
     }
 
@@ -219,7 +209,7 @@ nodeca.hooks.init.after('init-finish', function (next) {
     env = {
       request: {
         origin: 'HTTP',
-        method: method.name
+        method: match.meta.name
       },
       response: {
         err: {
@@ -228,12 +218,14 @@ nodeca.hooks.init.after('init-finish', function (next) {
         },
         data: null,
         layout: 'default',
-        view: method.name
+        view: match.meta.name
       }
     };
 
+    // mix GET QUERY params (part after ? in URL) and params from router
+    // params from router tke precedence
     params = _.extend(req.query || {}, match.params || {});
-    execute_handler(method.name, method.func, env, params, function (err) {
+    execute_handler(match.meta.name, match.meta.func, env, params, function (err) {
       var data, view, layout, response;
 
       if (err && err.redirect) {
