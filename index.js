@@ -121,6 +121,17 @@ function find_view(scope, api_path) {
 }
 
 
+nodeca.hooks.init.before('init-complete', function (next) {
+/*  
+  var current = nodeca.models.Migrations.first(); // get current migrations 
+  if (nodeca.runtime.migration_tool.getMigrationsStatus(current).length > 0){
+    next(new Error("Found not performed migrations. Please use $ ./migration"));
+    return;
+  }
+  next();
+*/
+});
+
 nodeca.hooks.init.after('init-complete', function (next) {
   var app = connect();
 
