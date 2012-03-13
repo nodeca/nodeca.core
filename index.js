@@ -122,13 +122,23 @@ function find_view(scope, api_path) {
 
 
 nodeca.hooks.init.before('init-complete', function (next) {
-/*  
-  var current = nodeca.models.Migrations.first(); // get current migrations 
-  if (nodeca.runtime.migration_tool.getMigrationsStatus(current).length > 0){
-    next(new Error("Found not performed migrations. Please use $ ./migration"));
-    return;
-  }
-  next();
+/*
+  nodeca.models.migrations.getCurrentMigrations(function(err, current){
+    if (err) {
+      next(err);
+      return;
+    }
+    nodeca.runtime.migrator.getMigrationsStatus(current, function(err, migrations){
+      if (!err && migrations.length > 0){
+        err = new Error("Can't start: database changed. Please, run migration tool.");
+      }
+      if (err) {
+        next(err);
+        return;
+      }
+      next();
+    });
+  });
 */
 });
 
