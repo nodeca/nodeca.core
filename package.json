@@ -12,7 +12,6 @@
   "repository"      : { "type": "git", "url": "git://github.com/nodeca/nodeca.core.git" },
 
   "main"            : "./index.js",
-  "bin"             : { "migration": "./bin/migration" },
 
   "scripts"         : {
                         "test": "make test-all"
