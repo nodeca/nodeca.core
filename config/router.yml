@@ -3,5 +3,8 @@ router:
     admin.dashboard:
       "/dashboard": ~
 
+    admin.anotherDashboard:
+      "/another-dashboard": ~
+
   mount:
     admin: /admin
