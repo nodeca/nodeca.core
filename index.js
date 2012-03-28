@@ -121,6 +121,25 @@ function find_view(scope, api_path) {
 }
 
 
+nodeca.hooks.init.before('init-complete', function (next) {
+  // fetch used migrations from db
+  nodeca.models.migration.get_last_state(function(err, last_state){
+    if (err) {
+      next(err);
+      return;
+    }
+
+    // finde new migrations
+    nodeca.runtime.migrator.checkMigrations(last_state, function(err, new_migrations){
+      if (!err && new_migrations.length > 0){
+        err = new Error("Can't start: database changed. Please, run migration tool.");
+      }
+
+      next(err);
+    });
+  });
+});
+
 nodeca.hooks.init.after('init-complete', function (next) {
   var app = connect();
 
@@ -211,3 +230,6 @@ nodeca.hooks.init.after('init-complete', function (next) {
   require('http').createServer(app).listen(nodeca.config.listen.port);
   next();
 });
+
+
+
