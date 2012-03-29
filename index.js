@@ -141,7 +141,7 @@ nodeca.hooks.init.before('init-complete', function (next) {
 });
 
 nodeca.hooks.init.after('init-complete', function (next) {
-  var app = connect(), default_host = nodeca.config.listen.host;
+  var app = connect(), default_host = nodeca.config.listen.host, static_helpers;
 
   if (!!nodeca.config.listen.port && 80 !== +nodeca.config.listen.port) {
     default_host += ":" + nodeca.config.listen.port;
@@ -151,6 +151,13 @@ nodeca.hooks.init.after('init-complete', function (next) {
 
   // middlewares
   app.use(connect.query());
+
+  // define some request/session insensitive view helpers
+  static_helpers = {
+    link_to: function (name, params) {
+      return nodeca.runtime.router.linkTo(name, params) || '#';
+    }
+  };
 
   // main worker
   app.use(function (req, res) {
@@ -210,9 +217,9 @@ nodeca.hooks.init.after('init-complete', function (next) {
 
       layout = nodeca.runtime.views['desktop'].layouts[env.response.layout];
       view = find_view(nodeca.runtime.views['desktop'], env.response.view);
-      data = _.extend({}, env.response.data, {
-        link_to: function (name, params) {
-          return nodeca.runtime.router.linkTo(name, params) || '#';
+      data = _.extend({}, env.response.data, static_helpers, {
+        t: function (phrase, params) {
+          return nodeca.runtime.i18n.t('en-US', phrase, params);
         }
       });
 
