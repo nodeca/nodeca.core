@@ -210,7 +210,11 @@ nodeca.hooks.init.after('init-complete', function (next) {
 
       layout = nodeca.runtime.views['core-desktop'].layouts[env.response.layout];
       view = find_view(nodeca.runtime.views['core-desktop'], env.response.view);
-      data = env.response.data || {};
+      data = _.extend({}, env.response.data, {
+        link_to: function (name, params) {
+          return nodeca.runtime.router.linkTo(name, params) || '#';
+        }
+      });
 
       if (!view) {
         // TODO: Fix view not found handling
