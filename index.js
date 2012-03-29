@@ -183,6 +183,11 @@ nodeca.hooks.init.after('init-complete', function (next) {
         origin: 'HTTP',
         method: match.meta.name
       },
+      session: {
+        // FIXME: use req.session instead
+        theme: 'desktop',
+        lang: nodeca.config.locales.default
+      },
       response: {
         err: {
           code: null,
@@ -212,14 +217,11 @@ nodeca.hooks.init.after('init-complete', function (next) {
         return;
       }
 
-      // TODO: respect session theme id
-      // TODO: respect session lang id
-
-      layout = nodeca.runtime.views['desktop'].layouts[env.response.layout];
-      view = find_view(nodeca.runtime.views['desktop'], env.response.view);
+      layout = nodeca.runtime.views[env.session.theme].layouts[env.response.layout];
+      view = find_view(nodeca.runtime.views[env.session.theme], env.response.view);
       data = _.extend({}, env.response.data, static_helpers, {
         t: function (phrase, params) {
-          return nodeca.runtime.i18n.t('en-US', phrase, params);
+          return nodeca.runtime.i18n.t(env.session.lang, phrase, params);
         }
       });
 
@@ -231,11 +233,11 @@ nodeca.hooks.init.after('init-complete', function (next) {
       }
 
       // success render view
-      response = view['en-US'](data);
+      response = view[env.session.lang](data);
 
       if (layout) {
         data.content = response;
-        response = layout['en-US'](data);
+        response = layout[env.session.lang](data);
       }
 
       res.end(response);
