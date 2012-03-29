@@ -208,8 +208,8 @@ nodeca.hooks.init.after('init-complete', function (next) {
       // TODO: respect session theme id
       // TODO: respect session lang id
 
-      layout = nodeca.runtime.views['core-desktop'].layouts[env.response.layout];
-      view = find_view(nodeca.runtime.views['core-desktop'], env.response.view);
+      layout = nodeca.runtime.views['desktop'].layouts[env.response.layout];
+      view = find_view(nodeca.runtime.views['desktop'], env.response.view);
       data = _.extend({}, env.response.data, {
         link_to: function (name, params) {
           return nodeca.runtime.router.linkTo(name, params) || '#';
