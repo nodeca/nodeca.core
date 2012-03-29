@@ -123,7 +123,7 @@ function find_view(scope, api_path) {
 
 nodeca.hooks.init.before('init-complete', function (next) {
   // fetch used migrations from db
-  nodeca.models.migration.get_last_state(function(err, last_state){
+  nodeca.models.core.migration.getLastState(function(err, last_state){
     if (err) {
       next(err);
       return;
