@@ -141,7 +141,11 @@ nodeca.hooks.init.before('init-complete', function (next) {
 });
 
 nodeca.hooks.init.after('init-complete', function (next) {
-  var app = connect();
+  var app = connect(), default_host = nodeca.config.listen.host;
+
+  if (!!nodeca.config.listen.port && 80 !== +nodeca.config.listen.port) {
+    default_host += ":" + nodeca.config.listen.port;
+  }
 
   app.use("/assets/", nodeca.runtime.assets_server.middleware);
 
@@ -150,7 +154,7 @@ nodeca.hooks.init.after('init-complete', function (next) {
 
   // main worker
   app.use(function (req, res) {
-    var host = req.headers.host, env, match, params;
+    var host = req.headers.host || default_host, env, match, params;
 
     // remove port part if it's 80
     if ('80' === host.split(':')[1]) {
