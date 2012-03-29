@@ -181,7 +181,7 @@ nodeca.hooks.init.after('init-complete', function (next) {
           code: null,
           message: null
         },
-        data: null,
+        data: {},
         layout: 'default',
         view: match.meta.name
       }
