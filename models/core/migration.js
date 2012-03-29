@@ -1,6 +1,7 @@
 'use strict';
 
-var nodeca = global.nodeca;
+/*global nodeca*/
+
 
 var mongoose = nodeca.runtime.mongoose;
 var Schema = mongoose.Schema;

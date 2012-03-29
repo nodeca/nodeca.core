@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 
 'use strict';
+
+/*global nodeca*/
+
+
 var Async = require('async');
 
 require('nlib').Application.create({
@@ -11,7 +15,6 @@ require('nlib').Application.create({
     console.log(err);
     process.exit(0);
   }
-  var nodeca = global.nodeca;
   var current = nodeca.models.Migrations.first(); // get current migrations
 
   var migrations = nodeca.runtime.migration_tool.getMigrationsStatus(current);

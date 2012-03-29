@@ -1,7 +1,6 @@
 'use strict';
 
-
-var nodeca = global.nodeca;
+/*global nodeca*/
 
 
 module.exports = function (params, next) {

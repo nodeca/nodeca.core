@@ -1,5 +1,7 @@
 "use strict";
 
+/*global nodeca*/
+
 
 // stdlib
 var Fs = require('fs');
@@ -27,9 +29,6 @@ module.exports = NLib.Application.create({
     callback();
   }
 });
-
-
-var nodeca = global.nodeca;
 
 
 // connect to redis
