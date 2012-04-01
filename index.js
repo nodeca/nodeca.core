@@ -131,7 +131,8 @@ nodeca.hooks.init.before('init-complete', function (next) {
     // finde new migrations
     nodeca.runtime.migrator.checkMigrations(last_state, function(err, new_migrations){
       if (!err && new_migrations.length > 0){
-        err = "Can't start: database changed. Please, run migration tool.";
+        err = "Can't start: database changed. Please, run migration tool:" +
+              "\n    ./bin/db-migrate";
       }
 
       next(err);
