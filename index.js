@@ -210,9 +210,9 @@ nodeca.hooks.init.after('init-complete', function (next) {
         res.end();
         return;
       } else if (err) {
-        // TODO: Fix error handling
         res.statusCode = 500;
-        res.end(err.toString());
+        res.end(('development' !== nodeca.runtime.env) ? 'Application error'
+                : (err.stack || err.toString()));
         return;
       }
 
@@ -225,7 +225,6 @@ nodeca.hooks.init.after('init-complete', function (next) {
       });
 
       if (!view) {
-        // TODO: Fix view not found handling
         res.statusCode = 500;
         res.end('View ' + env.response.view + ' not found');
         return;
