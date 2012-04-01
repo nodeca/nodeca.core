@@ -36,7 +36,7 @@ nodeca.hooks.init.before('init-start', function (next) {
   var cfg = (nodeca.config.database || {}).redis;
 
   if (!cfg) {
-    next(new Error('No Redis configuration'));
+    next('No Redis configuration found');
     return;
   }
 
@@ -63,7 +63,7 @@ nodeca.hooks.init.before('init-start', function (next) {
   var cfg = (nodeca.config.database || {}).mongo, uri = 'mongodb://';
 
   if (!cfg) {
-    next(new Error('No MongoDB configuration'));
+    next('No MongoDB configuration found');
     return;
   }
 
@@ -131,7 +131,7 @@ nodeca.hooks.init.before('init-complete', function (next) {
     // finde new migrations
     nodeca.runtime.migrator.checkMigrations(last_state, function(err, new_migrations){
       if (!err && new_migrations.length > 0){
-        err = new Error("Can't start: database changed. Please, run migration tool.");
+        err = "Can't start: database changed. Please, run migration tool.";
       }
 
       next(err);
