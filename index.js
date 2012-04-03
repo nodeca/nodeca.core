@@ -25,3 +25,4 @@ nodeca.hooks.init.after('bundles',        require('./lib/init/assets_server'));
 
 nodeca.hooks.init.after('init-complete',  require('./lib/init/migrations_check'));
 nodeca.hooks.init.after('init-complete',  require('./lib/init/http_server'));
+nodeca.hooks.init.after('init-complete',  require('./lib/init/filters'));
