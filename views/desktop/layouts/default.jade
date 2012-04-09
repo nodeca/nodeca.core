@@ -3,4 +3,8 @@ html
   head
     title Nodeca rulez!
   body
+    #menu
+      ul
+        - each item in menus.common.topnav
+          li: a(href=item.link)= t(item.title)
     #contents!= content
