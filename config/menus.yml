@@ -1,0 +1,6 @@
+menus:
+  common:
+    topnav:
+      admin:
+        to: admin.dashboard
+        check_permissions: true

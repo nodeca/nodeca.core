@@ -11,6 +11,12 @@ module.exports = function (params, next) {
 
 nodeca.filters.before('::admin', function (params, next) {
   console.log('before ::admin fired');
+
+  if (0.5 < Math.random()) {
+    next({denied: true});
+    return;
+  }
+
   next();
 });
 
