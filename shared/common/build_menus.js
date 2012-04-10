@@ -12,9 +12,9 @@ function build(ns, cfg, perms, router) {
   var menu = [];
 
   _.each(cfg, function (opts, key) {
-    var item;
+    var item, p = perms[key] || {allowed: true};
 
-    if (opts.check_permissions && false === perms[opts.to]) {
+    if (!p.allowed) {
       // permission denied. skip.
       return;
     }
@@ -22,11 +22,11 @@ function build(ns, cfg, perms, router) {
     item = {title: 'menus.' + ns + '.' + key};
 
     if (opts.to) {
-      item.link = router.linkTo(opts.to);
+      item.link = router.linkTo(opts.to, opts.params || {});
     }
 
     if (opts.submenu) {
-      item.childs = build(ns + '.' + key, opts.submenu, perms, router);
+      item.childs = build(ns + '.' + key, opts.submenu, p.submenu || {}, router);
     }
 
     menu.push(item);
@@ -86,31 +86,12 @@ function build(ns, cfg, perms, router) {
 module.exports = function (menu_ids, permissions_map, router) {
   var menus = {};
 
-  _.each(menu_ids, function (id) {
-    var parts, ns, cfg;
+  nodeca.shared.common.each_menu(menu_ids, function (ns, id, cfg) {
+    var perms;
 
-    if (!_.isString(id)) {
-      // non-valid id
-      return;
-    }
-
-    parts = id.split('.'), ns = parts.shift(), cfg = nodeca.config.menus[ns];
-
-    if (!cfg) {
-      // no such namespace - skip
-      return;
-    }
-
-    menus[ns] = {};
-    id = parts.shift();
-
-    if (id) {
-      menus[ns][id] = build(ns + '.' + id, cfg[id] || {}, permissions_map, router);
-    } else {
-      _.each(cfg, function (cfg, id) {
-        menus[ns][id] = build(ns + '.' + id, cfg, permissions_map, router);
-      });
-    }
+    perms         = (permissions_map[ns] || {})[id];
+    menus[ns]     = menus[ns] || {};
+    menus[ns][id] = build(ns + '.' + id, cfg, perms || {}, router);
   });
 
   return menus;
