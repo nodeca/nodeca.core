@@ -19,7 +19,10 @@ function build(ns, cfg, perms, router) {
       return;
     }
 
-    item = {title: 'menus.' + ns + '.' + key};
+    item = {
+      title: 'menus.' + ns + '.' + key,
+      priority: opts.priority
+    };
 
     if (opts.to) {
       item.link = router.linkTo(opts.to, opts.params || {});
@@ -32,7 +35,11 @@ function build(ns, cfg, perms, router) {
     menu.push(item);
   });
 
-  return menu;
+  return _.sortBy(menu, function (item) {
+    var prio = (undefined === item.priority) ? 100 : +item.priority;
+    delete item.priority;
+    return prio;
+  });
 }
 
 

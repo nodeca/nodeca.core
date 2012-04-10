@@ -3,4 +3,5 @@ menus:
     topnav:
       admin:
         to: admin.dashboard
+        priority: 500
         check_permissions: true
