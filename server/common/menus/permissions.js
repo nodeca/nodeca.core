@@ -17,11 +17,10 @@ var get_menu_permissions = require('nodeca.core/lib/menu').get_menu_permissions;
 
 
 module.exports = function (params, callback) {
-  Async.waterfall([
-    Async.apply(get_menu_permissions, params.menu_ids, this),
-    function (menu_permissions, next) {
-      this.response.data = menu_permissions;
-      next();
-    }
-  ], callback);
+  var env = this;
+
+  get_menu_permissions(params.menu_ids, env, function (err, permissions) {
+    env.response.data = permissions;
+    callback(err);
+  });
 };

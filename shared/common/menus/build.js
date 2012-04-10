@@ -21,7 +21,7 @@ function build(ns, cfg, perms, router) {
     };
 
     if (opts.to) {
-      item.link = router.linkTo(opts.to, opts.params || {});
+      item.link = router.linkTo(opts.to, opts.params);
     }
 
     if (opts.submenu) {
@@ -47,11 +47,10 @@ function build(ns, cfg, perms, router) {
  *
  *  ##### Example
  *
- *      var menu_ids = ['admin', 'common'],
- *          permissions_map = this.response.permissions_map,
- *          router = nodeca.runtime.router;
+ *      var permissions_map = env.response.permissions_map,
+ *          router          = nodeca.runtime.router;
  *
- *      nodeca.shared.build_menus(menu_ids, permissions_map, router);
+ *      nodeca.shared.build_menus(['admin', 'common'], permissions_map, router);
  *      // ->
  *      //    {
  *      //      common: {
@@ -89,7 +88,9 @@ function build(ns, cfg, perms, router) {
 module.exports = function (menu_ids, permissions_map, router) {
   var menus = {};
 
-  nodeca.shared.common.each_menu(menu_ids, function (ns, id, cfg) {
+  permissions_map = permissions_map || {};
+
+  nodeca.shared.common.menus.walk(menu_ids, function (ns, id, cfg) {
     var perms;
 
     perms         = (permissions_map[ns] || {})[id];
