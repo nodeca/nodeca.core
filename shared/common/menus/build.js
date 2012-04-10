@@ -4,13 +4,13 @@
 /*global nodeca, _ */
 
 
-function build(ns, cfg, perms, router) {
+function build(ns, cfg, permissions, router) {
   var menu = [];
 
   _.each(cfg, function (opts, key) {
-    var item, p = perms[key] || {allowed: true};
+    var item;
 
-    if (!p.allowed) {
+    if (false === permissions[opts.to]) {
       // permission denied. skip.
       return;
     }
@@ -25,7 +25,7 @@ function build(ns, cfg, perms, router) {
     }
 
     if (opts.submenu) {
-      item.childs = build(ns + '.' + key, opts.submenu, p.submenu || {}, router);
+      item.childs = build(ns + '.' + key, opts.submenu, permissions, router);
     }
 
     menu.push(item);
@@ -91,11 +91,8 @@ module.exports = function (menu_ids, permissions_map, router) {
   permissions_map = permissions_map || {};
 
   nodeca.shared.common.menus.walk(menu_ids, function (ns, id, cfg) {
-    var perms;
-
-    perms         = (permissions_map[ns] || {})[id];
     menus[ns]     = menus[ns] || {};
-    menus[ns][id] = build(ns + '.' + id, cfg, perms || {}, router);
+    menus[ns][id] = build(ns + '.' + id, cfg, permissions_map, router);
   });
 
   return menus;
