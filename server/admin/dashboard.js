@@ -9,8 +9,8 @@ module.exports = function (params, next) {
 };
 
 
-nodeca.filters.before('::admin', function (params, next) {
-  console.log('before ::admin fired');
+nodeca.filters.before('admin', function (params, next) {
+  console.log('before admin fired');
 
   if (0.5 < Math.random()) {
     next({denied: true});
@@ -20,18 +20,18 @@ nodeca.filters.before('::admin', function (params, next) {
   next();
 });
 
-nodeca.filters.after('::admin', function (params, next) {
-  console.log('after ::admin fired');
+nodeca.filters.after('admin', function (params, next) {
+  console.log('after admin fired');
   next();
 });
 
-nodeca.filters.before('::admin.dashboard', function (params, next) {
-  console.log('before ::admin.dashboard fired');
+nodeca.filters.before('admin.dashboard', function (params, next) {
+  console.log('before admin.dashboard fired');
   next();
 });
 
-nodeca.filters.after('::admin.dashboard', function (params, next) {
-  console.log('after ::admin.dashboard fired');
+nodeca.filters.after('admin.dashboard', function (params, next) {
+  console.log('after admin.dashboard fired');
   next();
 });
 
