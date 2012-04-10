@@ -1,11 +1,7 @@
 "use strict";
 
 
-/*global nodeca */
-
-
-// FIXME: This will not work in browser - we need cross-side solution
-var _ = require('nlib').Vendor.Underscore;
+/*global nodeca, _ */
 
 
 module.exports = function (menu_ids, iterator) {
