@@ -8,3 +8,8 @@ html
         - each item in menus.common.topnav
           li: a(href=item.link)= t(item.title)
     #contents!= content
+
+  // TODO: replace with helpers?
+  script(src="/assets/system/common/api.js")
+  script(src="/assets/system/forum/api.js")
+  script(src="/assets/system/blogs/api.js")
