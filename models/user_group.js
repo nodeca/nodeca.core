@@ -1,5 +1,6 @@
 'use strict';
 
+/*global nodeca*/
 
 module.exports = new nodeca.runtime.mongoose.Schema({
   // shortcut name for the group
