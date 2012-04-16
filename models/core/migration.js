@@ -40,7 +40,7 @@ Migration.statics.getLastState = function (callback) {
     }
     callback(err, last_state);
   });
-}
+};
 
 module.exports.__init__ = function __init__() {
   return mongoose.model('migration', Migration);

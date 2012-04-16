@@ -1,5 +1,6 @@
 'use strict';
 
+/*global nodeca*/
 
 module.exports = new nodeca.runtime.mongoose.Schema({
   app_name: { type: String },
