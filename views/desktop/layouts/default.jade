@@ -10,6 +10,11 @@ html
     #contents!= content
 
   // TODO: replace with helpers?
+  script(src='/socket.io/socket.io.js')
   script(src="/assets/system/common/api.js")
   script(src="/assets/system/forum/api.js")
   script(src="/assets/system/blogs/api.js")
+
+  script
+    // TODO: Replace with bundled kickstarter
+    nodeca.runtime = {socket_io: io.connect()};

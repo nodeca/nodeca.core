@@ -17,7 +17,8 @@
                         "redis"       : "0.7.1",
                         "mongoose"    : "2.5.9",
                         "static-lulz" : "git://github.com/nodeca/static-lulz.git",
-                        "connect"     : "git://github.com/senchalabs/connect.git"
+                        "connect"     : "git://github.com/senchalabs/connect.git",
+                        "socket.io"   : "0.9.5"
                       },
   "devDependencies" : {
                         "vows": "~ 0.6.0"
