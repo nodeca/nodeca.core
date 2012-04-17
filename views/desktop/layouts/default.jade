@@ -17,18 +17,23 @@ html
 
   script
     // TODO: Replace with bundled kickstarter
-    nodeca.runtime = {version: 'preview', socket_io: io.connect()};
-    nodeca.runtime.noop = function () {};
-    nodeca.runtime.rpc_call = function (name, params, callback) {
-      var msg = {version: nodeca.runtime.version, method: name, params: params};
-      console.log(msg);
-      nodeca.runtime.socket_io.emit('server', msg, function (res) {
-        if (res.version !== nodeca.runtime.version) {
-          // TODO: implement software upgrade here
-          alert('nodeca server version mismatch');
-          return;
-        }
+    nodeca.runtime = {version: 'preview'};
+    (function (sio) {
+      nodeca.runtime.rpc = function (name, params, callback) {
+        var msg = {
+          version:  nodeca.runtime.version,
+          method:   name,
+          params:   params
+        };
 
-        (callback || nodeca.runtime.noop)(res.err, res.result);
-      });
-    }
+        sio.emit('server', msg, function (res) {
+          if (res.version !== nodeca.runtime.version) {
+            // TODO: implement software upgrade here
+            console.alert('nodeca server version mismatch');
+            return;
+          }
+
+          (callback || $.noop)(res.err, res.result);
+        });
+      };
+    }(io.connect()));
