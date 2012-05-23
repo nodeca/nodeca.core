@@ -16,13 +16,3 @@ module.exports = NLib.Application.create({
     callback();
   }
 });
-
-
-nodeca.hooks.init.before('init-start',    require('./lib/init/redis'));
-nodeca.hooks.init.before('init-start',    require('./lib/init/mongoose'));
-
-nodeca.hooks.init.after('bundles',        require('./lib/init/http_assets'));
-
-nodeca.hooks.init.after('init-complete',  require('./lib/init/migrations_check'));
-nodeca.hooks.init.after('init-complete',  require('./lib/init/http_server'));
-nodeca.hooks.init.after('init-complete',  require('./lib/init/filters'));
