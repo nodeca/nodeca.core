@@ -49,9 +49,9 @@ module.exports.commandLineArguments = [
       type: 'string'}
   },
   {
-    args: ['seed_name'],
+    args: ['seed'],
     options: {
-      metaver: 'SEED_NAME',
+      metavar: 'SEED_NAME',
       help:'seed name',
       nargs:'?',
       defaultValue:null
