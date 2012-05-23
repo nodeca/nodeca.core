@@ -35,8 +35,7 @@ module.exports.run = function (args, callback) {
     NLib.init.loadSharedApiSubtree
   ], function (err) {
     if (err){
-      console.log(err);
-      process.exit(1);
+      callback(err);
     }
    
     var migration_model = nodeca.models.core.migration;
@@ -63,8 +62,7 @@ module.exports.run = function (args, callback) {
           });
         }, function(err) {
           if (err) {
-            nodeca.logger.log(err);
-            process.exit(1);
+            callback(err);
           }
           process.exit(0);
         });
