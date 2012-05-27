@@ -46,7 +46,8 @@ module.exports.commandLineArguments = [
     args: ['-a', '--app'],
     options: {
       help: 'application name',
-      type: 'string'}
+      type: 'string'
+    }
   },
   {
     args: ['seed'],

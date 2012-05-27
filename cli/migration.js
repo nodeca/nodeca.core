@@ -12,11 +12,20 @@ module.exports.commandName ="migrate";
 
 module.exports.parserParameters= {
   addHelp:true,
-  description: 'Run migrations',
+  description: 'Without args show new migrations. With ' +
+    ' `--all` run all migrations.',
   help: 'run migrations'
 };
 
-module.exports.commandLineArguments = [];
+module.exports.commandLineArguments = [
+  {
+    args: ['--all'],
+    options: {
+      help: 'run all migrations',
+      action: 'storeTrue'
+    }
+  }
+];
 
 module.exports.run = function (args, callback) {
   Async.series([
@@ -35,21 +44,31 @@ module.exports.run = function (args, callback) {
     migration_model.getLastState(function(err, last_state){
       // find new migrations
       migrator.checkMigrations(last_state, function(err, new_migrations){
+        if (!args.all && new_migrations.length >0) {
+          console.log('New migrations:');
+        }
         Async.forEachSeries(new_migrations, function(migration, next_migration){
-          migrator.runMigration(migration, function(err){
-            if (err){
-              next_migration(err);
-              return;
-            }
-
-            // All ok. Write step to db
-            migration_model.markPassed( migration.app_name, migration.step, function(err){
-              if (!err){
-                nodeca.logger.log(migration.app_name + ': ' + migration.step +' successfully migrated');
+          if (!args.all) {
+            console.log(migration.app_name + ':' + migration.step);
+            next_migration();
+            return;
+          }
+          else {
+            migrator.runMigration(migration, function(err){
+              if (err){
+                next_migration(err);
+                return;
               }
-              next_migration(err);
+
+              // All ok. Write step to db
+              migration_model.markPassed( migration.app_name, migration.step, function(err){
+                if (!err){
+                  nodeca.logger.log(migration.app_name + ': ' + migration.step +' successfully migrated');
+                }
+                next_migration(err);
+              });
             });
-          });
+          }
         }, function(err) {
           if (err) {
             callback(err);
