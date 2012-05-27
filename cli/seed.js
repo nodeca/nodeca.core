@@ -31,7 +31,7 @@ module.exports.parserParameters= {
   epilog: 'Note: Loading seeds is limited to development/test enviroment.' +
     'If you really need to run seed  on production/stageing, use ' +
     'option -f.',
-  help: 'A help'
+  help: 'show or run existing seeds'
 };
 
 module.exports.commandLineArguments = [
@@ -59,22 +59,13 @@ module.exports.commandLineArguments = [
   },
 ];
 
-/**
- * run(callback, args)-> void
- * - callback(function): callback function
- * - args (array): parsed arguments
- *
- * args example:
- *    { command_name: 'migration', foo: 'baz', bar: '1' }
- *
- **/
 module.exports.run = function (args, callback) {
   var app_name = args.app;
   var seed_name = args.seed;
   Async.series([
+    require('../lib/init/redis'),
     require('../lib/init/mongoose'),
     NLib.init.loadModels,
-    NLib.init.loadSharedApiSubtree
   ], function (err) {
     if (err){
       callback(err);

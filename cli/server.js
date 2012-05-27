@@ -11,8 +11,8 @@ var Async = NLib.Vendor.Async;
 module.exports.parserParameters= {
   version: nodeca.runtime.version,
   addHelp:true,
-  help: 'controls nodeca server',
-  description: 'Controls nodeca server ...'
+  help: 'start nodeca server',
+  description: 'Start nodeca server'
 };
 
 module.exports.commandLineArguments = [];

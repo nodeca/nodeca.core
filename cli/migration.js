@@ -13,26 +13,16 @@ module.exports.commandName ="migrate";
 module.exports.parserParameters= {
   addHelp:true,
   description: 'Run migrations',
-  help: 'A help'
+  help: 'run migrations'
 };
-
 
 module.exports.commandLineArguments = [];
 
-/**
- * run(args, callback)-> void
- * - args (array): parsed arguments
- * - callback(function): callback function
- *
- * args example:
- *    { command_name: 'migration', foo: 'baz', bar: '1' }
- *
- **/
 module.exports.run = function (args, callback) {
   Async.series([
+    require('../lib/init/redis'),
     require('../lib/init/mongoose'),
     NLib.init.loadModels,
-    NLib.init.loadSharedApiSubtree
   ], function (err) {
     if (err){
       callback(err);
