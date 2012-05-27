@@ -30,12 +30,12 @@ module.exports.run = function (args, callback) {
     NLib.init.initTranslations,
     NLib.init.buildBundles,
 
-    require('../lib/init/http_assets'),
+    require('../lib/init/assets'),
 
     NLib.init.initRouter,
 
     require('../lib/init/migrations_check'),
-    require('../lib/init/http_server'),
+    require('../lib/init/server'),
     require('../lib/init/filters')
   ], callback);
 };
