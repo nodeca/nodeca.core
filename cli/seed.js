@@ -28,7 +28,7 @@ module.exports.parserParameters= {
     'Or, all seeds from `./db/seeds/seed-name/` folder. If <seed-name>' +
     'missed, then script will show all available seeds for given app. ' +
     'If `-a` missed, then all seed for all apps will be shown.',
-  epilog: 'Note: Loading seeds is limited to development/test enviroment.' +
+  epilog: 'Note: Loading seeds is limited to development/test enviroment. ' +
     'If you really need to run seed  on production/stageing, use ' +
     'option -f.',
   help: 'show or run existing seeds'
@@ -86,10 +86,17 @@ module.exports.run = function (args, callback) {
         process.exit(1);
       }
 
+      console.log('Applying seed(s)...\n');
       require(seed_path)(function(err){
+        var prefix = '  ' + app_name + ':' + seed_name + ' -- ';
+
         if (err) {
+          console.log(prefix + 'failed');
           callback(err);
+          return;
         }
+
+        console.log(prefix + 'success');
         process.exit(0);
       });
     }
@@ -102,7 +109,7 @@ module.exports.run = function (args, callback) {
         apps = nodeca.runtime.apps;
       }
 
-      console.log('Avaliable seeds:');
+      console.log('Available seeds:\n');
 
       Async.forEachSeries(apps, function(app, next_app){
         var seed_dir = Path.join(app.root, SEEDS_DIR);
@@ -114,6 +121,9 @@ module.exports.run = function (args, callback) {
         if (err) {
           callback(err);
         }
+
+        console.log('\nSeeds are shown in `<APP>:<SEED_NAME>` form.');
+        console.log('See `seed --help` for details');
         process.exit(0);
       });
     }

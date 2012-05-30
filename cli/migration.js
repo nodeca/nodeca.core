@@ -44,35 +44,55 @@ module.exports.run = function (args, callback) {
     migration_model.getLastState(function(err, last_state){
       // find new migrations
       migrator.checkMigrations(last_state, function(err, new_migrations){
-        if (!args.all && new_migrations.length >0) {
-          console.log('New migrations:');
+        if (0 === new_migrations.length) {
+          console.log(args.all ? 'Already up-to-date.' :
+                      'You have no outstanding migrations');
+          process.exit(0);
         }
+
+        if (!args.all) {
+          console.log('You have ' + new_migrations.length +
+                      ' outstanding migration(s):\n');
+        } else {
+          console.log('Applying ' + new_migrations.length +
+                      ' outstanding migration(s):\n');
+        }
+
         Async.forEachSeries(new_migrations, function(migration, next_migration){
+          var migration_title = '  ' + migration.app_name + ':' + migration.step;
+
           if (!args.all) {
-            console.log(migration.app_name + ':' + migration.step);
+            console.log(migration_title);
             next_migration();
             return;
           }
-          else {
-            migrator.runMigration(migration, function(err){
-              if (err){
-                next_migration(err);
-                return;
+
+          migrator.runMigration(migration, function(err){
+            if (err){
+              next_migration(err);
+              return;
+            }
+
+            // All ok. Write step to db
+            migration_model.markPassed(migration.app_name, migration.step, function(err){
+              if (!err){
+                nodeca.logger.log(migration_title +' -- success');
+              } else {
+                nodeca.logger.log(migration_title +' -- failed');
               }
 
-              // All ok. Write step to db
-              migration_model.markPassed( migration.app_name, migration.step, function(err){
-                if (!err){
-                  nodeca.logger.log(migration.app_name + ': ' + migration.step +' successfully migrated');
-                }
-                next_migration(err);
-              });
+              next_migration(err);
             });
-          }
+          });
         }, function(err) {
           if (err) {
             callback(err);
           }
+
+          if (!args.all) {
+            console.log('\nRun `migrate` command with `--all` to apply them.');
+          }
+
           process.exit(0);
         });
       });
