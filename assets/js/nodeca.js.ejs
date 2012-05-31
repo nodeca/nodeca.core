@@ -1,7 +1,8 @@
 /*global window*/
 
 
-// vim:syntax=javascript
+//  vim:syntax=javascript
+//= require nodeca-io
 
 
 (function () {
@@ -9,9 +10,6 @@
 
 
   var nodeca = window.nodeca = {
-    config: {
-      fontomas: <%- JSON.stringify(config('fontomas')) %>
-    },
     runtime: {
       env:      "<%= env() %>",
       version:  "<%= version() %>"
