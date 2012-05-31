@@ -8,32 +8,8 @@ html
         - each item in menus.common.topnav
           li: a(href=item.link)= t(item.title)
     #contents!= content
-
-  // TODO: replace with helpers?
-  script(src='/socket.io/socket.io.js')
-  script(src="/assets/system/common/api.js")
-  script(src="/assets/system/forum/api.js")
-  script(src="/assets/system/blogs/api.js")
+    #online!= count_online_users()
 
   script
-    // TODO: Replace with bundled kickstarter
-    nodeca.runtime = {version: 'preview'};
-    (function (sio) {
-      nodeca.runtime.rpc = function (name, params, callback) {
-        var msg = {
-          version:  nodeca.runtime.version,
-          method:   name,
-          params:   params
-        };
-
-        sio.emit('server', msg, function (res) {
-          if (res.version !== nodeca.runtime.version) {
-            // TODO: implement software upgrade here
-            console.alert('nodeca server version mismatch');
-            return;
-          }
-
-          (callback || $.noop)(res.err, res.result);
-        });
-      };
-    }(io.connect()));
+    window.REALTIME_ID = "!{random()}";
+  script(src=asset_path('app.js'))
