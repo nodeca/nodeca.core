@@ -23,6 +23,9 @@ module.exports.run = function (args, callback) {
     require('../lib/init/mongoose'),
 
     NLib.init.loadModels,
+
+    require('../lib/init/migrations_check'),
+
     NLib.init.loadServerApiSubtree,
     NLib.init.loadSharedApiSubtree,
     NLib.init.loadClientApiSubtree,
@@ -34,7 +37,6 @@ module.exports.run = function (args, callback) {
 
     NLib.init.initRouter,
 
-    require('../lib/init/migrations_check'),
     require('../lib/init/server'),
     require('../lib/init/filters')
   ], callback);
