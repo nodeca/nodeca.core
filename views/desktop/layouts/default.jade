@@ -7,8 +7,13 @@ html
       ul
         - each item in menus.common.topnav
           li: a(href=item.link)= t(item.title)
+
+    nav.breadcrumbs
+      p breadcrumbs should be here
+
     #contents!= content
     #online!= count_online_users()
+
 
   script
     window.REALTIME_ID = "!{random()}";
