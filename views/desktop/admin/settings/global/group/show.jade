@@ -1,0 +1,33 @@
+mixin display_number(name, value)
+  input(type="text", name=name)
+
+mixin dispay_sting(name, value)
+  input(type="text", name=name)
+
+mixin display_boolean(name, value)
+  input(type='checkbox', name=name, checked=value)
+
+mixin display_value(name, value, type)
+  case type
+    when 'number'
+      mixin display_number(name, value)
+    when 'string'
+      mixin dispay_sting(name, value)
+    when 'boolean'
+      mixin display_boolean(name, value)
+    default
+      mixin dispay_sting(name, value)
+
+h1= t('admin.settings.' + group_name + '_group_title')
+
+form(name="settings", action="#")
+  ul
+    -each setting, name in group
+      li
+        .setting
+          .setting_header
+            p= t('admin.settings.' + name + '_title')
+          .setting_body
+            p= t('admin.settings.' + name + '_description')
+            mixin display_value(name, setting.default, setting.type)
+  input(type="button", value="Save", onclick="saveSettings()")

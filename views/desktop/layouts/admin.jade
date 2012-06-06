@@ -1,0 +1,28 @@
+!!!
+html
+  head
+    title Nodeca admin panel
+  body
+    #menu
+      ul
+        - each item in menus.admin.topnav
+          li: a(href=item.link)= t(item.title)
+
+    #leftpanel
+      #tools
+        ul
+          - each item in menus.admin.leftpanel
+            li: a(href=item.link)= t(item.title)
+
+    #contents
+      #breadcrumbs
+        p breadcrumbs should be here
+
+      p!= content
+
+    #online!= count_online_users()
+
+
+  script
+    window.REALTIME_ID = "!{random()}";
+  script(src=asset_path('app.js'))
