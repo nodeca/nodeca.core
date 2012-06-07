@@ -1,0 +1,13 @@
+setting_schemas:
+  global:
+    friendly_url:
+      type: radio
+      values:
+        0: seo_off
+        1: seo_standard
+        2: seo_strict
+      group: frendly_urls
+
+    friendly_url_registered:
+      type: boolean
+      group: frendly_urls

@@ -2,6 +2,11 @@ router:
   map:
     admin.dashboard:
       "/dashboard": ~
+    admin.settings.global.index:
+      "/settings": ~
+    admin.settings.global.group.show:
+      "/settings/{id}":
+        id: /\w+/
 
   mount:
     admin: /admin

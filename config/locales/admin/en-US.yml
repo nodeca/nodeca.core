@@ -1,0 +1,10 @@
+i18n:
+  en-US:
+    core:
+      title: Nodeca admin panel
+    menus:
+      admin:
+        topnav:
+          settings: Global settings
+        leftpanel:
+          settings: Global settings
