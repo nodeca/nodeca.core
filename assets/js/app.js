@@ -1,8 +1,5 @@
 /*global nodeca, $*/
 
-
-//= require jquery
-//= require underscore
 //= require nodeca
 //= require nodeca-io
 
