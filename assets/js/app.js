@@ -1,13 +1,15 @@
 /*global nodeca, $*/
 
+
 //= require nodeca
 //= require nodeca-io
 
 
+nodeca.io.init();
+
+
 $(function () {
   'use strict';
-
-  nodeca.io.init();
 
   var $online = $('#online');
   nodeca.io.subscribe('/stats/users_online', function (count) {
