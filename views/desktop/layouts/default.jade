@@ -1,9 +1,9 @@
 !!!
-html
+html.no-js
   head
     title Nodeca rulez!
 
-    link(rel="stylesheet",href=asset_path('app.css'))
+    link(rel='stylesheet', href=asset_path('app.css'))
 
     script(type="text/javascript")!= asset_include('modernizr.custom.js')
 
@@ -11,13 +11,32 @@ html
     script(src=asset_path('app.js'))
 
   body
-    #menu
-      ul
-        - each item in menus.common.topnav
-          li: a(href=item.link)= t(item.title)
+    .container
+      nav.navbar
+        .navbar-inner
 
-    nav.breadcrumbs
-      p breadcrumbs should be here
+          a.btn.btn-navbar 123
 
-    #contents!= content
-    #online!= count_online_users()
+          a.brand(href="/") Nodeca
+
+          .container
+            .nav-collapse.collapse
+              ul.nav
+                - each item in menus.common.topnav
+                  li: a(href=item.link)= t(item.title)
+
+      ul.breadcrumb
+        li
+          a(href='#') breadcrumbs
+          span.divider /
+        li
+          a(href='#') should
+          span.divider /
+        li
+          a(href='#') be
+          span.divider /
+        li
+          a(href='#') here
+
+      #contents!= content
+      #online!= count_online_users()
