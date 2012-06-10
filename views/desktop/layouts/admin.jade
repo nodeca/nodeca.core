@@ -2,6 +2,17 @@
 html
   head
     title Nodeca admin panel
+
+    link(rel=stylesheet, href=asset_path('app.css'))
+
+    script(type="text/javascript")!= asset_include('modernizr.custom.js')
+
+    script
+      window.REALTIME_ID = "!{random()}";
+
+    script(src=asset_path('lib.js'))
+    script(src=asset_path('app.js'))
+
   body
     #menu
       ul
@@ -22,7 +33,3 @@ html
 
     #online!= count_online_users()
 
-
-  script
-    window.REALTIME_ID = "!{random()}";
-  script(src=asset_path('app.js'))

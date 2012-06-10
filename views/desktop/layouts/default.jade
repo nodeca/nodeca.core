@@ -3,9 +3,12 @@ html
   head
     title Nodeca rulez!
 
-    link(rel="stylesheet", href="asset_path('app.css')")
+    link(rel=stylesheet, href=asset_path('app.css'))
 
     script(type="text/javascript")!= asset_include('modernizr.custom.js')
+
+    script(src=asset_path('lib.js'))
+    script(src=asset_path('app.js'))
 
   body
     #menu
