@@ -8,5 +8,13 @@ router:
       "/settings/{id}":
         id: /\w+/
 
+    assets:
+      "/{path}":
+        path: /.+/
+    static:
+      "/{file}":
+        file: /favicon.ico|robots.txt|snippet.png/
+
   mount:
     admin: /admin
+    assets: /assets
