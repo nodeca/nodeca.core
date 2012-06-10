@@ -21,7 +21,8 @@
       events = {},
       // underlying bayeux client
       bayeux = null,
-      connected = false,
+      // whenever transport is up or not
+      is_connected = false,
       // api3 related (used by apiTree() send/receive calls) properies
       api3 = {
         req_channel: '/x/api3-req/' + window.REALTIME_ID,
@@ -184,9 +185,9 @@
     //   we execute callback with `ETIMEOUT` error
     //
 
-    // check if there active connection
-    if (!connected) {
-      callback(ioerr(io.ENOCONN, 'Cannot connect to server (RT).'));
+    // check if there an active connection
+    if (!is_connected) {
+      callback(ioerr(io.ENOCONN, 'No connection to the server (RT).'));
       return;
     }
 
@@ -212,6 +213,8 @@
 
     // handle transport down during request error
     function handle_transport_down() {
+      // mimics `once()` event listener
+      bayeux.unbind('transport:down', handle_transport_down);
       handle_error(ioerr(io.ECONNGONE, 'Server gone. (RT)'));
     }
 
@@ -237,10 +240,10 @@
       callback(msg.err, msg.result);
     };
 
-    // wait for successfull message delivery 30 seconds
+    // wait for successfull message delivery 10 seconds
     timeout = setTimeout(function () {
       handle_error(ioerr(io.ETIMEOUT, 'Timeout ' + name + ' execution.'));
-    }, 30000);
+    }, 10000);
 
 
     // send request
@@ -265,31 +268,44 @@
   };
 
 
+  // responses listener
+  function handle_api3_response(data) {
+    var callback = api3.callbacks[data.id];
+
+    if (!callback) {
+      // unknown response id
+      return;
+    }
+
+    delete api3.callbacks[data.id];
+    callback(data.msg);
+  }
+
+
   /**
    *  nodeca.io.init() -> Void
    **/
   io.init = function () {
     bayeux = new Faye.Client('/faye');
 
-    bayeux.bind('transport:up', function () { connected = true; });
-    bayeux.bind('transport:down', function () { connected = false; });
+    if ('development' === nodeca.runtime.env) {
+      // export some internals for debugging
+      window.fontello_bayeux = bayeux;
+    }
 
-    bayeux.subscribe(api3.res_channel, function (data) {
-      var callback = api3.callbacks[data.id];
+    //
+    // once connected, client.getState() always returns 'CONNECTED' regardless
+    // to the real state, so instead of relying on this state we use our own
+    //
 
-      if (!callback) {
-        // unknown response id
-        return;
-      }
+    bayeux.bind('transport:up',   function () { is_connected = true; });
+    bayeux.bind('transport:down', function () { is_connected = false; });
 
-      delete api3.callbacks[data.id];
-      callback(data.msg);
-    });
+    //
+    // faye handles reconnection on it's own:
+    // https://groups.google.com/d/msg/faye-users/NJPd3v98zjY/hyGpoat5Of0J
+    //
+
+    bayeux.subscribe(api3.res_channel, handle_api3_response);
   };
-
-
-  if ('development' === nodeca.runtime.env) {
-    // export some internals for debugging
-    window.fontello_bayeux = bayeux;
-  }
 }());
