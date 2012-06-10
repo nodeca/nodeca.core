@@ -37,7 +37,6 @@ module.exports.run = function (args, callback) {
 
     NLib.init.initRouter,
 
-    require('../lib/init/server'),
-    require('../lib/init/filters')
+    require('../lib/init/server')
   ], callback);
 };
