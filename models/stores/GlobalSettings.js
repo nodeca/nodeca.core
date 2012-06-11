@@ -7,7 +7,7 @@ var Schema = mongoose.Schema;
 
 var GlobalSettigs = module.exports.GlobalSettigs = new mongoose.Schema({
   _id: { type: String, unique: true},
-  value: { type: nodeca.runtime.mongoose.Schema.Types.Mixed, default: {}}
+  value: { type: Schema.Types.Mixed, default: {}}
 }, {strict: true});
 
 GlobalSettigs.statics.get = function() {
