@@ -15,7 +15,15 @@ module.exports.parserParameters= {
   description: 'Start nodeca server'
 };
 
-module.exports.commandLineArguments = [];
+module.exports.commandLineArguments = [
+  {
+    args: ['--repl'],
+    options: {
+      help:   'start REPL server',
+      action: 'storeTrue'
+    }
+  }
+];
 
 module.exports.run = function (args, callback) {
   Async.series([
@@ -37,6 +45,9 @@ module.exports.run = function (args, callback) {
 
     NLib.init.initRouter,
 
-    require('../lib/init/server')
+    require('../lib/init/server'),
+
+    // init repl only if it was required by `--repl` key
+    (args.repl ? require('../lib/init/repl') : function skip(next) { next(); })
   ], callback);
 };
