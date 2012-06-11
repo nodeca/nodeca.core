@@ -8,8 +8,8 @@ menus:
 
   admin:
     topnav:
-      settings:
-        to: admin.settings.global.index
+      system:
+        to: admin.dashboard
     leftpanel:
       settings:
         to: admin.settings.global.index
