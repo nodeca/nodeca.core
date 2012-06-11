@@ -28,6 +28,6 @@ module.exports = function (params, callback) {
   static_options.getOnly = true;
 
   connect.static.send(http.req, http.res, function (err) {
-    callback("File not found");
+    callback("Static file '" + http.req.url + "' not found.");
   }, static_options);
 };
