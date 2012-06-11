@@ -11,32 +11,30 @@ html.no-js
     script(src=asset_path('app.js'))
 
   body
-    .container
-      nav.navbar
-        .navbar-inner
+    nav.navbar.navbar-fixed-top
+      .navbar-inner
 
+        .container
           a.btn.btn-navbar 123
 
           a.brand(href="/") Nodeca
 
-          .container
-            .nav-collapse.collapse
-              ul.nav
-                - each item in menus.common.topnav
-                  li: a(href=item.link)= t(item.title)
+          .nav-collapse.collapse
+            ul.nav
+              - each item in menus.common.topnav
+                li: a(href=item.link)= t(item.title)
 
-      ul.breadcrumb
+    .container
+
+      ul.breadcrumbs
         li
-          a(href='#') breadcrumbs
-          span.divider /
+          a(href='#') Breadcrumbs
         li
-          a(href='#') should
-          span.divider /
+          a(href='#') Should
         li
-          a(href='#') be
-          span.divider /
+          a(href='#') Be
         li
-          a(href='#') here
+          a(href='#') Here
 
       #contents!= content
       #online!= count_online_users()
