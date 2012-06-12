@@ -3,7 +3,7 @@ html
   head
     title Nodeca admin panel
 
-    link(rel="stylesheet",href=asset_path('app.css'))
+    link(rel='stylesheet',href=asset_path('admin/app.css'))
 
     script(type="text/javascript")!= asset_include('modernizr.custom.js')
 
@@ -14,22 +14,36 @@ html
     script(src=asset_path('app.js'))
 
   body
-    #menu
-      ul
-        - each item in menus.admin.topnav
-          li: a(href=item.link)= t(item.title)
 
-    #leftpanel
-      #tools
-        ul
-          - each item in menus.admin.leftpanel
-            li: a(href=item.link)= t(item.title)
+    nav.navbar.navbar-fixed-top
+      .navbar-inner
+        .container-fluid
+          ul.nav
+            - each item in menus.admin.topnav
+              li: a(href=item.link)= t(item.title)
 
-    #contents
-      #breadcrumbs
-        p breadcrumbs should be here
 
-      p!= content
+    .container-fluid
+      .row-fluid
 
-    #online!= count_online_users()
+        // Menu sidebar
+        .span2
+          ul.nav.nav-list.well
+        
+            - each item in menus.admin.leftpanel
+              li: a(href=item.link)= t(item.title)
 
+        // Content
+        .span10
+
+          ul.breadcrumbs
+            li
+              a(href='#') Breadcrumbs
+            li
+              a(href='#') Should
+            li
+              a(href='#') Be
+            li
+              a(href='#') Here
+
+          != content
