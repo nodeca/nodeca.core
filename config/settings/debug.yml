@@ -1,0 +1,13 @@
+setting_schemas:
+  global:
+    debug_enabled:
+      type: boolean
+      group: debug
+
+    debug_ip:
+      type: string
+      group: debug
+
+    debug_users:
+      type: users
+      group: debug

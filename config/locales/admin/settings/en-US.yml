@@ -2,16 +2,17 @@ i18n:
   en-US:
     admin:
       settings:
-        image_group_title: Image
+        debug_group:
+          title: Debug mode
 
-        image_processing_lib_title: Image processing lib 
-        image_processing_lib_description: Choose image processing lib
-        magick_path_title: Path to ImageMagick
-        magick_path_description: Write path to ImageMagick
+        debug_enabled:
+          title: Activate Debug Mode
+          description: Set this setting to 'yes' to have debug information shown to all users with access to your ACP.
 
-        frendly_urls_group_title: Frendly Urls
-        
-        friendly_url_title:  Type
-        friendly_url_description: Enabling friendly URLs
-        friendly_url_registered_title: URL for Registered Users
-        friendly_url_registered_description: Setting this value to 'Yes' or 'No'
+        debug_ip:
+          title: Debug Mode for a specific IP-Address
+          description: Enter your IP address here, so that debug mode will only run for you. 
+
+        debug_users:
+          title: User
+          description: Choose users for which your forums should run in Debug Mode.
