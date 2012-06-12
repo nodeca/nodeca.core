@@ -18,7 +18,7 @@ mixin display_value(name, value, type)
     default
       mixin dispay_sting(name, value)
 
-h1= t('admin.settings.' + group_name + '_group_title')
+h1= t('admin.settings.' + group_name + '_group.title')
 
 form(name="settings", action="#")
   ul
@@ -26,8 +26,8 @@ form(name="settings", action="#")
       li
         .setting
           .setting_header
-            p= t('admin.settings.' + name + '_title')
+            p= t('admin.settings.' + name + '.title')
           .setting_body
-            p= t('admin.settings.' + name + '_description')
+            p= t('admin.settings.' + name + '.description')
             mixin display_value(name, setting.default, setting.type)
   input(type="button", value="Save", onclick="saveSettings()")
