@@ -2,4 +2,5 @@
 
 //= require jquery/jquery
 //= require underscore
+//= require bootstrap/bootstrap
 
