@@ -1,11 +1,12 @@
 /**
 
  *= require bootstrap/bootstrap
- *= require bootstrap/bootstrap-responsive
-
+ 
  *= require jquery.noty/noty
 
  *= require common/app
  *= require forum/app
+
+*= require bootstrap/bootstrap-responsive
 
  **/
