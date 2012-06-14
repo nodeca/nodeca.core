@@ -2,7 +2,7 @@ i18n:
   en-US:
     core:
       title: Nodeca core application
-    menus:
-      common:
+    common:
+      menus:
         topnav:
           admin: Admin
