@@ -2,5 +2,7 @@
 
 //= require jquery/jquery
 //= require underscore
-//= require bootstrap/bootstrap
+//= bootstrap/bootstrap
+//= require babelfish-runtime
+//= require pointer
 
