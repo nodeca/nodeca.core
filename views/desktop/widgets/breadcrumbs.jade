@@ -2,13 +2,12 @@ ul.breadcrumbs
   - each item in widgets.breadcrumbs
     // each item has fields:
     //   text   (String)  - link text
-    //   route  (String)  - routing rule is optional
-    //   params (Object)  - routing rule params is optional
+    //   route  (String)  - routing rule (optional). Ex: "forum.thread.show".
+    //   params (Object)  - routing params (optional). See routing rules in config.
     li
-      - item.params = item.params || {}
       - if (!!item.route)
         // link
         a(href=link_to(item.route, item.params))= item.text
       - else
-        // only text
+        // text only 
         #{item.text}
