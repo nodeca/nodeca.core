@@ -2,8 +2,8 @@ i18n:
   en-US:
     core:
       title: Nodeca admin panel
-    menus:
-      admin:
+    admin:
+      menus:
         topnav:
           system: System
         leftpanel:
