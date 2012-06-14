@@ -1,0 +1,5 @@
+ul.breadcrumbs
+  - each link in widgets.breadcrumbs.path
+    li
+      a(href=link_to(link[1], link[2] || {}))= link[0]
+  li= widgets.breadcrumbs.current
