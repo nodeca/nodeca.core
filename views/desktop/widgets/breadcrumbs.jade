@@ -1,5 +1,9 @@
 ul.breadcrumbs
-  - each link in widgets.breadcrumbs.path
+  - each item in widgets.breadcrumbs
     li
-      a(href=link_to(link[1], link[2] || {}))= link[0]
-  li= widgets.breadcrumbs.current
+      - if (item.length === 3)
+        a(href=link_to(item[1], item[2]))= item[0]
+      - else if (item.length === 2)
+        a(href=link_to(item[1], {}))= item[0]
+      - else
+        #{item[0]}
