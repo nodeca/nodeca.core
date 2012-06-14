@@ -1,9 +1,13 @@
 ul.breadcrumbs
   - each item in widgets.breadcrumbs
+    // each item has fields:
+    //   value     (String)  - text
+    //   [o]route  (String)  - routing rule
+    //   [o]params (Object)  - routing rule params 
     li
-      - if (item.length === 3)
-        a(href=link_to(item[1], item[2]))= item[0]
-      - else if (item.length === 2)
-        a(href=link_to(item[1], {}))= item[0]
+      - if (!!item.params)
+        a(href=link_to(item.route, item.params))= item.value
+      - else if (!!item.route)
+        a(href=link_to(item.route, {}))= item.value
       - else
-        #{item[0]}
+        #{item.value}
