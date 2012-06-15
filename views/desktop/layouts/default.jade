@@ -30,5 +30,41 @@ html.no-js
 
     .container
 
-      #contents!= content
-      #online!= count_online_users()
+      != content
+
+      footer.footer
+        ul.footer-nav.clearfix
+          li
+            a(href='#') About
+          li
+            a(href='#') Contacts
+          li
+            a(href='#') Terms
+          li
+            a(href='#') Help
+
+          li.dropup
+            a.dropdown-toggle(href='#',data-toggle='dropdown') Language
+              b.caret
+            ul.dropdown-menu
+              li
+                a(href='#') English
+              li
+                a(href='#') Russian
+
+          li.dropup
+            a.dropdown-toggle(href='#',data-toggle='dropdown') Theme
+              b.caret
+            ul.dropdown-menu
+              li
+                a(href='#') Black & White
+              li
+                a(href='#') Yellow
+
+        p.copyright
+          | Powered by 
+          a(href='#') Nodeca
+          | , social platform by 
+          a(href='#') RC Design
+        
+        //#online!= count_online_users()
