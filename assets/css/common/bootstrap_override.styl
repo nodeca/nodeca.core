@@ -2,7 +2,7 @@
   position static
   margin-bottom baseLineHeight
 
-// Responsive button (3 lines) with pure css
+// Responsive menu button (3 lines) with pure css
 .navbar .btn-navbar > span
   display block
   width 20px
@@ -22,5 +22,11 @@
 
 .btn
   font-family sansWideFontFamily
+  background-image none
+  transition background-color 0.5s ease
+  &:hover
+    background-color #999
+    transition background-color 0.5s ease
+
 .btn-primary
   font-weight bold
