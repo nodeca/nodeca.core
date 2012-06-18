@@ -4,10 +4,26 @@
 .hlist
   margin 0
   > li
-    display inline
+    display inline-block
     &:after
       content ','
       margin-right .5em
+    &:last-child:after
+      content " "
+
+// the same, but for definitions
+
+.def-hlist
+    margin 0
+    > dt
+      font-weight: normal
+      display inline-block
+    > dd
+      display inline-block
+      &:after
+        content ","
+      &:last-child:after
+        content ""
 
 //
 // Universal container for page info
