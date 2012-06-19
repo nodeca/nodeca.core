@@ -13,13 +13,15 @@
 
 // Brand text
 .navbar .brand
-  text-shadow 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 30px rgba(255, 255, 255, 0.3)
-  color black
+  //text-shadow 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 30px rgba(255, 255, 255, 0.3)
+  //color black
+  color gray
   font-weight bold
   font-family sansWideFontFamily
-  padding-right 0
-  float right
+  //padding-right 0
+  //float right
 
+// Buttons tweaks
 .btn
   font-family sansWideFontFamily
   background-image none
@@ -27,6 +29,9 @@
   transition background-color 0.5s ease
   &:hover
     transition background-color 0.5s ease
-
+.btn-navbar
+  min-width 0
 .btn-primary
   font-weight bold
+.btn.disabled, .btn[disabled]
+  opacity .4
