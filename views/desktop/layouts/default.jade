@@ -28,6 +28,24 @@ html.no-js
               - each item in menus.common.topnav
                 li: a(href=item.link)= t(item.title)
 
+            ul.nav.pull-right
+              li.dropdown
+                a.dropdown-toggle.icon-user(href='#', data-toggle='dropdown')
+                  | vasya@pupkin.net
+                  b.caret
+                ul.dropdown-menu
+                  li
+                    a(href='#') Admin
+                  li.divider
+                  li
+                    a(href='#') Settings
+                  li
+                    a.icon-ok(href='#') No images (fast)
+                  li.divider
+                  li
+                    a(href='#') Exit
+
+
     .container
 
       != content
