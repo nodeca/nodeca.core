@@ -7,7 +7,7 @@
 
 
 //= depend_on nodeca
-//= require minimizer
+//= require modernizr
 
 
 /*global window, $, _, Modernizr, yepnope, nodeca*/
