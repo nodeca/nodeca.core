@@ -2,7 +2,6 @@
 
 
 //= require nodeca
-//= require nodeca-io
 
 
 nodeca.io.init();
