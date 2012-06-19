@@ -6,11 +6,11 @@
  **/
 
 
-/*global window, $, _, Faye, nodeca*/
-
-
 //= depend_on nodeca
 //= require faye-browser
+
+
+/*global window, $, _, Faye, nodeca*/
 
 
 (function () {
