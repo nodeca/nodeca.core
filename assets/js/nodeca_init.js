@@ -1,15 +1,3 @@
-/**
- *  nodeca.loader
- *
- *  This module provides namespace assets loading for nodeca/nlib based
- *  applcations.
- **/
-
-
-//= depend_on nodeca
-//= require modernizr
-
-
 /*global window, $, _, Modernizr, yepnope, nodeca*/
 
 
@@ -59,7 +47,7 @@
   }
 
   // loader that requries assets for given namespace
-  nodeca.load = function load(namespace, callback) {
+  window.nodeca_init = function nodeca_init(namespace, callback) {
     var assets = find_assets(namespace);
 
     // TODO: load assets from localStorage if some were found.
