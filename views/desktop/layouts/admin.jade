@@ -3,15 +3,10 @@ html
   head
     title Nodeca admin panel
 
-    link(rel='stylesheet',href=asset_path('admin/app.css'))
-
-    script(type="text/javascript")!= asset_include('modernizr.custom.js')
-
     != javascripts()
     != stylesheets()
 
-    script(src=asset_path('lib.js'))
-    script(src=asset_path('app.js'))
+    link(rel='stylesheet',href=asset_path('admin/app.css'))
 
   body
 
