@@ -7,8 +7,8 @@ html.no-js
 
     script(type="text/javascript")!= asset_include('modernizr.custom.js')
 
-    script
-      window.REALTIME_ID = "!{random()}";
+    != javascripts()
+    != stylesheets()
 
     script(src=asset_path('lib.js'))
     script(src=asset_path('app.js'))
