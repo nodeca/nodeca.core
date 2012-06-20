@@ -9,11 +9,10 @@ nodeca.io.init();
 
 $(function () {
   'use strict';
-
-  var $online = $('#online');
-  nodeca.io.subscribe('/stats/users_online', function (count) {
-    $online.text(count);
-  }).fail(function (err) {
-    nodeca.logger.error('Failed subscribe for stats updates: ' + err);
+  $('body').on('click.collapse.data-api', '[data-toggle=collapse]', function ( e ) {
+    // Bootstrap.Collapse calls e.preventDefault() only when there's no
+    // data-target attribute. We don't want URL to be changed, so we are
+    // forcing prevention of default behavior.
+    e.preventDefault();
   });
 });
