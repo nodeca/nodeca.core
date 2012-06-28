@@ -1,13 +1,24 @@
-.vote-up:before
+.vote-up
   margin-left 0
   margin-right .1em
   color #080
-  text-shadow 1px 1px 1px rgba(127, 127, 127, 0.3)
-
-  content '\2b06'
-.vote-down:before
+  &:hover
+    color #080
+  &:before
+  	content '\2b06'
+.vote-down
   margin-left .1em
   margin-right 0
   color #c00
-  content '\2b07'
+  &:hover
+    color #c00
+  &:before
+    content '\2b07'
+
+.vote-up, .vote-down
+  transition all 0.5s ease
   text-shadow 1px 1px 1px rgba(127, 127, 127, 0.3)
+  &:hover
+    text-decoration none
+    text-shadow 0px 0px 10px rgba(127, 127, 127, 0.8)
+
