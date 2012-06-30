@@ -26,14 +26,14 @@ html
     .container-fluid
       .row-fluid
 
-        // Menu sidebar
+        //- Menu sidebar
         .span2
           ul.nav.nav-list.well
         
             - each item in menus.admin.leftpanel
               li: a(href=item.link)= t(item.title)
 
-        // Content
+        //- Content
         .span10
 
           ul.breadcrumbs
