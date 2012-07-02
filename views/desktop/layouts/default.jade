@@ -28,6 +28,10 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
               - each item in menus.common.topnav
                 li: a(href=item.link)= t(item.title)
 
+            ul.nav
+              - each item in menus.common.admin
+                li: a(href=item.link)= t(item.title)
+
             form.navbar-search
               input.input-medium.search-query(type='text', placeholder='Search')
               .icon-search

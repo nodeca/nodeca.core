@@ -1,7 +1,7 @@
 menus:
   common:
-    topnav:
-      admin:
+    admin:
+      dashboard:
         to: admin.dashboard
         priority: 500
         check_permissions: true

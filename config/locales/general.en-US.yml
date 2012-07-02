@@ -4,5 +4,5 @@ i18n:
       title: Nodeca core application
     common:
       menus:
-        topnav:
-          admin: Admin
+        admin:
+          dashboard: Admin
