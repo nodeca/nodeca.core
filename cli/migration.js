@@ -37,11 +37,11 @@ module.exports.run = function (args, callback) {
       callback(err);
     }
    
-    var migration_model = nodeca.models.core.migration;
+    var Migration = nodeca.models.core.Migration;
     var migrator = nodeca.runtime.migrator;
 
     // fetch used migrations from db
-    migration_model.getLastState(function(err, last_state){
+    Migration.getLastState(function(err, last_state){
       // find new migrations
       migrator.checkMigrations(last_state, function(err, new_migrations){
         if (0 === new_migrations.length) {
@@ -74,7 +74,7 @@ module.exports.run = function (args, callback) {
             }
 
             // All ok. Write step to db
-            migration_model.markPassed(migration.app_name, migration.step, function(err){
+            Migration.markPassed(migration.app_name, migration.step, function(err){
               if (!err){
                 nodeca.logger.log(migration_title +' -- success');
               } else {
