@@ -4,7 +4,7 @@
 /*global nodeca*/
 
 var Path = require('path');
-
+var Fs = require('fs');
 // nodeca
 var NLib = require('nlib');
 
@@ -20,6 +20,22 @@ function get_app_path(app_name){
     }
   }
   return null;
+}
+
+function seed_run(app_name, seed_path, callback) {
+  console.log('Applying seed(s)...\n');
+  require(seed_path)(function(err){
+    var prefix = '  ' + app_name + ':' + Path.basename(seed_path)+ ' -- ';
+
+    if (err) {
+      console.log(prefix + 'failed');
+      callback(err);
+      return;
+    }
+
+    console.log(prefix + 'success');
+    process.exit(0);
+  });
 }
 
 module.exports.parserParameters= {
@@ -50,6 +66,15 @@ module.exports.commandLineArguments = [
     }
   },
   {
+    args: ['-n'],
+    options: {
+      metavar: 'SEED_NUMBER',
+      dest: 'number',
+      help: 'run seed by number',
+      type: 'int'
+    }
+  },
+  {
     args: ['seed'],
     options: {
       metavar: 'SEED_NAME',
@@ -63,6 +88,7 @@ module.exports.commandLineArguments = [
 module.exports.run = function (args, callback) {
   var app_name = args.app;
   var seed_name = args.seed;
+
   Async.series([
     require('../lib/init/redis'),
     require('../lib/init/mongoose'),
@@ -72,7 +98,7 @@ module.exports.run = function (args, callback) {
       callback(err);
     }
 
-    // execute seed
+    // execute seed by name
     if (!!app_name && !!seed_name){
       var env = nodeca.runtime.env;
       if ('development' !== env && 'testing' !== env && !args.force) {
@@ -81,24 +107,12 @@ module.exports.run = function (args, callback) {
       }
 
       var seed_path = Path.join(get_app_path(app_name), SEEDS_DIR, seed_name);
-      if (!Path.existsSync(seed_path)){
+      if (!Fs.existsSync(seed_path)){
         console.log('Error: Application "' + app_name + '"does not have "' + seed_name);
         process.exit(1);
       }
 
-      console.log('Applying seed(s)...\n');
-      require(seed_path)(function(err){
-        var prefix = '  ' + app_name + ':' + seed_name + ' -- ';
-
-        if (err) {
-          console.log(prefix + 'failed');
-          callback(err);
-          return;
-        }
-
-        console.log(prefix + 'success');
-        process.exit(0);
-      });
+      seed_run(app_name, seed_path, callback);
     }
     else {
       var apps;
@@ -109,22 +123,38 @@ module.exports.run = function (args, callback) {
         apps = nodeca.runtime.apps;
       }
 
-      console.log('Available seeds:\n');
-
+      // collect seeds
+      var seed_list = [];
       Async.forEachSeries(apps, function(app, next_app){
         var seed_dir = Path.join(app.root, SEEDS_DIR);
         FsTools.walk(seed_dir, /w*\.js$/, function(file, stats, next_file) {
-          console.log('  ' + app.name + ':' + Path.basename(file));
+          seed_list.push({
+            name: app.name,
+            seed_path: file
+          });
           next_file();
         }, next_app);
       }, function(err){
         if (err) {
           callback(err);
         }
+        // display seed list
+        if (!args.number) {
+          console.log('Available seeds:\n');
+          for (var i=0; i < seed_list.length; i++) {
+            console.log('  ' + (i+1) + '. '+ seed_list[i].name + ': ' + Path.basename(seed_list[i].seed_path));
+          }
+          
 
-        console.log('\nSeeds are shown in `<APP>:<SEED_NAME>` form.');
-        console.log('See `seed --help` for details');
-        process.exit(0);
+          console.log('\nSeeds are shown in `<APP>: <SEED_NAME>` form.');
+          console.log('See `seed --help` for details');
+          process.exit(0);
+        }
+        // execute seed by number
+        else {
+          var seed_pos = args.number - 1;
+          seed_run(seed_list[seed_pos].name, seed_list[seed_pos].seed_path, callback);
+        }
       });
     }
   });
