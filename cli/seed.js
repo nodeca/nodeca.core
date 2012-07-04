@@ -23,7 +23,7 @@ function get_app_path(app_name){
 }
 
 function seed_run(app_name, seed_path, callback) {
-  console.log('Applying seed(s)...\n');
+  console.log('Applying seed...\n');
   require(seed_path)(function(err){
     var prefix = '  ' + app_name + ':' + Path.basename(seed_path)+ ' -- ';
 
@@ -88,6 +88,7 @@ module.exports.commandLineArguments = [
 module.exports.run = function (args, callback) {
   var app_name = args.app;
   var seed_name = args.seed;
+  var seed_pos =  args.number ? args.number - 1 : -1;
 
   Async.series([
     require('../lib/init/redis'),
@@ -138,8 +139,15 @@ module.exports.run = function (args, callback) {
         if (err) {
           callback(err);
         }
+        // execute seed by number
+        if (!!args.number && seed_list[seed_pos]) {
+          seed_run(seed_list[seed_pos].name, seed_list[seed_pos].seed_path, callback);
+        }
         // display seed list
-        if (!args.number) {
+        else {
+          if (!!args.number) {
+            console.log(args.number + ' seed not found\n');
+          }
           console.log('Available seeds:\n');
           for (var i=0; i < seed_list.length; i++) {
             console.log('  ' + (i+1) + '. '+ seed_list[i].name + ': ' + Path.basename(seed_list[i].seed_path));
@@ -149,11 +157,6 @@ module.exports.run = function (args, callback) {
           console.log('\nSeeds are shown in `<APP>: <SEED_NAME>` form.');
           console.log('See `seed --help` for details');
           process.exit(0);
-        }
-        // execute seed by number
-        else {
-          var seed_pos = args.number - 1;
-          seed_run(seed_list[seed_pos].name, seed_list[seed_pos].seed_path, callback);
         }
       });
     }
