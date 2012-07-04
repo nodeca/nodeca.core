@@ -1,12 +1,20 @@
 
-// Move logo to left on narrow screens
+// Fix menu elements
 
 @media (max-width: 979px)
+
+  //Move logo to left on narrow screens
   .navbar .brand
     float left
     padding-left 10px
 
+  // update search icon's offset
   .navbar-search
     .icon-search
       top 14px
       left 23px
+
+  // remove active item underline
+  .navbar .nav .active
+    &:before
+      display none;
