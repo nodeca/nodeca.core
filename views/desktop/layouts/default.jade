@@ -15,6 +15,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
   body
     nav.navbar.navbar-fixed-top
+      include ../widgets/menu
       .navbar-inner
 
         .container
@@ -24,9 +25,12 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
           a.brand(href="/") Nodeca
 
           .nav-collapse.collapse
-            ul.nav
-              - each item in menus.common.topnav
-                li: a(href=item.link)= t(item.title)
+
+            mixin main_menu(menus.common.topnav, head.route)
+
+            //-ul.nav
+              //-- each item in menus.common.topnav
+                //-li: a(href=item.link)= t(item.title)
 
             ul.nav
               - each item in menus.common.admin

@@ -18,7 +18,8 @@ function build(ns, cfg, permissions, router) {
     var array_ns = ns.split('.');
     item = {
       title: array_ns[0] + '.' + 'menus.' + array_ns.slice(1) + '.' + key,
-      priority: opts.priority
+      priority: opts.priority,
+      to: opts.to
     };
 
     if (opts.to) {

@@ -1,0 +1,7 @@
+mixin main_menu(menu, current_route)
+  ul.nav
+    - each item in menus.common.topnav
+      - if (current_route === item.to)
+        li: a(href=item.link, class='active')= t(item.title)
+      - else
+        li: a(href=item.link)= t(item.title)
