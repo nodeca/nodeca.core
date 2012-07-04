@@ -28,10 +28,6 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
             mixin main_menu(menus.common.topnav, head.route)
 
-            //-ul.nav
-              //-- each item in menus.common.topnav
-                //-li: a(href=item.link)= t(item.title)
-
             ul.nav
               - each item in menus.common.admin
                 li: a(href=item.link)= t(item.title)
