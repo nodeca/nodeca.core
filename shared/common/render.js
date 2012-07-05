@@ -68,9 +68,7 @@ function prepare(locale, theme, path, layouts) {
   }
 
   return function (data) {
-    var // body is a simple string
-        // head is a list of strings like `<link href=...` and so on
-        out = {body: view(data), head: []};
+    var html = view(data);
 
     if (layouts && layouts.length) {
       _.each(layouts.slice().reverse(), function (path) {
@@ -81,14 +79,12 @@ function prepare(locale, theme, path, layouts) {
           return;
         }
 
-        data.content = out.body;
-        out.body = fn(data);
+        data.content = html;
+        html = fn(data);
       });
     }
 
-    // TODO: fill in out.head
-
-    return out;
+    return html;
   };
 }
 
