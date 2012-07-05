@@ -21,36 +21,18 @@ function find_path(obj, path) {
 }
 
 
-function get_layouts_stack(theme, layout) {
-  var stack = [],
-      parts = (layout || '').split('.'),
-      func;
+function get_layouts_stack(layout) {
+  var stack = layout.split('.'), i, l;
 
-  // TODO: In-memory caching
-
-  _.each((layout || '').split('.'), function (part, idx, parts) {
-    var path = parts.slice(0, idx + 1).join('.');
-
-    theme = theme && theme[part];
-
-    if (!theme) {
-      nodeca.logger.warn("Layout " + path + " not found");
-      return;
-    }
-
-    if (!_.isFunction(theme)) {
-      nodeca.logger.warn("Layout " + path + " is not a function");
-      return;
-    }
-
-    stack.push(theme);
-  });
+  for (i = 1, l = stack.length; i < l; i++) {
+    stack[i] = stack[i - 1] + '.' + stack[i];
+  }
 
   return stack;
 }
 
 
-function prepare(locale, theme, path, layouts) {
+function prepare(locale, theme, path, layout) {
   var view;
 
   if (!nodeca.runtime.views[locale]) {
@@ -70,8 +52,8 @@ function prepare(locale, theme, path, layouts) {
   return function (data) {
     var html = view(data);
 
-    if (layouts && layouts.length) {
-      _.each(layouts.slice().reverse(), function (path) {
+    if (layout) {
+      _.each(get_layouts_stack(layout).reverse(), function (path) {
         var fn = find_path(nodeca.runtime.views[locale][theme].layouts, path);
 
         if (!_.isFunction(fn)) {
@@ -92,8 +74,8 @@ function prepare(locale, theme, path, layouts) {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-module.exports = function render(locale, theme, path, layouts, data) {
-  return prepare(locale, theme, path, layouts)(data);
+module.exports = function render(locale, theme, path, layout, data) {
+  return prepare(locale, theme, path, layout)(data);
 };
 
 
