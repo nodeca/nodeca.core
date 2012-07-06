@@ -4,7 +4,7 @@ i18n:
       title: Nodeca admin panel
     admin:
       menus:
-        topnav:
+        navbar:
           system: System
         leftpanel:
           settings: Global settings

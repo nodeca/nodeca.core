@@ -7,7 +7,7 @@ menus:
         check_permissions: true
 
   admin:
-    topnav:
+    navbar:
       system:
         to: admin.dashboard
     leftpanel:

@@ -56,9 +56,9 @@ function build(ns, cfg, permissions, router) {
  *      // ->
  *      //    {
  *      //      common: {
- *      //        topnav: [
+ *      //        navbar: [
  *      //          {
- *      //            title: menus.common.topnav.profile,
+ *      //            title: menus.common.navbar.profile,
  *      //            link: "http://nodeca.org/user/profile"
  *      //          },
  *      //          // ...
