@@ -6,5 +6,6 @@
 //= require babelfish-runtime
 //= require pointer
 //= require jade/runtime
+//= require yepnope.preload
 
 //= require_tree ./lib

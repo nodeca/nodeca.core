@@ -29,7 +29,7 @@ html
         //- Menu sidebar
         .span2
           ul.nav.nav-list.well
-        
+
             - each item in menus.admin.leftpanel
               li: a(href=item.link)= t(item.title)
 
@@ -46,4 +46,4 @@ html
             li
               a(href='#') Here
 
-          != content
+          div(data-nodeca-layout-content="admin")!= content
