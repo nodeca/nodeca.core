@@ -10,6 +10,6 @@ menus:
     navbar:
       system:
         to: admin.dashboard
-    leftpanel:
+    sidebar:
       settings:
         to: admin.settings.global.index

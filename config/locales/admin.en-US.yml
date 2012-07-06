@@ -6,5 +6,5 @@ i18n:
       menus:
         navbar:
           system: System
-        leftpanel:
+        sidebar:
           settings: Global settings
