@@ -1,8 +1,8 @@
 i18n:
   en-US:
-    core:
-      title: Nodeca core application
     common:
+      core:
+        title: Nodeca core application
       menus:
         admin:
           dashboard: Admin

@@ -1,8 +1,8 @@
 i18n:
   en-US:
-    core:
-      title: Nodeca admin panel
     admin:
+      core:
+        title: Nodeca admin panel
       menus:
         navbar:
           system: System
