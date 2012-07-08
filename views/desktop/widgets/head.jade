@@ -1,1 +1,13 @@
-title #{head.title}
+
+//- Helper to inject data into <HEAD>
+//- takes info from env.response.data.head
+
+- if (head)
+  - if (head.title)
+    title #{head.title}
+  //- description
+  - if (head.desc)
+    meta(name='description', content=head.desc)
+  //- keywords
+  - if (head.keywords)
+    meta(name='description', content=head.keywords)
