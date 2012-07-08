@@ -3,18 +3,15 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
   head
     include ../widgets/head
 
-    link(rel='stylesheet', href=asset_path('app.css'))
+    - for (var i in head.assets)
+      - if ('css' === head.assets[i].type)
+        link(rel='stylesheet', href=head.assets[i].link)
 
     script(type="text/javascript")!= asset_include('loader.js')
 
     script(type="text/javascript")
       window.REALTIME_ID = "!{random()}";
-      yepnope.load([
-        "preload!!{asset_path('app.css')}"
-      ]);
-
-    script(src=asset_path('lib.js'))
-    script(src=asset_path('app.js'))
+      nodeca.runtime.load(!{JSON.stringify(head.assets)}, 'js');
 
   body
     nav.navbar.navbar-fixed-top
