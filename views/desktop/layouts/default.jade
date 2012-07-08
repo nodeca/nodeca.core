@@ -5,10 +5,13 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
     link(rel='stylesheet', href=asset_path('app.css'))
 
-    script(type="text/javascript")!= asset_include('modernizr.js')
+    script(type="text/javascript")!= asset_include('loader.js')
 
-    script
+    script(type="text/javascript")
       window.REALTIME_ID = "!{random()}";
+      yepnope.load([
+        "preload!!{asset_path('app.css')}"
+      ]);
 
     script(src=asset_path('lib.js'))
     script(src=asset_path('app.js'))
