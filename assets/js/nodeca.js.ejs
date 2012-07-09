@@ -3,16 +3,11 @@
 //= require_self
 //= require_tree ./nodeca
 
-(function () {
+(function (nodeca) {
   'use strict';
 
-
-  var nodeca = window.nodeca = {
-    runtime: {
-      env:      "<%= env() %>",
-      version:  "<%= version() %>"
-    }
-  };
+  nodeca.runtime.env      = "<%= env() %>";
+  nodeca.runtime.version  = "<%= version() %>";
 
   <% if ('development' === env()) { %>
     nodeca.logger = {
@@ -29,6 +24,7 @@
       debug  : $.noop
     };
   <% } %>
-}());
+
+}(window.nodeca || window.nodeca = {}));
 
 // vim: syntax=javascript
