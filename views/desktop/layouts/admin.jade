@@ -12,7 +12,10 @@ html
 
     script(type="text/javascript")
       window.REALTIME_ID = "!{random()}";
-      nodeca.runtime.load(!{JSON.stringify(head.assets)});
+      nodeca.runtime.init(
+        !{JSON.stringify(head.assets)},
+        !{jason(nodeca.runtime.client_router)}
+      );
 
   body
 

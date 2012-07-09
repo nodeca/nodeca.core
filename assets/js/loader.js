@@ -57,4 +57,27 @@
 
     d.wait();
   };
+
+
+  nodeca.runtime.init = function (assets, routes) {
+    nodeca.runtime.load(assets, function () {
+      var router = nodeca.runtime.router = new Pointer();
+
+      _.each(routes, function (options) {
+        var name = options.name;
+
+        router.addRoute(options.pattern, {
+          name: options.name,
+          prefix: options.prefix,
+          params: options.params,
+          meta: {
+            name: options.name,
+            func: function (params, options, callback) {
+              nodeca.io.apiTree(name, params, options, callback);
+            }
+          }
+        });
+      });
+    });
+  };
 }(window.nodeca || window.nodeca = {}));
