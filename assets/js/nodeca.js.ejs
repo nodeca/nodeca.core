@@ -1,4 +1,4 @@
-/*global window*/
+/*global window, nodeca*/
 
 //= require_self
 //= require_tree ./nodeca
@@ -6,13 +6,8 @@
 (function () {
   'use strict';
 
-
-  var nodeca = window.nodeca = {
-    runtime: {
-      env:      "<%= env() %>",
-      version:  "<%= version() %>"
-    }
-  };
+  nodeca.runtime.env      = "<%= env() %>";
+  nodeca.runtime.version  = "<%= version() %>";
 
   <% if ('development' === env()) { %>
     nodeca.logger = {
@@ -29,6 +24,7 @@
       debug  : $.noop
     };
   <% } %>
+
 }());
 
 // vim: syntax=javascript

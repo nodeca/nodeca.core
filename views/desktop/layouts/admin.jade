@@ -6,13 +6,15 @@ html
     - for (var i in head.assets)
       - if ('css' === head.assets[i].type)
         link(rel='stylesheet', href=head.assets[i].link, media=head.assets[i].media)
-        - head.assets[i].link = 'preload!' + head.assets[i].link
 
     script(type="text/javascript")!= asset_include('loader.js')
 
     script(type="text/javascript")
       window.REALTIME_ID = "!{random()}";
-      nodeca.runtime.load(!{JSON.stringify(head.assets)});
+      nodeca.runtime.init(
+        !{JSON.stringify(head.assets)},
+        !{jason(nodeca.runtime.client_routes)}
+      );
 
   body
 

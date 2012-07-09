@@ -20,12 +20,26 @@ $(function () {
   //
   // Observe quicksearch focus to tweak icon style
   //
-  $('.navbar-search .search-query').focus(
-    function(){
-        $(this).next('div').addClass('focused');
-    }).blur(
-    function(){
-        $(this).next('div').removeClass('focused');
-    });
+  $('.navbar-search .search-query')
+    .focus(function (){ $(this).next('div').addClass('focused'); })
+    .blur(function (){ $(this).next('div').removeClass('focused'); });
 
+
+  $('body').on('click', 'a', function ( e ) {
+    var href  = $(this).attr('href'),
+        match = nodeca.runtime.router.match(href);
+
+    if (match) {
+      e.preventDefault();
+      match.meta.func(match.params, function (err, msg) {
+        console.log(msg);
+        if (confirm('Client-side rendering is not yet implemented. Go to new URL?')) {
+          window.location.pathname = href;
+        }
+      });
+      return false;
+    }
+
+    return true;
+  });
 });
