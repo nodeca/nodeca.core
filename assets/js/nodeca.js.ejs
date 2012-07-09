@@ -3,7 +3,7 @@
 //= require_self
 //= require_tree ./nodeca
 
-(function () {
+var nodeca = window.nodeca = (function (nodeca) {
   'use strict';
 
   nodeca.runtime.env      = "<%= env() %>";
@@ -25,6 +25,7 @@
     };
   <% } %>
 
-}());
+  return nodeca;
+}({}));
 
 // vim: syntax=javascript
