@@ -1,9 +1,9 @@
-/*global window*/
+/*global window, nodeca*/
 
 //= require_self
 //= require_tree ./nodeca
 
-(function (nodeca) {
+(function () {
   'use strict';
 
   nodeca.runtime.env      = "<%= env() %>";
@@ -25,6 +25,6 @@
     };
   <% } %>
 
-}(window.nodeca || window.nodeca = {}));
+}());
 
 // vim: syntax=javascript

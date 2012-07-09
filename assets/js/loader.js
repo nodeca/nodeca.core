@@ -3,7 +3,7 @@
 //= require_self
 
 
-(function (nodeca) {
+var nodeca = window.nodeca = (function (nodeca) {
   nodeca.client   = {};
   nodeca.server   = {};
   nodeca.shared   = {};
@@ -43,15 +43,22 @@
   };
 
 
+  var cached_assets = {};
+
+
   nodeca.runtime.load = function (assets, callback) {
     var i, l, d = new DefferedAssets(callback);
 
     // simple version of Array#forEach
     for (i = 0, l = assets.length ; i < l ; i++) {
-      if ('css' === assets[i].type && assets[i].media) {
-        yepnope.injectCss(assets[i].link, d.listen(), {media: assets[i].media});
-      } else {
-        yepnope({load: assets[i].link, complete: d.listen()});
+      // do not double-load assets - yep nope fires callbacks really strange
+      if (!cached_assets[assets[i].link]) {
+        cached_assets[assets[i].link] = true;
+        if ('css' === assets[i].type && assets[i].media) {
+          yepnope.injectCss(assets[i].link, d.listen(), {media: assets[i].media});
+        } else {
+          yepnope({load: assets[i].link, callback: d.listen()});
+        }
       }
     }
 
@@ -59,7 +66,26 @@
   };
 
 
+  function filter(arr, test) {
+    var result = [], i, l;
+
+    for (i = 0, l = arr.length; i < l; i++) {
+      if (test(arr[i])) {
+        result.push(arr[i]);
+      }
+    }
+
+    return result;
+  }
+
+
   nodeca.runtime.init = function (assets, routes) {
+    assets = filter(assets, function (asset) {
+      cached_assets[asset.link] = ('css' === asset.type);
+      return !cached_assets[asset.link];
+    });
+
+    // all css files are injected in the template, so git rid of them
     nodeca.runtime.load(assets, function () {
       var router = nodeca.runtime.router = new Pointer();
 
@@ -80,4 +106,6 @@
       });
     });
   };
-}(window.nodeca || window.nodeca = {}));
+
+  return nodeca;
+}({}));
