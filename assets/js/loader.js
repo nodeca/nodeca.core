@@ -3,7 +3,7 @@
 //= require_self
 
 
-var assets_loader = window.assets_loader = (function () {
+var load_assets = window.load_assets = (function () {
   function collect(obj, prop) {
     var out = [], i, l;
 
@@ -16,9 +16,9 @@ var assets_loader = window.assets_loader = (function () {
     return out;
   }
 
-  function assets_loader(assets, callback) {
+  function load_assets(assets, callback) {
     yepnope({load: collect(assets, 'link'), complete: callback});
   };
 
-  return assets_loader;
+  return load_assets;
 }());
