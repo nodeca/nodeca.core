@@ -3,15 +3,16 @@ html
   head
     title Nodeca admin panel
 
-    link(rel='stylesheet',href=asset_path('admin/app.css'))
+    - for (var i in head.assets)
+      - if ('css' === head.assets[i].type)
+        link(rel='stylesheet', href=head.assets[i].link, media=head.assets[i].media)
+        - head.assets[i].link = 'preload!' + head.assets[i].link
 
-    script(type="text/javascript")!= asset_include('modernizr.js')
+    script(type="text/javascript")!= asset_include('loader.js')
 
-    script
+    script(type="text/javascript")
       window.REALTIME_ID = "!{random()}";
-
-    script(src=asset_path('lib.js'))
-    script(src=asset_path('app.js'))
+      nodeca.runtime.load(!{JSON.stringify(head.assets)});
 
   body
 

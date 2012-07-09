@@ -4,7 +4,7 @@
 
 
 module.exports = function (params, next) {
-  this.response.data = {now: (new Date).toString()};
+  this.response.data.now = (new Date).toString();
   next();
 };
 
