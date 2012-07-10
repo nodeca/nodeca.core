@@ -38,13 +38,12 @@ module.exports.run = function (args, callback) {
     NLib.init.loadSharedApiSubtree,
     NLib.init.loadClientApiSubtree,
     NLib.init.loadSettings,
+    NLib.init.initRouter,
+
     NLib.init.initTranslations,
     NLib.init.buildBundles,
 
     require('../lib/init/assets'),
-
-    NLib.init.initRouter,
-
     require('../lib/init/server'),
 
     // init repl only if it was required by `--repl` key
