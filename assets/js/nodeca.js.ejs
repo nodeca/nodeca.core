@@ -6,10 +6,11 @@
 var nodeca = window.nodeca = (function (nodeca) {
   'use strict';
 
-  nodeca.runtime.env      = "<%= env() %>";
-  nodeca.runtime.version  = "<%= version() %>";
+  nodeca.runtime          = {};
+  nodeca.runtime.env      = "<%= nodeca('runtime.env') %>";
+  nodeca.runtime.version  = "<%= nodeca('runtime.version') %>";
 
-  <% if ('development' === env()) { %>
+  <% if ('development' === nodeca('runtime.env')) { %>
     nodeca.logger = {
       assert : _.bind(console.assert || console.debug || console.log || $.noop, console),
       error  : _.bind(console.error || console.log || $.noop, console),
@@ -28,7 +29,7 @@ var nodeca = window.nodeca = (function (nodeca) {
   nodeca.runtime.router = new Pointer();
 
   // fill in routes
-  _.each(<%= jason(nodeca.runtime.routes_config) %>, function (v) {
+  _.each(<%= jason(nodeca('runtime.routes_config')) %>, function (v) {
     nodeca.runtime.router.addRoute(v[0], v[1]);
   });
 
