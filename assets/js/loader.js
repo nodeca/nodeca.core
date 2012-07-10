@@ -16,7 +16,16 @@ var load_assets = window.load_assets = (function () {
     return out;
   }
 
+  function noop() {}
+
   function load_assets(assets, callback) {
+    callback = callback || noop;
+
+    if (0 === assets.length) {
+      callback();
+      return;
+    }
+
     yepnope({load: collect(assets, 'link'), complete: callback});
   };
 
