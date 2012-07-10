@@ -278,7 +278,7 @@
 
   // responses listener
   function handle_api3_response(data) {
-    var callback = api3.callbacks[data.id], assets;
+    var callback = api3.callbacks[data.id];
 
     if (!callback) {
       // unknown response id
@@ -287,10 +287,7 @@
 
     delete api3.callbacks[data.id];
 
-    assets = (data.msg.head || {}).assets || [];
-    nodeca.runtime.load(assets, function () {
-      callback(data.msg);
-    });
+    callback(data.msg);
   }
 
 
