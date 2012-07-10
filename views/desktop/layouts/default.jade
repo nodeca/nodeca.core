@@ -12,9 +12,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
     script(type="text/javascript")
       window.REALTIME_ID = "!{random()}";
-      load_assets(!{JSON.stringify(head.assets)}, function () {
-        // init will be here
-      });
+      load_assets(!{JSON.stringify(head.assets)});
 
   body
     nav.navbar.navbar-fixed-top
