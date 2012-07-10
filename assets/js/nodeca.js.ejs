@@ -25,6 +25,13 @@ var nodeca = window.nodeca = (function (nodeca) {
     };
   <% } %>
 
+  nodeca.runtime.router = new Pointer();
+
+  // fill in routes
+  _.each(<%= jason(nodeca.runtime.routes_config) %>, function (v) {
+    nodeca.runtime.router.addRoute(v[0], v[1]);
+  });
+
   return nodeca;
 }({}));
 
