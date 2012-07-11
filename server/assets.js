@@ -26,7 +26,7 @@ function call_mincer_server(req, res) {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-module.exports = function (params, callback) {
+module.exports = function serve_assets(params, callback) {
   if (!this.origin.http) {
     callback("HTTP requests only");
     return;
