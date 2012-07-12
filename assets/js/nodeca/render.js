@@ -16,6 +16,15 @@
   'use strict';
 
 
+  var helpers = {};
+
+  _.each(['t', 'asset_include', 'config', 'random', 'link_to', 'nodeca', 'jason'], function (name) {
+    helpers[name] = function () {
+      return name + "() is not implemented yet.";
+    };
+  });
+
+
   function find_fn(path) {
     var val = nodeca.views, parts = path.split('.');
 
@@ -30,9 +39,8 @@
 
 
   nodeca.render = function (path, data) {
-    var html = find_fn(path)(data);
-
-    console.log(html, data);
-    alert('Not implemented yet');
+    var locals  = _.extend(data, helpers),
+        html    = find_fn(path)(locals);
+    $('[data-nodeca-layout-content]').html(html);
   };
 }());

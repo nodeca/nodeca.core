@@ -9,6 +9,8 @@ var nodeca = window.nodeca = (function (nodeca) {
   nodeca.runtime          = {};
   nodeca.runtime.env      = "<%= nodeca('runtime.env') %>";
   nodeca.runtime.version  = "<%= nodeca('runtime.version') %>";
+  nodeca.runtime.router   = new Pointer();
+  nodeca.runtime.i18n     = new BabelFish();
 
   <% if ('development' === nodeca('runtime.env')) { %>
     nodeca.logger = {
@@ -25,8 +27,6 @@ var nodeca = window.nodeca = (function (nodeca) {
       debug  : $.noop
     };
   <% } %>
-
-  nodeca.runtime.router = new Pointer();
 
   // fill in routes
   _.each(<%- jason(nodeca('runtime.routes_config')) %>, function (v) {
