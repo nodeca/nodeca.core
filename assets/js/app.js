@@ -40,7 +40,7 @@ $(function () {
         History.pushState(null, msg.data.head.title, href);
 
         // FIXME: use view from msg
-        nodeca.render(match.meta, msg.data);
+        nodeca.render(msg.view || match.meta, msg.data);
       });
 
       event.preventDefault();

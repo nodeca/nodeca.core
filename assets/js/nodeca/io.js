@@ -233,6 +233,8 @@
     api3.callbacks[id] = function (msg) {
       stop_timer();
 
+      nodeca.logger.debug('API3 [' + id + '] Received response', msg);
+
       bayeux.unbind('transport:down', handle_transport_down);
 
       if (msg.version !== nodeca.runtime.version) {
@@ -255,6 +257,8 @@
         }
       }
 
+      nodeca.logger.debug('API3 [' + id + '] Parsed response', msg);
+
       // run actual callback
       callback(msg.err, msg.result);
     };
@@ -264,6 +268,7 @@
       handle_error(ioerr(io.ETIMEOUT, 'Timeout ' + name + ' execution.'));
     }, 10000);
 
+    nodeca.logger.debug('API3 [' + id + '] Sending request', data.msg);
 
     // send request
     bayeux_call('publish', [api3.req_channel, data])
