@@ -78,7 +78,7 @@
 
 
   function find_view(path) {
-    return (find(nodeca.views, path) || []).pop() || function () {
+    return find(nodeca.views, path) || function () {
       alert("View " + path + " not found");
     };
   }
