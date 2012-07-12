@@ -37,7 +37,12 @@
   var helpers = {};
 
   helpers.t = function (phrase, params) {
-    return nodeca.runtime.i18n.t(nodeca.runtime.locale, phrase, params);
+    try {
+      return nodeca.runtime.i18n.t(nodeca.runtime.locale, phrase, params);
+    } catch (err) {
+      nodeca.logger.error('Failed translate phrase', phrase, params, err);
+      return phrase;
+    }
   };
 
   helpers.asset_path = function (pathname) {
