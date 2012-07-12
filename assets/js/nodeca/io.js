@@ -44,6 +44,7 @@
   io.ENOCONN    = 'IO_ENOCONN';
   io.ETIMEOUT   = 'IO_ETIMEOUT';
   io.EWRONGVER  = 'IO_EWRONGVER';
+  io.EDECODE    = 'IO_EDECODE';
 
 
   // error constructor
@@ -242,6 +243,16 @@
         });
         callback(ioerr(io.EWRONGVER, 'Client version does not match server.'));
         return;
+      }
+
+      if (msg.result) {
+        try {
+          /*jshint evil:true*/
+          eval('msg.result = ' + msg.result);
+        } catch (e) {
+          callback(ioerr(io.EDECODE, 'Failed unserialize respone: ' + String(e)));
+          return;
+        }
       }
 
       // run actual callback
