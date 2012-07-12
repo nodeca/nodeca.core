@@ -27,7 +27,7 @@ $(function () {
 
   $('body').on('click', 'a', function (event) {
     var href  = $(this).attr('href'),
-        match = href && nodeca.runtime.router.match(href);
+        match = href && nodeca.runtime.router.match(href.split('#')[0]);
 
     if (match) {
       nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
