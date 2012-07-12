@@ -32,9 +32,7 @@ $(function () {
     if (match) {
       nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
         // TODO: Properly handle `err` and (?) `msg.error`
-        load_assets(((msg.data || {}).head || {}).assets || [], function () {
-          nodeca.render(match.meta, msg.data);
-        });
+        nodeca.render(match.meta, msg.data);
       });
 
       event.preventDefault();
