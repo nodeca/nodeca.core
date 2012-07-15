@@ -116,8 +116,8 @@ var format_date = (function () {
         case "w": return padNumber(date.getDay(), 2);
         case "x": return date.toLocaleDateString();
         case "X": return date.toLocaleTimeString();
-        case "y": return String(date.getFulYear()).substring(2);
-        case "Y": return date.getFulYear();
+        case "y": return String(date.getFullYear()).substring(2);
+        case "Y": return date.getFullYear();
         case "z": return timeZoneOffset(date);
         default: return m;
       }
