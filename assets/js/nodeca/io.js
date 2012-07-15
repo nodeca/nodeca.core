@@ -246,6 +246,14 @@
         return;
       }
 
+      try {
+        msg.result = JSON.parse(msg.result);
+      } catch (err) {
+        nodeca.logger.error('Failed parse result', err);
+        callback(err);
+        return;
+      }
+
       // run actual callback
       callback(msg.err, msg.result);
     };
