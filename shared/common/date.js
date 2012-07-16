@@ -139,17 +139,17 @@ var format_date = (function () {
 
 
 /**
- *  shared.common.date(locale, value, format, tzOffset) -> String
- *  - locale (String): Locale you want date to be formatted with
+ *  shared.common.date(value, format, locale, tzOffset) -> String
  *  - value (Date|String|Number): Date instance, DateTime string or timestamp.
  *    This must be a date in UTC TZ.
  *  - format (String): `date`, `time`, `datetime`, `iso` or `timestamp`.
+ *  - locale (String): Locale you want date to be formatted with
  *  - tzOffset (Number): TZ offset in minutes
  *
  *  Returns date string with requested format.
  **/
-module.exports = function date(locale, value, format, tzOffset) {
-  var d = new Date(get_timestamp(value) + (tzOffset || 0));
+module.exports = function date(value, format, locale, tzOffset) {
+  var d = new Date(get_timestamp(value) + ((tzOffset || 0) * 60 * 1000));
 
   switch (format) {
     case 'date':      return format_date(d, '%d %B %Y');

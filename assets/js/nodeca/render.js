@@ -56,7 +56,7 @@ var tzOffset = (new Date).getTimezoneOffset();
   };
 
   helpers.date = function (value, format) {
-    return nodeca.shared.common.date(nodeca.runtime.locale, value, format, tzOffset);
+    return nodeca.shared.common.date(value, format, nodeca.runtime.locale, tzOffset);
   };
 
   helpers.asset_path = function (pathname) {
