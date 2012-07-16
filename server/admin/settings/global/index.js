@@ -6,11 +6,15 @@
  **/
 
 /**
- *  server.settings
+ *  server.admin
  **/
 
 /**
- *  server.settings.global
+ *  server.admin.settings
+ **/
+
+/**
+ *  server.admin.settings.global
  **/
 
 
