@@ -8,7 +8,7 @@ var NLib = require('nlib');
 
 var Async = NLib.Vendor.Async;
 
-module.exports.commandName ="migrate";
+module.exports.commandName = "migrate";
 
 module.exports.parserParameters= {
   addHelp:true,
