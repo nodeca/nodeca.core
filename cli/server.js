@@ -15,16 +15,6 @@ module.exports.parserParameters= {
   description: 'Start nodeca server'
 };
 
-module.exports.commandLineArguments = [
-  {
-    args: ['--repl'],
-    options: {
-      help:   'start REPL server',
-      action: 'storeTrue'
-    }
-  }
-];
-
 module.exports.run = function (args, callback) {
   Async.series([
     require('../lib/init/redis'),
@@ -44,9 +34,6 @@ module.exports.run = function (args, callback) {
     NLib.init.buildBundles,
 
     require('../lib/init/assets'),
-    require('../lib/init/server'),
-
-    // init repl only if it was required by `--repl` key
-    (args.repl ? require('../lib/init/repl') : function skip(next) { next(); })
+    require('../lib/init/server')
   ], callback);
 };
