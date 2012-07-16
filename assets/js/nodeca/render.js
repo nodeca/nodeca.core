@@ -13,6 +13,15 @@
 /*global window, $, _, jade, JASON, nodeca*/
 
 
+////////////////////////////////////////////////////////////////////////////////
+
+
+var tzOffset = (new Date).getTimezoneOffset();
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
 (function () {
   'use strict';
 
@@ -47,7 +56,7 @@
   };
 
   helpers.date = function (value, format) {
-    return nodeca.shared.common.date(nodeca.runtime.locale, value, format);
+    return nodeca.shared.common.date(nodeca.runtime.locale, value, format, tzOffset);
   };
 
   helpers.asset_path = function (pathname) {
@@ -87,16 +96,23 @@
   //////////////////////////////////////////////////////////////////////////////
 
 
-  function find_view(path) {
-    return find(nodeca.views, path) || function () {
-      alert("View " + path + " not found");
-    };
-  }
+  nodeca.render = function (path, layout, data) {
+    var placeholder, $content_el, locals, html;
 
+    // prepare variables
+    layout      = layout.split('.');
+    placeholder = layout.shift(); // first part is a 'base layout'
+    $content_el = $('[data-nodeca-layout-content="' + placeholder + '"]');
+    layout      = layout.join('.');
 
-  nodeca.render = function (path, data) {
-    var locals  = _.extend(data, helpers),
-        html    = find_view(path)(locals);
-    $('[data-nodeca-layout-content]').html(html);
+    if (!$content_el.length) {
+      nodeca.logger.warn('Content placeholder <' + placeholder + '> is unknown');
+      throw 'NODECA_PLACEHOLDER_NOT_FOUND';
+    }
+
+    locals  = _.extend(data, helpers);
+    html    = nodeca.shared.common.render(nodeca.views, path, layout, locals);
+
+    $content_el.html(html);
   };
 }());

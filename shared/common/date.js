@@ -135,11 +135,10 @@ var format_date = (function () {
  *  - value (Date|String|Number): Date instance, DateTime string or timestamp.
  *    This must be a date in UTC TZ.
  *  - format (String): `date`, `time`, `datetime` or `iso`.
+ *  - tzOffset (Number): TZ offset in minutes
  **/
 module.exports = function date(locale, value, format, tzOffset) {
-  var d = new Date(get_timestamp(value));
-
-  // TODO: respect TimeZone
+  var d = new Date(get_timestamp(value) + (tzOffset || 0));
 
   switch (format) {
     case 'date':      return format_date(d, '%d %B %Y');
