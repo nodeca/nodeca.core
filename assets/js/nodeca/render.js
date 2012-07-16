@@ -13,6 +13,15 @@
 /*global window, $, _, jade, JASON, nodeca*/
 
 
+////////////////////////////////////////////////////////////////////////////////
+
+
+var tzOffset = (new Date).getTimezoneOffset();
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
 (function () {
   'use strict';
 
@@ -47,7 +56,7 @@
   };
 
   helpers.date = function (value, format) {
-    return nodeca.shared.common.date(nodeca.runtime.locale, value, format);
+    return nodeca.shared.common.date(nodeca.runtime.locale, value, format, tzOffset);
   };
 
   helpers.asset_path = function (pathname) {
