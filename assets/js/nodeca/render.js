@@ -100,10 +100,9 @@ var tzOffset = (new Date).getTimezoneOffset();
     var placeholder, $content_el, locals, html;
 
     // prepare variables
-    layout      = layout.split('.');
-    placeholder = layout.shift(); // first part is a 'base layout'
+    placeholder = layout.split('.').shift(); // first part is a 'base layout'
     $content_el = $('[data-nodeca-layout-content="' + placeholder + '"]');
-    layout      = layout.join('.');
+    layout      = nodeca.shared.common.render.parseLayout(layout).slice(1);
 
     if (!$content_el.length) {
       nodeca.logger.warn('Content placeholder <' + placeholder + '> is unknown');

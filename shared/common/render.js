@@ -62,7 +62,8 @@ function prepare(views, path, layout) {
     var html = view(data);
 
     if (layout) {
-      _.each(get_layouts_stack(layout).reverse(), function (path) {
+      layout = (_.isArray(layout) ? layout.slice() : get_layouts_stack(layout));
+      _.each(layout.reverse(), function (path) {
         var fn = find_path(views.layouts, path);
 
         if (!_.isFunction(fn)) {
@@ -119,3 +120,14 @@ module.exports = function render(views, path, layout, data) {
  *  where `content` property will be previously rendered layout.
  **/
 module.exports.prepare = prepare;
+
+
+/**
+ *  shared.common.render.parseLayout(layout) -> Array
+ *  - layout (string): Full layout path
+ *
+ *  Returns stack of layouts.
+ *
+ *      parseLayout('foo.bar.baz') // => ['foo', 'foo.bar', 'foo.bar.baz']
+ **/
+module.exports.parseLayout = get_layouts_stack;
