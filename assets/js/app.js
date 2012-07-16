@@ -41,6 +41,12 @@ $(function () {
 
         // FIXME: use view from msg
         nodeca.render(msg.view || match.meta, msg.data);
+
+        // set active menu
+        $('[data-api3-route]').removeClass('active');
+
+        var route = msg.data.head.route || match.meta;
+        $('[data-api3-route="' + route + '"]').addClass('active');
       });
 
       event.preventDefault();

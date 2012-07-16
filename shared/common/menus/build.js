@@ -22,7 +22,7 @@ function build(ns, cfg, permissions, router) {
     };
 
     if (opts.to) {
-      item.to = opts.to;
+      item.to   = opts.to;
       item.link = router.linkTo(opts.to, opts.params);
     }
 
@@ -59,7 +59,8 @@ function build(ns, cfg, permissions, router) {
  *      //        navbar: [
  *      //          {
  *      //            title: menus.common.navbar.profile,
- *      //            link: "http://nodeca.org/user/profile"
+ *      //            link: "http://nodeca.org/user/profile",
+ *      //            to: "users.profile"
  *      //          },
  *      //          // ...
  *      //        ]
@@ -73,10 +74,12 @@ function build(ns, cfg, permissions, router) {
  *      //              {
  *      //                title: menus.admin.system-sidebar.system.settings,
  *      //                link: "http://nodeca.org/admin/settings",
+ *      //                to: "admin.settings.index",
  *      //                childs: [
  *      //                  {
  *      //                    title: menus.admin.system-sidebar.system.performance,
  *      //                    link: "http://nodeca.org/admin/performance"
+ *      //                    to: "admin.performance.dashboard",
  *      //                  },
  *      //                  // ...
  *      //                ]
