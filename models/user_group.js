@@ -1,7 +1,24 @@
 'use strict';
 
+
+/**
+ *  models
+ **/
+
+
+/**
+ *  class models.user_group
+ *
+ *  Description of the model.
+ **/
+
+
 /*global nodeca*/
 
+
+/**
+ *  new models.user_group()
+ **/
 module.exports = new nodeca.runtime.mongoose.Schema({
   // shortcut name for the group
   name:     { type: String },
@@ -12,5 +29,5 @@ module.exports = new nodeca.runtime.mongoose.Schema({
 
 
 module.exports.__init__ = function () {
-  return nodeca.runtime.mongoose.model('user-group', module.exports);
+  return nodeca.runtime.mongoose.model('user_group', module.exports);
 };
