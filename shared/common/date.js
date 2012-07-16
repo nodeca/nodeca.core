@@ -130,12 +130,14 @@ var format_date = (function () {
 
 
 /**
- *  nodeca.shared.common.date(locale, value, format) -> String
+ *  nodeca.shared.common.date(locale, value, format, tzOffset) -> String
  *  - locale (String): Locale you want date to be formatted with
  *  - value (Date|String|Number): Date instance, DateTime string or timestamp.
  *    This must be a date in UTC TZ.
  *  - format (String): `date`, `time`, `datetime` or `iso`.
  *  - tzOffset (Number): TZ offset in minutes
+ *
+ *  Description
  **/
 module.exports = function date(locale, value, format, tzOffset) {
   var d = new Date(get_timestamp(value) + (tzOffset || 0));

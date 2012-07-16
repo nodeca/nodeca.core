@@ -42,7 +42,7 @@ function build(ns, cfg, permissions, router) {
 
 
 /**
- *  nodeca.shared.common.build_menus(menu_ids, permissions_map, router) -> Object
+ *  shared.common.menus.build(menu_ids, permissions_map, router) -> Object
  *  - menu_ids (Array):
  *  - permissions_map (Object):
  *  - router (Pointer)
@@ -89,7 +89,7 @@ function build(ns, cfg, permissions, router) {
  *      //        ]
  *      //      }
  *      //    }
- */
+ **/
 module.exports = function (menu_ids, permissions_map, router) {
   var menus = {};
 
