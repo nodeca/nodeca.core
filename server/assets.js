@@ -1,6 +1,14 @@
 'use strict';
 
 
+/**
+ *  server
+ **/
+
+
+/*global nodeca, _*/
+
+
 // 3rd-party
 var Mincer  = require('mincer');
 
@@ -11,6 +19,7 @@ var Mincer  = require('mincer');
 var server;
 
 
+// helper to pass request to the lazy-loaded miner server
 function call_mincer_server(req, res) {
   var assets;
 
@@ -26,6 +35,13 @@ function call_mincer_server(req, res) {
 ////////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ *  server.assets(params, callback) -> Void
+ *
+ *  - **HTTP only**
+ *
+ *  Mincer assets server middleware.
+ **/
 module.exports = function serve_assets(params, callback) {
   if (!this.origin.http) {
     callback("HTTP requests only");

@@ -1,6 +1,11 @@
 "use strict";
 
 
+/**
+ *  server
+ **/
+
+
 /*global nodeca, _*/
 
 
@@ -15,7 +20,22 @@ var connect = require('connect');
 ////////////////////////////////////////////////////////////////////////////////
 
 
-var static_options = {root: path.join(nodeca.runtime.apps[0].root, 'public/root')};
+var static_options = {
+  root: path.join(nodeca.runtime.apps[0].root, 'public/root')
+};
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+/**
+ *  server.static(params, callback) -> Void
+ *
+ *  - **HTTP only**
+ *
+ *  Middleware that serves static assets from `public/root` directory under the
+ *  main application root path.
+ **/
 module.exports = function (params, callback) {
   var http = this.origin.http;
 

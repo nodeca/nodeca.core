@@ -1,9 +1,22 @@
 "use strict";
 
+/**
+ *  shared
+ **/
+
+/**
+ *  shared.common
+ **/
+
+/**
+ *  shared.common.menus
+ **/
+
 
 /*global nodeca, _ */
 
 
+// main function that actually builds a menu tree
 function build(ns, cfg, permissions, router) {
   var menu = [];
 

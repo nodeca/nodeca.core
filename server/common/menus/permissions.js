@@ -1,6 +1,15 @@
 "use strict";
 
 
+/**
+ *  server
+ **/
+
+/**
+ *  server.common
+ **/
+
+
 /*global nodeca*/
 
 
@@ -16,11 +25,39 @@ var Async = NLib.Vendor.Async;
 var get_menu_permissions = require('nodeca.core/lib/menu').get_menu_permissions;
 
 
-module.exports = function (params, callback) {
-  var env = this;
+////////////////////////////////////////////////////////////////////////////////
 
-  get_menu_permissions(params.menu_ids, env, function (err, permissions) {
-    env.response.data = permissions;
+
+/**
+ *  server.common.permissions(params, callback) -> Void
+ *
+ *  Returns menu permissions map.
+ *
+ *
+ *  ##### Params
+ *
+ *  - **menu_ids** (Array): List of menu ids to get permissions map for.
+ *
+ *
+ *  ##### Response data
+ *
+ *  - **data.permissions** (Object): Permissions map
+ *
+ *
+ *  ##### See Also:
+ *
+ *  - [[lib.menu.get_menu_permissions]]
+ **/
+module.exports = function (params, callback) {
+  var data = this.response.data;
+
+  if (!this.origin.realtime) {
+    callback("Realtime requests only");
+    return;
+  }
+
+  get_menu_permissions(params.menu_ids, this, function (err, permissions) {
+    data.permissions = permissions;
     callback(err);
   });
 };

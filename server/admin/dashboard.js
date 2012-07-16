@@ -1,12 +1,32 @@
 'use strict';
 
+
+/**
+ *  server
+ **/
+
+/**
+ *  server.admin
+ **/
+
+
 /*global nodeca*/
 
 
+/**
+ *  server.admin.dashboard(params, callback) -> Void
+ *
+ *  Administration dashboard
+ **/
 module.exports = function (params, next) {
   this.response.data.now = (new Date).toString();
   next();
 };
+
+
+// Examples of server filter hooks
+// TODO: Remove them all
+
 
 nodeca.filters.before('admin', function (params, next) {
   this.response.layout = 'admin';

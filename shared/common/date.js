@@ -1,6 +1,15 @@
 'use strict';
 
 
+/**
+ *  shared
+ **/
+
+/**
+ *  shared.common
+ **/
+
+
 /*global nodeca, _*/
 
 
@@ -130,14 +139,14 @@ var format_date = (function () {
 
 
 /**
- *  nodeca.shared.common.date(locale, value, format, tzOffset) -> String
+ *  shared.common.date(locale, value, format, tzOffset) -> String
  *  - locale (String): Locale you want date to be formatted with
  *  - value (Date|String|Number): Date instance, DateTime string or timestamp.
  *    This must be a date in UTC TZ.
- *  - format (String): `date`, `time`, `datetime` or `iso`.
+ *  - format (String): `date`, `time`, `datetime`, `iso` or `timestamp`.
  *  - tzOffset (Number): TZ offset in minutes
  *
- *  Description
+ *  Returns date string with requested format.
  **/
 module.exports = function date(locale, value, format, tzOffset) {
   var d = new Date(get_timestamp(value) + (tzOffset || 0));
