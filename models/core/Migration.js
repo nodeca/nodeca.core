@@ -1,3 +1,8 @@
+/**
+ *  class Migration
+ **/
+
+
 'use strict';
 
 /*global nodeca*/
@@ -6,15 +11,21 @@
 var mongoose = nodeca.runtime.mongoose;
 var Schema = mongoose.Schema;
 
+/**
+ *  new Migration()
+ *
+ *  Description
+ **/
 var Migration = module.exports.Migration = new mongoose.Schema({
   _id: { type:String, unique: true},    // app name
   steps: [String]                       // array of migration files for app
 }, { strict: true });
 
 /**
- * Write used migration step in db
+ * Migration.markPassed(app_name, step, callback) -> Void
  *
- */
+ * Write used migration step in db
+ **/
 Migration.statics.markPassed = function (app_name, step, callback) {
   var model = this;
   model.find({_id: app_name}, function(err, docs) {
@@ -28,8 +39,10 @@ Migration.statics.markPassed = function (app_name, step, callback) {
 };
 
 /**
+ * Migration.getLastState(callback) -> Void
+ *
  * Fetch and format migrations from db
- */
+ **/
 Migration.statics.getLastState = function (callback) {
   this.find({}, function(err, docs) {
     var last_state = {};
@@ -41,6 +54,7 @@ Migration.statics.getLastState = function (callback) {
     callback(err, last_state);
   });
 };
+
 
 module.exports.__init__ = function __init__() {
   return mongoose.model('core.Migration', Migration);
