@@ -54,11 +54,14 @@ $(function () {
 
         History.pushState(null, msg.data.head.title, href);
 
-        // set active menu
-        $('[data-api3-route]').removeClass('active');
+        // unset active menu
+        $('[data-api3-route], [data-api3-namespace]').removeClass('active');
 
         var route = msg.data.head.route || match.meta;
-        $('[data-api3-route="' + route + '"]').addClass('active');
+        var ns    = msg.data.head.namespace || route.split('.').shift();
+
+        // set new active menu
+        $('[data-api3-route="' + route + '"], [data-api3-namespace="' + ns + '"]').addClass('active');
       });
 
       event.preventDefault();

@@ -35,8 +35,9 @@ function build(ns, cfg, permissions, router) {
     };
 
     if (opts.to) {
-      item.to   = opts.to;
-      item.link = router.linkTo(opts.to, opts.params);
+      item.to         = opts.to;
+      item.namespace  = opts.to.split('.').shift();
+      item.link       = router.linkTo(opts.to, opts.params);
     }
 
     if (opts.submenu) {
@@ -73,7 +74,8 @@ function build(ns, cfg, permissions, router) {
  *      //          {
  *      //            title: menus.common.navbar.profile,
  *      //            link: "http://nodeca.org/user/profile",
- *      //            to: "users.profile"
+ *      //            to: "users.profile",
+ *      //            namespace: "users"
  *      //          },
  *      //          // ...
  *      //        ]
@@ -88,11 +90,13 @@ function build(ns, cfg, permissions, router) {
  *      //                title: menus.admin.system-sidebar.system.settings,
  *      //                link: "http://nodeca.org/admin/settings",
  *      //                to: "admin.settings.index",
+ *      //                namespace: "admin"
  *      //                childs: [
  *      //                  {
  *      //                    title: menus.admin.system-sidebar.system.performance,
- *      //                    link: "http://nodeca.org/admin/performance"
+ *      //                    link: "http://nodeca.org/admin/performance",
  *      //                    to: "admin.performance.dashboard",
+ *      //                    namespace: "admin"
  *      //                  },
  *      //                  // ...
  *      //                ]
