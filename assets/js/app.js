@@ -58,7 +58,7 @@ $(function () {
         $('[data-api3-route], [data-api3-namespace]').removeClass('active');
 
         var route = msg.data.head.route || match.meta;
-        var ns    = msg.data.head.namespace || route.split('.').shift();
+        var ns    = route.split('.').shift();
 
         // set new active menu
         $('[data-api3-route="' + route + '"], [data-api3-namespace="' + ns + '"]').addClass('active');

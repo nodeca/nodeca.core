@@ -1,6 +1,7 @@
 ul.nav
   - each item in menus.common.navbar
-    - if (head.namespace === item.namespace)
-      li(data-api3-namespace=item.namespace, class='active'): a(href=item.link)= t(item.title)
+    - var route_ns = head.route.split('.').shift(), item_ns = item.to.split('.').shift();
+    - if (route_ns === item_ns)
+      li(data-api3-namespace=item_ns, class='active'): a(href=item.link)= t(item.title)
     - else
-      li(data-api3-namespace=item.namespace): a(href=item.link)= t(item.title)
+      li(data-api3-namespace=item_ns): a(href=item.link)= t(item.title)
