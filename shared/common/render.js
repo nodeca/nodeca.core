@@ -32,18 +32,8 @@ function get_layouts_stack(layout) {
 }
 
 
-function prepare(locale, theme, path, layout) {
-  var view;
-
-  if (!nodeca.runtime.views[locale]) {
-    throw new Error("No localized views for " + locale);
-  }
-
-  if (!nodeca.runtime.views[locale][theme]) {
-    throw new Error("Theme " + theme + " not found");
-  }
-
-  view = find_path(nodeca.runtime.views[locale][theme], path);
+function prepare(views, path, layout) {
+  var view = find_path(views, path);
 
   if (!view) {
     throw new Error("View " + path + " not found");
@@ -54,7 +44,7 @@ function prepare(locale, theme, path, layout) {
 
     if (layout) {
       _.each(get_layouts_stack(layout).reverse(), function (path) {
-        var fn = find_path(nodeca.runtime.views[locale][theme].layouts, path);
+        var fn = find_path(views.layouts, path);
 
         if (!_.isFunction(fn)) {
           nodeca.logger.warn("Layout " + path + " not found");
@@ -74,8 +64,8 @@ function prepare(locale, theme, path, layout) {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-module.exports = function render(locale, theme, path, layout, data) {
-  return prepare(locale, theme, path, layout)(data);
+module.exports = function render(views, path, layout, data) {
+  return prepare(views, path, layout)(data);
 };
 
 

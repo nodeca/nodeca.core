@@ -1,4 +1,4 @@
-/*global nodeca, $, History*/
+/*global nodeca, $, History, window*/
 
 
 //= require nodeca
@@ -37,10 +37,21 @@ $(function () {
           return;
         }
 
-        History.pushState(null, msg.data.head.title, href);
+        try {
+          nodeca.render(msg.view || match.meta, msg.layout, msg.data);
+        } catch (err) {
+          if ('NODECA_PLACEHOLDER_NOT_FOUND' === err) {
+            window.location = href;
+            return;
+          }
 
-        // FIXME: use view from msg
-        nodeca.render(msg.view || match.meta, msg.data);
+          // FIXME: redirect on error? or at least propose user to click
+          //        a link to reload to the requested page
+          nodeca.logger.error('Failed render view', err);
+          return;
+        }
+
+        History.pushState(null, msg.data.head.title, href);
 
         // set active menu
         $('[data-api3-route]').removeClass('active');
