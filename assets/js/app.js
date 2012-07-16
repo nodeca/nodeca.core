@@ -47,7 +47,8 @@ $(function () {
 
           // FIXME: redirect on error? or at least propose user to click
           //        a link to reload to the requested page
-          nodeca.logger.error('Failed render view', err);
+          nodeca.logger.error('Failed render view <' + (msg.view || match.meta) +
+                              '> with layout <' + msg.layout + '>', err);
           return;
         }
 
