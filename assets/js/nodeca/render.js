@@ -16,28 +16,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-var tzOffset = (new Date).getTimezoneOffset();
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-
 (function () {
   'use strict';
 
 
-  // finds value within `val` by given path
-  //    find({foo: {bar: 123}}, 'foo.bar') // -> 123
-  //    find({foo: {bar: 123}}, 'bar.foo') // -> undefined
-  function find(val, path) {
-    var parts = path.split('.');
-
-    while (val && parts.length) {
-      val = val[parts.shift()];
-    }
-
-    return val;
-  }
+  var tzOffset = (new Date).getTimezoneOffset();
 
 
   //////////////////////////////////////////////////////////////////////////////
@@ -72,16 +55,25 @@ var tzOffset = (new Date).getTimezoneOffset();
   };
 
   helpers.config = function (path) {
-    return !path ? nodeca.config : find(nodeca.config, path);
-  };
+    var parts, val;
 
-  helpers.random = function () {
-    /*global alert*/
-    alert('random() is a server-side only helper');
-    // FIXME:   use sha1 with randomString:
-    //        - http://pajhome.org.uk/crypt/md5/sha1.html
-    //        - https://github.com/flatiron/neuron/blob/master/lib/neuron.js#L31
-    return "";
+    if (!path) {
+      return nodeca.config;
+    }
+
+    parts = path.split('.');
+    val   = nodeca.config;
+
+    // returns part of the config by path
+    //
+    //    find({foo: {bar: 123}}, 'foo.bar') // -> 123
+    //    find({foo: {bar: 123}}, 'bar.foo') // -> undefined
+    //
+    while (val && parts.length) {
+      val = val[parts.shift()];
+    }
+
+    return val;
   };
 
   helpers.link_to = function (name, params) {
@@ -96,13 +88,18 @@ var tzOffset = (new Date).getTimezoneOffset();
   //////////////////////////////////////////////////////////////////////////////
 
 
-  nodeca.render = function (path, layout, data) {
+  // nodeca.render(apiPath, layout, data) -> Void
+  // - apiPath (String): Server method API path.
+  // - layout (String): Layout or layouts stack
+  // - data (Oject): Locals data for the renderer
+  //
+  nodeca.render = function (apiPath, layout, data) {
     var placeholder, $content_el, locals, html;
 
     // prepare variables
     placeholder = layout.split('.').shift(); // first part is a 'base layout'
     $content_el = $('[data-nodeca-layout-content="' + placeholder + '"]');
-    layout      = nodeca.shared.common.render.parseLayout(layout).slice(1);
+    layout      = nodeca.shared.common.render.getLayoutStack(layout).slice(1);
 
     if (!$content_el.length) {
       nodeca.logger.warn('Content placeholder <' + placeholder + '> is unknown');
@@ -110,7 +107,7 @@ var tzOffset = (new Date).getTimezoneOffset();
     }
 
     locals  = _.extend(data, helpers);
-    html    = nodeca.shared.common.render(nodeca.views, path, layout, locals);
+    html    = nodeca.shared.common.render(nodeca.views, apiPath, layout, locals);
 
     $content_el.html(html);
   };
