@@ -49,10 +49,6 @@ helpers.asset_include = function () {
   return "";
 };
 
-helpers.config = function (path) {
-  return !path ? nodeca.config : nodeca.shared.common.getByPath(nodeca.config, path);
-};
-
 helpers.link_to = function (name, params) {
   return nodeca.runtime.router.linkTo(name, params) || '#';
 };
