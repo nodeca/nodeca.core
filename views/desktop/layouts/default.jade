@@ -16,6 +16,9 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
       - if ('js' === head.assets[i].type)
         script(type="text/javascript", src=head.assets[i].link)
 
+    script(type="text/javascript")
+      nodeca.client.common.init();
+
   body
     nav.navbar.navbar-fixed-top
       .navbar-inner
