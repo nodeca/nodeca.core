@@ -1,7 +1,7 @@
 ul#navbar_menu.nav
   - each item in menus.common.navbar
-    - var route_ns = head.route.split('.').shift(), item_ns = item.to.split('.').shift();
-    - if (route_ns === item_ns)
-      li(data-api3-route=item_ns, class='active'): a(href=item.link)= t(item.title)
+    - var ns = head.apiPath.split('.').shift(), item_ns = item.to.split('.').shift();
+    - if (ns === item_ns)
+      li(data-api3-route=ns, class='active'): a(href=item.link)= t(item.title)
     - else
-      li(data-api3-route=item_ns): a(href=item.link)= t(item.title)
+      li(data-api3-route=ns): a(href=item.link)= t(item.title)
