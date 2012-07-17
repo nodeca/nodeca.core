@@ -50,25 +50,7 @@ helpers.asset_include = function () {
 };
 
 helpers.config = function (path) {
-  var parts, val;
-
-  if (!path) {
-    return nodeca.config;
-  }
-
-  parts = path.split('.');
-  val   = nodeca.config;
-
-  // returns part of the config by path
-  //
-  //    find({foo: {bar: 123}}, 'foo.bar') // -> 123
-  //    find({foo: {bar: 123}}, 'bar.foo') // -> undefined
-  //
-  while (val && parts.length) {
-    val = val[parts.shift()];
-  }
-
-  return val;
+  return !path ? nodeca.config : nodeca.shared.common.getByPath(nodeca.config, path);
 };
 
 helpers.link_to = function (name, params) {
