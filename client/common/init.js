@@ -62,7 +62,7 @@ module.exports = function () {
       }
 
       History.pushState(match, msg.data.head.title, href);
-      nodeca.client.common.menus.activate(msg.data.head.route || match.meta);
+      nodeca.client.common.navbar_menu.activate(msg.data.head.route || match.meta);
     });
   }
 
