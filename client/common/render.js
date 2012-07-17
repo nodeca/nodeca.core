@@ -83,11 +83,14 @@ helpers.jason = JASON.stringify;
 ////////////////////////////////////////////////////////////////////////////////
 
 
-// client.common.render(apiPath, layout, data) -> Void
-// - apiPath (String): Server method API path.
-// - layout (String): Layout or layouts stack
-// - data (Oject): Locals data for the renderer
-//
+/**
+ *  client.common.render(apiPath, layout, data) -> Void
+ *  - apiPath (String): Server method API path.
+ *  - layout (String): Layout or layouts stack
+ *  - data (Oject): Locals data for the renderer
+ *
+ *  Renders view and injects result HTML into `#content` element.
+ **/
 module.exports = function render(apiPath, layout, data) {
   var locals, html;
 
