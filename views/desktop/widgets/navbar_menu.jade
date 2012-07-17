@@ -1,4 +1,4 @@
-ul.nav
+ul#navbar_menu.nav
   - each item in menus.common.navbar
     - var route_ns = head.route.split('.').shift(), item_ns = item.to.split('.').shift();
     - if (route_ns === item_ns)
