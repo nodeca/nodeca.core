@@ -15,6 +15,13 @@
 
 /**
  *  client.common.init()
+ *
+ *  Assigns all necessary event listeners and handlers.
+ *
+ *
+ *  ##### Example
+ *
+ *      $(nodeca.client.common.init);
  **/
 module.exports = function () {
   //
