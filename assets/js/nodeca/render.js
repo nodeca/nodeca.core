@@ -94,21 +94,13 @@
   // - data (Oject): Locals data for the renderer
   //
   nodeca.render = function (apiPath, layout, data) {
-    var placeholder, $content_el, locals, html;
+    var locals, html;
 
     // prepare variables
-    placeholder = layout.split('.').shift(); // first part is a 'base layout'
-    $content_el = $('[data-nodeca-layout-content="' + placeholder + '"]');
-    layout      = nodeca.shared.common.render.getLayoutStack(layout).slice(1);
+    layout = nodeca.shared.common.render.getLayoutStack(layout).slice(1);
+    locals = _.extend(data, helpers);
+    html   = nodeca.shared.common.render(nodeca.views, apiPath, layout, locals);
 
-    if (!$content_el.length) {
-      nodeca.logger.warn('Content placeholder <' + placeholder + '> is unknown');
-      throw 'NODECA_PLACEHOLDER_NOT_FOUND';
-    }
-
-    locals  = _.extend(data, helpers);
-    html    = nodeca.shared.common.render(nodeca.views, apiPath, layout, locals);
-
-    $content_el.html(html);
+    $('#content').html(html);
   };
 }());
