@@ -77,9 +77,8 @@ module.exports = function render(apiPath, layout, data) {
   }
 
   // prepare variables
-  layout = nodeca.shared.common.render.getLayoutStack(layout).slice(1);
   locals = _.extend(data, helpers);
-  html   = nodeca.shared.common.render(nodeca.views, apiPath, layout, locals);
+  html   = nodeca.shared.common.render(nodeca.views, apiPath, layout, locals, true);
 
   $('#content').html(html);
 };

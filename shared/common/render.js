@@ -16,7 +16,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-// see [[shared.common.render.getLayoutStack]] below
+//  get_layout_stack(layout) -> Array
+//  - layout (string): Full layout path
+//
+//  Returns stack of layouts.
+//
+//      get_layout_stack('foo.bar.baz') // => ['foo', 'foo.bar', 'foo.bar.baz']
+//
 function get_layout_stack(layout) {
   var stack = layout.split('.'), i, l;
 
@@ -32,11 +38,12 @@ function get_layout_stack(layout) {
 
 
 /**
- *  shared.common.render(views, path, layout, data) -> String
+ *  shared.common.render(views, path, layout, data, skipBaseLayout) -> String
  *  - viewsTree (Object): Views tree (without locale and/or theme subpaths).
  *  - path (String): View name to render, e.g. `forums.index`
  *  - layout (String): Layout to render, e.g. `default.blogs`
  *  - data (Object): Locals data to pass to the renderer function
+ *  - skipBaseLayout (Boolean): Whenever to skip rendering base layout or not
  *
  *  Renders view registered as `path` with given `layout` and returns result.
  *
@@ -47,7 +54,7 @@ function get_layout_stack(layout) {
  *  property will be rendered view, then `default` layout with `data` where
  *  `content` property will be previously rendered layout.
  **/
-module.exports = function render(viewsTree, path, layout, data) {
+module.exports = function render(viewsTree, path, layout, data, skipBaseLayout) {
   var html, view = nodeca.shared.common.getByPath(viewsTree, path);
 
   if (!!view) {
@@ -59,10 +66,11 @@ module.exports = function render(viewsTree, path, layout, data) {
     html = '';
   }
 
-
   if (layout) {
     layout = (_.isArray(layout) ? layout.slice() : get_layout_stack(layout));
-    _.each(layout.reverse(), function (path) {
+    layout = (!!skipBaseLayout ? layout.slice(1) : layout).reverse();
+
+    _.each(layout, function (path) {
       var fn = nodeca.shared.common.getByPath(viewsTree.layouts, path);
 
       if (!_.isFunction(fn)) {
@@ -77,14 +85,3 @@ module.exports = function render(viewsTree, path, layout, data) {
 
   return html;
 };
-
-
-/**
- *  shared.common.render.getLayoutStack(layout) -> Array
- *  - layout (string): Full layout path
- *
- *  Returns stack of layouts.
- *
- *      getLayoutStack('foo.bar.baz') // => ['foo', 'foo.bar', 'foo.bar.baz']
- **/
-module.exports.getLayoutStack = get_layout_stack;
