@@ -18,9 +18,9 @@
 
 // returns deep-nested value from the obj by path
 //
-//    find_path({foo: {bar: 123}}, 'foo.bar'); // => 123
+//    get_by_path({foo: {bar: 123}}, 'foo.bar'); // => 123
 //
-function find_path(obj, path) {
+function get_by_path(obj, path) {
   var parts = path.split('.');
 
   // this is the fastest way to find nested value:
@@ -36,9 +36,9 @@ function find_path(obj, path) {
 
 // return stack of layouts
 //
-//    get_layouts_stack('foo.bar'); // => ['foo', 'foo.bar']
+//    get_layout_stack('foo.bar'); // => ['foo', 'foo.bar']
 //
-function get_layouts_stack(layout) {
+function get_layout_stack(layout) {
   var stack = layout.split('.'), i, l;
 
   for (i = 1, l = stack.length; i < l; i++) {
@@ -52,7 +52,7 @@ function get_layouts_stack(layout) {
 // prepares renderer function that will render view by given path with all
 // layouts required
 function prepare(views, path, layout) {
-  var view = find_path(views, path);
+  var view = get_by_path(views, path);
 
   if (!view) {
     throw new Error("View " + path + " not found");
@@ -62,9 +62,9 @@ function prepare(views, path, layout) {
     var html = view(data);
 
     if (layout) {
-      layout = (_.isArray(layout) ? layout.slice() : get_layouts_stack(layout));
+      layout = (_.isArray(layout) ? layout.slice() : get_layout_stack(layout));
       _.each(layout.reverse(), function (path) {
-        var fn = find_path(views.layouts, path);
+        var fn = get_by_path(views.layouts, path);
 
         if (!_.isFunction(fn)) {
           nodeca.logger.warn("Layout " + path + " not found");
@@ -123,11 +123,11 @@ module.exports.prepare = prepare;
 
 
 /**
- *  shared.common.render.parseLayout(layout) -> Array
+ *  shared.common.render.getLayoutStack(layout) -> Array
  *  - layout (string): Full layout path
  *
  *  Returns stack of layouts.
  *
- *      parseLayout('foo.bar.baz') // => ['foo', 'foo.bar', 'foo.bar.baz']
+ *      getLayoutStack('foo.bar.baz') // => ['foo', 'foo.bar', 'foo.bar.baz']
  **/
-module.exports.parseLayout = get_layouts_stack;
+module.exports.getLayoutStack = get_layout_stack;
