@@ -16,24 +16,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-// returns deep-nested value from the obj by path
-//
-//    get_by_path({foo: {bar: 123}}, 'foo.bar'); // => 123
-//
-function get_by_path(obj, path) {
-  var parts = path.split('.');
-
-  // this is the fastest way to find nested value:
-  // http://jsperf.com/find-object-deep-nested-value
-
-  while (obj && parts.length) {
-    obj = obj[parts.shift()];
-  }
-
-  return obj;
-}
-
-
 // return stack of layouts
 //
 //    get_layout_stack('foo.bar'); // => ['foo', 'foo.bar']
@@ -52,7 +34,7 @@ function get_layout_stack(layout) {
 // prepares renderer function that will render view by given path with all
 // layouts required
 function prepare(views, path, layout) {
-  var view = get_by_path(views, path);
+  var view = nodeca.shared.common.getByPath(views, path);
 
   if (!view) {
     throw new Error("View " + path + " not found");
@@ -64,7 +46,7 @@ function prepare(views, path, layout) {
     if (layout) {
       layout = (_.isArray(layout) ? layout.slice() : get_layout_stack(layout));
       _.each(layout.reverse(), function (path) {
-        var fn = get_by_path(views.layouts, path);
+        var fn = nodeca.shared.common.getByPath(views.layouts, path);
 
         if (!_.isFunction(fn)) {
           nodeca.logger.warn("Layout " + path + " not found");
