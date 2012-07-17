@@ -16,10 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-// return stack of layouts
-//
-//    get_layout_stack('foo.bar'); // => ['foo', 'foo.bar']
-//
+// see [[shared.common.render.getLayoutStack]]
 function get_layout_stack(layout) {
   var stack = layout.split('.'), i, l;
 
@@ -31,8 +28,7 @@ function get_layout_stack(layout) {
 }
 
 
-// prepares renderer function that will render view by given path with all
-// layouts required
+// see [[shared.common.render.prepare]]
 function prepare(views, path, layout) {
   var view = nodeca.shared.common.getByPath(views, path);
 
