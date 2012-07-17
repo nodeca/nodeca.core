@@ -58,7 +58,7 @@ module.exports = function () {
         }
 
         try {
-          nodeca.render(msg.view || match.meta, msg.layout, msg.data);
+          nodeca.client.common.render(msg.view || match.meta, msg.layout, msg.data);
         } catch (err) {
           // FIXME: redirect on error? or at least propose user to click
           //        a link to reload to the requested page
