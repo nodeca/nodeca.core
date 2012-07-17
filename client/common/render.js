@@ -94,6 +94,10 @@ helpers.jason = JASON.stringify;
 module.exports = function render(apiPath, layout, data) {
   var locals, html;
 
+  if (!nodeca.shared.common.getByPath(nodeca.views, apiPath)) {
+    throw new Error("View " + apiPath + " not found");
+  }
+
   // prepare variables
   layout = nodeca.shared.common.render.getLayoutStack(layout).slice(1);
   locals = _.extend(data, helpers);
