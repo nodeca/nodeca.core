@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-// see [[shared.common.render.getLayoutStack]]
+// see [[shared.common.render.getLayoutStack]] below
 function get_layout_stack(layout) {
   var stack = layout.split('.'), i, l;
 
@@ -33,7 +33,7 @@ function get_layout_stack(layout) {
 
 /**
  *  shared.common.render(views, path, layout, data) -> String
- *  - views (Object): Views tree (without locale and/or theme subpaths).
+ *  - viewsTree (Object): Views tree (without locale and/or theme subpaths).
  *  - path (String): View name to render, e.g. `forums.index`
  *  - layout (String): Layout to render, e.g. `default.blogs`
  *  - data (Object): Locals data to pass to the renderer function
@@ -47,20 +47,23 @@ function get_layout_stack(layout) {
  *  property will be rendered view, then `default` layout with `data` where
  *  `content` property will be previously rendered layout.
  **/
-module.exports = function render(views, path, layout, data) {
-  var view = nodeca.shared.common.getByPath(views, path),
-      html = view && view(data) || '';
+module.exports = function render(viewsTree, path, layout, data) {
+  var html, view = nodeca.shared.common.getByPath(viewsTree, path);
 
-  if (!view) {
+  if (!!view) {
+    html = view(data);
+  } else {
     // Here we just notify that view not found.
     // This should never happen - one must check path existance before render()
     nodeca.logger.warn("View " + path + " not found");
+    html = '';
   }
+
 
   if (layout) {
     layout = (_.isArray(layout) ? layout.slice() : get_layout_stack(layout));
     _.each(layout.reverse(), function (path) {
-      var fn = nodeca.shared.common.getByPath(views.layouts, path);
+      var fn = nodeca.shared.common.getByPath(viewsTree.layouts, path);
 
       if (!_.isFunction(fn)) {
         nodeca.logger.warn("Layout " + path + " not found");
