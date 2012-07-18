@@ -16,8 +16,33 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-var tzOffset = (new Date).getTimezoneOffset();
-var helpers  = {};
+var tzOffset       = (new Date).getTimezoneOffset();
+var helpers        = {};
+var $puncher_stats = null;
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+function inject_puncher_stats(data) {
+  var html;
+
+  // try to find puncher stats first time
+  if (null === $puncher_stats) {
+    $puncher_stats = $('#puncher_stats');
+  }
+
+  if (!$puncher_stats.length) {
+    // server didn't injected puncher stats so we don't
+    return;
+  }
+
+  html = nodeca.shared.common.render(nodeca.views, 'widgets.puncher_stats', false, data);
+  $puncher_stats.replaceWith(html);
+
+  // replace cached element with new one
+  $puncher_stats = $('#puncher_stats');
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,4 +106,7 @@ module.exports = function render(apiPath, layout, data) {
   html   = nodeca.shared.common.render(nodeca.views, apiPath, layout, locals, true);
 
   $('#content').html(html);
+
+  // try to inject puncher stats
+  inject_puncher_stats(locals);
 };
