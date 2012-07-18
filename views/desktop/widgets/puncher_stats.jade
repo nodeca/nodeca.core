@@ -1,6 +1,11 @@
 mixin puncher_scope(scope)
   li
-    p (#{scope.elapsed.total}ms = #{scope.elapsed.childs}ms + #{scope.elapsed.self}ms) #{scope.message} #{JSON.stringify(scope.meta)}
+    p
+      - if (scope.elapsed.missed)
+        | (#{scope.elapsed.total}ms - #{scope.elapsed.missed}ms)
+      - else
+        | (#{scope.elapsed.total}ms)
+      |  #{scope.message} #{JSON.stringify(scope.meta)}
     - if (scope.childs.length)
       mixin puncher_items(scope.childs)
 
