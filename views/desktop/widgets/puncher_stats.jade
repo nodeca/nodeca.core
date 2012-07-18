@@ -1,0 +1,13 @@
+mixin puncher_scope(scope)
+  li
+    p (#{scope.elapsed}ms) #{scope.message} #{JSON.stringify(scope.meta)}
+    - if (scope.children.length)
+      mixin puncher_items(scope.children)
+
+mixin puncher_items(scopes)
+  ul
+    - each scope in scopes
+      mixin puncher_scope(scope)
+
+#puncher_stats
+  mixin puncher_items(widgets.puncher_stats)
