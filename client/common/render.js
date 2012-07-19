@@ -29,7 +29,7 @@ function inject_puncher_stats(data) {
 
   // try to find puncher stats first time
   if (null === $puncher_stats) {
-    $puncher_stats = $('#puncher_stats');
+    $puncher_stats = $('#debug_timeline');
   }
 
   if (!$puncher_stats.length) {
@@ -37,11 +37,11 @@ function inject_puncher_stats(data) {
     return;
   }
 
-  html = nodeca.shared.common.render(nodeca.views, 'widgets.puncher_stats', false, data);
+  html = nodeca.shared.common.render(nodeca.views, 'widgets.debug_timeline', false, data);
   $puncher_stats.replaceWith(html);
 
   // replace cached element with new one
-  $puncher_stats = $('#puncher_stats');
+  $puncher_stats = $('#debug_timeline');
 }
 
 
