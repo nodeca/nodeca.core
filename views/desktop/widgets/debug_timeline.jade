@@ -1,16 +1,16 @@
-// Generates nested list for timeline
+//- Generates nested list for timeline
 
 mixin timeline_scope(scope)
   - var metaline;
   li
-    p
-      | #{scope.elapsed.total}ms
-      | #{scope.message} 
-      - if (scope.elapsed.missed > 0)
-        | [missed #{scope.elapsed.missed}ms] 
-      - metaline = JSON.stringify(scope.meta);
-      - if (metaline !== '{}')
-        | #{metaline}
+    span.timeline-period #{scope.elapsed.total}ms 
+    | - #{scope.message} 
+    - if (scope.elapsed.missed > 0)
+      | [missed #{scope.elapsed.missed}ms] 
+    - metaline = JSON.stringify(scope.meta);
+    - if (metaline !== '{}')
+      | #{metaline}
+
     - if (scope.childs.length)
       mixin timeline_items(scope.childs)
 
