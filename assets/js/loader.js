@@ -3,9 +3,16 @@
 //= require_self
 
 
+/*jshint browser:true,node:false*/
+/*global yepnope*/
+
+
 var load_assets = window.load_assets = (function () {
+  'use strict';
+
+
   function collect(obj, prop) {
-    var out = [], i, l;
+    var out = [], i;
 
     for (i in obj) {
       if (obj.hasOwnProperty(i) && obj[i][prop]) {
@@ -27,7 +34,7 @@ var load_assets = window.load_assets = (function () {
     }
 
     yepnope({load: collect(assets, 'link'), complete: callback});
-  };
+  }
 
   return load_assets;
 }());
