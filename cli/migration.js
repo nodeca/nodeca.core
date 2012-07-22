@@ -76,9 +76,9 @@ module.exports.run = function (args, callback) {
             // All ok. Write step to db
             Migration.markPassed(migration.app_name, migration.step, function(err){
               if (!err){
-                nodeca.logger.log(migration_title +' -- success');
+                console.log(migration_title +' -- success');
               } else {
-                nodeca.logger.log(migration_title +' -- failed');
+                console.log(migration_title +' -- failed');
               }
 
               next_migration(err);
