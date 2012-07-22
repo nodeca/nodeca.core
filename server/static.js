@@ -17,6 +17,10 @@ var path = require('path');
 var connect = require('connect');
 
 
+// internal
+var logger = nodeca.logger.getLogger('assets');
+
+
 ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -47,16 +51,18 @@ module.exports = function (params, callback) {
   static_options.path    = params.file;
   static_options.getOnly = true;
 
+  logger.info('(' + http.req.url + ') Serving...');
+
   connect.static.send(http.req, http.res, function (err) {
-    var prefix = '[server.static] ',
-        suffix = ' (' + http.req.url + ')';
+    var prefix = '(' + http.req.url + ') ';
 
     if (err) {
-      callback(prefix + (err.message || err) + suffix +
-               (err.stack ? ('\n' + err.stack) : ''));
+      logger.error(prefix + (err.message || err) + (err.stack ? ('\n' + err.stack) : ''));
+      callback(prefix + (err.message || err));
       return;
     }
 
-    callback(prefix + 'File not found' + suffix);
+    logger.warn(prefix + 'File not found');
+    callback(prefix + 'File not found');
   }, static_options);
 };
