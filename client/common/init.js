@@ -50,6 +50,46 @@ module.exports = function () {
     var History = window.History; // History.js
     var $window = $(window);
 
+
+    function call_api3(data, href) {
+      var match = data.match,
+          anchor = data.anchor;
+
+      $window.scrollTop(0);
+
+      nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
+        // TODO: Properly handle `err` and (?) `msg.error`
+        if (err) {
+          nodeca.logger.error('Failed apiTree call', err);
+          return;
+        }
+
+        try {
+          nodeca.client.common.render(msg.view || match.meta, msg.layout, msg.data);
+        } catch (err) {
+          // FIXME: redirect on error? or at least propose user to click
+          //        a link to reload to the requested page
+          nodeca.logger.error('Failed render view <' + (msg.view || match.meta) +
+                              '> with layout <' + msg.layout + '>', err);
+          return;
+        }
+
+        document.title = msg.data.head.title;
+        nodeca.client.common.navbar_menu.activate(msg.data.head.route || match.meta);
+
+        if (data.userClick) {
+          // **NOTICE** History.pushState(data, title, url):
+          //            does not triggers event if url contains #
+          History.pushState(data, null, href);
+        }
+
+        if (anchor) {
+          // TODO: scrollTo()
+          window.location.hash = anchor;
+        }
+      });
+    }
+
     if (History.enabled) {
       $('body').on('click', 'a', function (event) {
         var href  = $(this).attr('href').split('#'),
@@ -61,48 +101,21 @@ module.exports = function () {
         }
 
         if (match) {
-          // **NOTICE** History.pushState(data, title, url):
-          //            does not triggers event if url contains #
-          History.pushState({match: match, anchor: href[1]}, null, href[0]);
+          call_api3({match: match, anchor: href[1]}, href[0]);
           event.preventDefault();
           return false;
         }
       });
 
       History.Adapter.bind(window, 'statechange', function (event) {
-        var state = History.getState(),
-            data = state.data || {},
-            match = data.match,
-            anchor = data.anchor;
+        var state = History.getState(), data = state.data || {};
 
-        document.title = 'Loading...';
-        $window.scrollTop(0);
+        if (!data.userClick) {
+          call_api3(state.data, state.url);
+          return;
+        }
 
-        nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
-          // TODO: Properly handle `err` and (?) `msg.error`
-          if (err) {
-            nodeca.logger.error('Failed apiTree call', err);
-            return;
-          }
-
-          try {
-            nodeca.client.common.render(msg.view || match.meta, msg.layout, msg.data);
-          } catch (err) {
-            // FIXME: redirect on error? or at least propose user to click
-            //        a link to reload to the requested page
-            nodeca.logger.error('Failed render view <' + (msg.view || match.meta) +
-                                '> with layout <' + msg.layout + '>', err);
-            return;
-          }
-
-          document.title = msg.data.head.title;
-          nodeca.client.common.navbar_menu.activate(msg.data.head.route || match.meta);
-
-          if (anchor) {
-            // TODO: scrollTo()
-            window.location.hash = anchor;
-          }
-        });
+        data.userClick = false;
       });
     }
   });
