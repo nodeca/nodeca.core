@@ -17,13 +17,13 @@
 
   // check if `obj` is a function
   function isFunction(obj) {
-    return '[object Function]' === toString(obj);
+    return '[object Function]' === toString.call(obj);
   }
 
 
   // check if `obj` is array
   function isArray(obj) {
-    return '[object Array]' === toString(obj);
+    return '[object Array]' === toString.call(obj);
   }
 
 
@@ -32,7 +32,7 @@
   function isPlainObject(obj) {
     // Must be an Object.
     // Because of IE, we also have to check the presence of the constructor property.
-    if (!obj || '[object Object]' !== toString(obj)) {
+    if (!obj || '[object Object]' !== toString.call(obj)) {
       return false;
     }
 
