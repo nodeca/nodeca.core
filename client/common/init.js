@@ -48,6 +48,7 @@ module.exports = function () {
     //
 
     var History = window.History; // History.js
+    var $window = $(window);
 
     if (History.enabled) {
       $('body').on('click', 'a', function (event) {
@@ -75,6 +76,7 @@ module.exports = function () {
             anchor = data.anchor;
 
         document.title = 'Loading...';
+        $window.scrollTop(0);
 
         nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
           // TODO: Properly handle `err` and (?) `msg.error`
