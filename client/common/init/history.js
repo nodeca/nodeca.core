@@ -32,59 +32,32 @@ module.exports = function () {
   }
 
 
-  // calls api3 method, and renders response
-  //
-  //    - data (Object) with `match`, `anchor` and `userClick` properties
-  //    - href (String)
-  function call_api3(data, href) {
-    var match   = data.match,
-        anchor  = data.anchor;
+  History.Adapter.bind(window, 'statechange', function (event) {
+    var data = History.getState().data;
+
+    // FIXME: load appropriate data for initial state, as it's data is null
 
     $(window).scrollTop(0);
 
-    nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
-      // TODO: Properly handle `err` and (?) `msg.error`
-      if (err) {
-        nodeca.logger.error('Failed apiTree call', err);
-        return;
-      }
-
-      try {
-        nodeca.client.common.render(msg.view || match.meta, msg.layout, msg.data);
-      } catch (err) {
-        // FIXME: redirect on error? or at least propose user to click
-        //        a link to reload to the requested page
-        nodeca.logger.error('Failed render view <' + (msg.view || match.meta) +
-                            '> with layout <' + msg.layout + '>', err);
-        return;
-      }
-
-      document.title = msg.data.head.title;
-      nodeca.client.common.navbar_menu.activate(msg.data.head.route || match.meta);
-
-      if (data.userClick) {
-        // **NOTICE** History.pushState(data, title, url):
-        //            does not triggers event if url contains #
-        History.pushState(data, null, href);
-      }
-
-      if (anchor) {
-        // TODO: scrollTo()
-        window.location.hash = anchor;
-      }
-    });
-  }
-
-
-  History.Adapter.bind(window, 'statechange', function (event) {
-    var state = History.getState(), data = state.data || {};
-
-    if (!data.userClick) {
-      call_api3(state.data, state.url);
+    try {
+      nodeca.client.common.render(data.view, data.layout, data.locals);
+    } catch (err) {
+      // FIXME: redirect on error? or at least propose user to click
+      //        a link to reload to the requested page
+      nodeca.logger.error('Failed render view <' + data.view +
+                          '> with layout <' + data.layout + '>', err);
       return;
     }
 
-    data.userClick = false;
+    document.title = data.title;
+    nodeca.client.common.navbar_menu.activate(data.route);
+
+    // TODO: listen statechange and anchorchange events
+    //       we can't use:
+    //
+    //          window.location.hash = data.anchor;
+    //
+    //       as it adds new state and triggers `anchorchange`
   });
 
 
@@ -99,7 +72,24 @@ module.exports = function () {
       }
 
       if (match) {
-        call_api3({match: match, anchor: href[1]}, href[0]);
+        nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
+          // TODO: Properly handle `err` and (?) `msg.error`
+          if (err) {
+            nodeca.logger.error('Failed apiTree call', err);
+            return;
+          }
+
+          // **NOTICE** History.pushState(data, title, url):
+          //            does not triggers event if url contains #
+          History.pushState({
+            view:   msg.view || match.meta,
+            layout: msg.layout,
+            locals: msg.data,
+            title:  msg.data.head.title,
+            route:  msg.data.head.route || match.meta
+          }, null, href[0]);
+        });
+
         event.preventDefault();
         return false;
       }
