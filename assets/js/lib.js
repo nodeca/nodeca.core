@@ -1,6 +1,8 @@
 /*global nodeca, $*/
 
 //= require jquery/jquery
+//= require jquery.scrollto
+
 //= require underscore
 //= require bootstrap/bootstrap
 //= require babelfish-runtime
