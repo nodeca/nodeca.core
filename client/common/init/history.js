@@ -46,12 +46,75 @@ module.exports = function () {
   // ######################################################################## //
 
 
+  var rootUrl      = History.getRootUrl().replace(/\/$/, '');
+  var virtualHost  = rootUrl.replace(/^[^:]+:/, '');
+
+
+  // Tries to find match data from the router
+  //
+  function find_match_data(url) {
+    var parts   = String(url).split('#'),
+        href    = String(parts[0]),
+        anchor  = String(parts[1]),
+        match   = nodeca.runtime.router.match(href);
+
+    if (!match && !/^\/\//.test(url)) {
+      // try full URL if it's host-relative:
+      //
+      //    `/foo/bar` -> `//example.com/foo/bar`
+      match = nodeca.runtime.router.match(virtualHost + href);
+    }
+
+    return match ? [match, href, anchor] : null;
+  }
+
+
+  // Executes api3 method from given `data` (an array of `match`, `href` and
+  // `anhor` as returned by find_match_data);
+  //
+  function exec_api3_call(data, callback) {
+    var match = data[0], href = data[1], anchor = data[2];
+
+    nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
+      // TODO: Properly handle `err` and (?) `msg.error`
+      if (err) {
+        nodeca.logger.error('Failed apiTree call', err);
+        return;
+      }
+
+      callback({
+        view:   msg.view || match.meta,
+        layout: msg.layout,
+        locals: msg.data,
+        title:  msg.data.head.title,
+        route:  msg.data.head.route || match.meta,
+        anchor: anchor
+      }, null, href);
+    });
+  }
+
+
+  // Bind @statechange handler
+  //
   History.Adapter.bind(window, 'statechange', function (event) {
     var data = History.getState().data;
 
-    // FIXME: load appropriate data for initial state, as it's data is null
-
     $(window).scrollTop(0);
+
+    if (!data || History.isEmptyObject(data)) {
+      if (History.getStateByIndex(0).id === History.getState().id) {
+        // First time got back to initial state - get necessary data
+        var href  = History.getState().url.replace(rootUrl, ''),
+            match = find_match_data(href);
+
+        // if router was able to find apropriate data - make a call,
+        // otherwise should never happen
+        if (match) { exec_api3_call(match, History.replaceState); }
+      }
+
+      // skip handlling in any case if we don't have data
+      return;
+    }
 
     try {
       nodeca.client.common.render(data.view, data.layout, data.locals);
@@ -75,8 +138,7 @@ module.exports = function () {
 
   $(function () {
     $('body').on('click', 'a', function (event) {
-      var href  = $(this).attr('href').split('#'),
-          match = href && nodeca.runtime.router.match(href[0]);
+      var match = find_match_data($(this).attr('href'));
 
       // Continue as normal for cmd clicks etc
       if (2 === event.which || event.metaKey) {
@@ -84,25 +146,7 @@ module.exports = function () {
       }
 
       if (match) {
-        nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
-          // TODO: Properly handle `err` and (?) `msg.error`
-          if (err) {
-            nodeca.logger.error('Failed apiTree call', err);
-            return;
-          }
-
-          // **NOTICE** History.pushState(data, title, url):
-          //            does not triggers event if url contains #
-          History.pushState({
-            view:   msg.view || match.meta,
-            layout: msg.layout,
-            locals: msg.data,
-            title:  msg.data.head.title,
-            route:  msg.data.head.route || match.meta,
-            anchor: href[1]
-          }, null, href[0]);
-        });
-
+        exec_api3_call(match, History.pushState);
         event.preventDefault();
         return false;
       }
