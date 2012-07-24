@@ -10,4 +10,8 @@
 //= require jade/runtime
 //= require jason
 
+//= require noty/jquery.noty
+//= require noty/layouts/topCenter
+//= require noty/themes/default
+
 //= require_tree ./lib
