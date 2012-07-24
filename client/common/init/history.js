@@ -111,7 +111,6 @@ module.exports = function () {
         return;
       }
 
-      setTimeout(function () {
       callback({
         view:   msg.view || match.meta,
         layout: msg.layout,
@@ -120,7 +119,6 @@ module.exports = function () {
         route:  msg.data.head.route || match.meta,
         anchor: anchor
       }, null, href);
-      }, 60000);
     });
   }
 
