@@ -128,8 +128,6 @@ module.exports = function () {
   History.Adapter.bind(window, 'statechange', function (event) {
     var data = History.getState().data;
 
-    $(window).scrollTop(0);
-
     if (!data || History.isEmptyObject(data)) {
       if (History.getStateByIndex(0).id === History.getState().id) {
         // First time got back to initial state - get necessary data
@@ -144,6 +142,8 @@ module.exports = function () {
       // skip handlling in any case if we don't have data
       return;
     }
+
+    $(window).scrollTop(0);
 
     try {
       nodeca.client.common.render(data.view, data.layout, data.locals);
@@ -162,8 +162,7 @@ module.exports = function () {
     nodeca.client.common.navbar_menu.activate(data.route);
 
     if (data.anchor) {
-      $.noop();
-      // TODO: Scroll to desired element
+      $('#' + data.anchor).ScrollTo();
     }
   });
 
