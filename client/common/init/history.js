@@ -70,12 +70,18 @@ module.exports = function () {
 
 
   // Executes api3 method from given `data` (an array of `match`, `href` and
-  // `anhor` as returned by find_match_data);
+  // `anchor` as returned by find_match_data);
   //
   function exec_api3_call(data, callback) {
     var match = data[0], href = data[1], anchor = data[2];
 
     nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
+      // TODO: Realtime must send this "HTTP_ONLY" error by itself
+      if (err && "HTTP_ONLY" === String(err).replace(/[^a-z]/i, '_').toUpperCase()) {
+        window.location = href;
+        return;
+      }
+
       // TODO: Properly handle `err` and (?) `msg.error`
       if (err) {
         nodeca.logger.error('Failed apiTree call', err);
