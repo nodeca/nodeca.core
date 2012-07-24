@@ -32,6 +32,20 @@ module.exports = function () {
   }
 
 
+  // ## WARNING ############################################################# //
+  //                                                                          //
+  // History.js works poorly with URLs containing hashes:                     //
+  //                                                                          //
+  //    https://github.com/balupton/history.js/issues/111                     //
+  //    https://github.com/balupton/history.js/issues/173                     //
+  //                                                                          //
+  // So upon clicks on `/foo#bar` we treat URL and push it to the state as    //
+  // `/foo` and saving `bar` in the state data, so we could scroll to desired //
+  // element upon statechange                                                 //
+  //                                                                          //
+  // ######################################################################## //
+
+
   History.Adapter.bind(window, 'statechange', function (event) {
     var data = History.getState().data;
 
@@ -52,12 +66,10 @@ module.exports = function () {
     document.title = data.title;
     nodeca.client.common.navbar_menu.activate(data.route);
 
-    // TODO: listen statechange and anchorchange events
-    //       we can't use:
-    //
-    //          window.location.hash = data.anchor;
-    //
-    //       as it adds new state and triggers `anchorchange`
+    if (data.anchor) {
+      $.noop();
+      // TODO: Scroll to desired element
+    }
   });
 
 
@@ -86,7 +98,8 @@ module.exports = function () {
             layout: msg.layout,
             locals: msg.data,
             title:  msg.data.head.title,
-            route:  msg.data.head.route || match.meta
+            route:  msg.data.head.route || match.meta,
+            anchor: href[1]
           }, null, href[0]);
         });
 
