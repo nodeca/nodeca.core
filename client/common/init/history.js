@@ -48,6 +48,26 @@ module.exports = function () {
 
   var rootUrl      = History.getRootUrl().replace(/\/$/, '');
   var virtualHost  = rootUrl.replace(/^[^:]+:/, '');
+  var notification = {timout: null, noty: null};
+
+
+  function notify_loading(show) {
+    clearTimeout(notification.timeout);
+
+    /*global noty*/
+    if (show) {
+      notification.timeout = setTimeout(function () {
+        notification.noty = noty({
+          text: 'Loading...',
+          layout: 'topCenter',
+          type: 'warning'
+        });
+      }, 500);
+    } else if (notification.noty) {
+      notification.noty.close();
+      notification.noty = null;
+    }
+  }
 
 
   // Tries to find match data from the router
@@ -75,6 +95,9 @@ module.exports = function () {
   function exec_api3_call(data, callback) {
     var match = data[0], href = data[1], anchor = data[2];
 
+    // schedule "loading..." notification
+    notify_loading(true);
+
     nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
       // TODO: Realtime must send this "HTTP_ONLY" error by itself
       if (err && "HTTP_ONLY" === String(err).replace(/[^a-z]/i, '_').toUpperCase()) {
@@ -88,6 +111,7 @@ module.exports = function () {
         return;
       }
 
+      setTimeout(function () {
       callback({
         view:   msg.view || match.meta,
         layout: msg.layout,
@@ -96,6 +120,7 @@ module.exports = function () {
         route:  msg.data.head.route || match.meta,
         anchor: anchor
       }, null, href);
+      }, 60000);
     });
   }
 
@@ -130,6 +155,9 @@ module.exports = function () {
       nodeca.logger.error('Failed render view <' + data.view +
                           '> with layout <' + data.layout + '>', err);
       return;
+    } finally {
+      // remove "loading..." notification
+      notify_loading(false);
     }
 
     document.title = data.title;
