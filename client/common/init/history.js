@@ -48,26 +48,30 @@ module.exports = function () {
 
   var rootUrl      = History.getRootUrl().replace(/\/$/, '');
   var virtualHost  = rootUrl.replace(/^[^:]+:/, '');
-  var notification = {timout: null, noty: null};
+  var notification = (function () {
+    var $container, $el, $btn, api, timeout;
 
+    $btn        = $('<button class="close">×</button>');
+    $el         = $('<div class="alert"></div>').append($btn)
+                  .append('<p>Loading...</p>');
+    $container  = $('<div>').append($el).hide();
 
-  function notify_loading(show) {
-    clearTimeout(notification.timeout);
+    api = {
+      show: function () {
+        timeout = setTimeout(function () {
+          $container.appendTo(document.body).show();
+        }, 500);
+      },
+      hide: function () {
+        clearTimeout(timeout);
+        $container.hide().detach();
+      }
+    };
 
-    /*global noty*/
-    if (show) {
-      notification.timeout = setTimeout(function () {
-        notification.noty = noty({
-          text: 'Loading...',
-          layout: 'topCenter',
-          type: 'warning'
-        });
-      }, 500);
-    } else if (notification.noty) {
-      notification.noty.close();
-      notification.noty = null;
-    }
-  }
+    $btn.click(api.hide);
+
+    return api;
+  }());
 
 
   // Tries to find match data from the router
@@ -96,11 +100,10 @@ module.exports = function () {
     var match = data[0], href = data[1], anchor = data[2];
 
     // schedule "loading..." notification
-    notify_loading(true);
+    notification.show();
 
     nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
-      // TODO: Realtime must send this "HTTP_ONLY" error by itself
-      if (err && "HTTP_ONLY" === String(err).replace(/[^a-z]/i, '_').toUpperCase()) {
+      if (err && "HTTP ONLY" === String(err)) {
         window.location = href;
         return;
       }
@@ -155,7 +158,7 @@ module.exports = function () {
       return;
     } finally {
       // remove "loading..." notification
-      notify_loading(false);
+      notification.hide();
     }
 
     document.title = data.title;
