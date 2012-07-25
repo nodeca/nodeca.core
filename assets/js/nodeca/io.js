@@ -258,10 +258,10 @@
       callback(msg.err, msg.result);
     };
 
-    // wait for successfull message delivery 10 seconds
+    // wait for successfull message delivery 10 minutes
     timeout = setTimeout(function () {
       handle_error(ioerr(io.ETIMEOUT, 'Timeout ' + name + ' execution.'));
-    }, 10000);
+    }, 600000);
 
     nodeca.logger.debug('API3 [' + id + '] Sending request', data.msg);
 
