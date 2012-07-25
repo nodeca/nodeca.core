@@ -25,7 +25,7 @@
  **/
 module.exports = function () {
   nodeca.io.init();
-  nodeca.client.common.init.history();
+
 
   $(function () {
     // Bootstrap.Collapse calls e.preventDefault() only when there's no
@@ -43,4 +43,10 @@ module.exports = function () {
       .focus(function (){ $(this).next('div').addClass('focused'); })
       .blur(function (){ $(this).next('div').removeClass('focused'); });
   });
+
+
+  // history intercepts clicks on all `a` elements,
+  // so we initialize it as later as possible to have
+  // "lowest" priority of handlers
+  nodeca.client.common.init.history();
 };
