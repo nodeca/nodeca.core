@@ -40,7 +40,7 @@ module.exports = function (params, callback) {
   var http = this.origin.http;
 
   if (!http) {
-    callback("HTTP requests only");
+    callback({statusCode: 400, body: "HTTP ONLY"});
     return;
   }
 

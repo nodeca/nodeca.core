@@ -64,7 +64,7 @@ function call_mincer_server(req, res) {
  **/
 module.exports = function serve_assets(params, callback) {
   if (!this.origin.http) {
-    callback("HTTP requests only");
+    callback({statusCode: 400, body: "HTTP ONLY"});
     return;
   }
 

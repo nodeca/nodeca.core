@@ -52,7 +52,7 @@ module.exports = function (params, callback) {
   var data = this.response.data;
 
   if (!this.origin.realtime) {
-    callback("Realtime requests only");
+    callback({statusCode: 400, body: "REALTIME ONLY"});
     return;
   }
 
