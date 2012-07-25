@@ -49,33 +49,19 @@ module.exports = function () {
   var rootUrl      = History.getRootUrl().replace(/\/$/, '');
   var virtualHost  = rootUrl.replace(/^[^:]+:/, '');
   var notification = (function () {
-    var $container, $el, $btn, api, timeout;
+    var timeout, msg = nodeca.runtime.t('common.notice.loading');
 
-    $btn        = $('<button class="close">×</button>');
-    $el         = $('<div class="alert"></div>')
-                  .append('<p>Loading...</p>')
-                  .append($btn);
-    $container  = $('<div>').append($el).hide();
-
-    $container.css({position: 'fixed', top: '75px', width: '100%'});
-    $btn.css({right: '10px', top: '10px', position: 'absolute'});
-    $el.css({width: '60px', height: '20px', margin: '0 auto', position: 'relative'});
-
-    api = {
+    return {
       show: function () {
         timeout = setTimeout(function () {
-          $container.appendTo(document.body).show();
+          nodeca.client.common.notice.show(msg);
         }, 500);
       },
       hide: function () {
         clearTimeout(timeout);
-        $container.hide().detach();
+        nodeca.client.common.notice.hide();
       }
     };
-
-    $btn.click(api.hide);
-
-    return api;
   }());
 
 

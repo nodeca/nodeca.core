@@ -1,6 +1,8 @@
 i18n:
   en-US:
     common:
+      notice:
+        loading: Loading...
       core:
         title: Nodeca core application
       menus:

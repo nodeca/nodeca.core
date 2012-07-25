@@ -48,15 +48,8 @@ function inject_puncher_stats(data) {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-helpers.t = function (phrase, params) {
-  try {
-    // TODO: should be removed once BabelFish is fixed
-    return nodeca.runtime.i18n.t(nodeca.runtime.locale, phrase, params);
-  } catch (err) {
-    nodeca.logger.error('Failed translate phrase', phrase, params, err);
-    return phrase;
-  }
-};
+helpers.t = nodeca.runtime.t;
+
 
 helpers.date = function (value, format) {
   return nodeca.shared.common.date(value, format, nodeca.runtime.locale, tzOffset);
