@@ -52,9 +52,14 @@ module.exports = function () {
     var $container, $el, $btn, api, timeout;
 
     $btn        = $('<button class="close">×</button>');
-    $el         = $('<div class="alert"></div>').append($btn)
-                  .append('<p>Loading...</p>');
+    $el         = $('<div class="alert"></div>')
+                  .append('<p>Loading...</p>')
+                  .append($btn);
     $container  = $('<div>').append($el).hide();
+
+    $container.css({position: 'fixed', top: '75px', width: '100%'});
+    $btn.css({right: '10px', top: '10px', position: 'absolute'});
+    $el.css({width: '60px', height: '20px', margin: '0 auto', position: 'relative'});
 
     api = {
       show: function () {
