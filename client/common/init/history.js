@@ -53,6 +53,7 @@ module.exports = function () {
 
     return {
       show: function () {
+        clearTimeout(timeout); // make sure previous timeout was cleared
         timeout = setTimeout(function () {
           nodeca.client.common.notice.show(msg);
         }, 500);
