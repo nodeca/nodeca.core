@@ -13,10 +13,29 @@
 var Mincer  = require('mincer');
 
 
+// internal
+var logger = nodeca.logger.getLogger('server.assets');
+
+
 ////////////////////////////////////////////////////////////////////////////////
 
 
 var server;
+
+
+// Formats and writes log event into our logger
+//
+function assets_logger(level, event) {
+  logger[level]('%s - "%s %s HTTP/%s" %d "%s" - %s',
+                event.remoteAddress,
+                event.method,
+                event.url,
+                event.httpVersion,
+                event.code,
+                event.headers['user-agent'],
+                event.message);
+}
+
 
 
 // helper to pass request to the lazy-loaded miner server
@@ -25,10 +44,11 @@ function call_mincer_server(req, res) {
 
   if (!server) {
     assets = nodeca.runtime.assets,
-    server = Mincer.createServer(assets.environment, assets.manifest);
+    server = new Mincer.Server(assets.environment, assets.manifest);
+    server.log = assets_logger;
   }
 
-  return server(req, res);
+  server.handle(req, res);
 }
 
 
