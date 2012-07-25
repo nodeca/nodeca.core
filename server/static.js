@@ -17,10 +17,6 @@ var path = require('path');
 var connect = require('connect');
 
 
-// internal
-var logger = nodeca.logger.getLogger('server.static');
-
-
 ////////////////////////////////////////////////////////////////////////////////
 
 
