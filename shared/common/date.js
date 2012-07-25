@@ -155,7 +155,9 @@ module.exports = function date(value, format, locale, tzOffset) {
     case 'date':      return format_date(d, '%d %B %Y');
     case 'time':      return format_date(d, '%R');
     case 'datetime':  return format_date(d, '%d %B %Y %R');
-    case 'iso':       return d.toISOString();
+    // valid datetime attribute needs 0 or 4 fractional digits.
+    // toISOString() returns 3 digits. So, we need to cut those.
+    case 'iso':       return d.toISOString().slice(0,19) + 'Z';
     case 'timestamp': return d.getTime();
     default:          return format_date(d, format);
   }
