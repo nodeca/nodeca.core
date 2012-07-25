@@ -149,16 +149,21 @@ var format_date = (function () {
  *  Returns date string with requested format.
  **/
 module.exports = function date(value, format, locale, tzOffset) {
-  var d = new Date(get_timestamp(value) + ((tzOffset || 0) * 60 * 1000));
+  value = get_timestamp(value);
+
+  if (!/^(?:iso|timestamp)/.test(format)) {
+    // apply offest on non-utc formats only
+    value += (tzOffset || 0) * 60 * 1000;
+  }
 
   switch (format) {
-    case 'date':      return format_date(d, '%d %B %Y');
-    case 'time':      return format_date(d, '%R');
-    case 'datetime':  return format_date(d, '%d %B %Y %R');
+    case 'date':      return format_date(new Date(value), '%d %B %Y');
+    case 'time':      return format_date(new Date(value), '%R');
+    case 'datetime':  return format_date(new Date(value), '%d %B %Y %R');
     // valid datetime attribute needs 0 or 4 fractional digits.
     // toISOString() returns 3 digits. So, we need to cut those.
-    case 'iso':       return d.toISOString().slice(0,19) + 'Z';
-    case 'timestamp': return d.getTime();
-    default:          return format_date(d, format);
+    case 'iso':       return (new Date(value)).toISOString().slice(0,19) + 'Z';
+    case 'timestamp': return (new Date(value)).getTime();
+    default:          return format_date(new Date(value), format);
   }
 };
