@@ -108,7 +108,14 @@ module.exports = function () {
     notification.show();
 
     nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
-      if (err && "HTTP ONLY" === String(err)) {
+      if (err && err.statusCode && (301 === err.statusCode || 307 === err.statusCode)) {
+        // TODO: handle rediect via RPC
+        window.location = href;
+        return;
+      }
+
+      if (err && (err.statusCode || 'HTTP ONLY' === String(err))) {
+        // can't deal via realtime - try http
         window.location = href;
         return;
       }
