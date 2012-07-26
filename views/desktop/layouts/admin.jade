@@ -1,7 +1,7 @@
 !!!
-html
+html.no-js
   head
-    title Nodeca admin panel
+    include ../widgets/head
 
     - for (var i in head.assets)
       - if ('css' === head.assets[i].type)

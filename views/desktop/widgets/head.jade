@@ -2,6 +2,9 @@
 //- Helper to inject data into <HEAD>
 //- takes info from env.response.data.head
 
+//- http://validator.w3.org  recommendation
+meta(charset='UTF-8')
+
 - if (head)
   - if (head.title)
     title #{head.title}
