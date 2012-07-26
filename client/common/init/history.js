@@ -122,10 +122,9 @@ module.exports = function () {
         view:   msg.view || match.meta,
         layout: msg.layout,
         locals: msg.data,
-        title:  msg.data.head.title,
         route:  msg.data.head.route || match.meta,
         anchor: anchor
-      }, null, href);
+      }, msg.data.head.title, href);
     });
   }
 
@@ -166,7 +165,6 @@ module.exports = function () {
       notification.hide();
     }
 
-    document.title = data.title;
     nodeca.client.common.navbar_menu.activate(data.route);
 
     if (data.anchor) {
