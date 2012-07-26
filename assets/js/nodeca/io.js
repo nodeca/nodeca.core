@@ -232,7 +232,8 @@
     api3.callbacks[id] = function (msg) {
       stop_timer();
 
-      nodeca.logger.debug('API3 [' + id + '] Received response', msg);
+      nodeca.logger.debug('API3 [' + id + '] Received response ' +
+                          '(' + String((msg || {}).result).length + ')', msg);
 
       bayeux.unbind('transport:down', handle_transport_down);
 
