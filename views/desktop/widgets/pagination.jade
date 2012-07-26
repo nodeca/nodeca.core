@@ -1,0 +1,38 @@
+mixin pagination()
+  ul.pagination
+    li
+      a(href='#') 1
+    li.dropdown
+      a.more.dropdown-toggle(href='#', data-toggle='dropdown') ...
+      form.dropdown-menu
+        - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
+        label.pgn-jump.input(for=pgmpid) Jump to:
+        .input-append
+          input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
+          button.btn.btn-inverse(type='button') Go!
+    li
+      a(href='#') 13
+    li
+      a(href='#') 14
+    li.dropdown
+      a.current.dropdown-toggle(href='#', data-toggle='dropdown') 15
+      form.dropdown-menu
+        - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
+        label.pgn-jump.input(for=pgmpid) Jump to:
+        .input-append
+          input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
+          button.btn.btn-inverse(type='button') Go!
+    li
+      a(href='#') 16
+    li
+      a(href='#') 17
+    li.dropdown
+      a.more.dropdown-toggle(href='#', data-toggle='dropdown') ...
+      form.dropdown-menu
+        - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
+        label.pgn-jump.input(for=pgmpid) Jump to:
+        .input-append
+          input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
+          button.btn.btn-inverse(type='button') Go!
+    li
+      a(href='#') 325
