@@ -172,7 +172,7 @@ module.exports = function () {
         $el = $(document.body);
       }
 
-      $el.ScrollTo({duration: 500});
+      $el.ScrollTo({duration: 300});
 
       // restore opacity
       $('#content').stop().fadeTo('fast', 1);
