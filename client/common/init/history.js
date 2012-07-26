@@ -26,6 +26,7 @@
 module.exports = function () {
   var History = window.History; // History.js
 
+
   if (!History.enabled) {
     // do not do anything if History.js is not available
     return;
@@ -48,6 +49,10 @@ module.exports = function () {
 
   var rootUrl      = History.getRootUrl().replace(/\/$/, '');
   var virtualHost  = rootUrl.replace(/^[^:]+:/, '');
+
+
+  // An API object with show/hide methods
+  //
   var notification = (function () {
     var timeout, msg = nodeca.runtime.t('common.notice.loading');
 
@@ -96,7 +101,7 @@ module.exports = function () {
 
     nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
       if (err && err.statusCode && (301 === err.statusCode || 307 === err.statusCode)) {
-        // TODO: handle rediect via RPC
+        // handle rediect via RPC
         exec_api3_call(find_match_data(err.headers.Location), callback);
         return;
       }
@@ -124,9 +129,10 @@ module.exports = function () {
     });
   }
 
-
+  //
   // Bind @statechange handler
   //
+
   History.Adapter.bind(window, 'statechange', function (event) {
     var data = History.getState().data;
 
@@ -168,6 +174,9 @@ module.exports = function () {
     }
   });
 
+  //
+  // Bind global a.click handlers
+  //
 
   $(function () {
     $('body').on('click', 'a', function (event) {
