@@ -132,6 +132,12 @@ module.exports = function () {
   History.Adapter.bind(window, 'statechange', function (event) {
     var data = History.getState().data, $el;
 
+    // make contnt semi-opque before rendering, for smooth back/forward
+    // button handling
+    //
+    // FIXME: This should probably be done through some kind of singleton?
+    $('#content').stop().fadeTo('fast', 0.5);
+
     if (!data || History.isEmptyObject(data)) {
       if (History.getStateByIndex(0).id === History.getState().id) {
         // First time got back to initial state - get necessary data
@@ -139,10 +145,13 @@ module.exports = function () {
 
         // if router was able to find apropriate data - make a call,
         // otherwise should never happen
-        if (match) { exec_api3_call(match, History.replaceState); }
+        if (match) {
+          exec_api3_call(match, History.replaceState);
+          return;
+        }
       }
 
-      // skip handlling in any case if we don't have data
+      // FIXME: handle this unexpected situation?
       return;
     }
 
@@ -157,6 +166,9 @@ module.exports = function () {
     } finally {
       // remove "loading..." notification
       notification.hide();
+
+      // restore opacity
+      $('#content').stop().fadeTo('fast', 1);
     }
 
     nodeca.client.common.navbar_menu.activate(data.route);
@@ -189,6 +201,8 @@ module.exports = function () {
       }
 
       if (match) {
+        // make content semi-opaque before sending an api3 request
+        $('#content').stop().fadeTo('fast', 0.5);
         exec_api3_call(match, History.pushState);
         event.preventDefault();
         return false;
