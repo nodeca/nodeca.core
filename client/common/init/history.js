@@ -53,6 +53,7 @@ module.exports = function () {
 
     return {
       show: function () {
+        clearTimeout(timeout); // make sure previous timeout was cleared
         timeout = setTimeout(function () {
           nodeca.client.common.notice.show(msg);
         }, 500);
@@ -96,7 +97,7 @@ module.exports = function () {
     nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
       if (err && err.statusCode && (301 === err.statusCode || 307 === err.statusCode)) {
         // TODO: handle rediect via RPC
-        window.location = href;
+        exec_api3_call(find_match_data(err.headers.Location), callback);
         return;
       }
 
