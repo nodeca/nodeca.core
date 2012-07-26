@@ -51,7 +51,7 @@ module.exports = function (params, callback) {
     .root(root)
     .on('error', function (err) {
       if (404 === err.status) {
-        callback({statusCode: 404, body: 'File not found'});
+        callback({statusCode: 404});
         return;
       }
 
