@@ -17,7 +17,7 @@
                         "redis"       : "~ 0.7.2",
                         "mongoose"    : "git://github.com/LearnBoost/mongoose.git",
                         "puncher"     : "~ 1.0.1",
-                        "connect"     : "~ 2.3.4",
+                        "send"        : "~ 0.0.3",
                         "qs"          : "~ 0.5.0",
                         "mincer"      : "~ 0.2.5",
                         "stylus"      : "~ 0.28.2",
