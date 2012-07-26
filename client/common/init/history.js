@@ -149,39 +149,37 @@ module.exports = function () {
       return;
     }
 
-    try {
-      // make contnet semi-opque before rendering
-      $('#content').stop().fadeTo('fast', 0.5);
+    // make contnet semi-opque before rendering
+    $('#content').stop().fadeTo('fast', 0.3, function () {
+      try {
+        nodeca.client.common.render(data.view, data.layout, data.locals);
+        nodeca.client.common.navbar_menu.activate(data.route);
+      } catch (err) {
+        // FIXME: redirect on error? or at least propose user to click
+        //        a link to reload to the requested page
+        nodeca.logger.error('Failed render view <' + data.view +
+                            '> with layout <' + data.layout + '>', err);
+      }
 
-      nodeca.client.common.render(data.view, data.layout, data.locals);
-    } catch (err) {
-      // FIXME: redirect on error? or at least propose user to click
-      //        a link to reload to the requested page
-      nodeca.logger.error('Failed render view <' + data.view +
-                          '> with layout <' + data.layout + '>', err);
-      return;
-    } finally {
-      // remove "loading..." notification
-      notification.hide();
+      if (data.anchor) {
+        // if anchor is given try to find matching element
+        $el = $('#' + data.anchor);
+      }
+
+      if (!$el || !$el.length) {
+        // if there were no anchor or thre were no matching element
+        // use `top` element instead
+        $el = $(document.body);
+      }
+
+      $el.ScrollTo({duration: 500});
 
       // restore opacity
       $('#content').stop().fadeTo('fast', 1);
-    }
 
-    nodeca.client.common.navbar_menu.activate(data.route);
-
-    if (data.anchor) {
-      // if anchor is given try to find matching element
-      $el = $('#' + data.anchor);
-    }
-
-    if (!$el || !$el.length) {
-      // if there were no anchor or thre were no matching element
-      // use `top` element instead
-      $el = $(document.body);
-    }
-
-    $el.ScrollTo({duration: 300});
+      // remove "loading..." notification
+      notification.hide();
+    });
   });
 
   //
