@@ -20,9 +20,10 @@ module.exports.hide = function () {
 
 
 $(function () {
-  $notice   = $('#io-notice');
+  $notice   = $(nodeca.views.widgets.notice());
   $message  = $notice.find('.message');
 
+  $notice.appendTo(document.body);
   $notice.find('.close').click(module.exports.hide);
 
   module.exports.hide();
