@@ -47,10 +47,6 @@ module.exports = function () {
   // ######################################################################## //
 
 
-  var rootUrl      = History.getRootUrl().replace(/\/$/, '');
-  var virtualHost  = rootUrl.replace(/^[^:]+:/, '');
-
-
   // An API object with show/hide methods
   //
   var notification = (function () {
@@ -75,15 +71,16 @@ module.exports = function () {
   //
   function find_match_data(url) {
     var parts   = String(url).split('#'),
-        href    = String(parts[0]),
+        href    = String(parts[0]).replace(/^[^:]+:\/\//, '//'),
         anchor  = String(parts[1]),
         match   = nodeca.runtime.router.match(href);
 
-    if (!match && !/^\/\//.test(url)) {
-      // try full URL if it's host-relative:
+    if (!match && /^\/\//.test(href)) {
+      // try relative URL if full didn;t match
       //
-      //    `/foo/bar` -> `//example.com/foo/bar`
-      match = nodeca.runtime.router.match(virtualHost + href);
+      //    `//example.com/foo/bar` -> `/foo/bar`
+      href  = href.replace(/^\/\/[^/]+\//, '/');
+      match = nodeca.runtime.router.match(href);
     }
 
     return match ? [match, href, anchor] : null;
@@ -138,8 +135,7 @@ module.exports = function () {
     if (!data || History.isEmptyObject(data)) {
       if (History.getStateByIndex(0).id === History.getState().id) {
         // First time got back to initial state - get necessary data
-        var href  = History.getState().url.replace(rootUrl, ''),
-            match = find_match_data(href);
+        var match = find_match_data(History.getState().url);
 
         // if router was able to find apropriate data - make a call,
         // otherwise should never happen
