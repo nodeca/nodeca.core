@@ -126,6 +126,13 @@ module.exports = function () {
   }
 
   //
+  // Global semaphore that allows/dissalows ScrollTo animation.
+  // Animation is allowed every time we handle user click.
+  //
+
+  var allowScrollTo = false;
+
+  //
   // Bind @statechange handler
   //
 
@@ -161,18 +168,24 @@ module.exports = function () {
                             '> with layout <' + data.layout + '>', err);
       }
 
-      if (data.anchor) {
+      // scroll to element only when we handle user click
+      if (allowScrollTo) {
         // if anchor is given try to find matching element
-        $el = $('#' + data.anchor);
-      }
+        if (data.anchor) {
+          $el = $('#' + data.anchor);
+        }
 
-      if (!$el || !$el.length) {
         // if there were no anchor or thre were no matching element
         // use `top` element instead
-        $el = $(document.body);
-      }
+        if (!$el || !$el.length) {
+          $el = $(document.body);
+        }
 
-      $el.ScrollTo({duration: 300});
+        $el.ScrollTo({duration: 300});
+
+        // disable scrollTo
+        allowScrollTo = false;
+      }
 
       // restore opacity
       $('#content').stop().fadeTo('fast', 1);
@@ -196,6 +209,7 @@ module.exports = function () {
       }
 
       if (match) {
+        allowScrollTo = true;
         exec_api3_call(match, History.pushState);
         event.preventDefault();
         return false;
