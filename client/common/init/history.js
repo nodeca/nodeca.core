@@ -130,7 +130,7 @@ module.exports = function () {
   //
 
   History.Adapter.bind(window, 'statechange', function (event) {
-    var data = History.getState().data;
+    var data = History.getState().data, $el;
 
     if (!data || History.isEmptyObject(data)) {
       if (History.getStateByIndex(0).id === History.getState().id) {
@@ -145,8 +145,6 @@ module.exports = function () {
       // skip handlling in any case if we don't have data
       return;
     }
-
-    $(window).scrollTop(0);
 
     try {
       nodeca.client.common.render(data.view, data.layout, data.locals);
@@ -164,8 +162,17 @@ module.exports = function () {
     nodeca.client.common.navbar_menu.activate(data.route);
 
     if (data.anchor) {
-      $('#' + data.anchor).ScrollTo();
+      // if anchor is given try to find matching element
+      $el = $('#' + data.anchor);
     }
+
+    if (!$el || !$el.length) {
+      // if there were no anchor or thre were no matching element
+      // use `top` element instead
+      $el = $(document.body);
+    }
+
+    $el.ScrollTo({duration: 300});
   });
 
   //
