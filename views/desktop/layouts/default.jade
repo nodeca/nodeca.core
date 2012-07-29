@@ -9,9 +9,6 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
     script(type="text/javascript")!= asset_include('loader.js')
 
-    script(type="text/javascript")
-      window.REALTIME_ID = "!{random()}";
-
     - for (var i in head.assets)
       - if ('js' === head.assets[i].type)
         script(type="text/javascript", src=head.assets[i].link)
