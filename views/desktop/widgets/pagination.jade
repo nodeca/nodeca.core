@@ -1,38 +1,61 @@
 mixin pagination()
+  - current_page = head.apiParams.page || 1
+  - params = {}
+  - for (var attr in head.apiParams) {
+  -   if (head.apiParams.hasOwnProperty(attr) && attr !== 'page') {
+  -     params[attr] = head.apiParams[attr];
+  -   }
+  - }
   ul.pagination
-    li
-      a(href='#') 1
+    - if (current_page > 2)
+      li
+        a(href=link_to(head.apiPath, params)) 1
+    - if (current_page > 4)
+      li.dropdown
+        a.more.dropdown-toggle(href='#', data-toggle='dropdown') ...
+        form.dropdown-menu
+          - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
+          label.pgn-jump.input(for=pgmpid) Jump to:
+          .input-append
+            input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
+            button.btn.btn-inverse(type='button') Go!
+    - if (current_page > 3)
+      - params.page = parseInt(current_page) - 2
+      li
+        a(href=link_to(head.apiPath, params)) #{parseInt(current_page) - 2}
+    - if (current_page > 2)
+      - params.page = parseInt(current_page) - 1
+      li
+        a(href=link_to(head.apiPath, params)) #{parseInt(current_page) - 1}
     li.dropdown
-      a.more.dropdown-toggle(href='#', data-toggle='dropdown') ...
+      a.current.dropdown-toggle(href='#', data-toggle='dropdown') #{current_page}
       form.dropdown-menu
         - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
         label.pgn-jump.input(for=pgmpid) Jump to:
         .input-append
           input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
           button.btn.btn-inverse(type='button') Go!
-    li
-      a(href='#') 13
-    li
-      a(href='#') 14
-    li.dropdown
-      a.current.dropdown-toggle(href='#', data-toggle='dropdown') 15
-      form.dropdown-menu
-        - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
-        label.pgn-jump.input(for=pgmpid) Jump to:
-        .input-append
-          input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
-          button.btn.btn-inverse(type='button') Go!
-    li
-      a(href='#') 16
-    li
-      a(href='#') 17
-    li.dropdown
-      a.more.dropdown-toggle(href='#', data-toggle='dropdown') ...
-      form.dropdown-menu
-        - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
-        label.pgn-jump.input(for=pgmpid) Jump to:
-        .input-append
-          input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
-          button.btn.btn-inverse(type='button') Go!
-    li
-      a(href='#') 325
+
+    - if ((max_page - current_page) >= 1 )
+      - params.page = parseInt(current_page) + 1
+      li
+        a(href=link_to(head.apiPath, params)) #{parseInt(current_page) + 1}
+
+    - if ((max_page - current_page) >= 2)
+      - params.page = parseInt(current_page) + 2
+      li
+        a(href=link_to(head.apiPath, params))  #{parseInt(current_page) + 2}
+
+    - if (max_page - current_page > 3)
+      li.dropdown
+        a.more.dropdown-toggle(href='#', data-toggle='dropdown') ...
+        form.dropdown-menu
+          - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
+          label.pgn-jump.input(for=pgmpid) Jump to:
+          .input-append
+            input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
+            button.btn.btn-inverse(type='button') Go!
+    -if (max_page - current_page > 2)
+      - params.page = max_page
+      li
+        a(href=link_to(head.apiPath, params)) #{max_page}
