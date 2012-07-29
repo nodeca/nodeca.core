@@ -197,7 +197,7 @@
     //
 
     nodeca.logger.debug('API3 [' + id + '] Sending request', data.msg);
-    xhr = rpc.xhr = $.getJSON('/rpc', data);
+    xhr = rpc.xhr = $.post('/rpc', data);
 
     //
     // Listen for a response
