@@ -21,15 +21,9 @@
       events = {},
       // underlying bayeux client
       bayeux = null,
-      // whenever transport is up or not
-      is_connected = false,
-      // api3 related (used by apiTree() send/receive calls) properies
-      api3 = {
-        req_channel: '/x/api3-req/' + window.REALTIME_ID,
-        res_channel: '/x/api3-res/' + window.REALTIME_ID,
-        callbacks:    {},
-        last_msg_id:  0
-      };
+      // stores last msg id for debug purposes
+      // and last xhr to allow interrupt it
+      rpc = {idx: 0, xhr: null};
 
 
   // exported IO object
@@ -41,7 +35,6 @@
   //
 
 
-  io.ENOCONN    = 'IO_ENOCONN';
   io.ETIMEOUT   = 'IO_ETIMEOUT';
   io.EWRONGVER  = 'IO_EWRONGVER';
 
@@ -77,7 +70,9 @@
    *
    *  ##### Known events
    *
-   *  - `api3:version-mismatch(versions)`
+   *  - `connected`
+   *  - `disconnected`
+   *  - `rpc:version-mismatch({client: "str", server: "str"})`
    **/
   io.on = function on(event, handler) {
     if (!events[event]) {
@@ -164,7 +159,7 @@
    *  nodeca.io.apiTree(name, callback) -> Void
    **/
   io.apiTree = function apiTree(name, params, options, callback) {
-    var timeout, id = api3.last_msg_id++, data = {id: id};
+    var xhr, timeout, id = rpc.idx++, data = {id: id};
 
     // Scenario: rpc(name, callback);
     if (_.isFunction(params)) {
@@ -183,20 +178,15 @@
     callback  = callback || $.noop;
 
     //
-    // ERROR HANDLING
-    //
-    // - when there's no connection (or client is `connecting`), we execute
-    //   callback with `ENOCONN` error imediately
-    // - when connection lost during waiting for server to send a message into
-    //   response channel, we execute calback with `ECONNGONE` error
-    // - when server didn't received published request message within 30 seconds
-    //   we execute callback with `ETIMEOUT` error
+    // Interrupt previous rpc request
     //
 
-    // check if there an active connection
-    if (!is_connected) {
-      callback(ioerr(io.ENOCONN, 'No connection to the server (RT).'));
-      return;
+    if (rpc.xhr) {
+      // if we are not on Firefox abort will save us some time
+      // see notice on timeout below
+      (rpc.xhr.abort || $.noop)();
+      (rpc.xhr.reject || $.noop)();
+      rpc.xhr = null;
     }
 
     // fill in message
@@ -212,34 +202,38 @@
       timeout = null; // mark timeout as "removed"
     }
 
-    // simple error handler
-    function handle_error(err) {
-      stop_timer();
-      delete api3.callbacks[id];
-      callback(err);
-    }
+    //
+    // Wait for response 10 minutes
+    //
+    // NOTICE: we do not use $.ajax() settigns.timeout due to it's not working
+    // with JSONP requests on Firefox 3.0+ (it will fire a callback anyway, so
+    // we implement our own timeout): http://api.jquery.com/jQuery.ajax/
+    //
 
-    // handle transport down during request error
-    function handle_transport_down() {
-      // mimics `once()` event listener
-      bayeux.unbind('transport:down', handle_transport_down);
-      handle_error(ioerr(io.ECONNGONE, 'Server gone. (RT)'));
-    }
+    timeout = setTimeout(function () {
+      xhr.reject(ioerr(io.ETIMEOUT, 'Timeout ' + name + ' execution.'));
+    }, 600000);
 
-    bayeux.bind('transport:down', handle_transport_down);
+    //
+    // Send request
+    //
 
-    // store callback for the response
-    api3.callbacks[id] = function (msg) {
+    nodeca.logger.debug('API3 [' + id + '] Sending request', data.msg);
+    xhr = rpc.xhr = $.getJSON('/rpc', data);
+
+    //
+    // Listen for a response
+    //
+
+    xhr.success(function (msg) {
       stop_timer();
 
       nodeca.logger.debug('API3 [' + id + '] Received response ' +
                           '(' + String((msg || {}).result).length + ')', msg);
 
-      bayeux.unbind('transport:down', handle_transport_down);
-
       if (msg.version !== nodeca.runtime.version) {
         // emit version mismatch error
-        emit('api3:version-mismatch', {
+        emit('rpc:version-mismatch', {
           client: nodeca.runtime.version,
           server: msg.version
         });
@@ -257,50 +251,27 @@
 
       // run actual callback
       callback(msg.err, msg.result);
-    };
+    });
 
-    // wait for successfull message delivery 10 minutes
-    timeout = setTimeout(function () {
-      handle_error(ioerr(io.ETIMEOUT, 'Timeout ' + name + ' execution.'));
-    }, 600000);
+    //
+    // Listen for an error
+    //
 
-    nodeca.logger.debug('API3 [' + id + '] Sending request', data.msg);
+    xhr.fail(function (err) {
+      stop_timer();
 
-    // send request
-    bayeux_call('publish', [api3.req_channel, data])
-      // see bayeux_call info for details on fail/done
-      .fail(handle_error)
-      .done(stop_timer);
+      if (err) {
+        // fire callback with error only if
+        // it was actually error (and not an interruption)
+        callback(err);
+      }
+    });
   };
 
 
   //
   // Initialization API
   //
-
-
-  /**
-   *  nodeca.io.auth(callback) -> Void
-   **/
-  io.auth = function (callback) {
-    // Not implemented yet
-    callback(null);
-  };
-
-
-  // responses listener
-  function handle_api3_response(data) {
-    var callback = api3.callbacks[data.id];
-
-    if (!callback) {
-      // unknown response id
-      return;
-    }
-
-    delete api3.callbacks[data.id];
-
-    callback(data.msg);
-  }
 
 
   /**
@@ -320,20 +291,11 @@
     //
 
     bayeux.bind('transport:up',   function () {
-      is_connected = true;
       emit('connected');
     });
 
     bayeux.bind('transport:down', function () {
-      is_connected = false;
       emit('disconnected');
     });
-
-    //
-    // faye handles reconnection on it's own:
-    // https://groups.google.com/d/msg/faye-users/NJPd3v98zjY/hyGpoat5Of0J
-    //
-
-    bayeux.subscribe(api3.res_channel, handle_api3_response);
   };
 }());
