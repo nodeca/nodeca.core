@@ -104,7 +104,7 @@ module.exports = function () {
       }
 
       if (err && (err.statusCode || 'HTTP ONLY' === String(err))) {
-        // can't deal via realtime - try http
+        // can't deal via rpc - try http
         window.location = href;
         return;
       }
