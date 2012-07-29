@@ -7,7 +7,7 @@ mixin pagination()
   -   }
   - }
   ul.pagination
-    - if (current_page > 2)
+    - if (current_page > 1)
       li
         a(href=link_to(head.apiPath, params)) 1
     - if (current_page > 4)
