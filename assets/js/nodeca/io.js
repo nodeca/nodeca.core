@@ -35,7 +35,6 @@
   //
 
 
-  io.ETIMEOUT   = 'IO_ETIMEOUT';
   io.EWRONGVER  = 'IO_EWRONGVER';
 
 
@@ -159,7 +158,7 @@
    *  nodeca.io.apiTree(name, callback) -> Void
    **/
   io.apiTree = function apiTree(name, params, options, callback) {
-    var xhr, timeout, id = rpc.idx++, data = {id: id};
+    var xhr, id = rpc.idx++, data = {id: id};
 
     // Scenario: rpc(name, callback);
     if (_.isFunction(params)) {
@@ -182,9 +181,6 @@
     //
 
     if (rpc.xhr) {
-      // if we are not on Firefox abort will save us some time
-      // see notice on timeout below
-      (rpc.xhr.abort || $.noop)();
       (rpc.xhr.reject || $.noop)();
       rpc.xhr = null;
     }
@@ -195,24 +191,6 @@
       method:   name,
       params:   params
     };
-
-    // stop timer
-    function stop_timer() {
-      clearTimeout(timeout); // stop timeout counter
-      timeout = null; // mark timeout as "removed"
-    }
-
-    //
-    // Wait for response 10 minutes
-    //
-    // NOTICE: we do not use $.ajax() settigns.timeout due to it's not working
-    // with JSONP requests on Firefox 3.0+ (it will fire a callback anyway, so
-    // we implement our own timeout): http://api.jquery.com/jQuery.ajax/
-    //
-
-    timeout = setTimeout(function () {
-      xhr.reject(ioerr(io.ETIMEOUT, 'Timeout ' + name + ' execution.'));
-    }, 600000);
 
     //
     // Send request
@@ -226,8 +204,6 @@
     //
 
     xhr.success(function (msg) {
-      stop_timer();
-
       nodeca.logger.debug('API3 [' + id + '] Received response ' +
                           '(' + String((msg || {}).result).length + ')', msg);
 
@@ -258,11 +234,9 @@
     //
 
     xhr.fail(function (err) {
-      stop_timer();
-
       if (err) {
-        // fire callback with error only if
-        // it was actually error (and not an interruption)
+        // fire callback with error only in case of real error
+        // and not due to our "previous request interruption"
         callback(err);
       }
     });
