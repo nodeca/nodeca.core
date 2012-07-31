@@ -201,7 +201,14 @@ module.exports = function () {
 
   $(function () {
     $('body').on('click', 'a', function (event) {
-      var match = find_match_data($(this).attr('href'));
+      var match;
+
+      if (event.isDefaultPrevented()) {
+        // skip clicks that were already handled
+        return;
+      }
+
+      match = find_match_data($(this).attr('href'));
 
       // Continue as normal for cmd clicks etc
       if (2 === event.which || event.metaKey) {
