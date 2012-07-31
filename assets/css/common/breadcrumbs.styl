@@ -2,14 +2,12 @@
   white-space nowrap
   margin: 0 0 (baseLineHeight/2)
 
-  a
-    color grayLight
-
-  li
-    display inline-block
-    margin-right .5em 
- 
-    &:after
-      content '/' 
-      margin-left .5em
-      color grayLighter
+.breadcrumb-link
+  color grayLight
+  position relative
+  margin-right 1.2em
+  &:after
+    position absolute
+    content '/' 
+    color grayLighter
+    right -0.8em

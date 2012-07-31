@@ -1,13 +1,20 @@
-ul.breadcrumbs(itemprop='breadcrumb')
-  - each item in widgets.breadcrumbs
-    //- each item has fields:
-    //-   text   (String)  - link text
-    //-   route  (String)  - routing rule (optional). Ex: "forum.thread.show".
-    //-   params (Object)  - routing params (optional). See routing rules in config.
-    li
-      - if (!!item.route)
-        //- link
-        a(href=link_to(item.route, item.params))= item.text
-      - else
-        //- text only 
-        #{item.text}
+mixin breadcrumb_step(tail)
+  //- each item has fields:
+  //-   text   (String)  - link text
+  //-   route  (String)  - routing rule (optional). Ex: "forum.thread.show".
+  //-   params (Object)  - routing params (optional). See routing rules in config.
+  - var item = tail[0];
+  - if (!!item.route)
+    //- link
+    a.breadcrumb-link(itemprop='url', href=link_to(item.route, item.params))
+      span(itemprop='name')= item.text
+  - else
+    //- text only 
+    span(itemprop='name')= item.text
+  - if (tail.length > 1)
+    //- next sublevel
+    span(itemprop='child', itemscope, itemtype='http://schema.org/Breadcrumb')
+      mixin breadcrumb_step(tail.slice(1))
+
+.breadcrumbs(itemprop='breadcrumb', itemscope, itemtype='http://schema.org/Breadcrumb')
+  mixin breadcrumb_step(widgets.breadcrumbs)
