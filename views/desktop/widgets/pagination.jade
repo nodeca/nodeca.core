@@ -18,8 +18,7 @@ mixin pagination(route, params, current, max_page)
     - if (current > SURROUNDING_NUMBER + 2)
       li.dropdown
         - delete(params.page)
-        //- a.more.dropdown-toggle(href=link_to(route, params), data-target="#", data-toggle='dropdown') ...
-        a.more.dropdown-toggle(href='#', data-target="#", data-toggle='dropdown') ...
+        a.more.dropdown-toggle(href=link_to(route, params), data-target="#", data-toggle='dropdown') ...
         form.dropdown-menu
           - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
           label.pgn-jump.input(for=pgmpid) Jump to:
@@ -60,8 +59,7 @@ mixin pagination(route, params, current, max_page)
     - if (max_page - current > SURROUNDING_NUMBER + 1)
       li.dropdown
         - delete(params.page)
-        //- a.more.dropdown-toggle(href=link_to(route, params), data-target="#", data-toggle='dropdown') ...
-        a.more.dropdown-toggle(href='#', data-target="#", data-toggle='dropdown') ...
+        a.more.dropdown-toggle(href=link_to(route, params), data-target="#", data-toggle='dropdown') ...
         form.dropdown-menu
           - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
           label.pgn-jump.input(for=pgmpid) Jump to:
