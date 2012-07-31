@@ -35,11 +35,6 @@ module.exports = function () {
       e.preventDefault();
     });
 
-    // Bootstrap.Dropdown don't calls e.preventDefault() by default
-    $('body').on('click.dropdown.data-api', '[data-toggle=dropdown]', function ( e ) {
-      e.preventDefault();
-    });
-
     //
     // Observe quicksearch focus to tweak icon style
     //
