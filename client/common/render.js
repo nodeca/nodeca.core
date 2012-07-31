@@ -83,23 +83,27 @@ helpers.jason = JASON.stringify;
  *  client.common.render(apiPath, layout, data) -> Void
  *  - apiPath (String): Server method API path.
  *  - layout (String): Layout or layouts stack
- *  - data (Oject): Locals data for the renderer
+ *  - data (Object): Locals data for the renderer
+ *  - inject (Boolean): Inject rendered body into the #content
  *
  *  Renders view and injects result HTML into `#content` element.
  **/
-module.exports = function render(apiPath, layout, data) {
+module.exports = function render(apiPath, layout, data, inject) {
   var locals, html;
 
   if (!nodeca.shared.common.getByPath(nodeca.views, apiPath)) {
     throw new Error("View " + apiPath + " not found");
   }
 
-  // prepare variables
   locals = _.extend(data, helpers);
   html   = nodeca.shared.common.render(nodeca.views, apiPath, layout, locals, true);
 
-  $('#content').html(html);
+  if (inject) {
+    $('#content').html(html);
+    // try to inject puncher stats
+    inject_puncher_stats(locals);
+    return null;
+  }
 
-  // try to inject puncher stats
-  inject_puncher_stats(locals);
+  return html;
 };

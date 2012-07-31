@@ -159,7 +159,7 @@ module.exports = function () {
     // make contnet semi-opque before rendering
     $('#content').stop().fadeTo('fast', 0.3, function () {
       try {
-        nodeca.client.common.render(data.view, data.layout, data.locals);
+        nodeca.client.common.render(data.view, data.layout, data.locals, true);
         nodeca.client.common.navbar_menu.activate(data.route);
       } catch (err) {
         // FIXME: redirect on error? or at least propose user to click
