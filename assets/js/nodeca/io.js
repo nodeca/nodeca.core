@@ -200,30 +200,24 @@
     // Listen for a response
     //
 
-    xhr.success(function (msg) {
-      nodeca.logger.debug('API3 [' + id + '] Received response ' +
-                          '(' + String((msg || {}).result).length + ')', msg);
+    xhr.success(function (data) {
+      data = data || {};
 
-      if (msg.version !== nodeca.runtime.version) {
+      nodeca.logger.debug('API3 [' + id + '] Received data', data);
+
+      if (data.version !== nodeca.runtime.version) {
         // emit version mismatch error
         emit('rpc:version-mismatch', {
           client: nodeca.runtime.version,
-          server: msg.version
+          server: data.version
         });
+
         callback(ioerr(io.EWRONGVER, 'Client version does not match server.'));
         return;
       }
 
-      try {
-        msg.result = JSON.parse(msg.result);
-      } catch (err) {
-        nodeca.logger.error('Failed parse result', err);
-        callback(err);
-        return;
-      }
-
       // run actual callback
-      callback(msg.err, msg.result);
+      callback(data.error, data.response);
     });
 
     //
@@ -234,6 +228,7 @@
       if (err) {
         // fire callback with error only in case of real error
         // and not due to our "previous request interruption"
+        // TODO: Handle this error separately - it's a real fuckup
         callback(err);
       }
     });
