@@ -3,7 +3,7 @@
 body
   overflow-y scroll
 
-//
+
 // Horizontal comma-separated list
 //
 .hlist
@@ -17,7 +17,6 @@ body
       content " "
 
 // the same, but for definitions
-
 .def-hlist
     margin 0
     > dt
@@ -30,7 +29,7 @@ body
       &:last-child:after
         content ""
 
-//
+
 // Universal container for page info
 //
 .page-summary
@@ -55,7 +54,6 @@ body
       font-size 11px
 
 
-//
 // Page footer styles
 //
 .page-footer
@@ -81,10 +79,9 @@ body
   font-size 12px
   opacity .7
 
-//
+
 // Page title & description
 //
-
 .page-head
   max-width 700px
   > p
@@ -93,10 +90,9 @@ body
     margin-bottom 1.3em
     color grayLighter
 
-//
+
 // Toolbar with buttons
 //
-
 .controlbar
   padding 10px 15px 5px
   background-color #fbfbfb
@@ -107,10 +103,9 @@ body
   color grayLight
   font-family sansWideFontFamily
 
-//
+
 // Pagination
 //
-
 .pagination
   display: inline-block
   font-size 12px
@@ -146,10 +141,30 @@ body
 label.pgn-jump
   margin-bottom 0
 
+
+// Communication notice
 //
+#notice
+  position fixed
+  top 50px
+  left 50%
+  z-index 2000
+
+  padding 3px 20px 3px 15px
+  background-color #fcf8e3
+  border 1px solid darken(#fcf8e3, 50%)
+  font-size 12px
+  width 100px
+  margin-left -50px
+
+  > .close
+    font-size 18px
+    top 0
+    right -15px
+    //margin-left 10px
+
 // Debug area
 //
-
 .debug
   margin-top 20px
   padding-top 20px
