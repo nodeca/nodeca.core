@@ -1,36 +1,35 @@
-mixin pagination()
-  - current_page = head.apiParams.page || 1
-  - params = {}
-  - for (var attr in head.apiParams) {
-  -   if (head.apiParams.hasOwnProperty(attr) && attr !== 'page') {
-  -     params[attr] = head.apiParams[attr];
-  -   }
-  - }
+//- Create pagination
+//-
+//-   route  (String)  - routing rule. Ex: "forum.thread".
+//-   params (Object)  - routing params. See routing rules in config.
+//-   current (String|Int) - current page position
+mixin pagination(route, params, current, max_page)
+  - current = parseInt(current)
   ul.pagination
-    - if (current_page > 1)
+    - if (current > 1)
       li
-        a(href=link_to(head.apiPath, params)) 1
-    - if (current_page > 4)
+        a(href=link_to(route, params)) 1
+    - if (current > 4)
       li.dropdown
         - delete(params.page)
-        a.more.dropdown-toggle(href=link_to(head.apiPath, params), data-toggle='dropdown') ...
+        a.more.dropdown-toggle(href=link_to(route, params), data-toggle='dropdown') ...
         form.dropdown-menu
           - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
           label.pgn-jump.input(for=pgmpid) Jump to:
           .input-append
             input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
             button.btn.btn-inverse(type='button') Go!
-    - if (current_page > 3)
-      - params.page = parseInt(current_page) - 2
+    - if (current > 3)
+      - params.page = current - 2
       li
-        a(href=link_to(head.apiPath, params)) #{parseInt(current_page) - 2}
-    - if (current_page > 2)
-      - params.page = parseInt(current_page) - 1
+        a(href=link_to(route, params)) #{current - 2}
+    - if (current > 2)
+      - params.page = current - 1
       li
-        a(href=link_to(head.apiPath, params)) #{parseInt(current_page) - 1}
+        a(href=link_to(route, params)) #{current - 1}
     li.dropdown
-      - params.page = parseInt(current_page)
-      a.current.dropdown-toggle(href=link_to(head.apiPath, params), data-toggle='dropdown') #{current_page}
+      - params.page = current
+      a.current.dropdown-toggle(href=link_to(route, params), data-toggle='dropdown') #{current}
       form.dropdown-menu
         - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
         label.pgn-jump.input(for=pgmpid) Jump to:
@@ -38,27 +37,27 @@ mixin pagination()
           input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
           button.btn.btn-inverse(type='button') Go!
 
-    - if ((max_page - current_page) >= 1 )
-      - params.page = parseInt(current_page) + 1
+    - if ((max_page - current) >= 1 )
+      - params.page = current + 1
       li
-        a(href=link_to(head.apiPath, params)) #{parseInt(current_page) + 1}
+        a(href=link_to(route, params)) #{current + 1}
 
-    - if ((max_page - current_page) >= 2)
-      - params.page = parseInt(current_page) + 2
+    - if ((max_page - current) >= 2)
+      - params.page = current + 2
       li
-        a(href=link_to(head.apiPath, params))  #{parseInt(current_page) + 2}
+        a(href=link_to(route, params))  #{current + 2}
 
-    - if (max_page - current_page > 3)
+    - if (max_page - current > 3)
       li.dropdown
         - delete(params.page)
-        a.more.dropdown-toggle(href=link_to(head.apiPath, params), data-toggle='dropdown') ...
+        a.more.dropdown-toggle(href=link_to(route, params), data-toggle='dropdown') ...
         form.dropdown-menu
           - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
           label.pgn-jump.input(for=pgmpid) Jump to:
           .input-append
             input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
             button.btn.btn-inverse(type='button') Go!
-    -if (max_page - current_page > 2)
+    - if (max_page - current > 2)
       - params.page = max_page
       li
-        a(href=link_to(head.apiPath, params)) #{max_page}
+        a(href=link_to(route, params)) #{max_page}
