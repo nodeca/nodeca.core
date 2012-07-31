@@ -158,7 +158,8 @@
    *  nodeca.io.apiTree(name, callback) -> Void
    **/
   io.apiTree = function apiTree(name, params, options, callback) {
-    var xhr, id = rpc.idx++, data = {id: id};
+    var xhr, id = rpc.idx++,
+        payload = {id: id, version: nodeca.runtime.version, method: name};
 
     // Scenario: rpc(name, callback);
     if (_.isFunction(params)) {
@@ -185,19 +186,15 @@
       rpc.xhr = null;
     }
 
-    // fill in message
-    data.msg = {
-      version:  nodeca.runtime.version,
-      method:   name,
-      params:   params
-    };
+    // fill in payload params
+    payload.params = params;
 
     //
     // Send request
     //
 
-    nodeca.logger.debug('API3 [' + id + '] Sending request', data.msg);
-    xhr = rpc.xhr = $.post('/rpc', data);
+    nodeca.logger.debug('API3 [' + id + '] Sending request', payload);
+    xhr = rpc.xhr = $.post('/rpc', payload);
 
     //
     // Listen for a response
