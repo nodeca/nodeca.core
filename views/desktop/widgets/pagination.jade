@@ -18,7 +18,8 @@ mixin pagination(route, params, current, max_page)
     - if (current > SURROUNDING_NUMBER + 2)
       li.dropdown
         - delete(params.page)
-        a.more.dropdown-toggle(href=link_to(route, params), data-toggle='dropdown') ...
+        //- a.more.dropdown-toggle(href=link_to(route, params), data-target="#", data-toggle='dropdown') ...
+        a.more.dropdown-toggle(href='#', data-target="#", data-toggle='dropdown') ...
         form.dropdown-menu
           - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
           label.pgn-jump.input(for=pgmpid) Jump to:
@@ -37,13 +38,14 @@ mixin pagination(route, params, current, max_page)
     // current page dispayed always
     li.dropdown
       - params.page = current
-      a.current.dropdown-toggle(href=link_to(route, params), data-toggle='dropdown') #{current}
+      //- a.current.dropdown-toggle(href=link_to(route, params), data-target="#", data-toggle='dropdown') #{current}
+      a.current.dropdown-toggle(href='#', data-target="#", data-toggle='dropdown') #{current}
       form.dropdown-menu
         - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
         label.pgn-jump.input(for=pgmpid) Jump to:
         .input-append
           input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
-            button.btn.btn-inverse(type='button') Go!
+          button.btn.btn-inverse(type='button') Go!
 
     //- right surrounding pages displayed if current page less then one from bottom
     - for (var i=1 ; i <= SURROUNDING_NUMBER; i++) {
@@ -58,7 +60,8 @@ mixin pagination(route, params, current, max_page)
     - if (max_page - current > SURROUNDING_NUMBER + 1)
       li.dropdown
         - delete(params.page)
-        a.more.dropdown-toggle(href=link_to(route, params), data-toggle='dropdown') ...
+        //- a.more.dropdown-toggle(href=link_to(route, params), data-target="#", data-toggle='dropdown') ...
+        a.more.dropdown-toggle(href='#', data-target="#", data-toggle='dropdown') ...
         form.dropdown-menu
           - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
           label.pgn-jump.input(for=pgmpid) Jump to:
