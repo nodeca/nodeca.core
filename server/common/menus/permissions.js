@@ -51,8 +51,8 @@ var get_menu_permissions = require('nodeca.core/lib/menu').get_menu_permissions;
 module.exports = function (params, callback) {
   var data = this.response.data;
 
-  if (!this.origin.realtime) {
-    callback({statusCode: 400, body: "REALTIME ONLY"});
+  if (!this.origin.rpc) {
+    callback({statusCode: 400, body: "RPC ONLY"});
     return;
   }
 
