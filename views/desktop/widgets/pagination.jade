@@ -12,7 +12,8 @@ mixin pagination()
         a(href=link_to(head.apiPath, params)) 1
     - if (current_page > 4)
       li.dropdown
-        a.more.dropdown-toggle(href='#', data-toggle='dropdown') ...
+        - delete(params.page)
+        a.more.dropdown-toggle(href=link_to(head.apiPath, params), data-toggle='dropdown') ...
         form.dropdown-menu
           - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
           label.pgn-jump.input(for=pgmpid) Jump to:
@@ -28,7 +29,8 @@ mixin pagination()
       li
         a(href=link_to(head.apiPath, params)) #{parseInt(current_page) - 1}
     li.dropdown
-      a.current.dropdown-toggle(href='#', data-toggle='dropdown') #{current_page}
+      - params.page = parseInt(current_page)
+      a.current.dropdown-toggle(href=link_to(head.apiPath, params), data-toggle='dropdown') #{current_page}
       form.dropdown-menu
         - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
         label.pgn-jump.input(for=pgmpid) Jump to:
@@ -48,7 +50,8 @@ mixin pagination()
 
     - if (max_page - current_page > 3)
       li.dropdown
-        a.more.dropdown-toggle(href='#', data-toggle='dropdown') ...
+        - delete(params.page)
+        a.more.dropdown-toggle(href=link_to(head.apiPath, params), data-toggle='dropdown') ...
         form.dropdown-menu
           - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
           label.pgn-jump.input(for=pgmpid) Jump to:
