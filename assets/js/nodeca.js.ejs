@@ -12,6 +12,15 @@ var nodeca = window.nodeca = (function (nodeca) {
   nodeca.runtime.router   = new Pointer();
   nodeca.runtime.i18n     = new BabelFish({});
 
+  // translations injector
+  nodeca.runtime.i18n.load = function loadTranslations(lang, namespace, data) {
+    if (undefined === nodeca.runtime.i18n._storage[lang]) {
+      nodeca.runtime.i18n._storage[lang] = {};
+    }
+
+    nodeca.runtime.i18n._storage[lang][namespace] = data;
+  };
+
   // some defaults
   nodeca.runtime.locale   = "<%= nodeca('config.locales.default') %>";
 
