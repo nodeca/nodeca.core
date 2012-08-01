@@ -159,7 +159,7 @@
    **/
   io.apiTree = function apiTree(name, params, options, callback) {
     var xhr, id = rpc.idx++,
-        payload = {id: id, version: nodeca.runtime.version, method: name};
+        payload = {version: nodeca.runtime.version, method: name};
 
     // Scenario: rpc(name, callback);
     if (_.isFunction(params)) {
