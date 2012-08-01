@@ -1,6 +1,16 @@
 //- Number of pages before/after current one
 - var PAGES_INTERVAL = 2
 
+
+//- create 'go to page' dropdown menu
+mixin _pagination_dropdown_menu
+  form.dropdown-menu
+    - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
+    label.pgn-jump.input(for=pgmpid) Jump to:
+    .input-append
+      input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
+      button.btn.btn-inverse(type='button')  Go!
+
 //- Create pagination
 //-
 //-   route    (String)  - routing rule. Ex: "forum.thread".
@@ -24,12 +34,7 @@ mixin pagination(route, params, current, max_page)
       li.dropdown
         - delete(params.page)
         a.more.dropdown-toggle(href=link_to(route, params), data-target="#", data-toggle='dropdown') ...
-        form.dropdown-menu
-          - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
-          label.pgn-jump.input(for=pgmpid) Jump to:
-          .input-append
-            input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
-            button.btn.btn-inverse(type='button') Go!
+        mixin _pagination_dropdown_menu
 
     //- left surrounding pages displayed if current page > 2
     - for (var i=PAGES_INTERVAL; i > 0; i--) {
@@ -43,12 +48,7 @@ mixin pagination(route, params, current, max_page)
     li.dropdown
       - params.page = current
       a.current.dropdown-toggle(href=link_to(route, params), data-target="#", data-toggle='dropdown') #{current}
-      form.dropdown-menu
-        - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
-        label.pgn-jump.input(for=pgmpid) Jump to:
-        .input-append
-          input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
-          button.btn.btn-inverse(type='button') Go!
+      mixin _pagination_dropdown_menu
 
     //- right surrounding pages displayed if current page < (bottom-1)
     - for (var i=1 ; i <= PAGES_INTERVAL; i++) {
@@ -64,12 +64,7 @@ mixin pagination(route, params, current, max_page)
       li.dropdown
         - delete(params.page)
         a.more.dropdown-toggle(href=link_to(route, params), data-target="#", data-toggle='dropdown') ...
-        form.dropdown-menu
-          - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
-          label.pgn-jump.input(for=pgmpid) Jump to:
-          .input-append
-            input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
-            button.btn.btn-inverse(type='button') Go!
+        mixin _pagination_dropdown_menu
 
     //- last page always displayed, except it's current one
     //- (then we skip last half of paginator)
