@@ -8,8 +8,9 @@
 //-   current  (String|Int) - current page position
 //-   max_page (String|Int) - current page position
 mixin pagination(route, params, current, max_page)
-  - current  = parseInt(current)
-  - max_page = parseInt(max_page)
+  //- cast int types for safety (router returns parameters as strings)
+  - current  = ~~current
+  - max_page = ~~max_page
   ul.pagination
     //- first page always displayed, except when current == 1.
     //- (then we skip first half of paginator)
