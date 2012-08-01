@@ -6,3 +6,7 @@ i18n:
       menus:
         admin:
           dashboard: Admin
+      pagination:
+        dropdown_label: 'Jump to:'
+        dropdown_placeholder: Page number
+        dropdown_button: Go!

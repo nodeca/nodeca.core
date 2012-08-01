@@ -6,10 +6,10 @@
 mixin _pagination_dropdown_menu
   form.dropdown-menu
     - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
-    label.pgn-jump.input(for=pgmpid) Jump to:
+    label.pgn-jump.input(for=pgmpid) #{t('common.pagination.dropdown_label')}
     .input-append
-      input.input-small(id=pgmpid, type='text', size='8', placeholder='Page number')
-      button.btn.btn-inverse(type='button')  Go!
+      input.input-small(id=pgmpid, type='text', size='8', placeholder=t('common.pagination.dropdown_placeholder'))
+      button.btn.btn-inverse(type='button') #{t('common.pagination.dropdown_button')}
 
 //- Create pagination
 //-
