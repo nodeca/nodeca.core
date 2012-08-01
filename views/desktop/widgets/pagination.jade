@@ -2,11 +2,13 @@
 
 //- Create pagination
 //-
-//-   route  (String)  - routing rule. Ex: "forum.thread".
-//-   params (Object)  - routing params. See routing rules in config.
-//-   current (String|Int) - current page position
+//-   route    (String)  - routing rule. Ex: "forum.thread".
+//-   params   (Object)  - routing params. See routing rules in config.
+//-   current  (String|Int) - current page position
+//-   max_page (String|Int) - current page position
 mixin pagination(route, params, current, max_page)
-  - current = parseInt(current)
+  - current  = parseInt(current)
+  - max_page = parseInt(max_page)
   ul.pagination
     //- first page displayed always, but current
     - if (current > 1)
