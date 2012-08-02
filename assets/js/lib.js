@@ -1,7 +1,5 @@
 /*global nodeca, $*/
 
-//= require consolelog
-
 //= require jquery/jquery
 //= require jquery.scrollto
 
