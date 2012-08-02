@@ -70,7 +70,7 @@
    *
    *  - `connected`
    *  - `disconnected`
-   *  - `rpc:version-mismatch({client: "str", server: "str"})`
+   *  - `rpc:version-mismatch({ client: "str", server: "str" })`
    **/
   io.on = function on(event, handler) {
     if (!events[event]) {

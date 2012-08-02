@@ -98,7 +98,7 @@
       return;
     }
 
-    yepnope({load: collect(assets, 'link'), complete: callback});
+    yepnope({ load: collect(assets, 'link'), complete: callback });
   }
 
 
