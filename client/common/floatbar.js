@@ -32,6 +32,9 @@ module.exports.init = function () {
     // fix sub nav on scroll
     var $win = $(window), $bar = $('#floatbar');
 
+    // remove previous floatbar handlers (if any)
+    $win.off('.floatbar');
+
     if (!$bar.length) {
       // do nothing if there's no floatbar
       return;
@@ -57,6 +60,6 @@ module.exports.init = function () {
 
     updateFloatbarState();
 
-    $win.on('scroll', _.throttle(updateFloatbarState, 100));
+    $win.on('scroll.floatbar', _.throttle(updateFloatbarState, 100));
   });
 };
