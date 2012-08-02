@@ -21,9 +21,8 @@
       events = {},
       // underlying bayeux client
       bayeux = null,
-      // stores last msg id for debug purposes
-      // and last xhr to allow interrupt it
-      rpc = {idx: 0, xhr: null};
+      // last xhr to allow interrupt it
+      last_xhr = null;
 
 
   // exported IO object
@@ -158,16 +157,15 @@
    *  nodeca.io.apiTree(name, callback) -> Void
    **/
   io.apiTree = function apiTree(name, params, options, callback) {
-    var xhr, id = rpc.idx++,
-        payload = {version: nodeca.runtime.version, method: name};
+    var xhr, payload = { version: nodeca.runtime.version, method: name };
 
-    // Scenario: rpc(name, callback);
+    // Scenario: apiTree(name, callback);
     if (_.isFunction(params)) {
       callback = params;
       params   = options  = {};
     }
 
-    // Scenario: rpc(name, params[, callback]);
+    // Scenario: apiTree(name, params[, callback]);
     if (_.isFunction(options)) {
       callback = options;
       options = {};
@@ -181,9 +179,9 @@
     // Interrupt previous rpc request
     //
 
-    if (rpc.xhr) {
-      (rpc.xhr.reject || $.noop)();
-      rpc.xhr = null;
+    if (last_xhr) {
+      (last_xhr.reject || $.noop)();
+      last_xhr = null;
     }
 
     // fill in payload params
@@ -193,8 +191,8 @@
     // Send request
     //
 
-    nodeca.logger.debug('API3 [' + id + '] Sending request', payload);
-    xhr = rpc.xhr = $.post('/rpc', payload);
+    nodeca.logger.debug('API3 Sending request', payload);
+    xhr = last_xhr = $.post('/rpc', payload);
 
     //
     // Listen for a response
@@ -203,7 +201,7 @@
     xhr.success(function (data) {
       data = data || {};
 
-      nodeca.logger.debug('API3 [' + id + '] Received data', data);
+      nodeca.logger.debug('API3 Received data', data);
 
       if (data.version !== nodeca.runtime.version) {
         // emit version mismatch error
