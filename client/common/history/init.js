@@ -9,19 +9,23 @@
  *  client.common
  **/
 
+/**
+ *  client.common.history
+ **/
+
 
 /*global $, _, nodeca, window, document*/
 
 
 /**
- *  client.common.init()
+ *  client.common.history.init()
  *
  *  Assigns all necessary event listeners and handlers.
  *
  *
  *  ##### Example
  *
- *      $(nodeca.client.common.init);
+ *      nodeca.client.common.history.init();
  **/
 module.exports = function () {
   var History = window.History; // History.js
@@ -79,7 +83,7 @@ module.exports = function () {
       // try relative URL if full didn;t match
       //
       //    `//example.com/foo/bar` -> `/foo/bar`
-      href  = href.replace(/^\/\/[^/]+\//, '/');
+      href  = href.replace(/^\/\/[^\/]+\//, '/');
       match = nodeca.runtime.router.match(href);
     }
 
