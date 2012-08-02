@@ -27,7 +27,7 @@
  *
  *      nodeca.client.common.controlbar.init();
  **/
-module.exports = function () {
+module.exports.init = function () {
   $(function () {
     // fix sub nav on scroll
     var $win = $(window),

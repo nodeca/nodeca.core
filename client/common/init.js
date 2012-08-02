@@ -42,11 +42,7 @@ module.exports = function () {
   });
 
 
-  // assign action links handlers
   nodeca.client.common.controlbar.init();
-
-
-  // assign action links handlers
   nodeca.client.common.action_links.init();
 
 

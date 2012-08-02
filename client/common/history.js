@@ -17,6 +17,9 @@
 /*global $, _, nodeca, window, document*/
 
 
+var History = window.History; // History.js
+
+
 /**
  *  client.common.history.init()
  *
@@ -27,10 +30,7 @@
  *
  *      nodeca.client.common.history.init();
  **/
-module.exports = function () {
-  var History = window.History; // History.js
-
-
+module.exports.init = function () {
   if (!History.enabled) {
     // do not do anything if History.js is not available
     return;

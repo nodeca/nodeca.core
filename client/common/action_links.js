@@ -28,7 +28,7 @@
  *
  *      nodeca.client.common.action_links.init();
  **/
-module.exports = function () {
+module.exports.init = function () {
   $(function () {
     $('body').on('click.nodeca.data-api', '[data-action]', function (event) {
       var $this = $(this), path = $this.data('action').split('.'),
