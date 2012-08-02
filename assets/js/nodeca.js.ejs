@@ -29,13 +29,12 @@ var nodeca = window.nodeca = (function (nodeca) {
     return nodeca.runtime.i18n.t(nodeca.runtime.locale, phrase, params);
   };
 
-  nodeca.logger = {
-    assert : _.bind(console.assert || console.debug || console.log || $.noop, console),
-    warn   : _.bind(console.warn || console.error || console.log || $.noop, console),
-    error  : _.bind(console.error || console.log || $.noop, console),
-    info   : _.bind(console.info || console.log || $.noop, console),
-    debug  : _.bind(console.debug || console.log || $.noop, console)
-  };
+  nodeca.logger = {};
+  _.each(['assert', 'error', 'info', 'debug'], function (level) {
+    nodeca.logger[level] = function () {
+      window.log.apply(null, [level].concat(Array.prototype.slice.call(arguments)));
+    };
+  });
 
   // fill in routes
   _.each(<%- jason(nodeca('runtime.routes_config')) %>, function (v) {
