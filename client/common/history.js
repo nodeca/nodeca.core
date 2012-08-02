@@ -192,7 +192,9 @@ module.exports.init = function () {
       }
 
       // restore opacity
-      $('#content').stop().fadeTo('fast', 1);
+      $('#content').stop().fadeTo('fast', 1, function () {
+        nodeca.client.common.floatbar.init();
+      });
 
       // remove "loading..." notification
       notification.hide();
