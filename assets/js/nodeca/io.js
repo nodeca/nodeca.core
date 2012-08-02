@@ -52,6 +52,7 @@
 
   // executes all handlers registered for given `event`
   function emit(event, args) {
+    args = _.isArray(args) ? args : []; // for IE < 9
     _.each(events[event] || [], function (handler) {
       handler.apply(null, args);
     });
