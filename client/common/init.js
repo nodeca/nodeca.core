@@ -24,9 +24,6 @@
  *      nodeca.client.common.init();
  **/
 module.exports = function () {
-  nodeca.io.init();
-
-
   $(function () {
     // Bootstrap.Collapse calls e.preventDefault() only when there's no
     // data-target attribute. We don't want URL to be changed, so we are
