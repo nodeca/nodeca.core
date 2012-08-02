@@ -42,7 +42,7 @@ module.exports = function () {
   });
 
 
-  nodeca.client.common.controlbar.init();
+  nodeca.client.common.floatbar.init();
   nodeca.client.common.action_links.init();
 
 
