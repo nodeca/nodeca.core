@@ -39,7 +39,7 @@ var nodeca = window.nodeca = (function (nodeca) {
 
       // we deal with IE6-7 where no console exist at all
       // or we deal with IE8 where console.log or whatever might be an object
-      if (!_.isFunction(c[level])) {
+      if (!_.isFunction(logger)) {
         logger = function () {
           log([level].concat(_.toArray(arguments)));
         };
