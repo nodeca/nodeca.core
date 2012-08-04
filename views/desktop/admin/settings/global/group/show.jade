@@ -29,5 +29,5 @@ form(name="settings", action="#")
             p= t('admin.settings.' + name + '.title')
           .setting_body
             p= t('admin.settings.' + name + '.description')
-            mixin display_value(name, setting.default, setting.type)
+            mixin display_value(name, setting["default"], setting.type)
   input(type="button", value="Save", onclick="saveSettings()")
