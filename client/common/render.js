@@ -71,7 +71,9 @@ helpers.link_to = function (name, params) {
   return nodeca.runtime.router.linkTo(name, params) || '#';
 };
 
-helpers.nodeca = nodeca;
+helpers.nodeca = function (path) {
+  return !path ? nodeca : nodeca.shared.common.getByPath(nodeca, path);
+};
 
 helpers.jason = JASON.stringify;
 
