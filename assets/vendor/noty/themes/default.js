@@ -1,6 +1,6 @@
 ;(function($) {
 
-	$.noty.themes.default = {
+	$.noty.themes['default'] = {
 		name: 'default',
 		helpers: {
 			borderFix: function() {
@@ -148,8 +148,8 @@
 			}
 		},
 		callback: {
-			onShow: function() { $.noty.themes.default.helpers.borderFix.apply(this); },
-			onClose: function() { $.noty.themes.default.helpers.borderFix.apply(this); }
+			onShow: function() { $.noty.themes['default'].helpers.borderFix.apply(this); },
+			onClose: function() { $.noty.themes['default'].helpers.borderFix.apply(this); }
 		}
 	};
 
