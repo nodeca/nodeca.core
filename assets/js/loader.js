@@ -107,6 +107,14 @@
     tree = (isPlainObject(tree) || isFunction(tree)) && tree || {};
 
     each(branch || {}, function (val, key) {
+      if (0 <= key.indexOf('.')) {
+        // merg in `{"foo.bar.baz": {}}` trees
+        var parts = key.split('.'), parent = parts.shift(), childs = {};
+        childs[parts.join('.')] = val;
+        tree[parent] = inject_tree(tree[parent], childs);
+        return;
+      }
+
       if (isPlainObject(val)) {
         tree[key] = inject_tree(tree[key], val);
         return;
