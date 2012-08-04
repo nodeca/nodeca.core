@@ -10,7 +10,6 @@
 //= require history/history.adapter.jquery
 //= require history/history
 //= require jade/runtime
-//= require jason
 
 //= require noty/jquery.noty
 //= require noty/layouts/topCenter

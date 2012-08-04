@@ -75,7 +75,8 @@ helpers.nodeca = function (path) {
   return !path ? nodeca : nodeca.shared.common.getByPath(nodeca, path);
 };
 
-helpers.jason = JASON.stringify;
+// substitute JASON with JSON
+helpers.jason = JSON.stringify;
 
 
 ////////////////////////////////////////////////////////////////////////////////
