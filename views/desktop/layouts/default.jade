@@ -7,6 +7,9 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
       - if ('css' === head.assets[i].type)
         link(rel='stylesheet', href=head.assets[i].link)
 
+    //if lt IE 9
+      script(type="text/javascript", src=asset_path('es5-shim.js'))
+
     script(type="text/javascript")!= asset_include('loader.js')
 
     - for (var i in head.assets)
