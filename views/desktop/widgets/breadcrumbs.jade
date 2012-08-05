@@ -6,7 +6,7 @@ mixin breadcrumb_step(tail)
   - var item = tail[0];
   - if (!!item.route)
     //- link
-    a.breadcrumb-link(itemprop='url', href=link_to(item.route, item.params))
+    a.breadcrumb-link(itemprop='url', href=self.link_to(item.route, item.params))
       span(itemprop='name')= item.text
   - else
     //- text only 
@@ -17,4 +17,4 @@ mixin breadcrumb_step(tail)
       mixin breadcrumb_step(tail.slice(1))
 
 .breadcrumbs(itemprop='breadcrumb', itemscope, itemtype='http://schema.org/Breadcrumb')
-  mixin breadcrumb_step(widgets.breadcrumbs)
+  mixin breadcrumb_step(self.widgets.breadcrumbs)

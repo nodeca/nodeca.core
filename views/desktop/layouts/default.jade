@@ -3,18 +3,18 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
   head
     include ../widgets/head
 
-    - for (var i in head.assets)
-      - if ('css' === head.assets[i].type)
-        link(rel='stylesheet', href=head.assets[i].link)
+    - for (var i in self.head.assets)
+      - if ('css' === self.head.assets[i].type)
+        link(rel='stylesheet', href=self.head.assets[i].link)
 
     //if lt IE 9
-      script(type="text/javascript", src=asset_path('es5-shim.js'))
+      script(type="text/javascript", src=self.asset_path('es5-shim.js'))
 
-    script(type="text/javascript")!= asset_include('loader.js')
+    script(type="text/javascript")!= self.asset_include('loader.js')
 
-    - for (var i in head.assets)
-      - if ('js' === head.assets[i].type)
-        script(type="text/javascript", src=head.assets[i].link)
+    - for (var i in self.head.assets)
+      - if ('js' === self.head.assets[i].type)
+        script(type="text/javascript", src=self.head.assets[i].link)
 
     script(type="text/javascript")
       nodeca.client.common.init();
@@ -48,10 +48,10 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
               input.input-medium.search-query(type='text', placeholder='Search')
               .icon-search
 
-            - if (menus.common.admin.length > 0)
+            - if (self.menus.common.admin.length > 0)
               ul.nav
-                - each item in menus.common.admin
-                  li: a(href=item.link)= t(item.title)
+                - each item in self.menus.common.admin
+                  li: a(href=item.link)= self.t(item.title)
 
             ul.nav.pull-right
               li.dropdown
@@ -71,7 +71,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
                     a(href='#') Exit
 
 
-    #content.container!= content
+    #content.container!= self.content
 
     footer.container.page-footer
       ul.page-footer-nav.clearfix

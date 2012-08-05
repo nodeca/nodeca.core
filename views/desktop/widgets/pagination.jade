@@ -6,10 +6,10 @@
 mixin _pagination_dropdown_menu
   form.dropdown-menu
     - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
-    label.pgn-jump.input(for=pgmpid) #{t('common.pagination.dropdown_label')}
+    label.pgn-jump.input(for=pgmpid) #{self.t('common.pagination.dropdown_label')}
     .input-append
-      input.input-small(id=pgmpid, type='text', size='8', placeholder=t('common.pagination.dropdown_placeholder'))
-      button.btn.btn-inverse(type='button') #{t('common.pagination.dropdown_button')}
+      input.input-small(id=pgmpid, type='text', size='8', placeholder=self.t('common.pagination.dropdown_placeholder'))
+      button.btn.btn-inverse(type='button') #{self.t('common.pagination.dropdown_button')}
 
 //- Create pagination
 //-
@@ -26,14 +26,14 @@ mixin pagination(route, params, current, max_page)
     //- (then we skip first half of paginator)
     - if (current > 1)
       li
-        a(href=link_to(route, params)) 1
+        a(href=self.link_to(route, params)) 1
 
     //- left ellipsis displayed, if > 1 pages exists between first one
     //- and left head of "surrounding" pages
     - if (current > PAGES_INTERVAL + 2)
       li.dropdown
         - delete(params.page)
-        a.more.dropdown-toggle(href=link_to(route, params), data-target="#", data-toggle='dropdown') ...
+        a.more.dropdown-toggle(href=self.link_to(route, params), data-target="#", data-toggle='dropdown') ...
         mixin _pagination_dropdown_menu
 
     //- left surrounding pages displayed if current page > 2
@@ -41,13 +41,13 @@ mixin pagination(route, params, current, max_page)
     -   if (current > i + 1) 
           - params.page = current - i
           li
-            a(href=link_to(route, params)) #{current - i}
+            a(href=self.link_to(route, params)) #{current - i}
     - }
 
     // current page always dispayed
     li.dropdown
       - params.page = current
-      a.current.dropdown-toggle(href=link_to(route, params), data-target="#", data-toggle='dropdown') #{current}
+      a.current.dropdown-toggle(href=self.link_to(route, params), data-target="#", data-toggle='dropdown') #{current}
       mixin _pagination_dropdown_menu
 
     //- right surrounding pages displayed if current page < (bottom-1)
@@ -55,7 +55,7 @@ mixin pagination(route, params, current, max_page)
     -   if ((max_page - current) > i )
           - params.page = current + i
           li
-            a(href=link_to(route, params)) #{current + i}
+            a(href=self.link_to(route, params)) #{current + i}
     - }
 
     //- right ellipsis displayed, if > 1 pages exists between right
@@ -63,7 +63,7 @@ mixin pagination(route, params, current, max_page)
     - if (max_page - current > PAGES_INTERVAL + 1)
       li.dropdown
         - delete(params.page)
-        a.more.dropdown-toggle(href=link_to(route, params), data-target="#", data-toggle='dropdown') ...
+        a.more.dropdown-toggle(href=self.link_to(route, params), data-target="#", data-toggle='dropdown') ...
         mixin _pagination_dropdown_menu
 
     //- last page always displayed, except it's current one
@@ -71,4 +71,4 @@ mixin pagination(route, params, current, max_page)
     - if (max_page - current !== 0)
       - params.page = max_page
       li
-        a(href=link_to(route, params)) #{max_page}
+        a(href=self.link_to(route, params)) #{max_page}

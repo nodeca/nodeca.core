@@ -5,12 +5,12 @@
 //- http://validator.w3.org  recommendation
 meta(charset='UTF-8')
 
-- if (head)
-  - if (head.title)
-    title #{head.title}
+- if (self.head)
+  - if (self.head.title)
+    title #{self.head.title}
   //- description
-  - if (head.desc)
-    meta(name='description', content=head.desc)
+  - if (self.head.desc)
+    meta(name='description', content=self.head.desc)
   //- keywords
-  - if (head.keywords)
-    meta(name='description', content=head.keywords)
+  - if (self.head.keywords)
+    meta(name='description', content=self.head.keywords)
