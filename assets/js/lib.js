@@ -1,6 +1,6 @@
 /*global nodeca, $*/
 
-//= require json3
+//= require json2
 //= require jquery/jquery
 //= require jquery.scrollto
 
