@@ -107,15 +107,9 @@ module.exports.init = function () {
         return;
       }
 
-      if (err && (err.statusCode || 'HTTP ONLY' === String(err))) {
+      if (err) {
         // can't deal via rpc - try http
         window.location = href;
-        return;
-      }
-
-      // TODO: Properly handle `err` and (?) `msg.error`
-      if (err) {
-        nodeca.logger.error('Failed apiTree call', err);
         return;
       }
 
