@@ -27,12 +27,12 @@ var $puncher_stats = null;
 
 
 /**
- *  client.common.stats.injectPuncher(data) -> Void
+ *  client.common.stats.inject(data) -> Void
  *  - data (Object): Locals data for the renderer
  *
- *  Renders and injects Puncher stats data if needed.
+ *  Renders and injects debug stats data if needed.
  **/
-module.exports.injectPuncher = function injectPuncher(data) {
+module.exports.inject = function inject(data) {
   var html;
 
   // try to find puncher stats first time

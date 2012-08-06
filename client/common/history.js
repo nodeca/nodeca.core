@@ -164,7 +164,7 @@ module.exports.init = function () {
         html = nodeca.client.common.render(data.view, data.layout, data.locals);
         $('#content').html(html);
 
-        nodeca.client.common.stats.injectPuncher(data.locals);
+        nodeca.client.common.stats.inject(data.locals);
       } catch (err) {
         // FIXME: redirect on error? or at least propose user to click
         //        a link to reload to the requested page
