@@ -156,9 +156,15 @@ module.exports.init = function () {
 
     // make contnet semi-opque before rendering
     $('#content').stop().fadeTo('fast', 0.3, function () {
+      var html;
+
       try {
-        nodeca.client.common.render(data.view, data.layout, data.locals, true);
         nodeca.client.common.navbar_menu.activate(data.route);
+
+        html = nodeca.client.common.render(data.view, data.layout, data.locals);
+        $('#content').html(html);
+
+        nodeca.client.common.render.injectPuncherStats(data.locals);
       } catch (err) {
         // FIXME: redirect on error? or at least propose user to click
         //        a link to reload to the requested page

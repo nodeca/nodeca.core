@@ -24,24 +24,9 @@ var $puncher_stats = null;
 ////////////////////////////////////////////////////////////////////////////////
 
 
-function inject_puncher_stats(data) {
-  var html;
-
-  // try to find puncher stats first time
-  if (null === $puncher_stats) {
-    $puncher_stats = $('#debug_timeline');
-  }
-
-  if (!$puncher_stats.length) {
-    // server didn't injected puncher stats so we don't
-    return;
-  }
-
-  html = nodeca.shared.common.render(nodeca.views, 'widgets.debug_timeline', false, data);
-  $puncher_stats.replaceWith(html);
-
-  // replace cached element with new one
-  $puncher_stats = $('#debug_timeline');
+function render_view(apiPath, layout, locals) {
+  locals = _.extend(locals, helpers);
+  return nodeca.shared.common.render(nodeca.views, apiPath, layout, locals);
 }
 
 
@@ -87,26 +72,44 @@ helpers.jason = JSON.stringify;
  *  - apiPath (String): Server method API path.
  *  - layout (String): Layout or layouts stack
  *  - data (Object): Locals data for the renderer
- *  - inject (Boolean): Inject rendered body into the #content
  *
- *  Renders view and injects result HTML into `#content` element.
+ *  Renders view.
  **/
-module.exports = function render(apiPath, layout, data, inject) {
-  var locals, html;
+module.exports = function render(apiPath, layout, data) {
+  var locals;
 
   if (!nodeca.shared.common.getByPath(nodeca.views, apiPath)) {
     throw new Error("View " + apiPath + " not found");
   }
 
-  locals = _.extend(data, helpers);
-  html   = nodeca.shared.common.render(nodeca.views, apiPath, layout, locals, true);
+  return render_view(apiPath, layout, data);
+};
 
-  if (inject) {
-    $('#content').html(html);
-    // try to inject puncher stats
-    inject_puncher_stats(locals);
-    return null;
+
+/**
+ *  client.common.render.injectPuncherStats(data) -> Void
+ *  - data (Object): Locals data for the renderer
+ *
+ *  Renders and injects Puncher stats data if needed.
+ **/
+module.exports.injectPuncherStats = function injectPuncherStats(data) {
+  var html;
+
+  // try to find puncher stats first time
+  if (null === $puncher_stats) {
+    $puncher_stats = $('#debug_timeline');
   }
 
-  return html;
+  if (!$puncher_stats.length) {
+    // server didn't injected puncher stats so we don't
+    return;
+  }
+
+  html = render_view('widgets.debug_timeline', false, data);
+
+  // replace HTML with new stats
+  $puncher_stats.replaceWith(html);
+
+  // recache jQuery element
+  $puncher_stats = $('#debug_timeline');
 };
