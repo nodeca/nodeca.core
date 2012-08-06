@@ -71,5 +71,5 @@ module.exports = function render(apiPath, layout, locals) {
   }
 
   locals = _.extend(locals, helpers);
-  return nodeca.shared.common.render(nodeca.views, apiPath, layout, locals);
+  return nodeca.shared.common.render(nodeca.views, apiPath, layout, locals, true);
 };
