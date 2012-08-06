@@ -1,6 +1,10 @@
 /*global nodeca, $*/
 
+//  JSON is required for Opera < 11 + IE < 8
+//  See: http://caniuse.com/json
+//  FIXME: require via yepnope (or any other loader).
 //= require json2
+
 //= require jquery/jquery
 //= require jquery.scrollto
 
