@@ -206,15 +206,16 @@ module.exports.init = function () {
   //
 
   $(function () {
-    $('body').on('click', 'a:not([target])', function (event) {
-      var match;
+    $('body').on('click', 'a', function (event) {
+      var $this = $(this), match;
 
-      if (event.isDefaultPrevented()) {
-        // skip clicks that were already handled
+      if (!!$this.attr('target') || event.isDefaultPrevented()) {
+        // skip links that have `target` attribute specified
+        // and clicks that were already handled
         return;
       }
 
-      match = find_match_data($(this).attr('href'));
+      match = find_match_data($this.attr('href'));
 
       // Continue as normal for cmd clicks etc
       if (2 === event.which || event.metaKey) {
