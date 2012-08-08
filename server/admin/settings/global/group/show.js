@@ -25,6 +25,18 @@
 /*global nodeca*/
 
 
+// Validate input parameters
+//
+var params_schema = {
+  // thread id
+  id: {
+    type: 'string',
+    required: true
+  }
+}
+nodeca.validate(params_schema);
+
+
 /**
  *  server.admin.settings.global.group.show(params, callback) -> Void
  *
