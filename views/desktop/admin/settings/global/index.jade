@@ -3,4 +3,4 @@ h1 Settings
 ul
   -each group_name in self.groups
     li
-      a(href=link_to('admin.settings.global.group.show', {id:group_name}))= self.t('admin.settings.' + group_name + '_group.title')
+      a(href=self.link_to('admin.settings.global.group.show', {id:group_name}))= self.t('admin.settings.' + group_name + '_group.title')

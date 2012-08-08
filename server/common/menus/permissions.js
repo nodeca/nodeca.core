@@ -28,6 +28,21 @@ var get_menu_permissions = require('nodeca.core/lib/menu').get_menu_permissions;
 ////////////////////////////////////////////////////////////////////////////////
 
 
+// Validate input parameters
+//
+var params_schema = {
+  menu_ids: {
+    type: "array",
+    required: true,
+    items: {
+      type: "integer",
+    },
+    minItems: 1
+  }
+}
+nodeca.validate(params_schema);
+
+
 /**
  *  server.common.permissions(params, callback) -> Void
  *

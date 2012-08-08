@@ -28,6 +28,17 @@ var logger  = nodeca.logger.getLogger('server.static');
 ////////////////////////////////////////////////////////////////////////////////
 
 
+// Validate input parameters
+//
+var params_schema = {
+  file: {
+    type: "string",
+    required: true
+  }
+}
+nodeca.validate(params_schema);
+
+
 /**
  *  server.static(params, callback) -> Void
  *

@@ -55,6 +55,18 @@ function call_mincer_server(req, res) {
 ////////////////////////////////////////////////////////////////////////////////
 
 
+
+// Validate input parameters
+//
+var params_schema = {
+  path: {
+    type: "string",
+    required: true
+  }
+}
+nodeca.validate(params_schema);
+
+
 /**
  *  server.assets(params, callback) -> Void
  *

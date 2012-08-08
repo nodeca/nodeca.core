@@ -13,6 +13,13 @@
 /*global nodeca*/
 
 
+// Validate input parameters
+//
+var params_schema = {
+}
+nodeca.validate(params_schema);
+
+
 /**
  *  server.admin.dashboard(params, callback) -> Void
  *
