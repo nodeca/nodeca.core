@@ -51,7 +51,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
             - if (self.menus.common.admin.length > 0)
               ul.nav
                 - each item in self.menus.common.admin
-                  li: a(href=item.link)= self.t(item.title)
+                  li: a(href=item.link, target='_blank')= self.t(item.title)
 
             ul.nav.pull-right
               li.dropdown
