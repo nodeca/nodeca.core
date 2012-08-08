@@ -206,7 +206,7 @@ module.exports.init = function () {
   //
 
   $(function () {
-    $('body').on('click', 'a', function (event) {
+    $('body').on('click', 'a:not[target]', function (event) {
       var match;
 
       if (event.isDefaultPrevented()) {
