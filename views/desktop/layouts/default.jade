@@ -11,15 +11,15 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
       script(type="text/javascript", src=self.asset_path('es5-shim.js'))
 
     script(type="text/javascript")
-      != self.asset_include('loader.js')
+      !{self.asset_include('loader.js')}
       yepnope([
         { //  JSON is required for Opera < 11 + IE < 8
           //  See: http://caniuse.com/json
           test: window.JSON,
-          nope: #{self.asset_path('json2.js')}
+          nope: "!{self.asset_path('json2.js')}"
         }
       ]);
-      load_assets(#{JSON.stringify(self.head.assets)}, function () {
+      load_assets(!{JSON.stringify(self.head.assets)}, function () {
         nodeca.client.common.init();
       });
 
