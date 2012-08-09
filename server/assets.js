@@ -63,7 +63,7 @@ var params_schema = {
     type: "string",
     required: true
   }
-}
+};
 nodeca.validate(params_schema);
 
 

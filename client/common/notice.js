@@ -1,7 +1,7 @@
 'use strict';
 
 
-/*global $*/
+/*global $, nodeca, document*/
 
 
 var $notice = $([]), $message = $([]);

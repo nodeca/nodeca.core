@@ -42,8 +42,18 @@ module.exports.run = function (args, callback) {
 
     // fetch used migrations from db
     Migration.getLastState(function(err, last_state){
+      if (err) {
+        callback(err);
+        return;
+      }
+
       // find new migrations
       migrator.checkMigrations(last_state, function(err, new_migrations){
+        if (err) {
+          callback(err);
+          return;
+        }
+
         if (0 === new_migrations.length) {
           console.log(args.all ? 'Already up-to-date.' :
                       'You have no outstanding migrations');

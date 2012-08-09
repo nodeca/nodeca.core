@@ -43,7 +43,7 @@ module.exports.init = function () {
     var navTop = $bar.offset().top, isFixed = false;
 
     function updateFloatbarState() {
-      var i, scrollTop = $win.scrollTop();
+      var scrollTop = $win.scrollTop();
 
       if (scrollTop >= navTop && !isFixed) {
         isFixed = true;

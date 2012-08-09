@@ -46,6 +46,11 @@ var Migration = module.exports.Migration = new mongoose.Schema({
 Migration.statics.markPassed = function (app_name, step, callback) {
   var model = this;
   model.find({_id: app_name}, function(err, docs) {
+    if (err) {
+      callback(err);
+      return;
+    }
+
     if (docs.length > 0) {
       model.update({_id: app_name}, { $push: { steps: step }}, callback);
     }

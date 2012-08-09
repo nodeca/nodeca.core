@@ -30,7 +30,7 @@ helpers.date = function (value, format) {
   return nodeca.shared.common.date(value, format, nodeca.runtime.locale, tzOffset);
 };
 
-helpers.asset_path = function (pathname) {
+helpers.asset_path = function (/*pathname*/) {
   /*global alert*/
   alert('asset_path() is not implemented yet');
   return "";

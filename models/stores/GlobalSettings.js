@@ -46,6 +46,11 @@ GlobalSettigs.statics.get = function() {
 GlobalSettigs.statics.set= function (key, value, callback) {
   var model = this;
   model.findOne({_id: key}, function(err, doc) {
+    if (err) {
+      callback(err);
+      return;
+    }
+
     if (doc) {
       model.update({_id: key}, { value: value }, callback);
     }
