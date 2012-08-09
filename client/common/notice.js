@@ -1,7 +1,7 @@
 'use strict';
 
 
-/*global $, nodeca, document*/
+/*global $, nodeca*/
 
 
 var $notice = $([]), $message = $([]);
@@ -12,7 +12,7 @@ function init() {
     $notice   = $(nodeca.views.widgets.notice());
     $message  = $notice.find('.message');
 
-    $notice.appendTo(document.body);
+    $notice.appendTo($('body'));
     $notice.find('.close').click(module.exports.hide);
 
     module.exports.hide();
