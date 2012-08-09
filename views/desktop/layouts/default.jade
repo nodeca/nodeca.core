@@ -10,14 +10,18 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
     //if lt IE 9
       script(type="text/javascript", src=self.asset_path('es5-shim.js'))
 
-    script(type="text/javascript")!= self.asset_include('loader.js')
-
-    - for (var i in self.head.assets)
-      - if ('js' === self.head.assets[i].type)
-        script(type="text/javascript", src=self.head.assets[i].link)
-
     script(type="text/javascript")
-      nodeca.client.common.init();
+      != self.asset_include('loader.js')
+      yepnope([
+        { //  JSON is required for Opera < 11 + IE < 8
+          //  See: http://caniuse.com/json
+          test: window.JSON,
+          nope: #{self.asset_path('json2.js')}
+        }
+      ]);
+      load_assets(#{JSON.stringify(self.head.assets)}, function () {
+        nodeca.client.common.init();
+      });
 
     script(type="text/javascript")
       var _gaq = _gaq || [];
