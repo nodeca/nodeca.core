@@ -15,7 +15,7 @@
 
   "dependencies"    : {
                         "redis"       : "~ 0.7.2",
-                        "mongoose"    : "git://github.com/LearnBoost/mongoose.git",
+                        "mongoose"    : "~ 3.0.0",
                         "puncher"     : "~ 1.0.1",
                         "send"        : "~ 0.0.3",
                         "qs"          : "~ 0.5.0",
