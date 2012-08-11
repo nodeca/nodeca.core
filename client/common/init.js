@@ -42,6 +42,19 @@ module.exports = function () {
   });
 
 
+  // **WARNING**
+  //
+  // jQuery.each correctly iterate through own proprties of a function.
+  // Underscore, treats all objects with `length` proprerty as an array,
+  // thus it can't be used here.
+  //
+  $.each(nodeca.client.common.init, function (idx, func) {
+    if (_.isFunction(func)) {
+      func();
+    }
+  });
+
+
   nodeca.client.common.floatbar.init();
   nodeca.client.common.action_links.init();
 
