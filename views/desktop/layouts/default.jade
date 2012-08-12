@@ -1,7 +1,7 @@
 !!! 5
 html.no-js(itemscope, itemtype='http://schema.org/WebPage')
   head
-    include ../widgets/head
+    include ../common/widgets/head
 
     each ns in ['common', self.head.apiPath.split('.').shift()]
       - if (self.head.assets.apps[ns])
@@ -39,7 +39,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
           .nav-collapse.collapse
 
-            include ../widgets/navbar_menu
+            include ../common/widgets/navbar_menu
 
             form.navbar-search
               input.input-medium.search-query(type='text', placeholder='Search')

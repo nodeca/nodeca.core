@@ -9,7 +9,7 @@ var $notice = $([]), $message = $([]);
 
 function init() {
   if (!$notice.length) {
-    $notice   = $(nodeca.views.widgets.notice());
+    $notice   = $(nodeca.views.common.widgets.notice());
     $message  = $notice.find('.message');
 
     $notice.appendTo($('body'));
