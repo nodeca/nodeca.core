@@ -9,6 +9,9 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
           each asset in obj.load
             link(rel='stylesheet', href=asset)
 
+    //if lt IE 9
+      script(type="text/javascript", src=self.asset_path('es5-shim.js'))
+
     script(type="text/javascript")
       !{self.asset_include('loader.js')}
       load_assets.init(!{self.jason(self.head.assets)}, ['common', '!{self.head.apiPath.split(".").shift()}']);

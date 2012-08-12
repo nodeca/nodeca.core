@@ -1,5 +1,5 @@
 //= require modernizr.custom
-//= require yepnope/yepnope
+//= require yepnope
 //= require_self
 
 
@@ -141,18 +141,18 @@
     resources   = resources.concat(assetsMap.lib.js);
 
     for (i = 0; i < namespaces.length; i++) {
-      ns = assets[namespaces[i]];
+      ns = namespaces[i];
 
-      if (ns) {
-        ns.loaded = true;
-        resources = resources.concat(ns.js || []);
+      if (assets[ns]) {
+        assets[ns].loaded = true;
+        resources = resources.concat(assets[ns].js || []);
       }
     }
 
     load_resources(resources, function () {
       if (window.nodeca) {
         for (i = 0; i < namespaces.length; i++) {
-          ns = assets[namespaces[i]];
+          ns = namespaces[i];
 
           if (nodeca.client[ns] && isFunction(nodeca.client[ns].init)) {
             nodeca.client[ns].init();
