@@ -58,25 +58,7 @@
   }
 
 
-  // returns array of `prop` values from `obj`
-  //
-  //    collect([{foo: 1}, {foo: 2}], 'foo');
-  //    // -> [1, 2]
-  //
-  function collect(obj, prop) {
-    var out = [], i;
-
-    for (i in obj) {
-      if (obj.hasOwnProperty(i) && obj[i][prop]) {
-        out.push(obj[i][prop]);
-      }
-    }
-
-    return out;
-  }
-
-
-  // Simple `each` iterator
+  // Simple `each` iterator for `Objects`
   function each(obj, iter) {
     for (var k in obj) {
       if (obj.hasOwnProperty(k)) {
@@ -86,34 +68,18 @@
   }
 
 
+  // Simple cross-browser `forEach` iterator for `Arrays`
+  function forEach(arr, iter) {
+    var i, l;
+
+    for (i = 0, l = arr.length; i < l; i++) {
+      iter(arr[i], i);
+    }
+  }
+
+
   // cached non-operable function
   function noop() {}
-
-
-  // simple wrapper over yepnope that loads resources and fires callback only
-  // once all resources were injected
-  function load_resources(resources, callback) {
-    var i, count = resources.length;
-
-    if (0 === count) {
-      callback();
-      return;
-    }
-
-    function finish() {
-      count--;
-
-      if (0 === count) {
-        callback();
-      }
-    }
-
-    for (i = 0; i < count; i++) {
-      resources[i].complete = finish;
-    }
-
-    yepnope(resources);
-  }
 
 
   // assets map for namespaces only - set with load_assets.init()
@@ -131,14 +97,62 @@
 
     resources = resources.concat(assets[namespace].css || []);
     resources = resources.concat(assets[namespace].js || []);
-    assets[namespace].loaded = true;
 
-    load_resources([{load: resources}], callback || noop);
+    yepnope({
+      load:     resources,
+      complete: function () {
+        assets[namespace].loaded = true;
+        (callback || noop)();
+      }
+    });
   }
 
 
+  // internal helper used by load_assets,init that loads resources and fires
+  // callback only once all resources were injected.
+  function load_resources(resources, callback) {
+    var i, count = resources.length;
+
+    // fired once all queued scripts were injected
+    function complete() {
+      count--;
+
+      if (0 === count) {
+        callback();
+      }
+    }
+
+    // assign complete calback for each resource object
+    for (i = 0; i < count; i++) {
+      resources[i].complete = complete;
+    }
+
+    // queue resources
+    yepnope(resources);
+  }
+
+
+  // loads all necessary shims and libraries and assets for given namespace
   load_assets.init = function (assetsMap, namespace) {
-    var resources = [];
+    var resources = [], namespaces;
+
+    // set internal assets map
+    assets = assetsMap;
+
+    // init can be called only once
+    delete load_assets.init;
+
+    // set list of requried namespaces
+    namespaces = 'admin' === namespace ? [namespace] : ['common', namespace];
+
+    // FIXME: `lib` namespace is a *special case* namespace
+    //        and will be removed once it will be possible to
+    //        bundle it into admin/common app.js
+    namespaces.unshift('lib');
+
+    //
+    // Fill resources with shims and polyfills
+    //
 
     resources.push({
       //  JSON is required for Opera < 11 + IE < 8
@@ -147,36 +161,30 @@
       nope: <%- JSON.stringify(asset_path('json2.js')) %>
     });
 
-    assets = assetsMap;
+    //
+    // Add resource with assets of required namespaces
+    //
 
-    // FIXME: `lib` namespace is a *special case* namespace
-    //        and will be removed once it will be possible to
-    //        bundle it into admin/common app.js
-    resources.push({ load: assets.lib.js });
-    assets.lib.loaded = true;
+    forEach(namespaces, function (ns) {
+      if (assets[ns] && assets[ns].js && assets[ns].js.length) {
+        resources.push({ load: assets[ns].js });
+      }
+    });
 
-    if ('admin' !== namespace) {
-      resources.push({ load: assets.common.js });
-      assets.common.loaded = true;
-    }
-
-    if (assets[namespace]) {
-      resources.push({ load: assets[namespace].js });
-      assets[namespace].loaded = true;
-    }
+    //
+    // Queue assets injections
+    //
 
     load_resources(resources, function () {
-      var arr = ['common', namespace], ns, i;
-
-      if (window.nodeca) {
-        for (i = 0; i < arr.length; i++) {
-          ns = arr[i];
+      forEach(namespaces, function (ns) {
+        if (assets[ns]) {
+          assets[ns].loaded = true;
 
           if (nodeca.client[ns] && isFunction(nodeca.client[ns].init)) {
             nodeca.client[ns].init();
           }
         }
-      }
+      });
     });
   };
 
