@@ -124,8 +124,8 @@
     var resources = [];
 
     if (assets[namespace] && !assets[namespace].loaded) {
-      resources = resources.concat(assets[namespace].css);
-      resources = resources.concat(assets[namespace].js);
+      resources = resources.concat(assets[namespace].css || []);
+      resources = resources.concat(assets[namespace].js || []);
       assets[namespace].loaded = true;
     }
 
@@ -143,9 +143,9 @@
     for (i = 0; i < namespaces.length; i++) {
       ns = assets[namespaces[i]];
 
-      if (ns && assets[ns]) {
-        assets[ns].loaded = true;
-        resources = resources.concat(assets[ns].js || []);
+      if (ns) {
+        ns.loaded = true;
+        resources = resources.concat(ns.js || []);
       }
     }
 
