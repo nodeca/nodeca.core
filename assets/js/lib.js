@@ -16,3 +16,5 @@
 //= require noty/themes/default
 
 //= require_tree ./lib
+
+//= require nodeca

@@ -3,25 +3,15 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
   head
     include ../widgets/head
 
-    - for (var i in self.head.assets)
-      - if ('css' === self.head.assets[i].type)
-        link(rel='stylesheet', href=self.head.assets[i].link)
-
-    //if lt IE 9
-      script(type="text/javascript", src=self.asset_path('es5-shim.js'))
+    each ns in ['common', self.head.apiPath.split('.').shift()]
+      - if (self.head.assets.apps[ns])
+        each obj in self.head.assets.apps[ns].css
+          each asset in obj.load
+            link(rel='stylesheet', href=asset)
 
     script(type="text/javascript")
       !{self.asset_include('loader.js')}
-      yepnope([
-        { //  JSON is required for Opera < 11 + IE < 8
-          //  See: http://caniuse.com/json
-          test: window.JSON,
-          nope: "!{self.asset_path('json2.js')}"
-        }
-      ]);
-      load_assets(!{JSON.stringify(self.head.assets)}, function () {
-        nodeca.client.common.init();
-      });
+      load_assets.init(!{JSON.stringify(self.head.assets)}, ['common', '!{self.head.apiPath.split(".").shift()}']);
 
     script(type="text/javascript")
       var _gaq = _gaq || [];

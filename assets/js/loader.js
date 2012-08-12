@@ -4,7 +4,7 @@
 
 
 /*jshint browser:true,node:false*/
-/*global yepnope*/
+/*global yepnope, nodeca*/
 
 
 (function () {
@@ -90,16 +90,77 @@
   function noop() {}
 
 
-  function load_assets(assets, callback) {
-    callback = callback || noop;
+  // simple wrapper over yepnope that loads resources and fires callback only
+  // once all resources were injected
+  function load_resources(resources, callback) {
+    var i, count = resources.length;
 
-    if (0 === assets.length) {
+    if (0 === count) {
       callback();
       return;
     }
 
-    yepnope({ load: collect(assets, 'link'), complete: callback });
+    function finish() {
+      count--;
+
+      if (0 === count) {
+        callback();
+      }
+    }
+
+    for (i = 0; i < count; i++) {
+      resources[i].complete = finish;
+    }
+
+    yepnope(resources);
   }
+
+
+  // assets map for namespaces only - set with load_assets.init()
+  var assets;
+
+
+  function load_assets(namespace, callback) {
+    var resources = [];
+
+    if (assets[namespace] && !assets[namespace].loaded) {
+      resources = resources.concat(assets[namespace].css);
+      resources = resources.concat(assets[namespace].js);
+      assets[namespace].loaded = true;
+    }
+
+    load_resources(resources, callback || noop);
+  }
+
+
+  load_assets.init = function (assetsMap, namespaces) {
+    var i, ns, obj, resources = [];
+
+    assets      = assetsMap.apps;
+    namespaces  = namespaces || [];
+    resources   = resources.concat(assetsMap.lib.js);
+
+    for (i = 0; i < namespaces.length; i++) {
+      ns = assets[namespaces[i]];
+
+      if (ns && assets[ns]) {
+        assets[ns].loaded = true;
+        resources = resources.concat(assets[ns].js || []);
+      }
+    }
+
+    load_resources(resources, function () {
+      if (window.nodeca) {
+        for (i = 0; i < namespaces.length; i++) {
+          ns = assets[namespaces[i]];
+
+          if (nodeca.client[ns] && isFunction(nodeca.client[ns].init)) {
+            nodeca.client[ns].init();
+          }
+        }
+      }
+    });
+  };
 
 
   function inject_tree(tree, branch) {

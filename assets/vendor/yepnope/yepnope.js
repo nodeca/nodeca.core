@@ -1,2 +1,2 @@
 //= require ./src/yepnope
-//= require ./src/yepnope.preload
+//= require ./src/yepnope.ie-prefix

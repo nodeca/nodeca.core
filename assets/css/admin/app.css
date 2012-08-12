@@ -1,8 +1,6 @@
 /**
 
- *= require bootstrap/bootstrap
- *= require bootstrap/bootstrap-responsive
-
+ *= require lib.css
  *= require admin/admin
 
  **/
