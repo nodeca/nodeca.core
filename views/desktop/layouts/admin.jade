@@ -3,17 +3,16 @@ html.no-js
   head
     include ../common/widgets/head
 
-    - if (self.head.assets.apps.admin)
-      each obj in self.head.assets.apps.admin.css
-        each asset in obj.load
-          link(rel='stylesheet', href=asset)
+    - if (self.head.assets.admin)
+      each asset in self.head.assets.admin.css
+        link(rel='stylesheet', href=asset)
 
     //if lt IE 9
       script(type="text/javascript", src=self.asset_path('es5-shim.js'))
 
     script(type="text/javascript")
       !{self.asset_include('loader.js')}
-      load_assets.init(!{self.jason(self.head.assets)}, ['admin']);
+      load_assets.init(!{JSON.stringify(self.head.assets)}, 'admin');
 
   body
 

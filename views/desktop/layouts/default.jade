@@ -4,17 +4,16 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
     include ../common/widgets/head
 
     each ns in ['common', self.head.apiPath.split('.').shift()]
-      - if (self.head.assets.apps[ns])
-        each obj in self.head.assets.apps[ns].css
-          each asset in obj.load
-            link(rel='stylesheet', href=asset)
+      - if (self.head.assets[ns])
+        each asset in self.head.assets[ns].css
+          link(rel='stylesheet', href=asset)
 
     //if lt IE 9
       script(type="text/javascript", src=self.asset_path('es5-shim.js'))
 
     script(type="text/javascript")
       !{self.asset_include('loader.js')}
-      load_assets.init(!{self.jason(self.head.assets)}, ['common', '!{self.head.apiPath.split(".").shift()}']);
+      load_assets.init(!{JSON.stringify(self.head.assets)}, '!{self.head.apiPath.split(".").shift()}');
 
     script(type="text/javascript")
       var _gaq = _gaq || [];

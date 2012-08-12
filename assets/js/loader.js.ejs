@@ -123,36 +123,54 @@
   function load_assets(namespace, callback) {
     var resources = [];
 
-    if (assets[namespace] && !assets[namespace].loaded) {
-      resources = resources.concat(assets[namespace].css || []);
-      resources = resources.concat(assets[namespace].js || []);
-      assets[namespace].loaded = true;
+
+    if (!assets[namespace] || !!assets[namespace].loaded) {
+      (callback || noop)();
+      return;
     }
 
-    load_resources(resources, callback || noop);
+    resources = resources.concat(assets[namespace].css || []);
+    resources = resources.concat(assets[namespace].js || []);
+    assets[namespace].loaded = true;
+
+    load_resources([{load: resources}], callback || noop);
   }
 
 
-  load_assets.init = function (assetsMap, namespaces) {
-    var i, ns, obj, resources = [];
+  load_assets.init = function (assetsMap, namespace) {
+    var resources = [];
 
-    assets      = assetsMap.apps;
-    namespaces  = namespaces || [];
-    resources   = resources.concat(assetsMap.lib.js);
+    resources.push({
+      //  JSON is required for Opera < 11 + IE < 8
+      //  See: http://caniuse.com/json
+      test: !!window.JSON,
+      nope: <%- JSON.stringify(asset_path('json2.js')) %>
+    });
 
-    for (i = 0; i < namespaces.length; i++) {
-      ns = namespaces[i];
+    assets = assetsMap;
 
-      if (assets[ns]) {
-        assets[ns].loaded = true;
-        resources = resources.concat(assets[ns].js || []);
-      }
+    // FIXME: `lib` namespace is a *special case* namespace
+    //        and will be removed once it will be possible to
+    //        bundle it into admin/common app.js
+    resources.push({ load: assets.lib.js });
+    assets.lib.loaded = true;
+
+    if ('admin' !== namespace) {
+      resources.push({ load: assets.common.js });
+      assets.common.loaded = true;
+    }
+
+    if (assets[namespace]) {
+      resources.push({ load: assets[namespace].js });
+      assets[namespace].loaded = true;
     }
 
     load_resources(resources, function () {
+      var arr = ['common', namespace], ns, i;
+
       if (window.nodeca) {
-        for (i = 0; i < namespaces.length; i++) {
-          ns = namespaces[i];
+        for (i = 0; i < arr.length; i++) {
+          ns = arr[i];
 
           if (nodeca.client[ns] && isFunction(nodeca.client[ns].init)) {
             nodeca.client[ns].init();
@@ -198,3 +216,5 @@
   window.load_assets = load_assets;
   window.inject_tree = inject_tree;
 }());
+
+// vim: filetype=javascript:syntax=javascript
