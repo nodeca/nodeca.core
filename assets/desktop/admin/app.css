@@ -1,6 +1,6 @@
 /**
 
- *= require ../common/lib
- *= require admin/admin
+ *= require ../common/lib.css
+ *= require ./admin.css
 
  **/
