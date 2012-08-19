@@ -6,6 +6,11 @@
 var nodeca = window.nodeca = (function (nodeca) {
   'use strict';
 
+  nodeca.views            = {};
+  nodeca.server           = {};
+  nodeca.shared           = {};
+  nodeca.client           = {};
+
   nodeca.runtime          = {};
   nodeca.runtime.env      = "<%= nodeca('runtime.env') %>";
   nodeca.runtime.version  = "<%= nodeca('runtime.version') %>";
