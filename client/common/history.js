@@ -187,7 +187,8 @@ module.exports.init = function () {
           $el = $(document.body);
         }
 
-        $el.ScrollTo({duration: 300});
+        $("html:not(:animated)" + (!$.browser.opera ? ",body:not(:animated)" : ""))
+          .animate({scrollTop: $el.position().top}, 300);
 
         // disable scrollTo
         allowScrollTo = false;
