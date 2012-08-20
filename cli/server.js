@@ -31,7 +31,6 @@ module.exports.run = function (args, callback) {
     NLib.init.initRouter,
 
     NLib.init.initTranslations,
-    NLib.init.buildBundles,
 
     require('../lib/init/assets'),
     require('../lib/init/server')
