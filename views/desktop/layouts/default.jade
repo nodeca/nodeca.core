@@ -13,7 +13,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
     script(type="text/javascript")
       !{self.asset_include('loader.js')}
-      load_assets.init(!{JSON.stringify(self.head.assets)}, '!{self.head.apiPath.split(".").shift()}');
+      loadAssets.init(!{JSON.stringify(self.head.assets)}, '!{self.head.apiPath.split(".").shift()}');
 
     script(type="text/javascript")
       var _gaq = _gaq || [];

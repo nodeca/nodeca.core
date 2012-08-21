@@ -10,7 +10,7 @@
 //= require faye-browser
 
 
-/*global window, $, _, Faye, nodeca*/
+/*global window, $, _, Faye, nodeca, loadAssets*/
 
 
 (function () {
@@ -215,8 +215,10 @@
         return;
       }
 
-      // run actual callback
-      callback(data.error, data.response);
+      loadAssets(name.split('.').shift(), function (err) {
+        // run actual callback
+        callback(err || data.error, data.response);
+      });
     });
 
     //

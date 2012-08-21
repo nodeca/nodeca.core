@@ -14,7 +14,7 @@
  **/
 
 
-/*global $, _, nodeca, window, document, load_assets*/
+/*global $, _, nodeca, window, document*/
 
 
 var History = window.History; // History.js
@@ -113,15 +113,13 @@ module.exports.init = function () {
         return;
       }
 
-      load_assets(match.meta.split('.').shift(), function () {
-        callback({
-          view:   msg.view || match.meta,
-          layout: msg.layout,
-          locals: msg.data,
-          route:  msg.data.head.route || match.meta,
-          anchor: anchor
-        }, msg.data.head.title, href);
-      });
+      callback({
+        view:   msg.view || match.meta,
+        layout: msg.layout,
+        locals: msg.data,
+        route:  msg.data.head.route || match.meta,
+        anchor: anchor
+      }, msg.data.head.title, href);
     });
   }
 
