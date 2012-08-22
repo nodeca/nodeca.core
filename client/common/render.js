@@ -30,17 +30,11 @@ helpers.date = function (value, format) {
   return nodeca.shared.common.date(value, format, nodeca.runtime.locale, tzOffset);
 };
 
-helpers.asset_path = function (/*pathname*/) {
-  /*global alert*/
-  alert('asset_path() is not implemented yet');
-  return "";
-};
-
-helpers.asset_include = function () {
-  /*global alert*/
-  alert('asset_include() is a server-side only helper');
-  return "";
-};
+_.each(['asset_path', 'asset_include'], function (method) {
+  helpers[method] = function () {
+    throw method + '() is a server-side only helper, thus can be used in base layouts only.';
+  };
+});
 
 helpers.link_to = function (name, params) {
   return nodeca.runtime.router.linkTo(name, params) || '#';
