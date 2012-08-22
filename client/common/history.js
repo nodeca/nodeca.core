@@ -161,7 +161,7 @@ module.exports.init = function () {
       try {
         nodeca.client.common.navbar_menu.activate(data.route);
 
-        html = nodeca.client.common.render(data.view, data.layout, data.locals);
+        html = nodeca.client.common.render(data.view, data.locals, data.layout);
         $('#content').html(html);
 
         nodeca.client.common.stats.inject(data.locals);

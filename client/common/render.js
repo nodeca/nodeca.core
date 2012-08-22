@@ -58,18 +58,18 @@ helpers.jason = JSON.stringify;
 
 
 /**
- *  client.common.render(apiPath, layout, locals) -> Void
+ *  client.common.render(apiPath[, locals[, layout]]) -> Void
  *  - apiPath (String): Server method API path.
- *  - layout (String): Layout or layouts stack
  *  - locals (Object): Locals data for the renderer
+ *  - layout (String): Layout or layouts stack
  *
  *  Renders view.
  **/
-module.exports = function render(apiPath, layout, locals) {
+module.exports = function render(apiPath, locals, layout) {
   if (!nodeca.shared.common.getByPath(nodeca.views, apiPath)) {
     throw new Error("View " + apiPath + " not found");
   }
 
   locals = _.extend(locals, helpers);
-  return nodeca.shared.common.render(nodeca.views, apiPath, layout, locals, true);
+  return nodeca.shared.common.render(nodeca.views, apiPath, locals, layout, true);
 };

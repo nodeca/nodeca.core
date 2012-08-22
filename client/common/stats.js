@@ -45,7 +45,7 @@ module.exports.inject = function inject(data) {
     return;
   }
 
-  html = nodeca.client.common.render('common.widgets.debug_timeline', false, data);
+  html = nodeca.client.common.render('common.widgets.debug_timeline', data);
 
   // replace HTML with new stats
   $puncher_stats.replaceWith(html);
