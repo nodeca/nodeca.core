@@ -29,8 +29,8 @@ html.no-js
 
         //- Menu sidebar
         .span2
-          ul.nav.nav-list.well
 
+          ul.nav.nav-list.well
             - each item in self.menus.admin.sidebar
               li: a(href=item.link)= self.t(item.title)
 
@@ -38,13 +38,9 @@ html.no-js
         .span10
 
           ul.breadcrumbs
-            li
-              a(href='#') Breadcrumbs
-            li
-              a(href='#') Should
-            li
-              a(href='#') Be
-            li
-              a(href='#') Here
+            li: a(href='#') Breadcrumbs
+            li: a(href='#') Should
+            li: a(href='#') Be
+            li: a(href='#') Here
 
           #content!= self.content

@@ -55,30 +55,22 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
                   | vasya@pupkin.net
                   b.caret
                 ul.dropdown-menu
-                  li
-                    a(href='#') Admin
+                  li: a(href='#') Admin
                   li.divider
-                  li
-                    a(href='#') Settings
-                  li
-                    a.icon-ok(href='#') No images (fast)
+                  li: a(href='#') Settings
+                  li: a.icon-ok(href='#') No images (fast)
                   li.divider
-                  li
-                    a(href='#') Exit
+                  li: a(href='#') Exit
 
 
     #content.container!= self.content
 
     footer.container.page-footer
       ul.page-footer-nav.clearfix
-        li
-          a(href='#') About
-        li
-          a(href='#') Contacts
-        li
-          a(href='#') Terms
-        li
-          a(href='#') Help
+        li: a(href='#') About
+        li: a(href='#') Contacts
+        li: a(href='#') Terms
+        li: a(href='#') Help
 
         li.dropup
           a.dropdown-toggle(href='#',data-toggle='dropdown') Language
@@ -93,10 +85,8 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
           a.dropdown-toggle(href='#',data-toggle='dropdown') Theme
             b.caret
           ul.dropdown-menu
-            li
-              a(href='#') Black & White
-            li
-              a(href='#') Yellow
+            li: a(href='#') Black & White
+            li: a(href='#') Yellow
 
       p.copyright
         | Powered by 

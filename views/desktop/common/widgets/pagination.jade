@@ -25,8 +25,7 @@ mixin pagination(route, params, current, max_page)
     //- first page always displayed, except when current == 1.
     //- (then we skip first half of paginator)
     - if (current > 1)
-      li
-        a(href=self.link_to(route, params)) 1
+      li: a(href=self.link_to(route, params)) 1
 
     //- left ellipsis displayed, if > 1 pages exists between first one
     //- and left head of "surrounding" pages
@@ -40,8 +39,7 @@ mixin pagination(route, params, current, max_page)
     - for (var i=PAGES_INTERVAL; i > 0; i--) {
     -   if (current > i + 1) 
           - params.page = current - i
-          li
-            a(href=self.link_to(route, params)) #{current - i}
+          li: a(href=self.link_to(route, params)) #{current - i}
     - }
 
     // current page always dispayed
@@ -54,8 +52,7 @@ mixin pagination(route, params, current, max_page)
     - for (var i=1 ; i <= PAGES_INTERVAL; i++) {
     -   if ((max_page - current) > i )
           - params.page = current + i
-          li
-            a(href=self.link_to(route, params)) #{current + i}
+          li: a(href=self.link_to(route, params)) #{current + i}
     - }
 
     //- right ellipsis displayed, if > 1 pages exists between right
@@ -70,5 +67,4 @@ mixin pagination(route, params, current, max_page)
     //- (then we skip last half of paginator)
     - if (max_page - current !== 0)
       - params.page = max_page
-      li
-        a(href=self.link_to(route, params)) #{max_page}
+      li: a(href=self.link_to(route, params)) #{max_page}
