@@ -20,17 +20,17 @@ module.exports.run = function (args, callback) {
     require('../lib/init/redis'),
     require('../lib/init/mongoose'),
 
-    NLib.init.loadModels,
+    NLib.InitStages.loadModels,
 
     require('../lib/init/migrations_check'),
 
-    NLib.init.loadServerApiSubtree,
-    NLib.init.loadSharedApiSubtree,
-    NLib.init.loadClientApiSubtree,
-    NLib.init.loadSettings,
-    NLib.init.initRouter,
+    NLib.InitStages.loadServerApiSubtree,
+    NLib.InitStages.loadSharedApiSubtree,
+    NLib.InitStages.loadClientApiSubtree,
+    NLib.InitStages.loadSettings,
+    NLib.InitStages.initRouter,
 
-    NLib.init.initTranslations,
+    NLib.InitStages.initTranslations,
 
     require('../lib/init/assets'),
     require('../lib/init/server')

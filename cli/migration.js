@@ -31,7 +31,7 @@ module.exports.run = function (args, callback) {
   Async.series([
     require('../lib/init/redis'),
     require('../lib/init/mongoose'),
-    NLib.init.loadModels,
+    NLib.InitStages.loadModels,
   ], function (err) {
     if (err){
       callback(err);
