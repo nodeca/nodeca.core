@@ -113,13 +113,15 @@ module.exports.init = function () {
         return;
       }
 
-      callback({
-        view:   msg.view || match.meta,
-        layout: msg.layout,
-        locals: msg.data,
-        route:  msg.data.head.route || match.meta,
-        anchor: anchor
-      }, msg.data.head.title, href);
+      loadAssets((msg.view || match.meta).split('.').shift(), function () {
+        callback({
+          view:   msg.view || match.meta,
+          layout: msg.layout,
+          locals: msg.data,
+          route:  msg.data.head.route || match.meta,
+          anchor: anchor
+        }, msg.data.head.title, href);
+      });
     });
   }
 

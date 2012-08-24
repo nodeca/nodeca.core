@@ -31,19 +31,20 @@
 module.exports.init = function () {
   $(function () {
     $('body').on('click.nodeca.data-api', '[data-action]', function (event) {
-      var $this = $(this), path = $this.data('action').split('.'),
-          func = nodeca.client;
+      var $this = $(this), api_path = String($this.data('action'));
 
-      while (func && path.length) {
-        func = func[path.shift()];
-      }
+      loadAssets(api_path.split('.').shift(), function () {
+        var func = nodeca.shared.common.getByPath(nodeca.client, api_path);
 
-      if (!_.isFunction(func)) {
-        nodeca.logger.error('Action ' + $this.data('action') + ' not found');
-        return;
-      }
+        if (!_.isFunction(func)) {
+          nodeca.logger.error('Action ' + $this.data('action') + ' not found');
+          return;
+        }
 
-      return func($this, event);
+        func($this, event);
+      });
+
+      return false;
     });
   });
 };
