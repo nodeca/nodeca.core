@@ -5,7 +5,7 @@
       "uid": "7222571caa5c15f83dcfd447c58d68d9",
       "orig_css": "search",
       "orig_code": 59392,
-      "css": "search-1",
+      "css": "search",
       "code": 59392,
       "src": "entypo"
     },
@@ -53,7 +53,7 @@
       "uid": "b08cfe8039de2ce815686aced2caef06",
       "orig_css": "download",
       "orig_code": 59397,
-      "css": "download-1",
+      "css": "download",
       "code": 59397,
       "src": "entypo"
     },
@@ -63,6 +63,14 @@
       "orig_code": 59398,
       "css": "reply",
       "code": 59398,
+      "src": "entypo"
+    },
+    {
+      "uid": "1189604bf305b6b03a74685ce60e6632",
+      "orig_css": "doc-text",
+      "orig_code": 59399,
+      "css": "new",
+      "code": 59399,
       "src": "entypo"
     },
     {
@@ -119,14 +127,6 @@
       "orig_code": 11015,
       "css": "more",
       "code": 11015,
-      "src": "entypo"
-    },
-    {
-      "uid": "1189604bf305b6b03a74685ce60e6632",
-      "orig_css": "doc-text",
-      "orig_code": 59399,
-      "css": "new",
-      "code": 59399,
       "src": "entypo"
     }
   ]

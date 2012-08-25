@@ -38,6 +38,6 @@
 .icon-user:before { content: '\e801'; } /* '' */
 .icon-new:before { content: '\e807'; } /* '' */
 .icon-attach:before { content: '\e802'; } /* '' */
-.icon-download-1:before { content: '\e805'; } /* '' */
-.icon-search-1:before { content: '\e800'; } /* '' */
+.icon-download:before { content: '\e805'; } /* '' */
+.icon-search:before { content: '\e800'; } /* '' */
 .icon-closed:before { content: '\e803'; } /* '' */
