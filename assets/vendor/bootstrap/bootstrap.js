@@ -1,3 +1,4 @@
+//= //require ./src/js/bootstrap-affix
 //= require ./src/js/bootstrap-alert
 //= require ./src/js/bootstrap-button
 //= //require ./src/js/bootstrap-carousel
