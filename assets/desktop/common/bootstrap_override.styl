@@ -1,8 +1,29 @@
+//
+// Shift header sizes (reduce to lower level)
+//
+
+h1 { font-size: 30px; line-height: 40px; }
+h2 { font-size: 24px; line-height: 40px; }
+h3 { font-size: 18px; line-height: 20px; }
+h4 { font-size: 14px; line-height: 20px; }
+h5 { font-size: 12px; line-height: 20px; }
+
+h1 small { font-size: 18px; }
+h2 small { font-size: 14px; }
+h3 small { font-size: 14px; }
+
+//
+// Sticky navbar
+//
+
 .navbar-fixed-top
   position static
   margin-bottom baseLineHeight
 
+//
 // Responsive menu button (3 lines) with pure css
+//
+
 .navbar .btn-navbar > span
   display block
   width 20px
@@ -11,59 +32,56 @@
   border-bottom 2px solid navbarText
   margin 1px 0
 
+//
 // Brand text
+//
+
 .navbar .brand
   color gray
   font-weight bold
   font-family sansWideFontFamily
+  transition color 0.5s ease-in-out
 
+//
 // Buttons tweaks
+//
 .btn
-  font-family sansWideFontFamily
   background-image none
-  transition background-color 0.5s ease
-  &.wide
-    width 100%
-    box-sizing border-box
-    outline none
-    // IE7 improvment
-    padding-left 0
-    padding-right 0
+  transition background-color 0.3s ease-in-out
   &:hover
-    transition background-color 0.5s ease
+    transition background-color 0.3s ease-in-out
 .btn-icon-only
   min-width 40px
   &:before
     margin 0
-.btn-primary
-  font-weight bold
 .btn.disabled, .btn[disabled]
   opacity .4
+
 .input-append
   whitespace nowrap
 
+//
 // Search icon
+//
+
 .navbar-search
   .search-query
-    margin-bottom 0
-    padding-top 2px
-    padding-bottom 2px
     padding-left 25px
     font-size 14px
-    border-radius 13px
     &:focus, &.focused
-      padding-top 3px
-      padding-bottom 3px
-      padding-left 25px
-      background-color grayLightest
+      padding-left 25px !important
+      background-color grayLighter !important
   .icon-search
     position absolute
-    top 4px
+    top 5px
     left 8px
     &.focused
       color grayDark
 
+//
 // topnav underline for avtive item
+//
+
 .navbar .nav .active
   position relative
   &:before
@@ -73,7 +91,3 @@
     height 2px
     position absolute
     width 100%
-
-// Always use bottom margin only
-.btn-toolbar
-  margin-top 0
