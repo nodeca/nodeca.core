@@ -1,6 +1,7 @@
 /*global nodeca, $*/
 
 //= require jquery/jquery
+//= require powertip/jquery.powertip
 
 //= require underscore
 //= require bootstrap/bootstrap
