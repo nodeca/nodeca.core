@@ -689,8 +689,16 @@
 				top = Math.round(objectOffset.top - tipHeight - options.offset);
 				right = Math.round($window.width() - objectOffset.left - 20);
 				break;
+			case 'nw-nodeca':
+				top = Math.round(objectOffset.top - tipHeight - options.offset);
+				left = Math.round(objectOffset.left - tipWidth + objectWidth);
+				break;
 			case 'ne':
 				left = Math.round((objectOffset.left + objectWidth) - 20);
+				top = Math.round(objectOffset.top - tipHeight - options.offset);
+				break;
+			case 'ne-nodeca':
+				left = Math.round(objectOffset.left);
 				top = Math.round(objectOffset.top - tipHeight - options.offset);
 				break;
 			case 'sw':
@@ -698,8 +706,16 @@
 				top = Math.round(objectOffset.top + objectHeight + options.offset);
 				right = Math.round($window.width() - objectOffset.left - 20);
 				break;
+			case 'sw-nodeca':
+				top = Math.round(objectOffset.top + objectHeight + options.offset);
+				left = Math.round(objectOffset.left - tipWidth + objectWidth);
+				break;
 			case 'se':
 				left = Math.round((objectOffset.left + objectWidth) - 20);
+				top = Math.round(objectOffset.top + objectHeight + options.offset);
+				break;
+			case 'se-nodeca':
+				left = Math.round(objectOffset.left);
 				top = Math.round(objectOffset.top + objectHeight + options.offset);
 				break;
 			}
