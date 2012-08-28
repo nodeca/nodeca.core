@@ -689,34 +689,34 @@
 				top = Math.round(objectOffset.top - tipHeight - options.offset);
 				right = Math.round($window.width() - objectOffset.left - 20);
 				break;
-			case 'ne-se':
+			case 'nw-alt':
+				left = Math.round(objectOffset.left);
 				top = Math.round(objectOffset.top - tipHeight - options.offset);
-				left = Math.round(objectOffset.left - tipWidth + objectWidth);
 				break;
 			case 'ne':
 				left = Math.round((objectOffset.left + objectWidth) - 20);
 				top = Math.round(objectOffset.top - tipHeight - options.offset);
 				break;
-			case 'nw-sw':
-				left = Math.round(objectOffset.left);
+			case 'ne-alt':
 				top = Math.round(objectOffset.top - tipHeight - options.offset);
+				left = Math.round(objectOffset.left - tipWidth + objectWidth);
 				break;
 			case 'sw':
 				//left = (objectOffset.left - tipWidth) + 20;
 				top = Math.round(objectOffset.top + objectHeight + options.offset);
 				right = Math.round($window.width() - objectOffset.left - 20);
 				break;
-			case 'se-ne':
+			case 'sw-alt':
+				left = Math.round(objectOffset.left);
 				top = Math.round(objectOffset.top + objectHeight + options.offset);
-				left = Math.round(objectOffset.left - tipWidth + objectWidth);
 				break;
 			case 'se':
 				left = Math.round((objectOffset.left + objectWidth) - 20);
 				top = Math.round(objectOffset.top + objectHeight + options.offset);
 				break;
-			case 'sw-nw':
-				left = Math.round(objectOffset.left);
+			case 'se-alt':
 				top = Math.round(objectOffset.top + objectHeight + options.offset);
+				left = Math.round(objectOffset.left - tipWidth + objectWidth);
 				break;
 			}
 
