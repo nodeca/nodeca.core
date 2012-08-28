@@ -60,6 +60,24 @@
 		// hook mouse tracking
 		initMouseTracking();
 
+		// destroy associated powertips
+		if ('destroy' === opts) {
+			return this.off('.powertip').each(function destroy() {
+				var $this = $(this);
+
+				if (!$this.attr('title')) {
+					$this.attr('title', $this.data('originalTitle'));
+				}
+
+				$this.removeData([
+					'powertip',
+					'powertipjq',
+					'powertiptarget',
+					'displayController'
+				]);
+			});
+		}
+
 		// setup the elements
 		this.each(function elementSetup() {
 			var $this = $(this),
@@ -72,7 +90,7 @@
 			// data-powertipjq or data-powertiptarget. If we do use the title
 			// attribute, delete the attribute so the browser will not show it
 			if (!dataPowertip && !dataTarget && !dataElem && title) {
-				$this.data('powertip', title).removeAttr('title');
+				$this.data({powertip: title, originalTitle: title}).removeAttr('title');
 			}
 
 			// create hover controllers for each element
