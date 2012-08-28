@@ -139,7 +139,6 @@
   $.fn.powerTip.defaults = {
     fadeInTime: 200,
     fadeOutTime: 100,
-    followMouse: false,
     popupId: 'powerTip',
     intentSensitivity: 7,
     intentPollInterval: 100,
@@ -315,18 +314,6 @@
       $body.append(tipElement);
     }
 
-    // hook mousemove for cursor follow tooltips
-    if (options.followMouse) {
-      // only one positionTipOnCursor hook per tooltip element, please
-      if (!tipElement.data('hasMouseMove')) {
-        $document.on({
-          mousemove: positionTipOnCursor,
-          scroll: positionTipOnCursor
-        });
-        tipElement.data('hasMouseMove', true);
-      }
-    }
-
     // if we want to be able to mouse onto the tooltip then we need to
     // attach hover events to the tooltip that will cancel a close request
     // on hover and start a new close request on mouseleave
@@ -428,16 +415,10 @@
       session.activeHover = element;
       session.isTipOpen = true;
 
-      tipElement.data('followMouse', options.followMouse);
       tipElement.data('mouseOnToPopup', options.mouseOnToPopup);
 
-      // set tooltip position
-      if (!options.followMouse) {
-        positionTipOnElement(element);
-        session.isFixedTipOpen = true;
-      } else {
-        positionTipOnCursor();
-      }
+      positionTipOnElement(element);
+      session.isFixedTipOpen = true;
 
       // fadein
       tipElement.fadeIn(options.fadeInTime, function fadeInCallback() {
@@ -472,13 +453,6 @@
         session.isClosing = false;
         session.isFixedTipOpen = false;
         tipElement.removeClass();
-        // support mouse-follow and fixed position tips at the same
-        // time by moving the tooltip to the last known cursor location
-        // after it is hidden
-        setTipPosition({
-          left: session.currentX + options.offset,
-          top:  session.currentY + options.offset
-        });
 
         // trigger powerTipClose event
         element.trigger('powerTipClose');
@@ -527,53 +501,6 @@
       }
     }
 
-    /**
-     * Moves the tooltip to the users mouse cursor.
-     * @private
-     */
-    function positionTipOnCursor() {
-      // to support having fixed tooltips on the same page as cursor
-      // tooltips, where both instances are referencing the same tooltip
-      // element, we need to keep track of the mouse position constantly,
-      // but we should only set the tip location if a fixed tip is not
-      // currently open, a tip open is imminent or active, and the
-      // tooltip element in question does have a mouse-follow using it.
-      if ((session.isTipOpen && !session.isFixedTipOpen) || (session.tipOpenImminent && !session.isFixedTipOpen && tipElement.data('hasMouseMove'))) {
-        // grab measurements and collisions
-        var tipWidth = tipElement.outerWidth(),
-        tipHeight = tipElement.outerHeight(),
-        x = session.currentX + options.offset,
-        y = session.currentY + options.offset,
-        collisions = getViewportCollisions(
-          { left: x, top: y },
-          tipWidth,
-          tipHeight
-        ),
-        collisionCount = collisions.length;
-
-        // handle tooltip view port collisions
-        if (collisionCount > 0) {
-          if (collisionCount === 1) {
-            // if there is only one collision (bottom or right) then
-            // simply constrain the tooltip to the view port
-            if (collisions[0] === 'right') {
-              x = $window.width() - tipWidth;
-            } else if (collisions[0] === 'bottom') {
-              y = $window.scrollTop() + $window.height() - tipHeight;
-            }
-          } else {
-            // if the tooltip has more than one collision then it
-            // is trapped in the corner and should be flipped to
-            // get it out of the users way
-            x = session.currentX - tipWidth - options.offset;
-            y = session.currentY - tipHeight - options.offset;
-          }
-        }
-
-        // position the tooltip
-        setTipPosition({ top: y, left: x });
-      }
-    }
 
     /**
      * Sets the tooltip to the correct position relative to the specified
