@@ -12,7 +12,8 @@
 	z-index: 2;
 }
 #powerTip.n:before, #powerTip.e:before, #powerTip.s:before, #powerTip.w:before,
-#powerTip.ne:before, #powerTip.nw:before, #powerTip.se:before, #powerTip.sw:before {
+#powerTip.ne:before, #powerTip.nw:before, #powerTip.se:before, #powerTip.sw:before,
+#powerTip.ne-alt:before, #powerTip.nw-alt:before, #powerTip.se-alt:before, #powerTip.sw-alt:before {
 	content: "";
 	position: absolute;
 }
@@ -61,4 +62,28 @@
 #powerTip.se:before, #powerTip.sw:before {
 	border-bottom: 10px solid rgba(0, 0, 0, 0.8);
 	top: -10px;
+}
+
+
+#powerTip.nw-alt:before, #powerTip.ne-alt:before,
+#powerTip.sw-alt:before, #powerTip.se-alt:before {
+	border-top: 10px solid rgba(0, 0, 0, 0.8);
+  bottom: -10px;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	left: 10px;
+}
+#powerTip.ne-alt:before {
+	left: auto;
+	right: 10px;
+}
+#powerTip.sw-alt:before, #powerTip.se-alt:before {
+	border-top: none;
+	border-bottom: 10px solid rgba(0, 0, 0, 0.8);
+  bottom: auto;
+  top: -10px;
+}
+#powerTip.se-alt:before {
+	left: auto;
+	right: 10px;
 }
