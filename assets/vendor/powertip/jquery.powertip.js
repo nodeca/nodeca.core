@@ -143,29 +143,10 @@
     intentSensitivity: 7,
     intentPollInterval: 100,
     closeDelay: 100,
-    placement: 'n',
-    smartPlacement: false,
     offset: 10,
     mouseOnToPopup: false
   };
 
-  /**
-   * Default smart placement priority lists.
-   * The first item in the array is the highest priority, the last is the
-   * lowest. The last item is also the default, which will be used if all
-   * previous options do not fit.
-   * @type Object
-   */
-  $.fn.powerTip.smartPlacementLists = {
-    n: ['n', 'ne', 'nw', 's'],
-    e: ['e', 'ne', 'se', 'w', 'nw', 'sw', 'n', 's', 'e'],
-    s: ['s', 'se', 'sw', 'n'],
-    w: ['w', 'nw', 'sw', 'e', 'ne', 'se', 'n', 's', 'w'],
-    nw: ['nw', 'w', 'sw', 'n', 's', 'se', 'nw'],
-    ne: ['ne', 'e', 'se', 'n', 's', 'sw', 'ne'],
-    sw: ['sw', 'w', 'nw', 's', 'n', 'ne', 'sw'],
-    se: ['se', 'e', 'ne', 's', 'n', 'nw', 'se']
-  };
 
   /**
    * Public API
@@ -509,37 +490,28 @@
      * @param {Object} element The element that the tooltip should target.
      */
     function positionTipOnElement(element) {
-      var priorityList,
-      finalPlacement;
+      var finalPlacement;
 
-      if (options.smartPlacement) {
-        priorityList = $.fn.powerTip.smartPlacementLists[options.placement];
 
-        // iterate over the priority list and use the first placement
-        // option that does not collide with the view port. if they all
-        // collide then the last placement in the list will be used.
-        $.each(priorityList, function(idx, pos) {
-          // place tooltip and find collisions
-          var collisions = getViewportCollisions(
-            placeTooltip(element, pos),
-            tipElement.outerWidth(),
-            tipElement.outerHeight()
-          );
+      // iterate over the priority list and use the first placement
+      // option that does not collide with the view port. if they all
+      // collide then the last placement in the list will be used.
+      $.each(['nw', 'ne', 'sw', 'se'], function(idx, pos) {
+        // place tooltip and find collisions
+        var collisions = getViewportCollisions(
+          placeTooltip(element, pos),
+          tipElement.outerWidth(),
+          tipElement.outerHeight()
+        );
 
-          // update the final placement variable
-          finalPlacement = pos;
+        // update the final placement variable
+        finalPlacement = pos;
 
-          // break if there were no collisions
-          if (collisions.length === 0) {
-            return false;
-          }
-        });
-      } else {
-        // if we're not going to use the smart placement feature then
-        // just compute the coordinates and do it
-        placeTooltip(element, options.placement);
-        finalPlacement = options.placement;
-      }
+        // break if there were no collisions
+        if (collisions.length === 0) {
+          return false;
+        }
+      });
 
       // add placement as class for CSS arrows
       tipElement.addClass(finalPlacement);
@@ -555,29 +527,21 @@
      * @retun {Object} An object with the top, left, and right position values.
      */
     function placeTooltip(element, placement) {
-      var iterationCount = 0,
-      tipWidth,
-      tipHeight,
-      coords;
+      var iterationCount = 0, tipWidth, tipHeight, coords;
 
       // for the first iteration: set the tip to 0,0 to get the full
       // expanded width and set the iterationCount to 0
-      setTipPosition({top: 0, left: 0});
+      tipElement.css({ top: 0, left: 0, right: 'auto', bottom: 'auto' });
 
       // to support elastic tooltips we need to check for a change in
       // the rendered dimensions after the tooltip has been positioned
       do {
         // grab the current tip dimensions
-        tipWidth = tipElement.outerWidth();
+        tipWidth  = tipElement.outerWidth();
         tipHeight = tipElement.outerHeight();
 
         // get placement coordinates
-        coords = computePlacementCoords(
-          element,
-          placement,
-          tipWidth,
-          tipHeight
-        );
+        coords = computePlacementCoords(element, placement, tipWidth, tipHeight);
 
         // place the tooltip
         tipElement.css(coords);
@@ -588,7 +552,7 @@
           (tipWidth !== tipElement.outerWidth() || tipHeight !== tipElement.outerHeight())
       );
 
-    return coords;
+      return coords;
     }
 
     /**
@@ -604,89 +568,35 @@
     function computePlacementCoords(element, placement, tipWidth, tipHeight) {
       // grab measurements
       var objectOffset = element.offset(),
-      objectWidth = element.outerWidth(),
-      objectHeight = element.outerHeight(),
-      left = 'auto',
-      top = 'auto',
-      right = 'auto';
+          objectWidth  = element.outerWidth(),
+          objectHeight = element.outerHeight(),
+          top, left, right, bottom;
 
-      // calculate the appropriate x and y position in the document
       switch (placement) {
-        case 'n':
-          left = Math.round((objectOffset.left + (objectWidth / 2)) - (tipWidth / 2));
-        top = Math.round(objectOffset.top - tipHeight - options.offset);
-        break;
-        case 'e':
-          left = Math.round(objectOffset.left + objectWidth + options.offset);
-        top = Math.round((objectOffset.top + (objectHeight / 2)) - (tipHeight / 2));
-        break;
-        case 's':
-          left = Math.round((objectOffset.left + (objectWidth / 2)) - (tipWidth / 2));
-        top = Math.round(objectOffset.top + objectHeight + options.offset);
-        break;
-        case 'w':
-          //left = objectOffset.left - tipWidth - options.offset;
-          top = Math.round((objectOffset.top + (objectHeight / 2)) - (tipHeight / 2));
-        right = Math.round($window.width() - objectOffset.left + options.offset);
-        break;
         case 'nw':
-          //left = (objectOffset.left - tipWidth) + 20;
+          left    = Math.round(objectOffset.left);
           top = Math.round(objectOffset.top - tipHeight - options.offset);
-        right = Math.round($window.width() - objectOffset.left - 20);
-        break;
-        case 'nw-alt':
-          left = Math.round(objectOffset.left);
-        top = Math.round(objectOffset.top - tipHeight - options.offset);
-        break;
+          break;
         case 'ne':
-          left = Math.round((objectOffset.left + objectWidth) - 20);
-        top = Math.round(objectOffset.top - tipHeight - options.offset);
-        break;
-        case 'ne-alt':
           top = Math.round(objectOffset.top - tipHeight - options.offset);
-        left = Math.round(objectOffset.left - tipWidth + objectWidth);
-        break;
+          left = Math.round(objectOffset.left - tipWidth + objectWidth);
+          break;
         case 'sw':
-          //left = (objectOffset.left - tipWidth) + 20;
-          top = Math.round(objectOffset.top + objectHeight + options.offset);
-        right = Math.round($window.width() - objectOffset.left - 20);
-        break;
-        case 'sw-alt':
           left = Math.round(objectOffset.left);
-        top = Math.round(objectOffset.top + objectHeight + options.offset);
-        break;
-        case 'se':
-          left = Math.round((objectOffset.left + objectWidth) - 20);
-        top = Math.round(objectOffset.top + objectHeight + options.offset);
-        break;
-        case 'se-alt':
           top = Math.round(objectOffset.top + objectHeight + options.offset);
-        left = Math.round(objectOffset.left - tipWidth + objectWidth);
-        break;
+          break;
+        case 'se':
+          top = Math.round(objectOffset.top + objectHeight + options.offset);
+          left = Math.round(objectOffset.left - tipWidth + objectWidth);
+          break;
       }
 
       return {
-        left: left,
-        top: top,
-        right: right
+        top:    top || 'auto',
+        left:   left || 'auto',
+        right:  'auto',
+        bottom: 'auto'
       };
-    }
-
-    /**
-     * Sets the tooltip CSS position on the document.
-     * @private
-     * @param {Object} placement position
-     */
-    function setTipPosition(placement) {
-      var data = {};
-
-      $.each(['top', 'right', 'bottom', 'left'], function (pos) {
-        var val = placement[pos];
-
-        data[pos] = (+val == val) ? (val + 'px') : 'auto';
-      });
-
-      tipElement.css(data);
     }
 
     // expose methods
