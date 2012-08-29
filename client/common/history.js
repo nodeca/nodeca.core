@@ -21,11 +21,11 @@ var History = window.History; // History.js
 
 
 /**
- *  client.common.history.updateStateURL(url) -> Void
+ *  client.common.history.updateState(title, url) -> Void
  *
- *  Proxy to History.js that replaces current State with new URL.
+ *  Proxy to History.js that replaces current State with new URL and title.
  **/
-module.exports.updateStateURL = $.noop;
+module.exports.updateState = $.noop;
 
 
 /**
@@ -146,16 +146,17 @@ module.exports.init = function () {
   // This handler is called when:
   //
   //   - user presses `back` or `forward` button in his browser
-  //   - `History.pushSate()` is called (see a.click handler below)
-  //   - `History.replaceState()` is called (when no State data, or
-  //     updateStateURL was executed)
+  //   - user clicks a link
+  //   - user clicks "more ..." button
+  //
+  // Automates content rendering from State data for common cases.
   //
 
   History.Adapter.bind(window, 'statechange', function (event) {
     var data = History.getState().data, $el;
 
-    // we don't need to do rendering upon `replaceStateURL()` call.
-    // normal workflow designed to render a contents with stored State data.
+    // trigger to skip common rendering when we have custom one
+    // for example for "more ..." button
     if (skipStateChange) {
       skipStateChange = false;
       return;
@@ -171,8 +172,9 @@ module.exports.init = function () {
       // otherwise should never happen
       if (match) {
         exec_api3_call(match, History.replaceState);
-        return;
       }
+
+      return;
     }
 
     // make contnet semi-opque before rendering
@@ -191,6 +193,7 @@ module.exports.init = function () {
         //        a link to reload to the requested page
         nodeca.logger.error('Failed render view <' + data.view +
                             '> with layout <' + data.layout + '>', err);
+        return;
       }
 
       // scroll to element only when we handle user click
@@ -254,11 +257,11 @@ module.exports.init = function () {
   });
 
   //
-  // Provide real updateStateURL()
+  // Provide real updateState()
   //
 
-  module.exports.updateStateURL = function updateStateURL(url) {
+  module.exports.updateState = function updateState(title, url) {
     skipStateChange = true;
-    History.replaceState({}, History.getState().title, url);
+    History.replaceState({}, title, url);
   };
 };
