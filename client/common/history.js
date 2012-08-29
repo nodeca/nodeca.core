@@ -21,9 +21,9 @@ var History = window.History; // History.js
 
 
 /**
- *  client.common.history.updateState(title, url) -> Void
+ *  client.common.history.updateState(payload[, url]) -> Void
  *
- *  Proxy to History.js that replaces current State with new URL and title.
+ *  Proxy to History.js that replaces current State with new payload and URL.
  **/
 module.exports.updateState = $.noop;
 
@@ -260,8 +260,14 @@ module.exports.init = function () {
   // Provide real updateState()
   //
 
-  module.exports.updateState = function updateState(title, url) {
+  module.exports.updateState = function updateState(payload, url) {
     skipStateChange = true;
-    History.replaceState({}, title, url);
+
+    History.replaceState({
+      view:   payload.view,
+      layout: payload.layout,
+      locals: payload.data,
+      route:  payload.data.head.route
+    }, payload.data.head.title, url || History.getState().url);
   };
 };
