@@ -142,19 +142,29 @@ module.exports.init = function () {
   var skipStateChange = false;
 
   //
-  // Bind @statechange handler
+  // Bind @statechange handler.
+  // This handler is called when:
+  //
+  //   - user presses `back` or `forward` button in his browser
+  //   - `History.pushSate()` is called (see a.click handler below)
+  //   - `History.replaceState()` is called (when no State data, or
+  //     updateStateURL was executed)
   //
 
   History.Adapter.bind(window, 'statechange', function (event) {
     var data = History.getState().data, $el;
 
+    // we don't need to do rendering upon `replaceStateURL()` call.
+    // normal workflow designed to render a contents with stored State data.
     if (skipStateChange) {
       skipStateChange = false;
       return;
     }
 
+    // we have no State data when it's an initial state or when it was removed
+    // by `replaceStateURL`, so we schedule retreival of data by it's URL and
+    // triggering this event once again (replaceState)
     if (!data || History.isEmptyObject(data)) {
-      // First time got back to initial state - get necessary data
       var match = find_match_data(History.getState().url);
 
       // if router was able to find apropriate data - make a call,
