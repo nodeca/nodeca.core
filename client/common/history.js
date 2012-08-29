@@ -21,6 +21,14 @@ var History = window.History; // History.js
 
 
 /**
+ *  client.common.history.updateStateURL(url) -> Void
+ *
+ *  Proxy to History.js that replaces current State with new URL.
+ **/
+module.exports.updateStateURL = $.noop;
+
+
+/**
  *  client.common.history.init()
  *
  *  Assigns all necessary event listeners and handlers.
@@ -130,7 +138,8 @@ module.exports.init = function () {
   // Animation is allowed every time we handle user click.
   //
 
-  var allowScrollTo = false;
+  var allowScrollTo   = false;
+  var skipStateChange = false;
 
   //
   // Bind @statechange handler
@@ -139,21 +148,21 @@ module.exports.init = function () {
   History.Adapter.bind(window, 'statechange', function (event) {
     var data = History.getState().data, $el;
 
-    if (!data || History.isEmptyObject(data)) {
-      if (History.getStateByIndex(0).id === History.getState().id) {
-        // First time got back to initial state - get necessary data
-        var match = find_match_data(History.getState().url);
-
-        // if router was able to find apropriate data - make a call,
-        // otherwise should never happen
-        if (match) {
-          exec_api3_call(match, History.replaceState);
-          return;
-        }
-      }
-
-      // FIXME: handle this unexpected situation?
+    if (skipStateChange) {
+      skipStateChange = false;
       return;
+    }
+
+    if (!data || History.isEmptyObject(data)) {
+      // First time got back to initial state - get necessary data
+      var match = find_match_data(History.getState().url);
+
+      // if router was able to find apropriate data - make a call,
+      // otherwise should never happen
+      if (match) {
+        exec_api3_call(match, History.replaceState);
+        return;
+      }
     }
 
     // make contnet semi-opque before rendering
@@ -233,4 +242,13 @@ module.exports.init = function () {
       }
     });
   });
+
+  //
+  // Provide real updateStateURL()
+  //
+
+  module.exports.updateStateURL = function updateStateURL(url) {
+    skipStateChange = true;
+    History.replaceState({}, History.getState().title, url);
+  };
 };
