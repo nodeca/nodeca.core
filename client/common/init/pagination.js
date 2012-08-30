@@ -41,16 +41,14 @@ module.exports = function () {
       return;
     }
 
+    // do not allow to input anything but digits
+    $this.on('keypress', function (event) {
+      return ! event.charCode && /\d/.test(String.fromCharCode(event.charCode));
+    });
+
+    // listen for the "Go!" button clicks
     $this.next('button').on('click.pagination', function (event) {
       var page = +$this.val();
-
-      if (data.current === page) {
-        return;
-      }
-
-      if (1 > page) {
-        page = 1;
-      }
 
       $.extend(data.params, {page: page});
 
