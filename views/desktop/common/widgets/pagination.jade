@@ -8,7 +8,9 @@ mixin _pagination_dropdown_menu
     - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
     label.pgn-jump.input(for=pgmpid) #{self.t('common.pagination.dropdown_label')}
     .input-append
-      input.input-small(id=pgmpid, type='text', size='8', placeholder=self.t('common.pagination.dropdown_placeholder'))
+      input.pagination-input.input-small(
+        id=pgmpid, size='8', type='number', min='1',
+        placeholder=self.t('common.pagination.dropdown_placeholder'))
       button.btn.btn-inverse(type='button') #{self.t('common.pagination.dropdown_button')}
 
 //- Create pagination
@@ -19,9 +21,9 @@ mixin _pagination_dropdown_menu
 //-   max_page (String|Int) - current page position
 mixin pagination(route, params, current, max_page)
   //- cast int types for safety (router returns parameters as strings)
-  - current  = current
-  - max_page = max_page
-  ul.pagination
+  - current  = +current
+  - max_page = +max_page
+  ul.pagination(data-pagination=JSON.stringify({ route: route, params: params, current: current }))
     //- first page always displayed, except when current == 1.
     //- (then we skip first half of paginator)
     - if (current > 1)
