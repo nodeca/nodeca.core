@@ -13,7 +13,7 @@ mixin _pagination_dropdown_menu(route, params)
         placeholder=self.t('common.pagination.dropdown_placeholder'))
       button.btn.btn-inverse(
         data-pagination=JSON.stringify({ route: route, params: params }),
-        data-action='common.pagination',
+        data-action='common.pagination.change',
         type='button') #{self.t('common.pagination.dropdown_button')}
 
 //- Create pagination

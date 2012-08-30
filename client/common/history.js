@@ -29,11 +29,11 @@ module.exports.updateState = $.noop;
 
 
 /**
- *  client.common.history.goto(apiPath, params) -> Void
+ *  client.common.history.navigateTo(apiPath, params) -> Void
  *
  *  Perform server method, render result and update history.
  **/
-module.exports.goto = $.noop;
+module.exports.navigateTo = $.noop;
 
 
 /**
@@ -280,7 +280,7 @@ module.exports.init = function () {
   };
 
 
-  module.exports.goto = function goto(apiPath, params) {
+  module.exports.navigateTo = function navigateTo(apiPath, params) {
     exec_api3_call([
       { meta: apiPath, params: params },
       nodeca.runtime.router.linkTo(apiPath, params),
