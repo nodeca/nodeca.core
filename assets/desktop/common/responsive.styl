@@ -11,10 +11,18 @@
   // update search icon's offset
   .navbar-search
     .icon-search
-      top 14px
+      top 16px
       left 23px
 
   // remove active item underline
   .navbar .nav .active
     &:before
       display none;
+
+  // Hide white tail of navbar dropdowns
+  .navbar .pull-right > li > .dropdown-menu:after,
+  .navbar .nav > li > .dropdown-menu.pull-right:after,
+  .navbar .pull-left > li > .dropdown-menu:after,
+  .navbar .nav > li > .dropdown-menu.pull-left:after
+    border none
+    display none
