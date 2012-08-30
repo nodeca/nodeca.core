@@ -190,18 +190,18 @@ module.exports.init = function () {
       var html;
 
       try {
-        nodeca.client.common.navbar_menu.activate(data.route);
-
         html = nodeca.client.common.render(data.view, data.locals, data.layout);
         $('#content').html(html);
 
+        nodeca.client.common.navbar_menu.activate(data.route);
         nodeca.client.common.stats.inject(data.locals);
       } catch (err) {
-        // FIXME: redirect on error? or at least propose user to click
-        //        a link to reload to the requested page
-        nodeca.logger.error('Failed render view <' + data.view +
-                            '> with layout <' + data.layout + '>', err);
-        return;
+        // error is logged by renderer
+        allowScrollTo = false;
+        notification.hide();
+
+        // rethrow error
+        throw err;
       }
 
       // scroll to element only when we handle user click

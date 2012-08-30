@@ -61,9 +61,21 @@ helpers.jason = JSON.stringify;
  **/
 module.exports = function render(apiPath, locals, layout) {
   if (!nodeca.shared.common.getByPath(nodeca.views, apiPath)) {
-    throw new Error("View " + apiPath + " not found");
+    nodeca.logger.error('View <' + apiPath + '> not found.');
+    throw new Error('View <' + apiPath + '> not found.');
   }
 
-  locals = _.extend(locals || {}, helpers);
-  return nodeca.shared.common.render(nodeca.views, apiPath, locals, layout, true);
+  try {
+    locals = _.extend(locals || {}, helpers);
+    return nodeca.shared.common.render(nodeca.views, apiPath, locals, layout, true);
+  } catch (err) {
+    nodeca.logger.error(
+      'Failed render view <' + data.view +
+      '> with layout <' + data.layout + '>:\n\n' +
+      (err.stack || err.message || err)
+    );
+
+    // rethrow error
+    throw err;
+  }
 };
