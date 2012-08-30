@@ -89,11 +89,13 @@ module.exports.init = function () {
 
   // Tries to find match data from the router
   //
-  function find_match_data(url) {
+  function find_match_data(url, anchor) {
     var parts   = String(url).split('#'),
         href    = String(parts[0]).replace(/^[^:]+:\/\//, '//'),
-        anchor  = String(parts[1]),
         match   = nodeca.runtime.router.match(href);
+
+    // make sure anchor is an empty string or an id with hash prefix
+    anchor = String(anchor || parts[1]).replace(/^#?(.*)/, '$1');
 
     if (!match && /^\/\//.test(href)) {
       // try relative URL if full didn;t match
@@ -118,8 +120,11 @@ module.exports.init = function () {
 
     nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
       if (err && (301 === err.statusCode || 302 === err.statusCode || 307 === err.statusCode)) {
-        // handle rediect via RPC
-        exec_api3_call(find_match_data(err.headers.Location), callback);
+        // prepare new data
+        data = find_match_data(err.headers.Location, window.location.hash);
+
+        // handle redirect via RPC
+        exec_api3_call(data, callback);
         return;
       }
 
@@ -208,7 +213,7 @@ module.exports.init = function () {
       if (allowScrollTo) {
         // if anchor is given try to find matching element
         if (data.anchor) {
-          $el = $('#' + data.anchor);
+          $el = $(data.anchor);
         }
 
         // if there were no anchor or thre were no matching element
