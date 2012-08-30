@@ -109,7 +109,7 @@ module.exports.init = function () {
     notification.show();
 
     nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
-      if (err && err.statusCode && (301 === err.statusCode || 307 === err.statusCode)) {
+      if (err && (301 === err.statusCode || 302 === err.statusCode || 307 === err.statusCode)) {
         // handle rediect via RPC
         exec_api3_call(find_match_data(err.headers.Location), callback);
         return;
