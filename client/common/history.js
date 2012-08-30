@@ -29,6 +29,14 @@ module.exports.updateState = $.noop;
 
 
 /**
+ *  client.common.history.goto(apiPath, params) -> Void
+ *
+ *  Perform server method, render result and update history.
+ **/
+module.exports.goto = $.noop;
+
+
+/**
  *  client.common.history.init()
  *
  *  Assigns all necessary event listeners and handlers.
@@ -257,7 +265,7 @@ module.exports.init = function () {
   });
 
   //
-  // Provide real updateState()
+  // Provide real methods (as History.enabled)
   //
 
   module.exports.updateState = function updateState(payload, url) {
@@ -269,5 +277,14 @@ module.exports.init = function () {
       locals: payload.data,
       route:  payload.data.head.route
     }, payload.data.head.title, url || History.getState().url);
+  };
+
+
+  module.exports.goto = function goto(apiPath, params) {
+    exec_api3_call([
+      { meta: apiPath, params: params },
+      nodeca.runtime.router.linkTo(apiPath, params),
+      null
+    ], History.pushState);
   };
 };

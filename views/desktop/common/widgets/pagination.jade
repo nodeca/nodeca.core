@@ -3,15 +3,18 @@
 
 
 //- create 'go to page' dropdown menu
-mixin _pagination_dropdown_menu
+mixin _pagination_dropdown_menu(route, params)
   form.dropdown-menu
     - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
     label.pgn-jump.input(for=pgmpid) #{self.t('common.pagination.dropdown_label')}
     .input-append
-      input.pagination-input.input-small(
+      input.input-small(
         id=pgmpid, size='8', type='number', min='1',
         placeholder=self.t('common.pagination.dropdown_placeholder'))
-      button.btn.btn-inverse(type='button') #{self.t('common.pagination.dropdown_button')}
+      button.btn.btn-inverse(
+        data-pagination=JSON.stringify({ route: route, params: params }),
+        data-action='common.pagination',
+        type='button') #{self.t('common.pagination.dropdown_button')}
 
 //- Create pagination
 //-
@@ -23,7 +26,7 @@ mixin pagination(route, params, current, max_page)
   //- cast int types for safety (router returns parameters as strings)
   - current  = +current
   - max_page = +max_page
-  ul.pagination(data-pagination=JSON.stringify({ route: route, params: params, current: current }))
+  ul.pagination
     //- first page always displayed, except when current == 1.
     //- (then we skip first half of paginator)
     - if (current > 1)
@@ -34,8 +37,10 @@ mixin pagination(route, params, current, max_page)
     - if (current > PAGES_INTERVAL + 2)
       li.dropdown
         - delete(params.page)
-        a.more.dropdown-toggle(href=self.link_to(route, params), data-target="#", data-toggle='dropdown') ...
-        mixin _pagination_dropdown_menu
+        a.more.dropdown-toggle(
+          href=self.link_to(route, params),
+          data-target="#", data-toggle='dropdown') ...
+        mixin _pagination_dropdown_menu(route, params)
 
     //- left surrounding pages displayed if current page > 2
     - for (var i=PAGES_INTERVAL; i > 0; i--) {
@@ -47,8 +52,10 @@ mixin pagination(route, params, current, max_page)
     // current page always dispayed
     li.dropdown
       - params.page = current
-      a.current.dropdown-toggle(href=self.link_to(route, params), data-target="#", data-toggle='dropdown') #{current}
-      mixin _pagination_dropdown_menu
+      a.current.dropdown-toggle(
+        href=self.link_to(route, params),
+        data-target="#", data-toggle='dropdown') #{current}
+      mixin _pagination_dropdown_menu(route, params)
 
     //- right surrounding pages displayed if current page < (bottom-1)
     - for (var i=1 ; i <= PAGES_INTERVAL; i++) {
@@ -62,8 +69,10 @@ mixin pagination(route, params, current, max_page)
     - if (max_page - current > PAGES_INTERVAL + 1)
       li.dropdown
         - delete(params.page)
-        a.more.dropdown-toggle(href=self.link_to(route, params), data-target="#", data-toggle='dropdown') ...
-        mixin _pagination_dropdown_menu
+        a.more.dropdown-toggle(
+          href=self.link_to(route, params),
+          data-target="#", data-toggle='dropdown') ...
+        mixin _pagination_dropdown_menu(route, params)
 
     //- last page always displayed, except it's current one
     //- (then we skip last half of paginator)
