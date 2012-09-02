@@ -95,7 +95,7 @@ module.exports.init = function () {
         match   = nodeca.runtime.router.match(href);
 
     // make sure anchor is an empty string or an id with hash prefix
-    anchor = String(anchor || parts[1]).replace(/^#?(.*)/, '$1');
+    anchor = String(anchor || parts[1] || '').replace(/^#?(.*)/, '$1');
 
     if (!match && /^\/\//.test(href)) {
       // try relative URL if full didn;t match
@@ -121,7 +121,7 @@ module.exports.init = function () {
     nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
       if (err && (301 === err.statusCode || 302 === err.statusCode || 307 === err.statusCode)) {
         // prepare new data
-        data = find_match_data(err.headers.Location, window.location.hash);
+        data = find_match_data(err.headers.Location, anchor || window.location.hash);
 
         // handle redirect via RPC
         exec_api3_call(data, callback);
@@ -285,11 +285,11 @@ module.exports.init = function () {
   };
 
 
-  module.exports.navigateTo = function navigateTo(apiPath, params) {
+  module.exports.navigateTo = function navigateTo(apiPath, params, anchor) {
     exec_api3_call([
       { meta: apiPath, params: params },
       nodeca.runtime.router.linkTo(apiPath, params),
-      null
+      anchor
     ], History.pushState);
   };
 };
