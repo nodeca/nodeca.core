@@ -9,7 +9,7 @@ module.exports.setLocale = function (params, next) {
     params.locale = nodeca.config.locales['default'];
   }
 
-  if (-1 === nodeca.config.locales.enabled.indexOf(params.locale)) {
+  if (-1 < nodeca.config.locales.enabled.indexOf(params.locale)) {
     this.session.locale = params.locale;
     next();
     return;
