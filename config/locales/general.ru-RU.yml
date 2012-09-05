@@ -1,0 +1,12 @@
+i18n:
+  ru-RU:
+    common:
+      notice:
+        loading: Загрузка...
+      menus:
+        admin:
+          dashboard: Админ
+      pagination:
+        dropdown_label: 'Перейти к:'
+        dropdown_placeholder: Страница
+        dropdown_button: ОК!
