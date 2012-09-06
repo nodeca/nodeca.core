@@ -91,19 +91,11 @@ module.exports.init = function () {
   //
   function find_match_data(url, anchor) {
     var parts   = String(url).split('#'),
-        href    = String(parts[0]).replace(/^[^:]+:\/\//, '//'),
+        href    = String(parts[0]),
         match   = nodeca.runtime.router.match(href);
 
     // make sure anchor is an empty string or an id with hash prefix
     anchor = String(anchor || parts[1] || '').replace(/^#?(.*)/, '$1');
-
-    if (!match && /^\/\//.test(href)) {
-      // try relative URL if full didn;t match
-      //
-      //    `//example.com/foo/bar` -> `/foo/bar`
-      href  = href.replace(/^\/\/[^\/]+\//, '/');
-      match = nodeca.runtime.router.match(href);
-    }
 
     return match ? [match, href, anchor] : null;
   }
