@@ -120,6 +120,9 @@ module.exports.init = function () {
 
     nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
       if (err && (301 === err.statusCode || 302 === err.statusCode || 307 === err.statusCode)) {
+        // note, that we try to keep anchor, if exists.
+        // that's important for moved threads & last pages redirects
+
         // prepare new data
         data = find_match_data(err.headers.Location, anchor || window.location.hash);
 
