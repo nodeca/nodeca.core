@@ -3,10 +3,10 @@
 mixin timeline_scope(scope)
   - var metaline;
   li
-    span.timeline-period #{scope.elapsed.total}ms 
+    span.timeline-period #{scope.elapsed.total.toFixed(2)}ms 
     | - #{scope.message} 
     - if (scope.elapsed.missed > 0)
-      | [missed #{scope.elapsed.missed}ms] 
+      | [missed #{scope.elapsed.missed.toFixed(2)}ms] 
     - metaline = JSON.stringify(scope.meta);
     - if (metaline !== '{}')
       | #{metaline}
