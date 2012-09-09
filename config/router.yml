@@ -15,8 +15,8 @@ router:
       "/{file}":
         file: /favicon.ico|robots.txt|snippet.png/
 
-listen:
-  admin:
-    mount: /admin
-  assets:
-    mount: /assets
+  bind:
+    admin:
+      mount: /admin
+    assets:
+      mount: /assets
