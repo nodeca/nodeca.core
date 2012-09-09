@@ -14,7 +14,7 @@
  **/
 
 
-/*global $, _, nodeca, window, document*/
+/*global $, _, nodeca, window, document, loadAssets*/
 
 
 var History = window.History; // History.js
@@ -104,6 +104,8 @@ module.exports.init = function () {
   // Executes api3 method from given `data` (an array of `match`, `href` and
   // `anchor` as returned by find_match_data);
   //
+  // `callback` is a History function `pushState` or `replaceState`
+  //
   function exec_api3_call(data, callback) {
     var match = data[0], href = data[1], anchor = data[2];
 
@@ -127,6 +129,11 @@ module.exports.init = function () {
         // can't deal via rpc - try http
         window.location = href;
         return;
+      }
+
+      // fix href to have protocol before giving it to History.js
+      if (!/^https?:/.test(href)) {
+        href = window.location.protocol + href;
       }
 
       loadAssets((msg.view || match.meta).split('.').shift(), function () {
@@ -170,9 +177,9 @@ module.exports.init = function () {
       return;
     }
 
-    // we have no State data when it's an initial state or when it was removed
-    // by `replaceStateURL`, so we schedule retreival of data by it's URL and
-    // triggering this event once again (replaceState)
+    // we have no State data when it's an initial state, so we schedule
+    // retreival of data by it's URL and triggering this event once
+    // again (via History.replaceState)
     if (!data || History.isEmptyObject(data)) {
       var match = find_match_data(History.getState().url);
 
