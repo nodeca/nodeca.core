@@ -131,8 +131,14 @@ module.exports.init = function () {
         return;
       }
 
-      // fix href to have protocol before giving it to History.js
-      if (!/^https?:/.test(href)) {
+      // History.JS does not plays well with full URLs but without protocols:
+      //
+      //  http://example.com/foo.html  -- OK
+      //  /foo.html                    -- OK
+      //  //example.com/foo.html       -- becomes /example.com/foo.html
+      //
+      // So we add current protocol to the URLs starting with `//`
+      if (!/^\/\//.test(href)) {
         href = window.location.protocol + href;
       }
 
