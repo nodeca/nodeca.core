@@ -14,9 +14,3 @@ router:
     static:
       "/{file}":
         file: /favicon.ico|robots.txt|snippet.png/
-
-  bind:
-    admin:
-      mount: /admin
-    assets:
-      mount: /assets

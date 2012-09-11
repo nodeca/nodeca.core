@@ -1,0 +1,5 @@
+bind:
+  admin:
+    mount: /admin
+  assets:
+    mount: /assets
