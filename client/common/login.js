@@ -18,15 +18,10 @@
 
 
 /**
- *  client.common.login.send($btn, event)
+ *  client.common.login.send($form, event)
  **/
-module.exports.send = function ($btn, event) {
-  var data = {};
-
-  $.each($btn.parents('form:eq(0)').serializeArray(), function () {
-    data[this.name] = this.value;
-  });
-
-  nodeca.client.common.history.navigateTo('login.email', data);
+module.exports.send = function ($form, event) {
+  var params = nodeca.client.common.form.getData($form);
+  nodeca.client.common.history.navigateTo('login.email', params);
   return false;
 };
