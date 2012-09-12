@@ -36,6 +36,19 @@ module.exports.updateState = $.noop;
 module.exports.navigateTo = $.noop;
 
 
+// Returns normalized URL:
+//
+//  http://example.com/foo.html  => http://example.com/foo.html
+//  /foo.html                    => http://example.com/foo.html
+//  //example.com/foo.html       => http://example.com/foo.html
+//
+function normalizeURL(url) {
+  var a = window.document.createElement('a');
+  a.href = url;
+  return a.href.toString();
+}
+
+
 /**
  *  client.common.history.init()
  *
@@ -137,10 +150,8 @@ module.exports.init = function () {
       //  /foo.html                    -- OK
       //  //example.com/foo.html       -- becomes /example.com/foo.html
       //
-      // So we add current protocol to the URLs starting with `//`
-      if (!/^\/\//.test(href)) {
-        href = window.location.protocol + href;
-      }
+      // So we normalie URL to be full one (with protocol, host, etc.)
+      href = normalizeURL(href);
 
       loadAssets((msg.view || match.meta).split('.').shift(), function () {
         callback({
