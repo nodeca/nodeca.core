@@ -3,17 +3,16 @@ a.dropdown-toggle.icon-user(href='#', data-toggle='dropdown')
   b.caret
 ul.dropdown-menu
   li
-    form
+    form(data-action='common.login.send')
       label.pgn-jump.input(for='email') #{self.t('common.auth.email')}
       input.input-small(
-        id='email', name='email', type='string', min='4')
+        id='email', name='email', type='text', min='4')
       label.pgn-jump.input(for='pass') #{self.t('common.auth.pass')}
       input.input-small(
         id='pass', name='pass', type='password', min='6')
       button.btn.btn-inverse(
-        data-action='common.login.send',
-        type='button') #{self.t('common.auth.login')}
-     
+        type='submit') #{self.t('common.auth.login')}
+
   li.divider
   li: a(href=self.link_to('registration.form'))= self.t('common.auth.register')
   li.divider
