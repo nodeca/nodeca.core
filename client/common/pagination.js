@@ -27,7 +27,7 @@ module.exports.change = function ($form, event) {
     return;
   }
 
-  $.extend(data.params, {page: $form.find('input:eq(0)').val()});
+  $.extend(data.params, nodeca.client.common.form.getData($form));
   nodeca.client.common.history.navigateTo(data.route, data.params);
 
   return false;

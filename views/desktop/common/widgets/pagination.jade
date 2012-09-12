@@ -11,7 +11,7 @@ mixin _pagination_dropdown_menu(route, params)
     label.pgn-jump.input(for=pgmpid) #{self.t('common.pagination.dropdown_label')}
     .input-append
       input.input-small(
-        id=pgmpid, size='8', type='number', min='1',
+        id=pgmpid, name="page", size='8', type='number', min='1',
         placeholder=self.t('common.pagination.dropdown_placeholder'))
       button.btn.btn-inverse(
         onClick='$(this.form).trigger("submit"); return false;',
