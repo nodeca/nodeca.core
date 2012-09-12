@@ -1,0 +1,10 @@
+a.dropdown-toggle.icon-user(href='#', data-toggle='dropdown')
+  | #{self.profile._uname}
+  b.caret
+ul.dropdown-menu
+  li: a(href='#') Admin
+  li.divider
+  li: a(href=self.link_to('users.profile'))= self.t('common.auth.profile')
+  li: a.icon-check(href='#') No images (fast)
+  li.divider
+  li: a(href=self.link_to('logout'))= self.t('common.auth.logout')
