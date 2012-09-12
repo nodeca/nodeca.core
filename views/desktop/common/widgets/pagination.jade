@@ -4,7 +4,9 @@
 
 //- create 'go to page' dropdown menu
 mixin _pagination_dropdown_menu(route, params)
-  form.dropdown-menu
+  form.dropdown-menu(
+    data-pagination=JSON.stringify({ route: route, params: params }),
+    data-action='common.pagination.change')
     - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
     label.pgn-jump.input(for=pgmpid) #{self.t('common.pagination.dropdown_label')}
     .input-append
@@ -12,8 +14,7 @@ mixin _pagination_dropdown_menu(route, params)
         id=pgmpid, size='8', type='number', min='1',
         placeholder=self.t('common.pagination.dropdown_placeholder'))
       button.btn.btn-inverse(
-        data-pagination=JSON.stringify({ route: route, params: params }),
-        data-action='common.pagination.change',
+        onClick='$(this.form).trigger("submit"); return false;',
         type='button') #{self.t('common.pagination.dropdown_button')}
 
 //- Create pagination

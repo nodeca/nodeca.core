@@ -14,7 +14,7 @@
  **/
 
 
-/*global $, _, nodeca*/
+/*global $, _, nodeca, loadAssets*/
 
 
 /**
@@ -30,7 +30,8 @@
  **/
 module.exports.init = function () {
   $(function () {
-    $('body').on('click.nodeca.data-api', '[data-action]', function (event) {
+    function handleAction(event) {
+      /*jshint validthis:true*/
       var $this = $(this), api_path = String($this.data('action'));
 
       loadAssets(api_path.split('.').shift(), function () {
@@ -45,6 +46,9 @@ module.exports.init = function () {
       });
 
       return false;
-    });
+    }
+
+    $('body').on('click.nodeca.data-api', 'a[data-action],button[data-action]', handleAction);
+    $('body').on('submit.nodeca.data-api', 'form[data-action]', handleAction);
   });
 };

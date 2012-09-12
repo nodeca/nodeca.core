@@ -18,16 +18,16 @@
 
 
 /**
- *  client.common.pagination.change($btn, event)
+ *  client.common.pagination.change($form, event)
  **/
-module.exports.change = function ($btn, event) {
-  var data = $btn.data('pagination');
+module.exports.change = function ($form, event) {
+  var data = $form.data('pagination');
 
   if (!data) {
     return;
   }
 
-  $.extend(data.params, {page: +$btn.prev('input').val()});
+  $.extend(data.params, {page: $form.find('input:eq(0)').val()});
   nodeca.client.common.history.navigateTo(data.route, data.params);
 
   return false;
