@@ -14,8 +14,7 @@ mixin _pagination_dropdown_menu(route, params)
         id=pgmpid, name="page", size='8', type='number', min='1',
         placeholder=self.t('common.pagination.dropdown_placeholder'))
       button.btn.btn-inverse(
-        onClick='$(this.form).trigger("submit"); return false;',
-        type='button') #{self.t('common.pagination.dropdown_button')}
+        type='submit') #{self.t('common.pagination.dropdown_button')}
 
 //- Create pagination
 //-
