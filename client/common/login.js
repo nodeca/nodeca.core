@@ -22,10 +22,11 @@
  **/
 module.exports.send = function ($btn, event) {
   var data = {};
-  $.each($($btn.eq(0).form).serializeArray(), function () {
+
+  $.each($btn.parents('form:eq(0)').serializeArray(), function () {
     data[this.name] = this.value;
   });
-  nodeca.client.common.history.navigateTo('login.email', data);
 
+  nodeca.client.common.history.navigateTo('login.email', data);
   return false;
 };

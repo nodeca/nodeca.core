@@ -6,10 +6,10 @@ ul.dropdown-menu
     form
       label.pgn-jump.input(for='email') #{self.t('common.auth.email')}
       input.input-small(
-        id='email', type='string', min='4')
+        id='email', name='email', type='string', min='4')
       label.pgn-jump.input(for='pass') #{self.t('common.auth.pass')}
       input.input-small(
-        id='pass', type='password', min='6')
+        id='pass', name='pass', type='password', min='6')
       button.btn.btn-inverse(
         data-action='common.login.send',
         type='button') #{self.t('common.auth.login')}
