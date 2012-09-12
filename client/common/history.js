@@ -305,6 +305,8 @@ module.exports.init = function () {
 
 
   module.exports.navigateTo = function navigateTo(apiPath, params, anchor) {
+    allowScrollTo = true;
+
     exec_api3_call([
       { meta: apiPath, params: params },
       nodeca.runtime.router.linkTo(apiPath, params),
