@@ -6,7 +6,7 @@
 mixin _pagination_dropdown_menu(route, params)
   form.dropdown-menu(
     data-pagination=JSON.stringify({ route: route, params: params }),
-    data-action='common.pagination.change')
+    data-on-submit='common.pagination.change')
     - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
     label.pgn-jump.input(for=pgmpid) #{self.t('common.pagination.dropdown_label')}
     .input-append

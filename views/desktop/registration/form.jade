@@ -1,6 +1,6 @@
 H1= self.t('common.registration.form')
 
-form(data-action='common.auth.register')
+form(data-on-submit='common.auth.register')
   label.pgn-jump.input(for='email') #{self.t('common.registration.email')}
   input.input-small(
     id='email', name='email', type='text', min='5')
