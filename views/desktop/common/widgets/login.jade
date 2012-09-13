@@ -3,7 +3,7 @@ a.dropdown-toggle.icon-user(href='#', data-toggle='dropdown')
   b.caret
 ul.dropdown-menu
   li
-    form(data-action='common.login.send')
+    form(data-action='common.auth.login')
       label.pgn-jump.input(for='email') #{self.t('common.auth.email')}
       input.input-small(
         id='email', name='email', type='text', min='4')
