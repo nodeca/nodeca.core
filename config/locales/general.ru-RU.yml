@@ -10,3 +10,18 @@ i18n:
         dropdown_label: 'Перейти к:'
         dropdown_placeholder: Страница
         dropdown_button: ОК!
+      auth:
+        login: Вход
+        logout: Выход
+        profile: Настройки
+        register: Регистрация
+        email: email/имя
+        pass: Пароль
+      registration:
+        form: Форма регистрации
+        email: емейл
+        nick: Имя.
+        pass: Пароль должен быть больше 8 символов. Пожалуйста используйте знаки припинания, цифры и буквы в разных регистрах.
+        first_name: Фамилия.
+        last_name: Имя.
+        register: Зарегистрироваться.
