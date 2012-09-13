@@ -34,18 +34,25 @@ var params_schema = {
 };
 nodeca.validate(params_schema);
 
-
-
-// login by provider
-//
-// ##### params
-//
+/**
+ * registration.register(params, callback) -> Void
+ *
+ * ##### Params
+ * - email(String):       Email
+ * - pass(String):        Password
+ * - nick(String):        Nickname
+ * - first_name(String):  First name
+ * - last_name(String):   Last name
+ *
+ * Register new user
+ *
+ **/
 module.exports = function (params, next) {
   var env = this;
   var user,
       link;
 
-  // FIXME get real buck url
+  // FIXME get real back url
   var back_url = nodeca.runtime.router.linkTo('forum.index');
 
 
@@ -56,6 +63,7 @@ module.exports = function (params, next) {
       next(err);
       return;
     }
+    // is email uniq?
     if (docs.length !== 0) {
       // FIXME check statusCode
       next({ statusCode: 401, message: 'This email already exists' });
@@ -85,10 +93,11 @@ module.exports = function (params, next) {
           next(err);
           return;
         }
-
+        // all ok. redirect to previous page
         env.skip.push('renderer');
         env.response.statusCode = 302;
         env.response.headers.Location = back_url;
+        next();
       });
     });
   });

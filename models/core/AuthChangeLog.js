@@ -25,6 +25,11 @@ var Schema = mongoose.Schema;
 ////////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ *  new models.core.AuthChangeLog()
+ *
+ *  Create new odm object
+ **/
 var AuthChangeLog= new Schema({
   user_id: Schema.ObjectId,
   action: String,

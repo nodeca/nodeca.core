@@ -18,26 +18,30 @@ var params_schema = {
     required: true
   }
 };
-
 nodeca.validate(params_schema);
 
 
-// login by email provider
-//
-// ##### params
-//
-// - `email`      user email or nick
-// - `pass`       user password
+/**
+ * login.email(params, next) -> Void
+ *
+ * ##### params
+ *
+ * - `email`      user email or nick
+ * - `pass`       user password
+ *
+ * login by email provider
+ **/
 module.exports = function (params, next) {
   var env = this;
 
-  // FIXME get real buck url
+  // FIXME get real back url
   var back_url = nodeca.runtime.router.linkTo('forum.index');
 
   var ip = env.request.ip;
 
   env.session['profile'] =  null;
 
+  // try find user by email or nick
   AuthLink.findOne().or([{'email': params.email}, {'auth_data.nick': params.email}])
       .exec(function(err, link) {
     if (err) {
@@ -45,6 +49,7 @@ module.exports = function (params, next) {
       return;
     }
     if (!!link && link.checkPass(params.pass)) {
+      // user found and say correct password
       User.findOne({ '_id': link.user_id }).exec(function(err, user) {
         if (err){
           next(err);
@@ -58,6 +63,7 @@ module.exports = function (params, next) {
       });
     }
     else {
+      // user not found or wrong password
       next({ statusCode: 401, message: 'Authentication failed' });
     }
   });
