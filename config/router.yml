@@ -18,6 +18,9 @@ router:
     registration.form:
       "/form": ~
 
+    registration.register:
+      "/register": ~
+
     login.email:
       "/email": ~
 

@@ -1,21 +1,24 @@
 H1= self.t('common.registration.form')
 
-form
+form(data-action='common.auth.register')
   label.pgn-jump.input(for='email') #{self.t('common.registration.email')}
   input.input-small(
-    id='email', type='string', min='5')
+    id='email', name='email', type='text', min='5')
   label.pgn-jump.input(for='pass') #{self.t('common.registration.pass')}
   input.input-small(
-    id='pass', type='password', min='6')
+    id='pass', name='pass', type='password', min='6')
+
+  label.pgn-jump.input(for='nick') #{self.t('common.registration.nick')}
+  input.input-small(
+    id='nick', name='nick', type='text', min='4')
 
   label.pgn-jump.input(for='first_name') #{self.t('common.registration.first_name')}
   input.input-small(
-    id='first_name', type='string', min='5')
+    id='first_name', name='first_name', type='text', min='2')
 
-  label.pgn-jump.input(for='last_name') #{self.t('common.registration.first_name')}
+  label.pgn-jump.input(for='last_name') #{self.t('common.registration.last_name')}
   input.input-small(
-    id='last_name', type='string', min='5')
+    id='last_name', name='last_name', type='text', min='2')
 
   button.btn.btn-inverse(
-    data-action='common.login.send',
-    type='button') #{self.t('common.registration.register')}
+    type='submit') #{self.t('common.registration.register')}
