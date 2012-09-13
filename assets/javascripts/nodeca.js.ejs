@@ -57,7 +57,7 @@ var nodeca = window.nodeca = (function (nodeca) {
   }(window.console || {}));
 
   // fill in routes
-  _.each(<%- jason(nodeca('runtime.routes_config')) %>, function (v) {
+  _.each(<%- jason(nodeca('runtime.client_routes')) %>, function (v) {
     nodeca.runtime.router.addRoute(v[0], v[1]);
   });
 
