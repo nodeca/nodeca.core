@@ -142,7 +142,7 @@
     //
 
     nodeca.logger.debug('API3 Sending request', payload);
-    xhr = last_xhr = $.post('/rpc', payload);
+    xhr = last_xhr = $.post('/io/rpc', payload);
 
     //
     // Listen for a response
