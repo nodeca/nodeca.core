@@ -3,7 +3,3 @@ bind:
     mount: /admin
   assets:
     mount: /assets
-  registration:
-    mount: /reg
-  login:
-    email: /email

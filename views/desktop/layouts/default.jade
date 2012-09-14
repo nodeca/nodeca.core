@@ -49,12 +49,23 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
                 - each item in self.menus.common.admin
                   li: a(href=item.link, target='_blank')= self.t(item.title)
 
-            ul.nav.pull-right
-              li.dropdown
-                - if (self.profile)
-                  include ../common/widgets/autorized
-                - else
-                  include ../common/widgets/login
+            - if (self.profile)
+              ul.nav.pull-right
+                li.dropdown
+                  a.dropdown-toggle.icon-user(href='#', data-toggle='dropdown')
+                    | #{self.profile}
+                    b.caret
+                  ul.dropdown-menu
+                    li: a(href='#') Admin
+                    li.divider
+                    li: a(href=self.link_to('users.profile'))= self.t('common.auth.profile')
+                    li: a.icon-check(href='#') No images (fast)
+                    li.divider
+                    li: a(href=self.link_to('users.auth.logout'))= self.t('common.auth.logout')
+            - else
+              ul.nav
+                li: a(href=self.link_to('users.auth.login.view'))= self.t('common.auth.login')
+                li: a(href=self.link_to('users.auth.register.view'))= self.t('common.auth.register')
                
 
 

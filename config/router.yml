@@ -14,15 +14,3 @@ router:
     static:
       "/{file}":
         file: /favicon.ico|robots.txt|snippet.png/
-
-    registration.form:
-      "/form": ~
-
-    registration.register:
-      "/register": ~
-
-    login.email:
-      "/email": ~
-
-    logout:
-      "/logout": ~
