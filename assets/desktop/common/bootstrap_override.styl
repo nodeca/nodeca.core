@@ -1,7 +1,7 @@
-//
+
+
 // Shift header sizes (reduce to lower level)
 //
-
 h1 { font-size: 30px; line-height: 40px; }
 h2 { font-size: 24px; line-height: 40px; }
 h3 { font-size: 18px; line-height: 20px; }
@@ -12,18 +12,16 @@ h1 small { font-size: 18px; }
 h2 small { font-size: 14px; }
 h3 small { font-size: 14px; }
 
-//
+
 // Sticky navbar
 //
-
 .navbar-fixed-top
   position static
   margin-bottom baseLineHeight
 
-//
+
 // Responsive menu button (3 lines) with pure css
 //
-
 .navbar .btn-navbar > span
   display block
   width 20px
@@ -32,17 +30,16 @@ h3 small { font-size: 14px; }
   border-bottom 2px solid grayLight
   margin 1px 0
 
-//
+
 // Brand text
 //
-
 .navbar .brand
   color gray
   font-weight bold
   font-family sansWideFontFamily
   transition color 0.5s ease-in-out
 
-//
+
 // Buttons tweaks
 //
 .btn
@@ -60,10 +57,9 @@ h3 small { font-size: 14px; }
 .input-append
   whitespace nowrap
 
-//
+
 // Search icon
 //
-
 .navbar-search
   .search-query
     padding-left 25px
@@ -78,10 +74,9 @@ h3 small { font-size: 14px; }
     &.focused
       color grayDark
 
-//
+
 // topnav underline for avtive item
 //
-
 .navbar .nav .active
   position relative
   &:before
@@ -92,9 +87,16 @@ h3 small { font-size: 14px; }
     position absolute
     width 100%
 
+
+// form help-texts tweak (smaller & lighter)
 //
+.form-horizontal .help-block
+  color grayLight
+  font-size 90%
+  margin-top 5px
+
+
 // Collapser fix IE9 hack crashes all.
 //
-
 .collapse
   overflow hidden
