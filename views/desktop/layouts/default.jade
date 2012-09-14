@@ -44,10 +44,12 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
               input.input-medium.search-query(type='text', placeholder='Search')
               .icon-search
 
-            - if (self.menus.common.admin.length > 0)
-              ul.nav
-                - each item in self.menus.common.admin
-                  li: a(href=item.link, target='_blank')= self.t(item.title)
+            // Temporary removed, will go to dropdown
+            //
+              - if (self.menus.common.admin.length > 0)
+                ul.nav
+                  - each item in self.menus.common.admin
+                    li: a(href=item.link, target='_blank')= self.t(item.title)
 
             - if (self.profile)
               ul.nav.pull-right
@@ -63,7 +65,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
                     li.divider
                     li: a(href=self.link_to('users.auth.logout'))= self.t('common.auth.logout')
             - else
-              ul.nav
+              ul.nav.pull-right
                 li: a(href=self.link_to('users.auth.login.view'))= self.t('common.auth.login')
                 li: a(href=self.link_to('users.auth.register.view'))= self.t('common.auth.register')
                

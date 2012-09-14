@@ -10,18 +10,3 @@ i18n:
         dropdown_label: 'Jump to:'
         dropdown_placeholder: Page number
         dropdown_button: Go!
-      auth:
-        login:  login
-        logout: Exit
-        profile: Settings
-        register: Register
-        email: email/nick
-        pass: password
-      registration:
-        form: Registration form
-        email: Email address.
-        nick: Nick name.
-        pass: Password, more then 8 symbols. Please use numbers, punctuation marks and letters in both register.
-        first_name: First name.
-        last_name: Last name.
-        register: Register.
