@@ -5,6 +5,9 @@
 //- http://validator.w3.org  recommendation
 meta(charset='UTF-8')
 
+//- defaults for mobile devices, from twitter bootstrap.
+meta(name="viewport", content="width=device-width, initial-scale=1.0")
+
 - if (self.head)
   - if (self.head.title)
     title #{self.head.title}
