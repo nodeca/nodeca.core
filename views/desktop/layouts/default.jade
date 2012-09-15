@@ -70,8 +70,8 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
                 li: a(href=self.link_to('users.auth.register.view'))= self.t('common.auth.register')
                
 
-
     #content.container!= self.content
+
 
     footer.container.page-footer
       ul.page-footer-nav.clearfix
@@ -103,6 +103,6 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
         a(href='#') RC Design
 
 
-    .debug
+    .debug.hidden-phone
       .container
         //{{PUNCHER_STATS}}
