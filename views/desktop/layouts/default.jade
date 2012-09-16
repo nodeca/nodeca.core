@@ -13,7 +13,11 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
     script(type="text/javascript")
       !{self.asset_include('loader.js')}
-      loadAssets.init(!{JSON.stringify(self.head.assets)}, '!{self.head.apiPath.split(".").shift()}');
+      loadAssets.init(
+        !{JSON.stringify(self.head.assets)},
+        '!{self.head.apiPath.split(".").shift()}',
+        !{JSON.stringify(self.env.session.locale)}
+      );
 
     script(type="text/javascript")
       var _gaq = _gaq || [];

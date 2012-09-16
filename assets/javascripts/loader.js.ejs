@@ -82,7 +82,7 @@ var loadAssets = window.loadAssets = (function () {
 
 
   // loads all necessary shims and libraries and assets for given namespace
-  loadAssets.init = function init(assetsMap, namespace) {
+  loadAssets.init = function init(assetsMap, namespace, locale) {
     var resources = [], namespaces;
 
     // set internal assets map
@@ -121,9 +121,12 @@ var loadAssets = window.loadAssets = (function () {
 
     loadResources(resources, function () {
       var scope = nodeca.client['admin' === namespace ? 'admin' : 'common'];
+
       if (_.isFunction(scope.init)) {
         scope.init();
       };
+
+      nodeca.runtime.locale = locale;
     });
   };
 
