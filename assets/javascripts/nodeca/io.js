@@ -16,9 +16,7 @@
   'use strict';
 
 
-  var // registered events
-      events = {},
-      // last xhr to allow interrupt it
+  var // last xhr to allow interrupt it
       last_xhr = null;
 
 
@@ -40,60 +38,6 @@
     err.code = code;
     return err;
   }
-
-
-  //
-  // Events
-  //
-
-
-  // executes all handlers registered for given `event`
-  function emit(event, args) {
-    args = _.isArray(args) ? args : []; // for IE < 9
-    _.each(events[event] || [], function (handler) {
-      handler.apply(null, args);
-    });
-  }
-
-
-  /**
-   *  nodeca.io.on(event, handler) -> Void
-   *  - event (String)
-   *  - handler (Function)
-   *
-   *  Registers `handler` for an `event`.
-   *
-   *
-   *  ##### Known events
-   *
-   *  - `connected`
-   *  - `disconnected`
-   *  - `rpc:version-mismatch({ client: "str", server: "str" })`
-   **/
-  io.on = function on(event, handler) {
-    if (!events[event]) {
-      events[event] = [];
-    }
-
-    events[event].push(handler);
-  };
-
-
-  /**
-   *  nodeca.io.off(event[, handler]) -> Void
-   *  - event (String)
-   *  - handler (Function)
-   *
-   *  Unsubscribes `handler` (or all handlers) from specified `event`.
-   *
-   *
-   *  ##### See also
-   *
-   *  - [nodeca.io.on]
-   **/
-  io.off = function off(event, handler) {
-    events[event] = (!handler) ? [] : _.without(events[event], handler);
-  };
 
 
   //
@@ -154,12 +98,6 @@
       nodeca.logger.debug('API3 Received data', data);
 
       if (data.version !== nodeca.runtime.version) {
-        // emit version mismatch error
-        emit('rpc:version-mismatch', {
-          client: nodeca.runtime.version,
-          server: data.version
-        });
-
         callback(ioerr(io.EWRONGVER, 'Client version does not match server.'));
         return;
       }
