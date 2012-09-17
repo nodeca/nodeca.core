@@ -10,3 +10,6 @@ i18n:
         dropdown_label: 'Jump to:'
         dropdown_placeholder: Page number
         dropdown_button: Go!
+      language:
+        en-US: English
+        ru-RU: Русский

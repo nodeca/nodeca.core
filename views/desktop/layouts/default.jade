@@ -88,10 +88,11 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
           a.dropdown-toggle(href='#',data-toggle='dropdown') Language
             b.caret
           ul.dropdown-menu
-            li
-              a(href='#') English
-            li
-              a(href='#') Russian
+            each locale in self.nodeca('config.locales.enabled')
+              li
+                a(href='#',
+                  data-on-click='common.locale',
+                  data-locale=locale)= self.t('common.language.' + locale)
 
         li.dropup
           a.dropdown-toggle(href='#',data-toggle='dropdown') Theme
