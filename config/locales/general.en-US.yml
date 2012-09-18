@@ -1,15 +1,21 @@
 i18n:
   en-US:
     common:
+
       notice:
         loading: Loading...
+
       menus:
         admin:
           dashboard: Admin
+
       pagination:
         dropdown_label: 'Jump to:'
         dropdown_placeholder: Page number
         dropdown_button: Go!
+
       language:
         en-US: English
         ru-RU: Русский
+
+      nojs: This site will not work without javascript!

@@ -101,6 +101,9 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
             li: a(href='#') Black & White
             li: a(href='#') Yellow
 
+      .nojs
+        .alert.alert-error #{self.t('common.nojs')} 
+
       p.copyright
         | Powered by 
         a(href='#') Nodeca

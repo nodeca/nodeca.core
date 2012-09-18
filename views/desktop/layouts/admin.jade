@@ -48,3 +48,6 @@ html.no-js
             li: a(href='#') Here
 
           #content!= self.content
+
+    .nojs
+      .alert.alert-error #{self.t('common.nojs')} 
