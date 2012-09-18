@@ -12,11 +12,7 @@ html.no-js
 
     script(type="text/javascript")
       !{self.asset_include('loader.js')}
-      loadAssets.init(
-        !{JSON.stringify(self.head.assets)},
-        'admin',
-        !{JSON.stringify(self.env.session.locale)}
-      );
+      loadAssets.init(!{JSON.stringify(self.head.assets)}, 'admin');
 
   body
 

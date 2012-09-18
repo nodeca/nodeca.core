@@ -15,8 +15,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
       !{self.asset_include('loader.js')}
       loadAssets.init(
         !{JSON.stringify(self.head.assets)},
-        '!{self.head.apiPath.split(".").shift()}',
-        !{JSON.stringify(self.env.session.locale)}
+        '!{self.head.apiPath.split(".").shift()}'
       );
 
     script(type="text/javascript")
