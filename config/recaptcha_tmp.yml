@@ -1,0 +1,14 @@
+#FIXME move to nodeca settings
+recaptcha:
+  private_key: 6LezntYSAAAAAAo2lvuUuK_tXSfbUT1VXo07JZtN
+  publick_key: 6LezntYSAAAAAGfoKHJuEQlY_fE4Zn4Xy2PZob8n
+
+  enabled_on:
+    login: true
+    registration: true
+
+  form:
+    theme: red
+    # Custom thema div name, used only with theme = 'custom'
+    custom_theme: 'recaptcha_widget'
+    locale: en
