@@ -70,8 +70,8 @@ module.exports = function render(apiPath, locals, layout) {
     return nodeca.shared.common.render(nodeca.views, apiPath, locals, layout, true);
   } catch (err) {
     nodeca.logger.error(
-      'Failed render view <' + data.view +
-      '> with layout <' + data.layout + '>:\n\n' +
+      'Failed render view <' + apiPath +
+      '> with layout <' + layout + '>:\n\n' +
       (err.stack || err.message || err)
     );
 
