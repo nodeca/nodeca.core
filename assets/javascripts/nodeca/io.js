@@ -51,7 +51,13 @@
    *  nodeca.io.apiTree(name, callback) -> Void
    **/
   io.apiTree = function apiTree(name, params, options, callback) {
-    var xhr, payload = { version: nodeca.runtime.version, method: name };
+    var xhr, payload;
+
+    payload = {
+      version:  nodeca.runtime.version,
+      method:   name,
+      csrf:     nodeca.runtime.csrf
+    };
 
     // Scenario: apiTree(name, callback);
     if (_.isFunction(params)) {
