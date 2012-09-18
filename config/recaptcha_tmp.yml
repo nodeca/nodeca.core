@@ -8,7 +8,7 @@ recaptcha:
     registration: true
 
   form:
-    theme: red
+    theme: custom
     # Custom thema div name, used only with theme = 'custom'
     custom_theme: 'recaptcha_widget'
     lang: en

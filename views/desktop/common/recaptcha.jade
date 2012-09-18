@@ -8,3 +8,25 @@ script
     lang : "#{self.runtime.recaptcha.lang}",
     callback: Recaptcha.focus_response_field
   });
+
+div#recaptcha_widget
+  div#recaptcha_image
+  div.recaptcha_only_if_incorrect_sol  Incorrect please try again
+
+  span#recaptcha_only_if_image  Enter the words above:
+  span#recaptcha_only_if_audio  Enter the numbers you hear:
+
+  input(type="text",id="recaptcha_response_field",name="recaptcha_response_field")
+
+  div
+    a(href="javascript:Recaptcha.reload()") Get another CAPTCHA
+
+  div#recaptcha_only_if_image
+    a(href="javascript:Recaptcha.switch_type('audio')") Get an audio CAPTCHA
+
+  div#recaptcha_only_if_audio
+    a(href="javascript:Recaptcha.switch_type('image')") Get an image CAPTCHA
+
+  div
+    a(href="javascript:Recaptcha.showhelp()") Help
+
