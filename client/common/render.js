@@ -66,7 +66,7 @@ module.exports = function render(apiPath, locals, layout) {
   }
 
   try {
-    locals = _.extend(locals || {}, helpers);
+    locals = _.extend(locals || {}, helpers, {runtime: nodeca.runtime});
     return nodeca.shared.common.render(nodeca.views, apiPath, locals, layout, true);
   } catch (err) {
     nodeca.logger.error(
