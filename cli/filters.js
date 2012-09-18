@@ -11,12 +11,22 @@ var Async = NLib.Vendor.Async;
 ////////////////////////////////////////////////////////////////////////////////
 
 
+// callback for Array#sort to sort numbers adequately :))
+function sort_nums_asc(a, b) {
+  return a - b;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
 module.exports.parserParameters = {
   version:      nodeca.runtime.version,
   addHelp:      true,
   help:         'list registeres filters',
   description:  'List registered filters'
 };
+
 
 module.exports.commandLineArguments = [
   {
@@ -56,14 +66,16 @@ module.exports.run = function (args, callback) {
       console.log(apiPath || '<GLOBAL>');
 
       ['before', 'after', 'ensure'].forEach(function (chain) {
-        if (!nodeca.filters.__hooks__[apiPath][chain].sorted.length) {
+        var prios = Object.keys(nodeca.filters.__hooks__[apiPath][chain].__sequences__);
+
+        if (!prios.length) {
           return;
         }
 
         console.log('  *** ' + chain + ':');
 
-        _.each(nodeca.filters.__hooks__[apiPath][chain].__sequences__, function (filters, prio) {
-          _.each(filters, function (filter) {
+        prios.sort(sort_nums_asc).forEach(function (prio) {
+          _.each(nodeca.filters.__hooks__[apiPath][chain].__sequences__[prio], function (filter) {
             console.log('   ' + prio + ' ' + (filter.func.name || '<anonymous>'));
 
             if (filter.exclude.length) {
