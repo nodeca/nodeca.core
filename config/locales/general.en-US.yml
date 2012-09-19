@@ -19,3 +19,9 @@ i18n:
         ru-RU: Русский
 
       nojs: This site will not work without javascript!
+
+      recaptcha:
+        change_image: Change image
+        code: Captcha code
+        description: Enter 2 words from the image above.
+        fail: Wrong captcha code. Try again

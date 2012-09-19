@@ -14,12 +14,11 @@ script
 .control-group.capcha-image
   .controls
     span#recaptcha_image
-    div.capcha-reload: a(href="javascript:Recaptcha.reload()") Change image
+    div.capcha-reload: a(href="javascript:Recaptcha.reload()")= self.t('common.recaptcha.change_image')
 
 .control-group
-  label.control-label(for='i_captcha') Captcha code
+  label.control-label(for='i_captcha')= self.t('common.recaptcha.code')
   .controls
     .row-fluid
       input.span12(id="recaptcha_response_field", name="recaptcha_response_field", type='text')
-      span.help-block Enter 2 words from the image above.
-
+      span.help-block= self.t('common.recaptcha.description')
