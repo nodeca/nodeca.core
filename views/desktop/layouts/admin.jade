@@ -16,23 +16,24 @@ html.no-js
 
   body
 
-    nav.navbar.navbar-fixed-top
-      .navbar-inner
-        .container-fluid
-          ul.nav
-            - each item in self.menus.admin.navbar
-              li: a(href=item.link)= self.t(item.title)
+    - if (self.menus.admin && self.menus.admin.navbar)
+      nav.navbar.navbar-fixed-top
+        .navbar-inner
+          .container-fluid
+            ul.nav
+              - each item in self.menus.admin.navbar
+                li: a(href=item.link)= self.t(item.title)
 
 
     .container-fluid
       .row-fluid
 
         //- Menu sidebar
-        .span2
-
-          ul.nav.nav-list.well
-            - each item in self.menus.admin.sidebar
-              li: a(href=item.link)= self.t(item.title)
+        - if (self.menus.admin && self.menus.admin.sidebar)
+          .span2
+            ul.nav.nav-list.well
+              - each item in self.menus.admin.sidebar
+                li: a(href=item.link)= self.t(item.title)
 
         //- Content
         .span10

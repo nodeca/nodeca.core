@@ -49,7 +49,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
             // Temporary removed, will go to dropdown
             //
-              - if (self.menus.common.admin.length > 0)
+              - if (self.menus.common && self.menus.common.admin && self.menus.common.admin.length > 0)
                 ul.nav
                   - each item in self.menus.common.admin
                     li: a(href=item.link, target='_blank')= self.t(item.title)
