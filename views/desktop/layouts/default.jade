@@ -54,11 +54,11 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
                   - each item in self.menus.common.admin
                     li: a(href=item.link, target='_blank')= self.t(item.title)
 
-            - if (self.me)
+            - if (self.runtime.is_member)
               ul.nav.pull-right
                 li.dropdown
                   a.dropdown-toggle.icon-user(href='#', data-toggle='dropdown')
-                    | #{self.me._uname}
+                    | #{self.runtime.user_name}
                     b.caret
                   ul.dropdown-menu
                     li: a(href='#') Admin
