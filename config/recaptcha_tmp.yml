@@ -2,9 +2,3 @@
 recaptcha:
   private_key: 6LezntYSAAAAAAo2lvuUuK_tXSfbUT1VXo07JZtN
   public_key: 6LezntYSAAAAAGfoKHJuEQlY_fE4Zn4Xy2PZob8n
-
-  form:
-    theme: custom
-    # Custom thema div name, used only with theme = 'custom'
-    custom_theme: 'recaptcha_widget'
-    lang: en

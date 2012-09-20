@@ -22,6 +22,6 @@ i18n:
 
       recaptcha:
         change_image: Change image
-        code: Captcha code
-        description: Enter 2 words from the image above.
-        fail: Wrong captcha code. Try again
+        captcha: Captcha code
+        captcha_help: Enter 2 words from the image above.
+        fail: Captch code incorrect.
