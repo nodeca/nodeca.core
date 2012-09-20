@@ -5,8 +5,8 @@ script
       Recaptcha.create("#{self.runtime.recaptcha.public_key}", 'recaptcha_div', {
         theme: "#{self.runtime.recaptcha.theme}",
         custom_theme_widget: "#{self.runtime.recaptcha.custom_theme_widget}",
-        lang : "#{self.runtime.recaptcha.lang}",
-        callback: Recaptcha.focus_response_field
+        lang : "#{self.runtime.recaptcha.lang}" //,
+        //callback: Recaptcha.focus_response_field
       });
     }
   });
