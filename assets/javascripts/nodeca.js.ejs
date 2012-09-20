@@ -11,7 +11,7 @@ var nodeca = window.nodeca = (function (nodeca) {
   nodeca.shared           = {};
   nodeca.client           = {};
 
-  nodeca.runtime          = $('meta[name="nodeca-runtime"]').data('value');
+  nodeca.runtime          = JSON.parse($('meta[name="nodeca-runtime"]').attr('content'));
   nodeca.runtime.env      = "<%= nodeca('runtime.env') %>";
   nodeca.runtime.version  = "<%= nodeca('runtime.version') %>";
   nodeca.runtime.router   = new Pointer();
