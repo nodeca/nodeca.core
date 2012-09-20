@@ -14,7 +14,7 @@ script
 .control-group.capcha-image
   .controls
     span#recaptcha_image
-    div.capcha-reload: a(href="javascript:Recaptcha.reload()")= self.t('common.recaptcha.change_image')
+    div.capcha-reload: a(href="javascript:Recaptcha.reload();Recaptcha.focus_response_field();")= self.t('common.recaptcha.change_image')
 
 .control-group
   label.control-label(for='i_captcha')= self.t('common.recaptcha.code')
