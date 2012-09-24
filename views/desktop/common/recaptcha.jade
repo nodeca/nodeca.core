@@ -14,9 +14,12 @@ script
     div.capcha-reload
       a(tabindex=-1, href="javascript:Recaptcha.reload();Recaptcha.focus_response_field();")= self.t('common.recaptcha.change_image')
 
-.control-group
+- var recaptcha_err_class = (!!self.errors && !!self.errors.recaptcha) ? 'error' : ''
+.control-group(class=recaptcha_err_class)
   label.control-label(for='i_captcha')= self.t('common.recaptcha.captcha')
   .controls
     .row-fluid
       input.span12(id="recaptcha_response_field", name="recaptcha_response_field", type='text')
       span.help-block= self.t('common.recaptcha.captcha_help')
+      - if (recaptcha_err_class!== '')
+        span.help-block #{self.errors.recaptcha}
