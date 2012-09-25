@@ -55,5 +55,10 @@ module.exports.init = function () {
       var $this = $(this), apiPath = $this.data('on-submit');
       return handleAction(event, $this, apiPath);
     });
+
+    $('body').on('change.nodeca.data-api', '[data-on-change]', function (event) {
+      var $this = $(this), apiPath = $this.data('on-change');
+      return handleAction(event, $this, apiPath);
+    });
   });
 };
