@@ -20,6 +20,7 @@ script
   .controls
     .row-fluid
       input.span12(id="recaptcha_response_field", name="recaptcha_response_field", type='text')
-      span.help-block= self.t('common.recaptcha.captcha_help')
       - if (recaptcha_err_class!== '')
         span.help-block #{self.errors.recaptcha}
+      - else
+        span.help-block= self.t('common.recaptcha.captcha_help')
