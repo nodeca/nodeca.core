@@ -4,6 +4,7 @@ i18n:
 
       notice:
         loading: Loading...
+        internal_server_error: Sorry. The server encountered an unexpected condition which prevented it from fulfilling the request. 
 
       menus:
         admin:
