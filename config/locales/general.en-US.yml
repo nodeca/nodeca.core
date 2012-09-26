@@ -4,7 +4,6 @@ i18n:
 
       notice:
         loading: Loading...
-        internal_server_error: Sorry. The server encountered an unexpected condition which prevented it from fulfilling the request. 
 
       menus:
         admin:
@@ -26,3 +25,7 @@ i18n:
         captcha: Captcha code
         captcha_help: Enter 2 words from the image above.
         code_incorrect: Captch code incorrect.
+
+      error:
+        # 500
+        server_internal: Internal server error.
