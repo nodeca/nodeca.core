@@ -1,16 +1,16 @@
 ;(function($) {
 
-	$.noty.layouts.topCenter = {
-		name: 'topCenter',
+	$.noty.layouts.bottomCenter = {
+		name: 'bottomCenter',
 		options: { // overrides options
-			
+
 		},
 		container: {
-			object: '<ul id="noty_topCenter_layout_container" />',
-			selector: 'ul#noty_topCenter_layout_container',
+			object: '<ul id="noty_bottomCenter_layout_container" />',
+			selector: 'ul#noty_bottomCenter_layout_container',
 			style: function() {
 				$(this).css({
-					top: 20,
+					bottom: 20,
 					left: 0,
 					position: 'fixed',
 					width: '310px',
@@ -20,7 +20,7 @@
 					listStyleType: 'none',
 					zIndex: 10000000
 				});
-				
+
 				$(this).css({
 					left: ($(window).width() - $(this).outerWidth()) / 2 + 'px'
 				});
