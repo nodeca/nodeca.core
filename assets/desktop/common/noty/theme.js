@@ -5,8 +5,8 @@
   'use strict';
 
 
-  $.noty.themes.nodecaTheme = {
-    name: 'nodecaTheme',
+  $.noty.themes.defaultTheme = {
+    name: 'defaultTheme',
     helpers: {
       borderFix: function() {
         if (this.options.dismissQueue) {
@@ -153,8 +153,8 @@
       }
     },
     callback: {
-      onShow: function() { $.noty.themes.nodecaTheme.helpers.borderFix.apply(this); },
-      onClose: function() { $.noty.themes.nodecaTheme.helpers.borderFix.apply(this); }
+      onShow: function() { $.noty.themes.defaultTheme.helpers.borderFix.apply(this); },
+      onClose: function() { $.noty.themes.defaultTheme.helpers.borderFix.apply(this); }
     }
   };
 

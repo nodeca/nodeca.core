@@ -1,22 +1,33 @@
 'use strict';
 
 
-/*global $, nodeca, noty*/
+/*global $, nodeca*/
 
 
-module.exports = function (options) {
-  if ('string' === typeof options) {
-    options = { text: options };
+var $notice = $([]), $message = $([]);
+
+
+function init() {
+  if (!$notice.length) {
+    $notice   = $(nodeca.views.common.widgets.notice());
+    $message  = $notice.find('.message');
+
+    $notice.appendTo($('body'));
+    $notice.find('.close').click(module.exports.hide);
+
+    module.exports.hide();
   }
+}
 
-  return noty({
-    theme:    'nodecaTheme',
-    layout:   options.type || 'notification',
-    text:     options.text,
-    template:
-      '<div class="noty_message alert">' +
-      '<button class="noty_close close>×</button>' +
-      '<span class="noty_text message"></span>' +
-      '</div>'
-  });
+
+module.exports.show = function (message) {
+  init();
+  $message.html(message);
+  $notice.show();
+};
+
+
+module.exports.hide = function () {
+  $notice.hide();
+  $message.html('');
 };

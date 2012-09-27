@@ -83,23 +83,18 @@ module.exports.init = function () {
   // An API object with show/hide methods
   //
   var notification = (function () {
-    var timeout, $showing, msg = nodeca.runtime.t('common.notice.loading');
+    var timeout, msg = nodeca.runtime.t('common.notice.loading');
 
     return {
       show: function () {
         clearTimeout(timeout); // make sure previous timeout was cleared
         timeout = setTimeout(function () {
-          $showing = nodeca.client.common.notice({
-            type: 'progress',
-            text: msg
-          });
+          nodeca.client.common.notice.show(msg);
         }, 500);
       },
       hide: function () {
         clearTimeout(timeout);
-        if ($showing) {
-          $showing.close();
-        }
+        nodeca.client.common.notice.hide();
       }
     };
   }());
