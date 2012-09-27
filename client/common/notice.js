@@ -12,7 +12,8 @@ module.exports.show = function show(options) {
   return noty({
     theme:    'nodecaTheme',
     layout:   options.type || 'notification',
-    text:     options.text
+    text:     options.text,
+    template: nodeca.client.common.render('common.widgets.notice')
   });
 };
 
