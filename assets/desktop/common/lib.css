@@ -2,6 +2,7 @@
 
  *= require bootstrap/bootstrap
  *= require bootstrap/bootstrap-responsive
+ *= require bootstrap-notify
 
  *= require fontello/icons
 
