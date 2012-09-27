@@ -12,6 +12,11 @@ module.exports = function (options) {
   return noty({
     theme:    'nodecaTheme',
     layout:   options.type || 'notification',
-    text:     options.text
+    text:     options.text,
+    template:
+      '<div class="noty_message alert">' +
+      '<button class="noty_close close>×</button>' +
+      '<span class="noty_text message"></span>' +
+      '</div>'
   });
 };
