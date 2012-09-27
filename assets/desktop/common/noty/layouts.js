@@ -30,32 +30,14 @@
     name: 'notification',
     options: {}, // overrides options
     container: {
-      object: '<ul id="noty_topRight_layout_container" />',
-      selector: 'ul#noty_topRight_layout_container',
-      style: function() {
-        $(this).css({
-          top: 20,
-          right: 20,
-          position: 'fixed',
-          width: '310px',
-          height: 'auto',
-          margin: 0,
-          padding: 0,
-          listStyleType: 'none',
-          zIndex: 10000000
-        });
-
-        if (window.innerWidth < 600) {
-          $(this).css({
-            right: 5
-          });
-        }
-      }
+      object:   '<div id="notice-notification-container" />',
+      selector: 'div#notice-notification-container',
+      style:    $.noop,
     },
     parent: {
-      object: '<li />',
-      selector: 'li',
-      css: {}
+      object:   '<div class="notice-element" />',
+      selector: 'div.notice-element',
+      css:      {}
     },
     css: {
       display: 'none',
