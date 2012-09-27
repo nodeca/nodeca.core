@@ -19,18 +19,19 @@
       css:      {}
     },
     css: {
-      display:  'none'
+      display:  'none',
+      width:    '310px'
     },
     addClass: ''
   };
 
 
-  $.noty.layouts.info = {
-    name: 'info',
+  $.noty.layouts.notification = {
+    name: 'notification',
     options: {}, // overrides options
     container: {
-      object:   '<div id="notice-info-container" />',
-      selector: 'div#notice-info-container',
+      object:   '<div id="notice-notification-container" />',
+      selector: 'div#notice-notification-container',
       style:    $.noop,
     },
     parent: {
@@ -39,7 +40,8 @@
       css:      {}
     },
     css: {
-      display: 'none'
+      display: 'none',
+      width: '310px'
     },
     addClass: ''
   };
