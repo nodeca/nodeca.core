@@ -83,14 +83,13 @@ module.exports.init = function () {
   // An API object with show/hide methods
   //
   var notification = (function () {
-    var timeout, msg = nodeca.runtime.t('common.notice.loading');
+    var timeout, $showing, msg = nodeca.runtime.t('common.notice.loading');
 
     return {
       show: function () {
         clearTimeout(timeout); // make sure previous timeout was cleared
-
         timeout = setTimeout(function () {
-          nodeca.client.common.notice.show({
+          $showing = nodeca.client.common.notice({
             type: 'progress',
             text: msg
           });
@@ -98,7 +97,9 @@ module.exports.init = function () {
       },
       hide: function () {
         clearTimeout(timeout);
-        nodeca.client.common.notice.hide('progress');
+        if ($showing) {
+          $showing.close();
+        }
       }
     };
   }());
