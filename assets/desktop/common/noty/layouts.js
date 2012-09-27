@@ -9,34 +9,18 @@
     name: 'progress',
     options: {}, // overrides options
     container: {
-      object: '<ul id="noty_topCenter_layout_container" />',
-      selector: 'ul#noty_topCenter_layout_container',
-      style: function() {
-        $(this).css({
-          top: 50,
-          left: 0,
-          position: 'fixed',
-          width: '310px',
-          height: 'auto',
-          margin: 0,
-          padding: 0,
-          listStyleType: 'none',
-          zIndex: 10000000
-        });
-
-        $(this).css({
-          left: ($(window).width() - $(this).outerWidth()) / 2 + 'px'
-        });
-      }
+      object:   '<div id="notice-progress-container" />',
+      selector: 'div#notice-progress-container',
+      style:    $.noop,
     },
     parent: {
-      object: '<li />',
-      selector: 'li',
-      css: {}
+      object:   '<div class="notice-element" />',
+      selector: 'div.notice-element',
+      css:      {}
     },
     css: {
-      display: 'none',
-      width: '310px'
+      display:  'none',
+      width:    '310px'
     },
     addClass: ''
   };
