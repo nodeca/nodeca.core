@@ -11,6 +11,10 @@
 //= require history/history
 //= require jade/runtime
 
+//= require noty/jquery.noty
+//= require noty/layouts/topCenter
+//= require noty/themes/default
+
 //= require_tree ./lib
 
 //= require nodeca
