@@ -50,7 +50,7 @@ stacks.progress = (function () {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-stacks.info = (function () {
+stacks.info = stacks.success = stacks.error = (function () {
   var $container = $([]);
 
   return function (options) {
@@ -61,7 +61,7 @@ stacks.info = (function () {
     }
 
     notice = $container.notify({
-      type:       options.level || 'info',
+      type:       options.type,
       closable:   ( 'undefined' === typeof options.closable ) ? true : !!options.closable,
       fadeOut:    { enabled: !!options.autoclose, delay: +options.autoclose || 3000 },
       message:    { html: options.html, text: options.text }
@@ -71,6 +71,7 @@ stacks.info = (function () {
     return notice;
   };
 }());
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
