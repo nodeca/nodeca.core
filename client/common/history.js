@@ -209,7 +209,7 @@ module.exports.init = function () {
       return;
     }
 
-    nodeca.client.common.render.content(data.view, data.locals, data.layout, function () {
+    nodeca.client.common.render.page(data.view, data.locals, data.layout, function () {
       // scroll to element only when we handle user click
       if (allowScrollTo) {
         // if anchor is given try to find matching element
