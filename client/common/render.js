@@ -102,7 +102,8 @@ module.exports.page = function page(apiPath, locals, layout, callback) {
     } catch (err) {
       // FIXME: inject JS error into HTML if error occured?
       nodeca.logger.error(
-        'Failed render view <' + apiPath + '>:\n\n' +
+        'Failed render view <' + apiPath +
+        '> with layout <' + layout + '>:\n\n' +
         (err.stack || err.message || err)
       );
     }
