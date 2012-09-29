@@ -209,25 +209,7 @@ module.exports.init = function () {
       return;
     }
 
-    // make contnet semi-opque before rendering
-    $('#content').stop().fadeTo('fast', 0.3, function () {
-      var html;
-
-      try {
-        html = nodeca.client.common.render(data.view, data.locals, data.layout);
-        $('#content').html(html);
-
-        nodeca.client.common.navbar_menu.activate(data.route);
-        nodeca.client.common.stats.inject(data.locals);
-      } catch (err) {
-        // error is logged by renderer
-        allowScrollTo = false;
-        notification.hide();
-
-        // rethrow error
-        throw err;
-      }
-
+    nodeca.client.common.render.content(data.view, data.locals, data.layout, function () {
       // scroll to element only when we handle user click
       if (allowScrollTo) {
         // if anchor is given try to find matching element
@@ -247,11 +229,6 @@ module.exports.init = function () {
         // disable scrollTo
         allowScrollTo = false;
       }
-
-      // restore opacity
-      $('#content').stop().fadeTo('fast', 1, function () {
-        nodeca.client.common.floatbar.init();
-      });
 
       // remove "loading..." notification
       notification.hide();

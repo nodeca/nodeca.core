@@ -74,8 +74,41 @@ module.exports = function render(apiPath, locals, layout) {
       '> with layout <' + layout + '>:\n\n' +
       (err.stack || err.message || err)
     );
-
-    // rethrow error
-    throw err;
   }
+};
+
+
+/**
+ *  client.common.render.content(apiPath[, locals[, layout][, callback]]) -> Void
+ *  - apiPath (String): Server method API path.
+ *  - locals (Object): Locals data for the renderer
+ *  - layout (String): Layout or layouts stack
+ *  - callback (Function): Executed once content was updated
+ *
+ *  Renders view.
+ **/
+module.exports.content = function (apiPath, locals, layout, callback) {
+  var $content = $('#content');
+
+  if ('function' === typeof layout) {
+    callback = layout;
+    layout   = null;
+  }
+
+  callback = callback || $.noop;
+
+  // make content semi-opaque before rendering
+  $content.stop().fadeTo('fast', 0.3, function () {
+    // FIXME: inject JS error into HTML if error occured?
+    $content.html(nodeca.client.common.render(apiPath, locals, layout));
+
+    nodeca.client.common.stats.inject(locals);
+
+    // restore opacity
+    $content.stop().fadeTo('fast', 1, function () {
+      nodeca.client.common.floatbar.init();
+    });
+
+    callback();
+  });
 };
