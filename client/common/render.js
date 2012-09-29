@@ -88,7 +88,8 @@ module.exports.page = function page(apiPath, locals, layout, callback) {
     layout   = null;
   }
 
-  callback = callback || $.noop;
+  callback  = callback || $.noop;
+  layout    = layout || nodeca.runtime.layout;
 
   // make content semi-opaque before rendering
   $content.stop().fadeTo('fast', 0.3, function () {
