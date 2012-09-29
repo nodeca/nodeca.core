@@ -80,26 +80,6 @@ module.exports.init = function () {
   // ######################################################################## //
 
 
-  // An API object with show/hide methods
-  //
-  var notification = (function () {
-    var timeout, msg = nodeca.runtime.t('common.notice.loading');
-
-    return {
-      show: function () {
-        clearTimeout(timeout); // make sure previous timeout was cleared
-        timeout = setTimeout(function () {
-          nodeca.client.common.notice('progress', msg);
-        }, 500);
-      },
-      hide: function () {
-        clearTimeout(timeout);
-        nodeca.client.common.notice('progress').hide();
-      }
-    };
-  }());
-
-
   // Tries to find match data from the router
   //
   function find_match_data(url, anchor) {
@@ -121,9 +101,6 @@ module.exports.init = function () {
   //
   function exec_api3_call(data, callback) {
     var match = data[0], href = data[1], anchor = data[2];
-
-    // schedule "loading..." notification
-    notification.show();
 
     nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
       if (err && (301 === err.statusCode || 302 === err.statusCode || 307 === err.statusCode)) {
@@ -229,9 +206,6 @@ module.exports.init = function () {
         // disable scrollTo
         allowScrollTo = false;
       }
-
-      // remove "loading..." notification
-      notification.hide();
     });
   });
 

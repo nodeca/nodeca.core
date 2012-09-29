@@ -10,46 +10,6 @@ var stacks = {};
 ////////////////////////////////////////////////////////////////////////////////
 
 
-stacks.progress = (function () {
-  var $notice = $([]), $message = $([]), singleton = {};
-
-  function init() {
-    if (!$notice.length) {
-      $notice   = $(nodeca.views.common.widgets.notice());
-      $message  = $notice.find('.message');
-
-      $notice.appendTo($('body'));
-      $notice.find('.close').click(singleton.hide);
-
-      singleton.hide();
-    }
-  }
-
-  singleton.hide = function () {
-    $notice.hide();
-    $message.html('');
-
-    return singleton;
-  };
-
-  singleton.show = function (message) {
-    init();
-    $message.html(message);
-    $notice.show();
-
-    return singleton;
-  };
-
-
-  return function (message) {
-    return singleton.show(message);
-  };
-}());
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-
 stacks.info = stacks.success = stacks.error = (function () {
   var $container = $([]);
 
