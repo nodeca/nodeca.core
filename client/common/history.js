@@ -89,12 +89,12 @@ module.exports.init = function () {
       show: function () {
         clearTimeout(timeout); // make sure previous timeout was cleared
         timeout = setTimeout(function () {
-          nodeca.client.common.notice({ type: 'progress', text: msg });
+          nodeca.client.common.notice('progress', msg);
         }, 500);
       },
       hide: function () {
         clearTimeout(timeout);
-        nodeca.client.common.notice({ type: 'progress' }).hide();
+        nodeca.client.common.notice('progress').hide();
       }
     };
   }());

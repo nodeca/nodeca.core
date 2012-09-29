@@ -41,8 +41,8 @@ stacks.progress = (function () {
   };
 
 
-  return function (options) {
-    return singleton.show(options.html || options.text || '');
+  return function (message) {
+    return singleton.show(message);
   };
 }());
 
@@ -53,7 +53,7 @@ stacks.progress = (function () {
 stacks.info = stacks.success = stacks.error = (function () {
   var $container = $([]);
 
-  return function (options) {
+  return function (message, options) {
     var notice;
 
     if (!$container.length) {
@@ -64,7 +64,7 @@ stacks.info = stacks.success = stacks.error = (function () {
       type:       options.type,
       closable:   ( 'undefined' === typeof options.closable ) ? true : !!options.closable,
       fadeOut:    { enabled: !!options.autoclose, delay: +options.autoclose || 3000 },
-      message:    { html: options.html, text: options.text }
+      message:    { html: message }
     });
 
     notice.show();
@@ -76,6 +76,16 @@ stacks.info = stacks.success = stacks.error = (function () {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-module.exports = function (options) {
-  return (stacks[options.type] || stacks.info)(options);
+module.exports = function (type, message, options) {
+  if ('string' !== typeof message) {
+    options = message;
+    message = type;
+    type    = 'error';
+  }
+
+  options = options || {};
+  message = message || '';
+  type    = options.type = !!stacks[type] ? type : 'error';
+
+  return stacks[type](message, options);
 };
