@@ -92,6 +92,12 @@
    *  nodeca.io.apiTree(name, params, options, callback) -> Void
    *  nodeca.io.apiTree(name, params[, callback]) -> Void
    *  nodeca.io.apiTree(name, callback) -> Void
+   *
+   *
+   *  ##### Options
+   *
+   *  - *silent* (Boolean) Do not emit event handlers (see [[nodeca.io.on]])
+   *    when `true`. Default: `false`.
    **/
   io.apiTree = function apiTree(name, params, options, callback) {
     var xhr, payload;
@@ -135,7 +141,10 @@
     //
 
     nodeca.logger.debug('API3 Sending request', payload);
-    emit('rpc.request');
+
+    if (!options.silent) {
+      emit('rpc.request');
+    }
 
     xhr = last_xhr = $.post('/io/rpc', payload);
 
@@ -147,7 +156,10 @@
       data = data || {};
 
       nodeca.logger.debug('API3 Received data', data);
-      emit('rpc.complete');
+
+      if (!options.silent) {
+        emit('rpc.complete');
+      }
 
       if (data.version !== nodeca.runtime.version) {
         callback(ioerr(io.EWRONGVER, 'Client version does not match server.'));
@@ -163,7 +175,9 @@
     //
 
     xhr.fail(function (err) {
-      emit('rpc.complete');
+      if (!options.silent) {
+        emit('rpc.complete');
+      }
 
       if (err) {
         // fire callback with error only in case of real error
