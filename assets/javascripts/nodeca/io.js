@@ -16,7 +16,8 @@
   'use strict';
 
 
-  var // last xhr to allow interrupt it
+  var events = { 'before.rpc': [], 'after.rpc': [] },
+      // last xhr to allow interrupt it
       last_xhr = null;
 
 
@@ -29,6 +30,9 @@
   //
 
 
+  /**
+   *  nodeca.io.EWRONGVER -> String
+   **/
   io.EWRONGVER  = 'IO_EWRONGVER';
 
 
@@ -38,6 +42,45 @@
     err.code = code;
     return err;
   }
+
+
+  //
+  // Events
+  //
+
+
+  function emit(name) {
+    if (!events[name]) {
+      return;
+    }
+
+    $.each(events[name], function (i, func) {
+      try {
+        func();
+      } catch (err) {
+        // do not interrupt event handlers chain
+        // !!! THIS SHOULD NEVER HAPPEN !!!
+        nodeca.logger.error(err);
+      }
+    });
+  }
+
+
+  /**
+   *  nodeca.io.on(name, callback) -> Void
+   *
+   *  ##### Known events
+   *
+   *  - `rpc.request`
+   *  - `rpc.complete`
+   **/
+  io.on = function on(name, callback) {
+    if (!events[name]) {
+      events[name] = [];
+    }
+
+    events[name].push(callback);
+  };
 
 
   //
@@ -92,6 +135,8 @@
     //
 
     nodeca.logger.debug('API3 Sending request', payload);
+    emit('rpc.request');
+
     xhr = last_xhr = $.post('/io/rpc', payload);
 
     //
@@ -102,6 +147,7 @@
       data = data || {};
 
       nodeca.logger.debug('API3 Received data', data);
+      emit('rpc.complete');
 
       if (data.version !== nodeca.runtime.version) {
         callback(ioerr(io.EWRONGVER, 'Client version does not match server.'));
@@ -117,6 +163,8 @@
     //
 
     xhr.fail(function (err) {
+      emit('rpc.complete');
+
       if (err) {
         // fire callback with error only in case of real error
         // and not due to our "previous request interruption"
