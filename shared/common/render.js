@@ -60,10 +60,8 @@ module.exports = function render(viewsTree, path, locals, layout, skipBaseLayout
   if (!!view) {
     html = view(locals);
   } else {
-    // Here we just notify that view not found.
-    // This should never happen - one must check path existance before render()
-    nodeca.logger.warn("View " + path + " not found");
-    html = '';
+    nodeca.logger.warn("View <" + path + "> not found");
+    throw new Error('View <' + path + '> not found.');
   }
 
   if (layout) {
