@@ -19,7 +19,7 @@ script
 - var _recaptcha_help = (_recaptcha_class !== '') ? self.errors.recaptcha : self.t('common.recaptcha.captcha_help')
 
 .control-group(class=_recaptcha_class)
-  label.control-label(for='i_captcha')= self.t('common.recaptcha.captcha')
+  label.control-label(for='recaptcha_response_field')= self.t('common.recaptcha.captcha')
   .controls
     .row-fluid
       input.span12(id="recaptcha_response_field", name="recaptcha_response_field", type='text')

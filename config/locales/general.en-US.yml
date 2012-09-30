@@ -2,26 +2,26 @@ i18n:
   en-US:
     common:
 
+      menus:
+        admin:
+          dashboard: Admin
+
+      language:
+        en-US: English
+        ru-RU: Русский
+
       io:
         progress: Loading...
         error:
           # 500
           server_internal: Internal server error.
 
-      menus:
-        admin:
-          dashboard: Admin
+      nojs: This site will not work without javascript!
 
       pagination:
         dropdown_label: 'Jump to:'
         dropdown_placeholder: Page number
         dropdown_button: Go!
-
-      language:
-        en-US: English
-        ru-RU: Русский
-
-      nojs: This site will not work without javascript!
 
       recaptcha:
         change_image: Change image
