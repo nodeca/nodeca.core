@@ -2,8 +2,11 @@ i18n:
   en-US:
     common:
 
-      notice:
-        loading: Loading...
+      io:
+        progress: Loading...
+        error:
+          # 500
+          server_internal: Internal server error.
 
       menus:
         admin:
@@ -25,7 +28,3 @@ i18n:
         captcha: Captcha code
         captcha_help: Enter 2 words from the image above.
         code_incorrect: Captch code incorrect.
-
-      error:
-        # 500
-        server_internal: Internal server error.
