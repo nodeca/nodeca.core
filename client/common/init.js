@@ -56,7 +56,7 @@ module.exports = function () {
 
 
   nodeca.client.common.floatbar.init();
-  nodeca.client.common.action_links.init();
+  nodeca.client.common.actions.init();
 
 
   // history intercepts clicks on all `a` elements,

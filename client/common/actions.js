@@ -10,7 +10,7 @@
  **/
 
 /**
- *  client.common.action_links
+ *  client.common.actions
  **/
 
 
@@ -34,7 +34,7 @@ function handleAction(event, $el, apiPath) {
 
 
 /**
- *  client.common.action_links.init()
+ *  client.common.actions.init()
  *
  *  Assigns handlers/listeners for `[data-action]` links.
  *  Actions associated with link will be called with `($el, event)`
@@ -42,7 +42,7 @@ function handleAction(event, $el, apiPath) {
  *
  *  ##### Example
  *
- *      nodeca.client.common.action_links.init();
+ *      nodeca.client.common.actions.init();
  **/
 module.exports.init = function () {
   $(function () {
