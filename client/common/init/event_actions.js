@@ -10,7 +10,7 @@
  **/
 
 /**
- *  client.common.actions
+ *  client.common.init
  **/
 
 
@@ -34,7 +34,7 @@ function handleAction(event, $el, apiPath) {
 
 
 /**
- *  client.common.actions.init()
+ *  client.common.init.event_actions()
  *
  *  Assigns handlers/listeners for `[data-action]` links.
  *  Actions associated with link will be called with `($el, event)`
