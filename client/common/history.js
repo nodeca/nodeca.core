@@ -103,7 +103,7 @@ module.exports.init = function () {
     var match = data[0], href = data[1], anchor = data[2];
 
     nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
-      if (err && (301 === err.statusCode || 302 === err.statusCode || 307 === err.statusCode)) {
+      if (err && (nodeca.io.MOVED === err.statusCode || nodeca.io.FOUND === err.statusCode)) {
         // note, that we try to keep anchor, if exists.
         // that's important for moved threads & last pages redirects
 
