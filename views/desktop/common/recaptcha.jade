@@ -15,8 +15,8 @@ script
       a(tabindex=-1, href="javascript:Recaptcha.reload();Recaptcha.focus_response_field();")= self.t('common.recaptcha.change_image')
 
 - self.errors = self.errors || {}
-- var _recaptcha_class = !!self.errors.recaptcha ? 'error' : ''
-- var _recaptcha_help = (_recaptcha_class !== '') ? self.errors.recaptcha : self.t('common.recaptcha.captcha_help')
+- var _recaptcha_class = ('recaptcha' in self.errors) ? 'error' : ''
+- var _recaptcha_help = (self.errors.recaptcha !== '') ? self.errors.recaptcha : self.t('common.recaptcha.captcha_help')
 
 .control-group(class=_recaptcha_class)
   label.control-label(for='recaptcha_response_field')= self.t('common.recaptcha.captcha')
