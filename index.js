@@ -24,3 +24,11 @@ module.exports = NLib.Application.create({
 
 
 require('./lib/filters');
+
+
+//
+// Preinitialize some base structures
+//
+
+
+require('./lib/init/io');
