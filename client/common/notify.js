@@ -10,7 +10,7 @@ var $container = $([]);
 ////////////////////////////////////////////////////////////////////////////////
 
 
-module.exports = function (type, message, options) {
+module.exports = function notify(type, message, options) {
   var notice;
 
   if ('string' !== typeof message) {
