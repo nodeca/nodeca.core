@@ -12,9 +12,6 @@ i18n:
 
       io:
         progress: Loading...
-        error:
-          # 500
-          server_internal: Internal server error.
 
       nojs: This site will not work without javascript!
 
