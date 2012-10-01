@@ -4,7 +4,7 @@
 /*global $, nodeca*/
 
 
-var $container = $([]);
+var $container;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -22,7 +22,7 @@ module.exports = function notify(type, message, options) {
   options = options || {};
   message = message || '';
 
-  if (!$container.length) {
+  if (!$container) {
     $container = $('<div class="notifications top-right" />').appendTo('body');
   }
 
