@@ -17,8 +17,8 @@
 /*global $, nodeca*/
 
 
-var timeout   = null;
-var $notice   = $([]);
+var timeout;
+var $notice;
 
 
 function hide() {
@@ -28,8 +28,8 @@ function hide() {
 
 
 function init() {
-  if (!$notice.length) {
-    $notice = $(nodeca.client.common.render.template('common.widgets.notice.io_progress'));
+  if (!$notice) {
+    $notice = $(nodeca.client.common.render.template('common.io_progress'));
     $notice.appendTo('body').find('.close').click(hide);
     hide();
   }
