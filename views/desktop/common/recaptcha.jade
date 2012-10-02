@@ -1,13 +1,3 @@
-script
-  yepnope({
-    load: "http://www.google.com/recaptcha/api/js/recaptcha_ajax.js",
-    complete: function () {
-      Recaptcha.create("#{self.runtime.recaptcha.public_key}", 'recaptcha_div', {
-        theme: 'custom'
-      });
-    }
-  });
-
 .control-group.capcha-image
   .controls
     span#recaptcha_image
@@ -24,3 +14,13 @@ script
     .row-fluid
       input.span12(id="recaptcha_response_field", name="recaptcha_response_field", type='text')
       span.help-block #{_recaptcha_help}
+
+script
+  yepnope({
+    load: "http://www.google.com/recaptcha/api/js/recaptcha_ajax.js",
+    complete: function () {
+      Recaptcha.create("#{self.runtime.recaptcha.public_key}", 'recaptcha_div', {
+        theme: 'custom'
+      });
+    }
+  });
