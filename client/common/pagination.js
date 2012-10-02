@@ -14,7 +14,7 @@
  **/
 
 
-/*global $, _, nodeca*/
+/*global $, nodeca*/
 
 
 /**

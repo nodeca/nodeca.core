@@ -14,7 +14,7 @@
  **/
 
 
-/*global $, _, nodeca, window, document, loadAssets*/
+/*global $*/
 
 
 /**

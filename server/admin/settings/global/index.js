@@ -21,11 +21,6 @@
 /*global nodeca*/
 
 
-var NLib = require('nlib');
-
-var _ = NLib.Vendor.Underscore;
-
-
 // Validate input parameters
 //
 var params_schema = {

@@ -6,7 +6,7 @@
  **/
 
 
-/*global nodeca, _*/
+/*global nodeca*/
 
 
 // stdlib

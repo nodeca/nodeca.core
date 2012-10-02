@@ -1,5 +1,6 @@
 'use strict';
 
+/*global nodeca*/
 
 nodeca.validate({
   locale: { type: 'string', required: true }

@@ -14,7 +14,7 @@
  **/
 
 
-/*global $, _, nodeca, window, document, loadAssets*/
+/*global $, nodeca, window, document, loadAssets*/
 
 
 var History = window.History; // History.js

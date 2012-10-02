@@ -10,7 +10,7 @@
  **/
 
 
-/*global $, _, nodeca, window, document*/
+/*global $, _, nodeca*/
 
 
 /**
