@@ -44,7 +44,7 @@ function handleAction(event, $el, apiPath) {
  *
  *      nodeca.client.common.actions.init();
  **/
-module.exports.init = function () {
+module.exports = function () {
   $(function () {
     $('body').on('click.nodeca.data-api', '[data-on-click]', function (event) {
       var $this = $(this), apiPath = $this.data('on-click');
