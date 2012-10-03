@@ -27,22 +27,18 @@ function hide() {
 }
 
 
-function init() {
+function show() {
+  // make sure previous timeout was cleared
+  clearTimeout(timeout);
+
   if (!$notice) {
     $notice = $(nodeca.client.common.render.template('common.io_progress'));
     $notice.appendTo('body').find('.close').click(hide);
     hide();
   }
-}
-
-
-function show() {
-  // make sure previous timeout was cleared
-  clearTimeout(timeout);
 
   // schedule showing new message in next 500 ms
   timeout = setTimeout(function () {
-    init();
     $notice.show();
   }, 500);
 }
