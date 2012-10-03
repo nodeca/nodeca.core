@@ -34,7 +34,6 @@ function show() {
   if (!$notice) {
     $notice = $(nodeca.client.common.render.template('common.io_progress'));
     $notice.appendTo('body').find('.close').click(hide);
-    hide();
   }
 
   // schedule showing new message in next 500 ms
