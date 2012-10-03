@@ -92,7 +92,7 @@ var loadAssets = window.loadAssets = (function () {
     loadAssets.init = noop;
 
     // set list of requried namespaces
-    namespaces = ['common', namespace];
+    namespaces = 'admin' === namespace ? [namespace] : ['common', namespace];
 
     //
     // Fill resources with shims and polyfills
@@ -120,11 +120,11 @@ var loadAssets = window.loadAssets = (function () {
     //
 
     loadResources(resources, function () {
-      forEach(namespaces, function (ns) {
-        if (nodeca.client[ns] && _.isFunction(nodeca.client[ns].init)) {
-          nodeca.client[ns].init();
-        }
-      });
+      var scope = nodeca.client['admin' === namespace ? 'admin' : 'common'];
+
+      if (_.isFunction(scope.init)) {
+        scope.init();
+      };
     });
   };
 
