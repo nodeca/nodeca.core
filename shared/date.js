@@ -5,10 +5,6 @@
  *  shared
  **/
 
-/**
- *  shared.common
- **/
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -137,7 +133,7 @@ var format_date = (function () {
 
 
 /**
- *  shared.common.date(value, format, locale, tzOffset) -> String
+ *  shared.date(value, format, locale, tzOffset) -> String
  *  - value (Date|String|Number): Date instance, DateTime string or timestamp.
  *    This must be a date in UTC TZ.
  *  - format (String): `date`, `time`, `datetime`, `iso` or `timestamp`.

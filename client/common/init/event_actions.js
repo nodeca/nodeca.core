@@ -19,7 +19,7 @@
 
 function handleAction(event, $el, apiPath) {
   loadAssets(apiPath.split('.').shift(), function () {
-    var func = nodeca.shared.common.getByPath(nodeca.client, apiPath);
+    var func = nodeca.shared.getByPath(nodeca.client, apiPath);
 
     if (!_.isFunction(func)) {
       nodeca.logger.error('Action ' + apiPath + ' not found');

@@ -5,11 +5,7 @@
  **/
 
 /**
- *  shared.common
- **/
-
-/**
- *  shared.common.menus
+ *  shared.menus
  **/
 
 
@@ -55,7 +51,7 @@ function build(ns, cfg, permissions, router) {
 
 
 /**
- *  shared.common.menus.build(menu_ids, permissions_map, router) -> Object
+ *  shared.menus.build(menu_ids, permissions_map, router) -> Object
  *  - menu_ids (Array):
  *  - permissions_map (Object):
  *  - router (Pointer)
@@ -108,7 +104,7 @@ module.exports = function (menu_ids, permissions_map, router) {
 
   permissions_map = permissions_map || {};
 
-  nodeca.shared.common.menus.walk(menu_ids, function (ns, id, cfg) {
+  nodeca.shared.menus.walk(menu_ids, function (ns, id, cfg) {
     menus[ns]     = menus[ns] || {};
     menus[ns][id] = build(ns + '.' + id, cfg, permissions_map, router);
   });
