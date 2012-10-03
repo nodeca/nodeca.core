@@ -6,11 +6,7 @@
  **/
 
 /**
- *  shared.common
- **/
-
-/**
- *  shared.common.menus
+ *  shared.menus
  **/
 
 
@@ -18,7 +14,7 @@
 
 
 /**
- *  shared.common.menus.walk(menu_ids, iterator(ns, id, config)) -> Void
+ *  shared.menus.walk(menu_ids, iterator(ns, id, config)) -> Void
  *  - menu_ids (Array): List of menus to iterate through
  *  - iterator (Function): An iterator function to be called on each menu
  *

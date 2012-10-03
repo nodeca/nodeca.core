@@ -27,7 +27,7 @@ helpers.t = nodeca.runtime.t;
 
 
 helpers.date = function (value, format) {
-  return nodeca.shared.common.date(value, format, nodeca.runtime.locale, tzOffset);
+  return nodeca.shared.date(value, format, nodeca.runtime.locale, tzOffset);
 };
 
 _.each(['asset_path', 'asset_include'], function (method) {
@@ -41,7 +41,7 @@ helpers.link_to = function (name, params) {
 };
 
 helpers.nodeca = function (path) {
-  return !path ? nodeca : nodeca.shared.common.getByPath(nodeca, path);
+  return !path ? nodeca : nodeca.shared.getByPath(nodeca, path);
 };
 
 // substitute JASON with JSON
@@ -61,7 +61,7 @@ helpers.jason = JSON.stringify;
 module.exports.template = function template(apiPath, locals) {
   try {
     locals = _.extend(locals || {}, helpers, {runtime: nodeca.runtime});
-    return nodeca.shared.common.render(nodeca.views, apiPath, locals, null, true);
+    return nodeca.shared.render(nodeca.views, apiPath, locals, null, true);
   } catch (err) {
     nodeca.logger.error(
       'Failed render view <' + apiPath + '>:\n\n' +
@@ -97,7 +97,7 @@ module.exports.page = function page(apiPath, locals, layout, callback) {
 
     try {
       locals = _.extend(locals || {}, helpers, {runtime: nodeca.runtime});
-      html   = nodeca.shared.common.render(nodeca.views, apiPath, locals, layout, true);
+      html   = nodeca.shared.render(nodeca.views, apiPath, locals, layout, true);
 
       $content.html(html);
     } catch (err) {
