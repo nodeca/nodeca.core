@@ -15,19 +15,21 @@
 
 /*global nodeca*/
 
+var mongoose = nodeca.components.mongoose;
+
 
 /**
  *  new models.user_group()
  **/
-module.exports = new nodeca.runtime.mongoose.Schema({
+module.exports = new mongoose.Schema({
   // shortcut name for the group
   name:     { type: String },
   // human readable title
   title:    { type: String },
-  settings: { type: nodeca.runtime.mongoose.Schema.Types.Mixed, default: {}}
+  settings: { type: mongoose.Schema.Types.Mixed, default: {}}
 });
 
 
 module.exports.__init__ = function () {
-  return nodeca.runtime.mongoose.model('user_group', module.exports);
+  return mongoose.model('user_group', module.exports);
 };

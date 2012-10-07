@@ -15,16 +15,17 @@
 
 /*global nodeca*/
 
+var mongoose = nodeca.components.mongoose;
 
 /**
  *  new models.app_settings()
  **/
-module.exports = new nodeca.runtime.mongoose.Schema({
+module.exports = new mongoose.Schema({
   app_name: { type: String },
-  settings: { type: nodeca.runtime.mongoose.Schema.Types.Mixed, default: {}}
+  settings: { type: mongoose.Schema.Types.Mixed, default: {}}
 });
 
 
 module.exports.__init__ = function () {
-  return nodeca.runtime.mongoose.model('app_settings', module.exports);
+  return mongoose.model('app_settings', module.exports);
 };
