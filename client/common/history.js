@@ -161,7 +161,7 @@ module.exports.init = function () {
   // Automates content rendering from State data for common cases.
   //
 
-  History.Adapter.bind(window, 'statechange', function (event) {
+  History.Adapter.bind(window, 'statechange', function (/* event */) {
     var data = History.getState().data, $el;
 
     // trigger to skip common rendering when we have custom one

@@ -4,7 +4,7 @@
 /*global window, nodeca*/
 
 
-module.exports = function ($el, event) {
+module.exports = function ($el) {
   var locale = $el.data('locale');
 
   nodeca.server.common.locale({ locale: locale }, function (err) {
