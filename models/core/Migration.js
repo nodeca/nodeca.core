@@ -32,7 +32,7 @@ var mongoose = nodeca.components.mongoose;
  *  Description
  **/
 var Migration = module.exports.Migration = new mongoose.Schema({
-  _id: { type:String, unique: true},    // app name
+  _id: { type: String, unique: true},    // app name
   steps: [String]                       // array of migration files for app
 }, { strict: true });
 
@@ -44,7 +44,7 @@ var Migration = module.exports.Migration = new mongoose.Schema({
  **/
 Migration.statics.markPassed = function (app_name, step, callback) {
   var model = this;
-  model.find({_id: app_name}, function(err, docs) {
+  model.find({_id: app_name}, function (err, docs) {
     if (err) {
       callback(err);
       return;
@@ -66,7 +66,7 @@ Migration.statics.markPassed = function (app_name, step, callback) {
  * Fetch and format migrations from db
  **/
 Migration.statics.getLastState = function (callback) {
-  this.find({}, function(err, docs) {
+  this.find({}, function (err, docs) {
     var last_state = {};
     if (!err) {
       for (var i = 0; i < docs.length; i++) {

@@ -35,7 +35,7 @@ var GlobalSettigs = module.exports.GlobalSettigs = new mongoose.Schema({
   value: { type: Schema.Types.Mixed, default: {}}
 }, {strict: true});
 
-GlobalSettigs.statics.get = function() {
+GlobalSettigs.statics.get = function () {
 
 };
 
@@ -43,9 +43,9 @@ GlobalSettigs.statics.get = function() {
 /**
  *  models.stores.GlobalSettings.set(key, value, callback) -> Void
  **/
-GlobalSettigs.statics.set= function (key, value, callback) {
+GlobalSettigs.statics.set = function (key, value, callback) {
   var model = this;
-  model.findOne({_id: key}, function(err, doc) {
+  model.findOne({_id: key}, function (err, doc) {
     if (err) {
       callback(err);
       return;

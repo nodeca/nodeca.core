@@ -13,9 +13,9 @@ var FsTools = NLib.Vendor.FsTools;
 
 var SEEDS_DIR = 'db/seeds';
 
-function get_app_path(app_name){
-  for (var i=0; i < nodeca.runtime.apps.length; i++) {
-    if (app_name === nodeca.runtime.apps[i].name){
+function get_app_path(app_name) {
+  for (var i = 0; i < nodeca.runtime.apps.length; i++) {
+    if (app_name === nodeca.runtime.apps[i].name) {
       return nodeca.runtime.apps[i].root;
     }
   }
@@ -24,8 +24,8 @@ function get_app_path(app_name){
 
 function seed_run(app_name, seed_path, callback) {
   console.log('Applying seed...\n');
-  require(seed_path)(function(err){
-    var prefix = '  ' + app_name + ':' + Path.basename(seed_path)+ ' -- ';
+  require(seed_path)(function (err) {
+    var prefix = '  ' + app_name + ':' + Path.basename(seed_path) + ' -- ';
 
     if (err) {
       console.log(prefix + 'failed');
@@ -38,13 +38,13 @@ function seed_run(app_name, seed_path, callback) {
   });
 }
 
-module.exports.parserParameters= {
-  addHelp:true,
+module.exports.parserParameters = {
+  addHelp: true,
   description: 'That will run `.<app_name>/db/seeds/<seed_name>.js` if exists. ' +
     'Or, all seeds from `./db/seeds/seed-name/` folder. If <seed-name>' +
     'missed, then script will show all available seeds for given app. ' +
     'If `-a` missed, then all seed for all apps will be shown.',
-  epilog: 'Note: Loading seeds is limited to development/test enviroment. ' +
+  epilog : 'Note: Loading seeds is limited to development/test enviroment. ' +
     'If you really need to run seed  on production/stageing, use ' +
     'option -f.',
   help: 'show or run existing seeds'
@@ -54,7 +54,7 @@ module.exports.commandLineArguments = [
   {
     args: ['-f'],
     options: {
-      help:'run without env checking',
+      help: 'run without env checking',
       action: 'storeTrue'
     }
   },
@@ -78,9 +78,9 @@ module.exports.commandLineArguments = [
     args: ['seed'],
     options: {
       metavar: 'SEED_NAME',
-      help:'seed name',
-      nargs:'?',
-      defaultValue:null
+      help: 'seed name',
+      nargs: '?',
+      defaultValue: null
     }
   },
 ];
@@ -95,13 +95,13 @@ module.exports.run = function (args, callback) {
     require('../lib/init/mongoose'),
     NLib.InitStages.loadModels
   ], function (err) {
-    if (err){
+    if (err) {
       callback(err);
       return;
     }
 
     // execute seed by name
-    if (!!app_name && !!seed_name){
+    if (!!app_name && !!seed_name) {
       var env = nodeca.runtime.env;
       if ('development' !== env && 'testing' !== env && !args.force) {
         console.log('Error: Can\'t run seed from ' + env + ' enviroment. Please, use -f to force.');
@@ -109,7 +109,7 @@ module.exports.run = function (args, callback) {
       }
 
       var seed_path = Path.join(get_app_path(app_name), SEEDS_DIR, seed_name);
-      if (!Fs.existsSync(seed_path)){
+      if (!Fs.existsSync(seed_path)) {
         console.log('Error: Application "' + app_name + '"does not have "' + seed_name);
         process.exit(1);
       }
@@ -127,16 +127,16 @@ module.exports.run = function (args, callback) {
 
       // collect seeds
       var seed_list = [];
-      Async.forEachSeries(apps, function(app, next_app){
+      Async.forEachSeries(apps, function (app, next_app) {
         var seed_dir = Path.join(app.root, SEEDS_DIR);
-        FsTools.walk(seed_dir, /w*\.js$/, function(file, stats, next_file) {
+        FsTools.walk(seed_dir, /w*\.js$/, function (file, stats, next_file) {
           seed_list.push({
             name: app.name,
             seed_path: file
           });
           next_file();
         }, next_app);
-      }, function(err){
+      }, function (err) {
         if (err) {
           callback(err);
         }
@@ -150,8 +150,8 @@ module.exports.run = function (args, callback) {
             console.log(args.number + ' seed not found\n');
           }
           console.log('Available seeds:\n');
-          for (var i=0; i < seed_list.length; i++) {
-            console.log('  ' + (i+1) + '. '+ seed_list[i].name + ': ' + Path.basename(seed_list[i].seed_path));
+          for (var i = 0; i < seed_list.length; i++) {
+            console.log('  ' + (i + 1) + '. ' + seed_list[i].name + ': ' + Path.basename(seed_list[i].seed_path));
           }
           
 

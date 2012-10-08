@@ -37,8 +37,8 @@ module.exports = function () {
     //
 
     $('.navbar-search .search-query')
-      .focus(function (){ $(this).next('div').addClass('focused'); })
-      .blur(function (){ $(this).next('div').removeClass('focused'); });
+      .focus(function () { $(this).next('div').addClass('focused'); })
+      .blur(function () { $(this).next('div').removeClass('focused'); });
   });
 
 

@@ -83,46 +83,86 @@ var format_date = (function () {
   return function (date, formatString) {
     return formatString.replace(re, function (m, p) {
       switch (p) {
-        case "a": return abbreviatedWeekdays[date.getDay()];
-        case "A": return fullWeekdays[date.getDay()];
-        case "b": return abbreviatedMonths[date.getMonth()];
-        case "B": return fullMonths[date.getMonth()];
-        case "c": return date.toLocaleString();
-        case "C": return Math.round(date.getFullYear() / 100);
-        case "d": return padNumber(date.getDate(), 2);
-        case "D": return date.format("%m/%d/%y");
-        case "e": return padNumber(date.getDate(), 2, " ");
-        case "F": return date.format("%Y-%m-%d");
-        case "h": return date.format("%b");
-        case "H": return padNumber(date.getHours(), 2);
-        case "I": return padNumber(tweleveHour(date), 2);
-        case "j": return padNumber(dayOfYear(date), 3);
-        case "k": return padNumber(date.getHours(), 2, " ");
-        case "l": return padNumber(tweleveHour(date), 2, " ");
-        case "L": return padNumber(date.getMilliseconds(), 3);
-        case "m": return padNumber(date.getMonth() + 1, 2);
-        case "M": return padNumber(date.getMinutes(), 2);
-        case "n": return "\n";
-        case "p": return date.getHours() > 11 ? "PM" : "AM";
-        case "P": return date.format("%p").toLowerCase();
-        case "r": return date.format("%I:%M:%S %p");
-        case "R": return date.format("%H:%M");
-        case "s": return date.getTime() / 1000;
-        case "S": return padNumber(date.getSeconds(), 2);
-        case "t": return "\t";
-        case "T": return date.format("%H:%M:%S");
-        case "u": return date.getDay() === 0 ? 7 : date.getDay();
-        case "U": return padNumber(weekOfYear(date), 2); //either date or W is wrong (or both)
-        case "v": return date.format("%e-%b-%Y");
-        case "V": return padNumber(isoWeekOfYear(date), 2);
-        case "W": return padNumber(weekOfYear(date), 2); //either date or U is wrong (or both)
-        case "w": return padNumber(date.getDay(), 2);
-        case "x": return date.toLocaleDateString();
-        case "X": return date.toLocaleTimeString();
-        case "y": return String(date.getFullYear()).substring(2);
-        case "Y": return date.getFullYear();
-        case "z": return timeZoneOffset(date);
-        default: return m;
+      case "a":
+        return abbreviatedWeekdays[date.getDay()];
+      case "A":
+        return fullWeekdays[date.getDay()];
+      case "b":
+        return abbreviatedMonths[date.getMonth()];
+      case "B":
+        return fullMonths[date.getMonth()];
+      case "c":
+        return date.toLocaleString();
+      case "C":
+        return Math.round(date.getFullYear() / 100);
+      case "d":
+        return padNumber(date.getDate(), 2);
+      case "D":
+        return date.format("%m/%d/%y");
+      case "e":
+        return padNumber(date.getDate(), 2, " ");
+      case "F":
+        return date.format("%Y-%m-%d");
+      case "h":
+        return date.format("%b");
+      case "H":
+        return padNumber(date.getHours(), 2);
+      case "I":
+        return padNumber(tweleveHour(date), 2);
+      case "j":
+        return padNumber(dayOfYear(date), 3);
+      case "k":
+        return padNumber(date.getHours(), 2, " ");
+      case "l":
+        return padNumber(tweleveHour(date), 2, " ");
+      case "L":
+        return padNumber(date.getMilliseconds(), 3);
+      case "m":
+        return padNumber(date.getMonth() + 1, 2);
+      case "M":
+        return padNumber(date.getMinutes(), 2);
+      case "n":
+        return "\n";
+      case "p":
+        return date.getHours() > 11 ? "PM" : "AM";
+      case "P":
+        return date.format("%p").toLowerCase();
+      case "r":
+        return date.format("%I:%M:%S %p");
+      case "R":
+        return date.format("%H:%M");
+      case "s":
+        return date.getTime() / 1000;
+      case "S":
+        return padNumber(date.getSeconds(), 2);
+      case "t":
+        return "\t";
+      case "T":
+        return date.format("%H:%M:%S");
+      case "u":
+        return date.getDay() === 0 ? 7 : date.getDay();
+      case "U":
+        return padNumber(weekOfYear(date), 2); //either date or W is wrong (or both)
+      case "v":
+        return date.format("%e-%b-%Y");
+      case "V":
+        return padNumber(isoWeekOfYear(date), 2);
+      case "W":
+        return padNumber(weekOfYear(date), 2); //either date or U is wrong (or both)
+      case "w":
+        return padNumber(date.getDay(), 2);
+      case "x":
+        return date.toLocaleDateString();
+      case "X":
+        return date.toLocaleTimeString();
+      case "y":
+        return String(date.getFullYear()).substring(2);
+      case "Y":
+        return date.getFullYear();
+      case "z":
+        return timeZoneOffset(date);
+      default:
+        return m;
       }
     });
   };
@@ -147,13 +187,19 @@ module.exports = function date(value, format, locale, tzOffset) {
   tzOffset  = (tzOffset || 0) * 60 * 1000;
 
   switch (format) {
-    case 'date':      return format_date(new Date(value + tzOffset), '%d %B %Y');
-    case 'time':      return format_date(new Date(value + tzOffset), '%R');
-    case 'datetime':  return format_date(new Date(value + tzOffset), '%d %B %Y %R');
-    // valid datetime attribute needs 0 or 4 fractional digits.
-    // toISOString() returns 3 digits. So, we need to cut those.
-    case 'iso':       return (new Date(value)).toISOString().slice(0,19) + 'Z';
-    case 'timestamp': return value;
-    default:          return format_date(new Date(value + tzOffset), format);
+  case 'date':
+    return format_date(new Date(value + tzOffset), '%d %B %Y');
+  case 'time':
+    return format_date(new Date(value + tzOffset), '%R');
+  case 'datetime':
+    return format_date(new Date(value + tzOffset), '%d %B %Y %R');
+  // valid datetime attribute needs 0 or 4 fractional digits.
+  // toISOString() returns 3 digits. So, we need to cut those.
+  case 'iso':
+    return (new Date(value)).toISOString().slice(0, 19) + 'Z';
+  case 'timestamp':
+    return value;
+  default:
+    return format_date(new Date(value + tzOffset), format);
   }
 };

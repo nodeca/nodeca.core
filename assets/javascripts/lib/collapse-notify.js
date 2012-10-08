@@ -11,6 +11,6 @@ $(function () {
   'use strict';
 
   $('body').on('shown.collapse.data-api hidden.collapse.data-api', '[data-notify]', function (event) {
-    $( $(this).data('notify') ).toggleClass('collapsed', 'hidden' === event.type);
+    $($(this).data('notify')).toggleClass('collapsed', 'hidden' === event.type);
   });
 });

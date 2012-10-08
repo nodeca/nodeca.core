@@ -37,7 +37,7 @@ module.exports = function (params, next) {
   var data = this.response.data;
 
   data.groups = [];
-  nodeca.settings.global.getGroups().forEach(function(group){
+  nodeca.settings.global.getGroups().forEach(function (group) {
     data.groups.push(group);
   });
 

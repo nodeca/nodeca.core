@@ -76,7 +76,7 @@ module.exports = function (params, callback) {
     .on('directory', function () {
       callback({statusCode: 400});
     })
-    .on('end', function() {
+    .on('end', function () {
       logger.info('%s - "%s %s HTTP/%s" %d "%s" - %s',
                   req.connection.remoteAddress,
                   req.method,

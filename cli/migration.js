@@ -10,8 +10,8 @@ var Async = NLib.Vendor.Async;
 
 module.exports.commandName = "migrate";
 
-module.exports.parserParameters= {
-  addHelp:true,
+module.exports.parserParameters = {
+  addHelp: true,
   description: 'Without args show new migrations. With ' +
     ' `--all` run all migrations.',
   help: 'run migrations'
@@ -33,7 +33,7 @@ module.exports.run = function (args, callback) {
     require('../lib/init/mongoose'),
     NLib.InitStages.loadModels,
   ], function (err) {
-    if (err){
+    if (err) {
       callback(err);
     }
    
@@ -41,14 +41,14 @@ module.exports.run = function (args, callback) {
     var migrator = nodeca.runtime.migrator;
 
     // fetch used migrations from db
-    Migration.getLastState(function(err, last_state){
+    Migration.getLastState(function (err, last_state) {
       if (err) {
         callback(err);
         return;
       }
 
       // find new migrations
-      migrator.checkMigrations(last_state, function(err, new_migrations){
+      migrator.checkMigrations(last_state, function (err, new_migrations) {
         if (err) {
           callback(err);
           return;
@@ -68,7 +68,7 @@ module.exports.run = function (args, callback) {
                       ' outstanding migration(s):\n');
         }
 
-        Async.forEachSeries(new_migrations, function(migration, next_migration){
+        Async.forEachSeries(new_migrations, function (migration, next_migration) {
           var migration_title = '  ' + migration.app_name + ':' + migration.step;
 
           if (!args.all) {
@@ -77,24 +77,24 @@ module.exports.run = function (args, callback) {
             return;
           }
 
-          migrator.runMigration(migration, function(err){
-            if (err){
+          migrator.runMigration(migration, function (err) {
+            if (err) {
               next_migration(err);
               return;
             }
 
             // All ok. Write step to db
-            Migration.markPassed(migration.app_name, migration.step, function(err){
-              if (!err){
-                console.log(migration_title +' -- success');
+            Migration.markPassed(migration.app_name, migration.step, function (err) {
+              if (!err) {
+                console.log(migration_title + ' -- success');
               } else {
-                console.log(migration_title +' -- failed');
+                console.log(migration_title + ' -- failed');
               }
 
               next_migration(err);
             });
           });
-        }, function(err) {
+        }, function (err) {
           if (err) {
             callback(err);
           }

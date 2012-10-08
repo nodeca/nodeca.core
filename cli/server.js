@@ -8,9 +8,9 @@ var NLib = require('nlib');
 
 var Async = NLib.Vendor.Async;
 
-module.exports.parserParameters= {
+module.exports.parserParameters = {
   version: nodeca.runtime.version,
-  addHelp:true,
+  addHelp: true,
   help: 'start nodeca server',
   description: 'Start nodeca server'
 };

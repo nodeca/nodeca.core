@@ -28,7 +28,7 @@ module.exports = function notify(type, message, options) {
 
   notice = $container.notify({
     type:       type,
-    closable:   ( 'undefined' === typeof options.closable ) ? true : !!options.closable,
+    closable:   ('undefined' === typeof options.closable) ? true : !!options.closable,
     fadeOut:    { enabled: !!options.autoclose, delay: +options.autoclose || 3000 },
     message:    { html: message }
   });
