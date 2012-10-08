@@ -28,4 +28,5 @@ require('./lib/filters');
 //
 
 
-require('./lib/init/io');
+require('./lib/io');
+require('./lib/components');
