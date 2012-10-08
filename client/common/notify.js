@@ -10,6 +10,12 @@ var $container;
 ////////////////////////////////////////////////////////////////////////////////
 
 
+var defaults = {
+  'info':   { closable: false, autohide: 5000 },
+  'error':  { closable: true, autohide: 15000 }
+};
+
+
 module.exports = function notify(type, message, options) {
   var notice;
 
@@ -19,20 +25,14 @@ module.exports = function notify(type, message, options) {
     type    = 'error';
   }
 
-  options = options || {};
-  message = message || '';
-
   if (!$container) {
     $container = $('<div class="notifications top-right" />').appendTo('body');
   }
 
-  notice = $container.notify({
-    type:       type,
-    closable:   ('undefined' === typeof options.closable) ? true : !!options.closable,
-    fadeOut:    { enabled: !!options.autoclose, delay: +options.autoclose || 3000 },
-    message:    { html: message }
-  });
+  $container.notification($.extend({}, defaults[type], options, {
+    type:     type,
+    message:  message
+  }));
 
-  notice.show();
-  return notice;
+  return;
 };
