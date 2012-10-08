@@ -1,0 +1,1 @@
+CSS partials. To keep code clear & reuse some parts in admin panel
