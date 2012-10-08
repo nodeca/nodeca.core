@@ -20,7 +20,7 @@
 /**
  *  client.common.pagination.change($form, event)
  **/
-module.exports.change = function ($form, event) {
+module.exports.change = function ($form) {
   var data = $form.data('pagination');
 
   if (!data) {
