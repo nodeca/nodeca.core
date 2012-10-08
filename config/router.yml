@@ -1,7 +1,7 @@
 router:
   map:
     admin.dashboard:
-      "/dashboard": ~
+      "/": ~
     admin.settings.global.index:
       "/settings": ~
     admin.settings.global.group.show:
