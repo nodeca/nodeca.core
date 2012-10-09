@@ -76,7 +76,7 @@ nodeca.validate(params_schema);
  **/
 module.exports = function serve_assets(params, callback) {
   if (!this.origin.http) {
-    callback({statusCode: 400, body: "HTTP ONLY"});
+    callback(nodeca.io.BAD_REQUEST);
     return;
   }
 
