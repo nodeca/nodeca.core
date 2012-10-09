@@ -1,3 +1,5 @@
+// appearance animation
+//
 @keyframes notification
   0%
     transform rotateY(-90deg)
@@ -12,28 +14,48 @@
     transform rotateY(-0deg)
     opacity: 1
 
+// notifications container
+//
 .notifications
   position fixed
 
+  // positioning mixin
+  //
   &.top-right
     right 10px
     top 10px
 
-  // override default opacity
-  .fade.in
-    opacity .95
-    animation notification .75s linear
-
+  // generic notice styles & animation
+  //
   & > .alert
     position: relative;
     z-index 9999
     margin 5px 0px
 
     max-width 300px
-    max-height 300px
+    max-height (alert_notice_max_height=200px)
     overflow auto
     text-shadow none
 
+    transition all .5s linear
+
+    // OFF state
+    &.fade
+      opacity 0
+      // height animation hack
+      max-height 0
+      overflow hidden
+
+      // ON state
+      &.in
+        opacity .95
+        animation notification .75s linear
+        // just return original value, if we use fade
+        overflow auto
+        max-height alert_notice_max_height
+
+  // error style
+  //
   & > .alert-error
     color white
     background-color btnDangerBackgroundHighlight
@@ -44,6 +66,8 @@
       color white
       text-shadow 0 1px 0 black
 
+  // default style
+  //
   & > .alert-info
     color white
     background-color grayDark
