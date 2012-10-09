@@ -12,7 +12,7 @@ var $container;
 
 var defaults = {
   'info':   { closable: false, autohide: 5000 },
-  'error':  { closable: true, autohide: 15000 }
+  'error':  { closable: true, autohide: 10000 }
 };
 
 
