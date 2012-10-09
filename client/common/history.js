@@ -108,7 +108,7 @@ module.exports.init = function () {
         // that's important for moved threads & last pages redirects
 
         // prepare new data
-        data = find_match_data(err.headers.Location, anchor || window.location.hash);
+        data = find_match_data(err.head.Location, anchor || window.location.hash);
 
         // handle redirect via RPC
         exec_api3_call(data, callback);
