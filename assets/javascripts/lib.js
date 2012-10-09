@@ -3,7 +3,6 @@
 
 //= require underscore
 //= require bootstrap/bootstrap
-//= require bootstrap-notify
 //= require babelfish-runtime
 //= require pointer
 //= require history/history.adapter.jquery
