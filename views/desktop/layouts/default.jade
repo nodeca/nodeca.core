@@ -69,8 +69,8 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
                     li: a(href=self.link_to('users.auth.logout'))= self.t('common.auth.logout')
             - else
               ul.nav.pull-right
-                li: a(href=self.link_to('users.auth.login.view'))= self.t('common.auth.login')
-                li: a(href=self.link_to('users.auth.register.view'))= self.t('common.auth.register')
+                li: a(href=self.link_to('users.auth.login.show'))= self.t('common.auth.login')
+                li: a(href=self.link_to('users.auth.register.show'))= self.t('common.auth.register')
                
 
     #content.container!= self.content
