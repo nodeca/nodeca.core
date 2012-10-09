@@ -18,6 +18,12 @@ mixin display_value(name, value, type)
     default
       mixin dispay_sting(name, value)
 
+ul.breadcrumbs
+  li: a(href='#') Breadcrumbs
+  li: a(href='#') Should
+  li: a(href='#') Be
+  li: a(href='#') Here
+
 h1= self.t('admin.settings.' + self.group_name + '_group.title')
 
 form(name="settings", action="#")

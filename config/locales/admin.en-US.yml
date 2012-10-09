@@ -8,3 +8,8 @@ i18n:
           system: System
         sidebar:
           settings: Global settings
+
+      settings:
+        usergroups:
+          group_visible_title: Group visible
+          group_visible_help: Boolean flag, show this group in member list?
