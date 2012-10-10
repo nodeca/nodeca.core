@@ -115,8 +115,21 @@ module.exports.init = function () {
         return;
       }
 
+      if (err && (nodeca.io.ECONNECTION === err.code)) {
+        // No need to do anything.
+        // User already notified that he needs to try again later
+        return;
+      }
+
       if (err) {
-        nodeca.logger.error(err);
+        // can't deal via rpc - try http. This might be:
+        //
+        // - either a generic error, e.g. authorization / bad params / fuckup
+        //   so we redirect user to show him an error page
+        //
+        // - or version mismatch,
+        //   so we call action by HTTP to update client
+        window.location = href;
         return;
       }
 
