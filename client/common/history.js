@@ -116,7 +116,7 @@ module.exports.init = function () {
       }
 
       if (err) {
-        nodeca.logger.error(err.message || JSON.stringify(err));
+        nodeca.logger.error(err);
         return;
       }
 

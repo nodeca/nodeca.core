@@ -17,8 +17,6 @@ var defaults = {
 
 
 function notify(type, message, options) {
-  var notice, position;
-
   if ('string' !== typeof message) {
     options = message;
     message = type;
