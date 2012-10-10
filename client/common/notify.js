@@ -4,7 +4,7 @@
 /*global $, nodeca*/
 
 
-var $container;
+var containers = {};
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -17,7 +17,7 @@ var defaults = {
 
 
 function notify(type, message, options) {
-  var notice;
+  var notice, position;
 
   if ('string' !== typeof message) {
     options = message;
@@ -25,11 +25,13 @@ function notify(type, message, options) {
     type    = 'error';
   }
 
-  if (!$container) {
-    $container = $('<div class="notifications top-right" />').appendTo('body');
+  position = options.position || 'top-right';
+
+  if (!containers[position]) {
+    containers[position] = $('<div class="notifications ' + position + '" />').appendTo('body');
   }
 
-  $container.notification($.extend({}, defaults[type], options, {
+  containers[position].notification($.extend({}, defaults[type], options, {
     type:     type,
     message:  message
   }));
@@ -47,8 +49,13 @@ nodeca.io.on('rpc.error', function (err) {
   if (nodeca.io.EWRONGVER === err.code) {
     notify('You need to reload the page.', {
       closable: false,
-      autohide: false
+      autohide: false,
+      position: 'top-center'
     });
+
+    // disable IO
+    nodeca.io.apiTree = $.noop;
+
     return;
   }
 
