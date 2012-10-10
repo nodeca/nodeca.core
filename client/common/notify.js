@@ -70,7 +70,7 @@ nodeca.io.on('rpc.error', function (err) {
     return;
   }
 
-  if (!err.code) {
+  if (nodeca.io.ECOMMUNICATION === err.code) {
     notify(nodeca.client.common.render.template('common.io.error.communication'));
     return;
   }

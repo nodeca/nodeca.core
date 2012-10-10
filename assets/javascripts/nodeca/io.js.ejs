@@ -26,9 +26,10 @@
 
 
   // error constructor
-  function error(code, message) {
+  function error(code, message, original) {
     var err = new Error(message);
     err.code = code;
+    err.original = original;
     return err;
   }
 
@@ -158,6 +159,8 @@
     //
 
     xhr.fail(function (err) {
+      err = error(nodeca.io.ECOMMUNICATION, 'Communication error', err);
+
       emit('rpc.complete');
       emit('rpc.error', [err]);
 
