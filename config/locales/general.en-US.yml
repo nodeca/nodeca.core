@@ -13,10 +13,10 @@ i18n:
       io:
         progress: Loading...
         error:
-          version: Server/client version mismatch. Please, reload the page.
-          csrf_token: Your session was re-initiated. Pease, try again.
-          application: Application Error. Try again later.
-          communication: Communication problems. Try again later.
+          version_mismatch: Server/client version mismatch. Please, reload the page.
+          invalid_csrf_token: Your session was re-initiated. Pease, try again.
+          application_fuckup: Application Error. Try again later.
+          communication_timeout: Communication problems. Try again later.
 
       nojs: This site will not work without javascript!
 

@@ -72,7 +72,7 @@ module.exports = function () {
 
   nodeca.io.on('rpc.error', function (err) {
     if (nodeca.io.EWRONGVER === err.code) {
-      show(nodeca.runtime.t('common.io.error.version'));
+      show(nodeca.runtime.t('common.io.error.version_mismatch'));
     }
   });
 };
