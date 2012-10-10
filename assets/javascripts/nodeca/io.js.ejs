@@ -38,14 +38,16 @@
   //
 
 
-  function emit(name) {
+  function emit(name, args) {
     if (!events[name]) {
       return;
     }
 
+    args = args || [];
+
     $.each(events[name], function (i, func) {
       try {
-        func();
+        func.apply(null, args);
       } catch (err) {
         // do not interrupt event handlers chain
         // !!! THIS SHOULD NEVER HAPPEN !!!
@@ -139,8 +141,12 @@
       emit('rpc.complete');
 
       if (data.version !== nodeca.runtime.version) {
-        callback(error(io.EWRONGVER, 'Client version does not match server.'));
-        return;
+        data.error = error(io.EWRONGVER, 'Client version does not match server.');
+        delete data.response;
+      }
+
+      if (data.error) {
+        emit('rpc.error', [data.error]);
       }
 
       // run actual callback
@@ -153,6 +159,7 @@
 
     xhr.fail(function (err) {
       emit('rpc.complete');
+      emit('rpc.error', [err]);
 
       if (err) {
         // fire callback with error only in case of real error

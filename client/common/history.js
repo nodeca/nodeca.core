@@ -116,8 +116,7 @@ module.exports.init = function () {
       }
 
       if (err) {
-        // can't deal via rpc - try http
-        window.location = href;
+        nodeca.logger.error(err.message || JSON.stringify(err));
         return;
       }
 
