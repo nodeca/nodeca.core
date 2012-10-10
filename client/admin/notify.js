@@ -45,7 +45,7 @@ function notify(type, message, options) {
 
 nodeca.io.on('rpc.error', function (err) {
   if (nodeca.io.EWRONGVER === err.code) {
-    notify(nodeca.client.common.render.template('common.io.error.version'), {
+    notify(nodeca.runtime.t('common.io.error.version'), {
       closable: false,
       autohide: false
     });
@@ -58,17 +58,17 @@ nodeca.io.on('rpc.error', function (err) {
 
   if (nodeca.io.INVALID_CSRF_TOKEN === err.code) {
     nodeca.runtime.csrf = err.data.token;
-    notify(nodeca.client.common.render.template('common.io.error.csrf_token'));
+    notify(nodeca.runtime.t('common.io.error.csrf_token'));
     return;
   }
 
   if (nodeca.io.APP_ERROR === err.code) {
-    notify(nodeca.client.common.render.template('common.io.error.application'));
+    notify(nodeca.runtime.t('common.io.error.application'));
     return;
   }
 
   if (nodeca.io.ECOMMUNICATION === err.code) {
-    notify(nodeca.client.common.render.template('common.io.error.communication'));
+    notify(nodeca.runtime.t('common.io.error.communication'));
     return;
   }
 });
