@@ -24,11 +24,11 @@ ul.breadcrumbs
   li: a(href='#') Be
   li: a(href='#') Here
 
-h1= self.t('admin.settings.' + self.group_name + '_group.title')
+h1= self.t('admin.settings.' + self.category_name + '_category.title')
 
 form(name="settings", action="#")
   ul
-    -each setting, name in self.group
+    -each setting, name in self.category
       li
         .setting
           .setting_header

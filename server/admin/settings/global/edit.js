@@ -17,10 +17,6 @@
  *  server.admin.settings.global
  **/
 
-/**
- *  server.admin.settings.global.group
- **/
-
 
 /*global nodeca*/
 
@@ -38,16 +34,16 @@ nodeca.validate(params_schema);
 
 
 /**
- *  server.admin.settings.global.group.show(params, callback) -> Void
+ *  server.admin.settings.global.edit(params, callback) -> Void
  *
- *  Show group settings
+ *  Edit global setings
  **/
 module.exports = function (params, next) {
   var data = this.response.data;
-  var group_name = params.id;
+  var category_name = params.id;
 
-  data.group_name = group_name;
-  data.group = nodeca.settings.global.fetchSettingsByGroup(group_name);
+  data.category_name = category_name;
+  data.category = nodeca.settings.global.fetchSettingsByCategory(category_name);
 
   next();
 };

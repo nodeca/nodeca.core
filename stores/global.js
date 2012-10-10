@@ -39,21 +39,21 @@ module.exports.massSet = function (settings, callback) {
   }, callback);
 };
 
-module.exports.getGroups = function () {
-  var groups = [];
+module.exports.getCategories = function () {
+  var categories = [];
 
   _.values(store).forEach(function (props) {
-    if (groups.indexOf(props.group) === -1) {
-      groups.push(props.group);
+    if (categories.indexOf(props.category) === -1) {
+      categories.push(props.category);
     }
   });
-  return groups;
+  return categories;
 };
 
-module.exports.fetchSettingsByGroup = function (group) {
+module.exports.fetchSettingsByCategory = function (category) {
   var result = {};
   _.keys(store).forEach(function (key) {
-    if (store[key]['group'] === group) {
+    if (store[key]['category'] === category) {
       result[key] = store[key];
     }
   });

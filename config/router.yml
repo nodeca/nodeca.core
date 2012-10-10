@@ -4,7 +4,7 @@ router:
       "/": ~
     admin.settings.global.index:
       "/settings": ~
-    admin.settings.global.group.show:
+    admin.settings.global.edit:
       "/settings/{id}":
         id: /\w+/
 

@@ -2,12 +2,12 @@ setting_schemas:
   global:
     debug_enabled:
       type: boolean
-      group: debug
+      category: debug
 
     debug_ip:
       type: string
-      group: debug
+      category: debug
 
     debug_users:
       type: users
-      group: debug
+      category: debug

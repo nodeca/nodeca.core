@@ -36,9 +36,9 @@ nodeca.validate(params_schema);
 module.exports = function (params, next) {
   var data = this.response.data;
 
-  data.groups = [];
-  nodeca.settings.global.getGroups().forEach(function (group) {
-    data.groups.push(group);
+  data.categories = [];
+  nodeca.settings.global.getCategories().forEach(function (category) {
+    data.categories.push(category);
   });
 
   next();

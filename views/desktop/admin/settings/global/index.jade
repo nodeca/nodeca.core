@@ -7,6 +7,6 @@ ul.breadcrumbs
 h1 Settings
 
 ul
-  -each group_name in self.groups
+  -each category_name in self.categories
     li
-      a(href=self.link_to('admin.settings.global.group.show', {id:group_name}))= self.t('admin.settings.' + group_name + '_group.title')
+      a(href=self.link_to('admin.settings.global.edit', {id:category_name}))= self.t('admin.settings.' + category_name + '_category.title')
