@@ -47,7 +47,7 @@ function notify(type, message, options) {
 
 nodeca.io.on('rpc.error', function (err) {
   if (nodeca.io.EWRONGVER === err.code) {
-    notify('You need to reload the page.', {
+    notify(nodeca.client.common.render.template('common.io.error.version'), {
       closable: false,
       autohide: false,
       position: 'top-center'
@@ -61,17 +61,17 @@ nodeca.io.on('rpc.error', function (err) {
 
   if (nodeca.io.INVALID_CSRF_TOKEN === err.code) {
     nodeca.runtime.csrf = err.data.token;
-    notify('Session reset. Please, try again');
+    notify(nodeca.client.common.render.template('common.io.error.csrf_token'));
     return;
   }
 
   if (nodeca.io.APP_ERROR === err.code) {
-    notify('Application Error. Try again later.');
+    notify(nodeca.client.common.render.template('common.io.error.application'));
     return;
   }
 
   if (!err.code) {
-    notify('Communication problems');
+    notify(nodeca.client.common.render.template('common.io.error.communication'));
     return;
   }
 });
