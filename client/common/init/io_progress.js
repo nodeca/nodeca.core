@@ -25,7 +25,12 @@ var messagesCache = {};
 
 function hide() {
   clearTimeout(timeout);
-  $container.hide();
+
+  if ($container) {
+    // $container might not be yet initialized when request
+    // succeded BEFORE the notification show()
+    $container.hide();
+  }
 }
 
 
