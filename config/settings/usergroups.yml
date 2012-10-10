@@ -3,8 +3,8 @@ setting_schemas:
   usergroup:
 
     # Are members searcheable & counted in stat?
-    group_visible:
+    members_visible:
       type: boolean
       default: true
-      category: common
+      category: ug_common
       priority: 0

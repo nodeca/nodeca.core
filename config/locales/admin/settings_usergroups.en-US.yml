@@ -3,6 +3,6 @@ i18n:
     admin:
       setting:
         category:
-          common: Common
-        group_visible: Group visible
-        group_visible_help: Boolean flag, show this group in member list?
+          ug_common: Common
+        members_visible: Are group members visible?
+        members_visible_help: Members are searcheable and counted in site statistics.
