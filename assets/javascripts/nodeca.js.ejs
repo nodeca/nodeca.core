@@ -37,19 +37,19 @@ var nodeca = window.nodeca = (function (nodeca) {
     nodeca.logger = {};
 
     _.each(['assert', 'error', 'info', 'debug'], function (level) {
-      var logger = c[level]; // try to get console.<level>
-
       // we deal with IE6-7 where no console exist at all
       // or we deal with IE8 where console.log or whatever might be an object
-      if (!_.isFunction(logger)) {
-        logger = function () {
+      if (!_.isFunction(c[level])) {
+        c[level]= function () {
           log([level].concat(_.toArray(arguments)));
         };
       }
 
       // logger is now a function for sure, so we can safely bind a console
       // context, which is needed for Chrome
-      nodeca.logger[level] = _.bind(logger, c);
+      nodeca.logger[level] = function () {
+        c[level].apply(c, arguments);
+      };
     });
   }(window.console || {}));
 
