@@ -18,28 +18,32 @@
 
 
 var timeout;
-var $notice;
+var $container;
+var $message;
+var messagesCache = {};
 
 
 function hide() {
   clearTimeout(timeout);
-  $notice.hide();
+  $container.hide();
 }
 
 
-function show() {
-  // make sure previous timeout was cleared
-  clearTimeout(timeout);
+function getContainer(id) {
+  if (!$container) {
+    $container  = $(nodeca.client.common.render.template('common.io_progress'));
+    $message    = $container.find('.message');
 
-  if (!$notice) {
-    $notice = $(nodeca.client.common.render.template('common.io_progress'));
-    $notice.appendTo('body').find('.close').click(hide);
+    $container.appendTo('body').find('.close').click(hide);
   }
 
-  // schedule showing new message in next 500 ms
-  timeout = setTimeout(function () {
-    $notice.show();
-  }, 500);
+  if (!messagesCache[id]) {
+    messagesCache[id] = nodeca.runtime.t(id);
+  }
+
+  $message.html(messagesCache[id]);
+
+  return $container;
 }
 
 
@@ -54,6 +58,21 @@ function show() {
  *      nodeca.client.common.init.io_progress();
  **/
 module.exports = function () {
-  nodeca.io.on('rpc.request',   show);
-  nodeca.io.on('rpc.complete',  hide);
+  nodeca.io.on('rpc.complete', hide);
+
+  nodeca.io.on('rpc.request', function () {
+    clearTimeout(timeout);
+
+    // schedule showing new message in next 500 ms
+    timeout = setTimeout(function () {
+      getContainer('common.io.progress').show();
+    }, 500);
+  });
+
+  nodeca.io.on('rpc.error', function (err) {
+    if (nodeca.io.EWRONGVER === err.code) {
+      clearTimeout(timeout);
+      getContainer('common.io.error.version').show();
+    }
+  });
 };

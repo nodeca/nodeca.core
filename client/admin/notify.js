@@ -44,18 +44,6 @@ function notify(type, message, options) {
 
 
 nodeca.io.on('rpc.error', function (err) {
-  if (nodeca.io.EWRONGVER === err.code) {
-    notify(nodeca.runtime.t('common.io.error.version'), {
-      closable: false,
-      autohide: false
-    });
-
-    // disable IO
-    nodeca.io.apiTree = $.noop;
-
-    return;
-  }
-
   if (nodeca.io.INVALID_CSRF_TOKEN === err.code) {
     nodeca.runtime.csrf = err.data.token;
     notify(nodeca.runtime.t('common.io.error.csrf_token'));
