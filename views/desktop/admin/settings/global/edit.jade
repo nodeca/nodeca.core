@@ -24,7 +24,7 @@ ul.breadcrumbs
   li: a(href='#') Be
   li: a(href='#') Here
 
-h1= self.t('admin.settings.' + self.category_name + '_category.title')
+h1= self.t('admin.setting.category.' + self.category_name)
 
 form(name="settings", action="#")
   ul
@@ -32,8 +32,8 @@ form(name="settings", action="#")
       li
         .setting
           .setting_header
-            p= self.t('admin.settings.' + name + '.title')
+            p= self.t('admin.setting.' + name)
           .setting_body
-            p= self.t('admin.settings.' + name + '.description')
+            p= self.t('admin.setting.' + name + '_help')
             mixin display_value(name, setting["default"], setting.type)
   input(type="button", value="Save", onclick="saveSettings()")

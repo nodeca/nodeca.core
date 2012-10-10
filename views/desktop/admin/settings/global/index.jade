@@ -9,4 +9,4 @@ h1 Settings
 ul
   -each category_name in self.categories
     li
-      a(href=self.link_to('admin.settings.global.edit', {id:category_name}))= self.t('admin.settings.' + category_name + '_category.title')
+      a(href=self.link_to('admin.settings.global.edit', {id:category_name}))= self.t('admin.setting.category.' + category_name)

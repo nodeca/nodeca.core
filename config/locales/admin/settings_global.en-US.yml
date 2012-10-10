@@ -1,0 +1,15 @@
+i18n:
+  en-US:
+    admin:
+      setting:
+        category:
+          debug: Debug mode
+
+        debug_enabled: Activate Debug Mode
+        debug_enabled_help: Set this setting to 'yes' to have debug information shown to all users with access to your ACP.
+
+        debug_ip: Debug Mode for a specific IP-Address
+        debug_ip_help: Enter your IP address here, so that debug mode will only run for you. 
+
+        debug_users: User
+        debug_users_help: Choose users for which your forums should run in Debug Mode.

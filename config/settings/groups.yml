@@ -6,5 +6,5 @@ setting_schemas:
     group_visible:
       type: boolean
       default: true
-      category: Common
+      category: common
       priority: 0

@@ -1,0 +1,8 @@
+i18n:
+  en-US:
+    admin:
+      setting:
+        category:
+          common: Common
+        group_visible: Group visible
+        group_visible_help: Boolean flag, show this group in member list?
