@@ -4,7 +4,7 @@
 /*global $, nodeca*/
 
 
-var containers = {};
+var $container;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -25,13 +25,11 @@ function notify(type, message, options) {
     type    = 'error';
   }
 
-  position = options.position || 'top-right';
-
-  if (!containers[position]) {
-    containers[position] = $('<div class="notifications ' + position + '" />').appendTo('body');
+  if (!$container) {
+    $container = $('<div class="notifications" />').appendTo('body');
   }
 
-  containers[position].notification($.extend({}, defaults[type], options, {
+  $container.notification($.extend({}, defaults[type], options, {
     type:     type,
     message:  message
   }));
@@ -49,8 +47,7 @@ nodeca.io.on('rpc.error', function (err) {
   if (nodeca.io.EWRONGVER === err.code) {
     notify(nodeca.client.common.render.template('common.io.error.version'), {
       closable: false,
-      autohide: false,
-      position: 'top-center'
+      autohide: false
     });
 
     // disable IO
