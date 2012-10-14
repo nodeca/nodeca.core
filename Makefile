@@ -48,6 +48,7 @@ test-ci: lint test
 	cd tmp/nodeca-ci && npm install && \
 		cp config/database.yml.example config/database.yml && \
 		cp config/application.yml.example config/application.yml
+	cd tmp/nodeca-ci && node nodeca.js migrate --all
 	cd tmp/nodeca-ci && node nodeca.js test "${NPM_PACKAGE}"
 
 
