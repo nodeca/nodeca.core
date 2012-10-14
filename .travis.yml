@@ -2,4 +2,7 @@ language: node_js
 node_js:
  - 0.8
 before_script: "make dev-deps"
-script: "make test"
+script: "make test-ci"
+services:
+  - redis
+  - mongodb
