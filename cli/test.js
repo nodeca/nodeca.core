@@ -30,6 +30,19 @@ module.exports.parserParameters = {
 };
 
 
+module.exports.commandLineArguments = [
+  {
+    args: ['app'],
+    options: {
+      metavar: 'APP_NAME',
+      help: 'Run tests of specific application only',
+      nargs: '?',
+      defaultValue: null
+    }
+  }
+];
+
+
 ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -111,9 +124,13 @@ module.exports.run = function (args, callback) {
       mocha.reporter('spec');
       mocha.ui('bdd');
 
-      _.each(nodeca.runtime.apps, function (app) {
-        files = files.concat(lookupFiles(app.root + '/test', true));
-      });
+      if (args.app) {
+        files = lookupFiles(nodeca.runtime.apps[args.app].root + '/test', true);
+      } else {
+        _.each(nodeca.runtime.apps, function (app) {
+          files = files.concat(lookupFiles(app.root + '/test', true));
+        });
+      }
 
       mocha.files = files.map(function (path) {
         return resolve(path);
