@@ -49,9 +49,6 @@ module.exports.commandLineArguments = [
 require('should');
 
 
-nodeca.runtime.env = process.env.NODECA_ENV || 'test';
-
-
 // Lookup file names at the given `path`.
 //
 function lookupFiles(path, recursive) {
@@ -71,7 +68,7 @@ function lookupFiles(path, recursive) {
     return path;
   }
 
-  fs.readdirSync(path).forEach(function(file){
+  fs.readdirSync(path).forEach(function (file) {
     file = join(path, file);
 
     var stat = fs.statSync(file);
@@ -99,6 +96,11 @@ function lookupFiles(path, recursive) {
 
 
 module.exports.run = function (args, callback) {
+  if (!process.env.NODECA_ENV) {
+    callback("You must provide NODECA_ENV in order to run nodeca test");
+    return;
+  }
+
   Async.series([
     require('../lib/init/redis'),
     require('../lib/init/mongoose'),

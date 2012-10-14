@@ -41,15 +41,10 @@ test: lint
 	NODE_ENV=test mocha
 
 
-test-ci: lint test
-	rm -rf tmp/nodeca-ci
-	mkdir -p tmp
+test-ci: lint
+	rm -rf tmp/nodeca-ci && mkdir -p tmp
 	git clone git://github.com/nodeca/nodeca.git tmp/nodeca-ci
-	cd tmp/nodeca-ci && npm install && \
-		cp config/database.yml.example config/database.yml && \
-		cp config/application.yml.example config/application.yml
-	cd tmp/nodeca-ci && node nodeca.js migrate --all
-	cd tmp/nodeca-ci && node nodeca.js test "${NPM_PACKAGE}"
+	cd tmp/nodeca-ci && NODECA_APP=${NPM_PACKAGE} $(MAKE) dev-deps test
 
 
 doc:

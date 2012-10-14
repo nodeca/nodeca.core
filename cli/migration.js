@@ -35,8 +35,9 @@ module.exports.run = function (args, callback) {
   ], function (err) {
     if (err) {
       callback(err);
+      return;
     }
-   
+
     var Migration = nodeca.models.core.Migration;
     var migrator = nodeca.runtime.migrator;
 
@@ -97,6 +98,7 @@ module.exports.run = function (args, callback) {
         }, function (err) {
           if (err) {
             callback(err);
+            return;
           }
 
           if (!args.all) {
