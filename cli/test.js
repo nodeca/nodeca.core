@@ -34,7 +34,11 @@ module.exports.parserParameters = {
 
 
 require('should');
-process.env.NODECA_ENV = 'test';
+
+
+if (!process.env.NODECA_ENV) {
+  nodeca.runtime.env = process.env.NODECA_ENV = 'test';
+}
 
 
 // Lookup file names at the given `path`.
