@@ -41,6 +41,16 @@ test: lint
 	NODE_ENV=test mocha
 
 
+test-ci: lint test
+	rm -rf tmp/nodeca-ci
+	mkdir -p tmp
+	git clone git://github.com/nodeca/nodeca.git tmp/nodeca-ci
+	cd tmp/nodeca-ci && npm install && \
+		cp config/database.yml.example config/database.yml && \
+		cp config/application.yml.example config/application.yml
+	cd tmp/nodeca-ci && node nodeca.js test "${NPM_PACKAGE}"
+
+
 doc:
 	@if test ! `which ndoc` ; then \
 		echo "You need 'ndoc' installed in order to generate docs." >&2 ; \
