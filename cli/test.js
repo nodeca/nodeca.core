@@ -119,5 +119,12 @@ module.exports.run = function (args, callback) {
 
       mocha.run(next);
     }
-  ], callback);
+  ], function (err) {
+    if (err) {
+      callback(err);
+      return;
+    }
+
+    process.exit(0);
+  });
 };
