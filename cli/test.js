@@ -124,13 +124,11 @@ module.exports.run = function (args, callback) {
       mocha.reporter('spec');
       mocha.ui('bdd');
 
-      if (args.app) {
-        files = lookupFiles(nodeca.runtime.apps[args.app].root + '/test', true);
-      } else {
-        _.each(nodeca.runtime.apps, function (app) {
+      _.each(nodeca.runtime.apps, function (app) {
+        if (!args.app || args.app === app.name) {
           files = files.concat(lookupFiles(app.root + '/test', true));
-        });
-      }
+        }
+      });
 
       mocha.files = files.map(function (path) {
         return resolve(path);
