@@ -1,0 +1,73 @@
+//- level of current app in ns
+- var NS_TOPNAV_BASE_LEVEL = 1
+//- ns for current app, adm
+- var current_app_ns = self.head.apiPath.split('.')[NS_TOPNAV_BASE_LEVEL]
+
+//- Create each item and all sumitems for topnav menu
+//-
+//-   menus (Object)         - menu item with submenus 
+//-   parent_class (String)  - class of item used only on zero level, 
+//-                            can by 'active' or null
+mixin _topnav_dropdowm_menu(container, parent_class)
+  - var menu_id = 'topnav' + ~~(Math.random()*100000000);
+  #dropdown
+    div
+      a(href=container.link, class=parent_class)= self.t(container.title)
+      a.dropdown-toggle(
+        role="button",
+        id=menu_id,
+        data-toggle="dropdown",
+        data-target="#",
+      )
+        b.caret
+
+      ul.dropdown-menu(role="menu", aria-labelledby=menu_id)
+        - each item in container.childs
+          - if (item.childs)
+            li
+              mixin _topnav_dropdowm_menu(item)
+          - else
+            li: a(href=item.link)= self.t(item.title)
+
+
+//- Create admin top menu
+//-
+//-   menus (Object)  - menu container nodeca.config.menus.<menu_name>
+mixin topnav_menu(menus)
+  - var item_class
+  ul.nav
+    - each item in menus
+      - item_class = (current_app_ns === item.to.split('.')[NS_TOPNAV_BASE_LEVEL] ? 'active' : '')
+      - if (item.childs)
+        li
+          mixin _topnav_dropdowm_menu(item, item_class)
+      - else
+        li: a(href=item.link, class=item_class)= self.t(item.title)
+
+
+//- Create sidebar sub-items 
+//-
+//-   menus (Object)     - menu item with submenus 
+//-   ns_level (Number)  - level in namespace, need for checking is this item active
+mixin _sidebar_submenu(parent_item, ns_level)
+  ul.nav
+    li
+      //- FIXME highlight active 
+      a(href=parent_item.link)= self.t(parent_item.title)
+      - if (parent_item.childs)
+        - each item in parent_item.childs
+          mixin _sidebar_submenu(item, ns_level + 1)        
+
+
+//- Create admin top menu
+//-
+//-   menus (Object)  - menu container nodeca.config.menus.<menu_name>
+mixin sidebar_menu(menus)
+  ul.nav.nav-list.well
+    - each item in menus
+      //- display item only for current app
+      - if (current_app_ns === item.to.split('.')[NS_TOPNAV_BASE_LEVEL])
+        li
+          | #{self.t(item.title)}
+          - if (item.childs)
+            mixin _sidebar_submenu(item, NS_TOPNAV_BASE_LEVEL + 1)
