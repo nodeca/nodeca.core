@@ -1,7 +1,5 @@
 //- level of current app in ns
 - var NS_TOPNAV_BASE_LEVEL = 1
-//- ns for current app, adm
-- var current_app_ns = self.head.apiPath.split('.')[NS_TOPNAV_BASE_LEVEL]
 
 //- Create sidebar sub-items 
 //-
@@ -24,6 +22,8 @@ mixin _sidebar_submenu(parent_item, ns_level)
 //-
 //-   menus (Object)  - menu container nodeca.config.menus.<menu_name>
 mixin sidebar_menu(menus)
+  //- ns for current app
+  - var current_app_ns = self.head.apiPath.split('.')[NS_TOPNAV_BASE_LEVEL]
   ul.nav.nav-list.well
     - each item in menus
       //- display item only for current app

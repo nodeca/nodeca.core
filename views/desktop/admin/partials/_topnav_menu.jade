@@ -1,7 +1,5 @@
 //- level of current app in ns
 - var NS_TOPNAV_BASE_LEVEL = 1
-//- ns for current app, adm
-- var current_app_ns = self.head.apiPath.split('.')[NS_TOPNAV_BASE_LEVEL]
 
 //- Create each item and all sumitems for topnav menu
 //-
@@ -34,6 +32,8 @@ mixin _topnav_dropdowm_menu(container, parent_class)
 //-
 //-   menus (Object)  - menu container nodeca.config.menus.<menu_name>
 mixin topnav_menu(menus)
+  //- ns for current app
+  - var current_app_ns = self.head.apiPath.split('.')[NS_TOPNAV_BASE_LEVEL]
   - var item_class
   ul.nav
     - each item in menus
