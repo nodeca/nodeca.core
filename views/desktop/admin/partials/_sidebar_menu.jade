@@ -1,0 +1,32 @@
+//- level of current app in ns
+- var NS_TOPNAV_BASE_LEVEL = 1
+//- ns for current app, adm
+- var current_app_ns = self.head.apiPath.split('.')[NS_TOPNAV_BASE_LEVEL]
+
+//- Create sidebar sub-items 
+//-
+//-   menus (Object)     - menu item with submenus 
+//-   ns_level (Number)  - level in namespace, need for checking is this item active
+mixin _sidebar_submenu(parent_item, ns_level)
+  ul.nav
+    li
+      //- FIXME highlight active 
+      -if (ns_level === NS_TOPNAV_BASE_LEVEL)
+        | #{self.t(parent_item.title)}
+      -else
+        a(href=parent_item.link)= self.t(parent_item.title)
+      - if (parent_item.childs)
+        - each item in parent_item.childs
+          mixin _sidebar_submenu(item, ns_level + 1)        
+
+
+//- Create admin top menu
+//-
+//-   menus (Object)  - menu container nodeca.config.menus.<menu_name>
+mixin sidebar_menu(menus)
+  ul.nav.nav-list.well
+    - each item in menus
+      //- display item only for current app
+      - if (current_app_ns === item.to.split('.')[NS_TOPNAV_BASE_LEVEL])
+        li
+          mixin _sidebar_submenu(item, NS_TOPNAV_BASE_LEVEL + 1)

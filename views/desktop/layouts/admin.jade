@@ -16,8 +16,7 @@ html.no-js
 
   body
 
-    include ../admin/nav_menu
-
+    include ../admin/partials/_topnav_menu
     - if (self.menus.admin && self.menus.admin.navbar)
       nav.navbar.navbar-fixed-top
         .navbar-inner
@@ -30,6 +29,7 @@ html.no-js
       .row-fluid
 
         //- Menu sidebar
+        include ../admin/partials/_sidebar_menu
         - if (self.menus.admin && self.menus.admin.navbar)
           .span2
             mixin sidebar_menu(self.menus.admin.navbar)
