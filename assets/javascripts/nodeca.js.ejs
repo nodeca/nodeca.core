@@ -32,7 +32,7 @@ var nodeca = window.nodeca = (function (nodeca) {
   };
 
   nodeca.runtime.t.exists = function (phrase) {
-    return nodeca.runtime.i18n.hasTranslation(nodeca.runtime.locale, phrase);
+    return nodeca.runtime.i18n.hasPhrase(nodeca.runtime.locale, phrase);
   };
 
   (function (c) {
