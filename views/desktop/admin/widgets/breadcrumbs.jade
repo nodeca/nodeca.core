@@ -1,29 +1,30 @@
-// need cut base of ns menu path ('admin.menus.navbar')
+//- need cut base of ns menu path ('admin.menus.navbar')
 - var MENU_BASE_NS_LEVEL = 3
-// need cut base of api path ('admin')
+//- need cut base of api path ('admin')
 - var API_PATH_BASE_NS_LEVEL = 1
-- var api_path = self.head.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
+- var api_path_tail = self.head.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
 - var last_index
+
 
 //- fetch next breadcrumb level
 //-
-//-   menus (Object)  - menu item with submenus
-mixin _fetch_next(menus)
-  - var path_tail
-  - each item in menus
-    - path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
-    - if (api_path.indexOf(path_tail) > -1)
+//-   submenus (Array)  - submenus
+mixin _fetch_next_breadcrumb(submenus)
+  - var item_path_tail
+  - each item in submenus
+    - item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
+    - if (api_path_tail.indexOf(item_path_tail) > -1)
       //- FIXME parameterized urls (usergroup edit)
       - self.widgets.breadcrumbs.push({ text: self.t(item.title), route: item.to })
       - if (item.childs && item.childs.length)
-        mixin _fetch_next(item.childs)
+        mixin _fetch_next_breadcrumb(item.childs)
 
 
 - if (self.menus.admin && self.menus.admin.navbar && !self.widgets.breadcrumbs)
   - self.widgets.breadcrumbs = []
-  mixin _fetch_next(self.menus.admin.navbar)
+  mixin _fetch_next_breadcrumb(self.menus.admin.navbar)
   - if (self.widgets.breadcrumbs.length)
-    // last element must by only text
+    //- last element can by only text
     - var last_index = self.widgets.breadcrumbs.length - 1
     - self.widgets.breadcrumbs[last_index] = { text: self.widgets.breadcrumbs[last_index].text }
 
