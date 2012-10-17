@@ -1,32 +1,43 @@
-//- level of current app in ns
-- var NS_TOPNAV_BASE_LEVEL = 1
+//- need cut base of ns menu path ('admin.menus.navbar')
+- var MENU_BASE_NS_LEVEL = 3
+//- need cut base of api path ('admin')
+- var API_PATH_BASE_NS_LEVEL = 1
 
-//- Create sidebar sub-items 
+- var api_path = self.head.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
+
+
+//- fetch next breadcrumb level
 //-
-//-   menus (Object)     - menu item with submenus 
-//-   ns_level (Number)  - level in namespace, need for checking is this item active
-mixin _sidebar_submenu(parent_item, ns_level)
-  ul.nav
-    li
-      //- FIXME highlight active 
-      -if (ns_level === NS_TOPNAV_BASE_LEVEL)
-        | #{self.t(parent_item.title)}
+//-   submenus (Array)  - submenus
+mixin _fetch_next(submenus)
+  - var item_path_tail
+  - var li_class
+  ul.nav.nav-list
+    - each item in submenus
+      - item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
+
+      - if (api_path.indexOf(item_path_tail) > -1 || self.head.apiPath === item.to)
+        li_class = 'active'
       -else
-        a(href=parent_item.link)= self.t(parent_item.title)
-      - if (parent_item.childs)
-        - each item in parent_item.childs
-          mixin _sidebar_submenu(item, ns_level + 1)        
+        li_class = ''
+
+      li(class=li_class)
+        a(href=item.link)= self.t(item.title)
+        - if (item.childs && item.childs.length)
+          mixin _fetch_next(item.childs)
 
 
 //- Create admin top menu
 //-
 //-   menus (Object)  - menu container nodeca.config.menus.<menu_name>
 mixin sidebar_menu(menus)
-  //- ns for current app
-  - var current_app_ns = self.head.apiPath.split('.')[NS_TOPNAV_BASE_LEVEL]
-  ul.nav.nav-list.well
+  - var item_path_tail
+  ul.nav.nav-list
     - each item in menus
+      - var item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
       //- display item only for current app
-      - if (current_app_ns === item.to.split('.')[NS_TOPNAV_BASE_LEVEL])
+      - if (api_path.indexOf(item_path_tail) > -1)
         li
-          mixin _sidebar_submenu(item, NS_TOPNAV_BASE_LEVEL + 1)
+          | #{self.t(item.title)}
+          - if (item.childs)
+            mixin _fetch_next(item.childs)
