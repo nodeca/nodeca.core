@@ -6,26 +6,16 @@
 //-   menus (Object)         - menu item with submenus 
 //-   parent_class (String)  - class of item used only on zero level, 
 //-                            can by 'active' or null
-mixin _topnav_dropdowm_menu(container, parent_class)
-  - var menu_id = 'topnav' + ~~(Math.random()*100000000);
-  #dropdown
-    div
-      a(href=container.link, class=parent_class)= self.t(container.title)
-      a.dropdown-toggle(
-        role="button",
-        id=menu_id,
-        data-toggle="dropdown",
-        data-target="#",
-      )
-        b.caret
-
-      ul.dropdown-menu(role="menu", aria-labelledby=menu_id)
-        - each item in container.childs
-          - if (item.childs)
-            li
-              mixin _topnav_dropdowm_menu(item)
-          - else
-            li: a(href=item.link)= self.t(item.title)
+mixin _topnav_dropdowm_menu(container)
+  ul.dropdown-menu
+    - each item in container.childs
+      - if (item.childs)
+        li.dropdown-submenu
+          a(href=item.link, tabindex='-1')= self.t(item.title)
+          mixin _topnav_dropdowm_menu(item)
+      - else
+        li
+          a(href=item.link)= self.t(item.title)
 
 
 //- Create admin top menu
@@ -34,12 +24,15 @@ mixin _topnav_dropdowm_menu(container, parent_class)
 mixin topnav_menu(menus)
   //- ns for current app
   - var current_app_ns = self.head.apiPath.split('.')[NS_TOPNAV_BASE_LEVEL]
-  - var item_class
+  - var active_class
   ul.nav
     - each item in menus
-      - item_class = (current_app_ns === item.to.split('.')[NS_TOPNAV_BASE_LEVEL] ? 'active' : '')
+      - active_class = (current_app_ns === item.to.split('.')[NS_TOPNAV_BASE_LEVEL] ? 'active' : '')
       - if (item.childs)
-        li
-          mixin _topnav_dropdowm_menu(item, item_class)
+        li.dropdown(class=active_class)
+          a.dropdown-toggle(href=item.link, data-toggle='dropdown')= self.t(item.title)
+            b.caret
+          mixin _topnav_dropdowm_menu(item)
       - else
-        li: a(href=item.link, class=item_class)= self.t(item.title)
+        li(class=active_class)
+          a(href=item.link)= self.t(item.title)
