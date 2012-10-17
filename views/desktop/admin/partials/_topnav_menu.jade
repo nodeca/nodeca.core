@@ -1,18 +1,21 @@
-//- level of current app in ns
-- var NS_TOPNAV_BASE_LEVEL = 1
+//- need cut base of ns menu path ('admin.menus.navbar')
+- var MENU_BASE_NS_LEVEL = 3
+//- need cut base of api path ('admin')
+- var API_PATH_BASE_NS_LEVEL = 1
+- var api_path_tail = self.head.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
 
-//- Create each item and all sumitems for topnav menu
+
+//- Create next menu level
 //-
-//-   menus (Object)         - menu item with submenus 
-//-   parent_class (String)  - class of item used only on zero level, 
-//-                            can by 'active' or null
-mixin _topnav_dropdowm_menu(container)
+//-   submenus (Array)         - submenus 
+mixin _create_submenus(submenus)
+  - var li_class
   ul.dropdown-menu
-    - each item in container.childs
+    - each item in submenus
       - if (item.childs)
         li.dropdown-submenu
           a(href=item.link, tabindex='-1')= self.t(item.title)
-          mixin _topnav_dropdowm_menu(item)
+          mixin _create_submenus(item.childs)
       - else
         li
           a(href=item.link)= self.t(item.title)
@@ -22,17 +25,24 @@ mixin _topnav_dropdowm_menu(container)
 //-
 //-   menus (Object)  - menu container nodeca.config.menus.<menu_name>
 mixin topnav_menu(menus)
-  //- ns for current app
-  - var current_app_ns = self.head.apiPath.split('.')[NS_TOPNAV_BASE_LEVEL]
-  - var active_class
+  - var li_class
+  - var item_path_tail
+
   ul.nav
     - each item in menus
-      - active_class = (current_app_ns === item.to.split('.')[NS_TOPNAV_BASE_LEVEL] ? 'active' : '')
+      - var item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
+
+      //- highlight current app
+      - if (api_path_tail.indexOf(item_path_tail) > -1)
+        - li_class = 'active'
+      -else
+        - li_class = ''
+      
       - if (item.childs)
-        li.dropdown(class=active_class)
+        li.dropdown(class=li_class)
           a.dropdown-toggle(href=item.link, data-toggle='dropdown')= self.t(item.title)
             b.caret
-          mixin _topnav_dropdowm_menu(item)
+          mixin _create_submenus(item.childs)
       - else
-        li(class=active_class)
+        li(class=li_class)
           a(href=item.link)= self.t(item.title)

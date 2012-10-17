@@ -2,21 +2,21 @@
 - var MENU_BASE_NS_LEVEL = 3
 //- need cut base of api path ('admin')
 - var API_PATH_BASE_NS_LEVEL = 1
+- var api_path_tail = self.head.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
 
-- var api_path = self.head.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
 
-
-//- fetch next breadcrumb level
+//- Create next menu level
 //-
 //-   submenus (Array)  - submenus
-mixin _fetch_next(submenus)
+mixin _create_submenus(submenus)
   - var item_path_tail
   - var li_class
   ul.nav.nav-list
     - each item in submenus
       - item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
-
-      - if (api_path.indexOf(item_path_tail) > -1 || self.head.apiPath === item.to)
+      
+      //- highlight item if it part of api path
+      - if (api_path_tail.indexOf(item_path_tail) > -1 || self.head.apiPath === item.to)
         li_class = 'active'
       -else
         li_class = ''
@@ -24,7 +24,7 @@ mixin _fetch_next(submenus)
       li(class=li_class)
         a(href=item.link)= self.t(item.title)
         - if (item.childs && item.childs.length)
-          mixin _fetch_next(item.childs)
+          mixin _create_submenus(item.childs)
 
 
 //- Create admin top menu
@@ -36,8 +36,8 @@ mixin sidebar_menu(menus)
     - each item in menus
       - var item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
       //- display item only for current app
-      - if (api_path.indexOf(item_path_tail) > -1)
+      - if (api_path_tail.indexOf(item_path_tail) > -1)
         li
           | #{self.t(item.title)}
           - if (item.childs)
-            mixin _fetch_next(item.childs)
+            mixin _create_submenus(item.childs)
