@@ -22,7 +22,11 @@ mixin _create_submenus(submenus)
         li_class = ''
 
       li(class=li_class)
-        a(href=item.link)= self.t(item.title)
+        - if (item.to)
+          a(href=item.link)= self.t(item.title)
+        - else
+          | #{self.t(item.title)}
+          
         - if (item.childs && item.childs.length)
           mixin _create_submenus(item.childs)
 
@@ -32,12 +36,9 @@ mixin _create_submenus(submenus)
 //-   menus (Object)  - menu container nodeca.config.menus.<menu_name>
 mixin sidebar_menu(menus)
   - var item_path_tail
-  ul.nav.nav-list
     - each item in menus
       - var item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
       //- display item only for current app
       - if (api_path_tail.indexOf(item_path_tail) > -1)
-        li
-          | #{self.t(item.title)}
-          - if (item.childs)
-            mixin _create_submenus(item.childs)
+        - if (item.childs)
+          mixin _create_submenus(item.childs)
