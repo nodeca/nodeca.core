@@ -44,6 +44,6 @@ mixin sidebar_menu(menus)
           mixin _create_submenus(item.childs)
 
 
-.span2
-  - if (self.menus.admin && self.menus.admin.navbar)
+- if (self.menus.admin && self.menus.admin.navbar)
+  .well.sidebar-nav
     mixin sidebar_menu(self.menus.admin.navbar)
