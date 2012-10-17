@@ -10,11 +10,17 @@
 //-   submenus (Array)         - submenus 
 mixin _create_submenus(submenus)
   - var li_class
+  - var item_link
   ul.dropdown-menu
     - each item in submenus
       - if (item.childs)
+        // If ACP item without link, then take link from first chaild
+        - if (!item.link)
+          item_link = item.childs[0].link
+        - else
+          item_link = item.link
         li.dropdown-submenu
-          a(href=item.link, tabindex='-1')= self.t(item.title)
+          a(href=item_link, tabindex='-1')= self.t(item.title)
           mixin _create_submenus(item.childs)
       - else
         li
