@@ -26,22 +26,7 @@ html.no-js
 
 
     .container-fluid
-      .row-fluid
-
-        //- Menu sidebar
-        include ../admin/partials/_sidebar_menu
-        - if (self.menus.admin && self.menus.admin.navbar)
-          .span2
-            mixin sidebar_menu(self.menus.admin.navbar)
-            //-ul.nav.nav-list.well
-              //-- each item in self.menus.admin.sidebar
-                //-li: a(href=item.link)= self.t(item.title)
-
-        //- Content
-        .span10
-
-
-          #content!= self.content
+      .row-fluid#content!= self.content
 
     .nojs
       .alert.alert-error #{self.t('common.nojs')} 

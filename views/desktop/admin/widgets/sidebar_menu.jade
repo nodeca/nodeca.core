@@ -42,3 +42,8 @@ mixin sidebar_menu(menus)
       - if (api_path_tail.indexOf(item_path_tail) > -1)
         - if (item.childs)
           mixin _create_submenus(item.childs)
+
+
+.span2
+  - if (self.menus.admin && self.menus.admin.navbar)
+    mixin sidebar_menu(self.menus.admin.navbar)
