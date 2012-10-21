@@ -30,4 +30,3 @@ require('./lib/filters');
 
 require('./lib/io');
 require('./lib/components');
-require('./lib/permissions');
