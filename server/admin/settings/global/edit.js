@@ -1,6 +1,9 @@
 'use strict';
 
 
+/*global nodeca, _*/
+
+
 /**
  *  server
  **/
@@ -43,7 +46,14 @@ module.exports = function (params, next) {
   var category_name = params.id;
 
   data.category_name = category_name;
-  data.category = nodeca.settings.global.fetchSettingsByCategory(category_name);
 
-  next();
+  nodeca.settings.getStore('global').fetchSettingsByCategory(category_name, function (err, settings) {
+    _.each(settings, function (obj, key) {
+      _.defaults(obj, nodeca.settings.getStore('global').getSchema(key));
+    });
+
+    data.category = settings;
+
+    next(err);
+  });
 };

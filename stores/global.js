@@ -1,61 +1,69 @@
 'use strict';
 
+
 /*global nodeca, _*/
 
-var NLib = require('nlib');
 
-var Async = NLib.Vendor.Async;
+// 3rd-party
+var Store = require('nlib').Settings.Store;
+var async = require('nlib').Vendor.Async;
 
-var store = {};
 
+// internal
 var Model = nodeca.models.stores.GlobalSettings;
 
-module.exports.init = function (settings, callback) {
-  store = settings;
-  Model.find({}, function (err, docs) {
-    if (err) {
-      callback(err);
-      return;
-    }
-    docs.forEach(function (doc) {
-      store[doc._id.toString()]['value'] = doc.value;
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+var GlobalStore = new Store({
+  get: function (key, params, options, callback) {
+    Model.findOne({ _id: key }, 'value', function (err, doc) {
+      var value = (doc || {}).value;
+
+      if (undefined === value) {
+        value = (GlobalStore.getSchema(key) || {})['default'];
+      }
+
+      callback(err, { value: value });
     });
-    callback();
-  });
-};
+  },
+  set: function (values, params, callback) {
+    async.forEach(_.keys(values), function (key, nextKey) {
+      Model.set(key, values[key], nextKey);
+    }, callback);
+  }
+});
 
-module.exports.get = function (key) {
-  return store[key]['value'] === undefined ? store[key]['default'] : store[key]['value'];
-};
 
-module.exports.massSet = function (settings, callback) {
-  Async.forEachSeries(settings, function (setting, next_setting) {
-    if (setting.value !== store[setting.key]) {
-      Model.set(setting.key, setting.value, next_setting);
-    }
-    else {
-      next_setting();
-    }
-  }, callback);
-};
-
-module.exports.getCategories = function () {
+GlobalStore.getCategories = function () {
   var categories = [];
 
-  _.values(store).forEach(function (props) {
-    if (categories.indexOf(props.category) === -1) {
-      categories.push(props.category);
+  GlobalStore.keys.forEach(function (key) {
+    var name = GlobalStore.getSchema(key).category;
+    if (-1 === categories.indexOf(name)) {
+      categories.push(name);
     }
   });
+
   return categories;
 };
 
-module.exports.fetchSettingsByCategory = function (category) {
-  var result = {};
-  _.keys(store).forEach(function (key) {
-    if (store[key]['category'] === category) {
-      result[key] = store[key];
+
+GlobalStore.fetchSettingsByCategory = function (category, callback) {
+  var keys = [];
+
+  GlobalStore.keys.forEach(function (key) {
+    if (category === GlobalStore.getSchema(key).category) {
+      keys.push(key);
     }
   });
-  return result;
+
+  GlobalStore.get(keys, {}, {}, callback);
 };
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+module.exports = GlobalStore;

@@ -34,12 +34,6 @@ nodeca.validate(params_schema);
  *  Global settings
  **/
 module.exports = function (params, next) {
-  var data = this.response.data;
-
-  data.categories = [];
-  nodeca.settings.global.getCategories().forEach(function (category) {
-    data.categories.push(category);
-  });
-
+  this.response.data.categories = nodeca.settings.getStore('global').getCategories();
   next();
 };
