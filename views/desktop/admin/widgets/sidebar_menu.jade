@@ -5,45 +5,46 @@
 - var api_path_tail = self.head.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
 
 
-//- Create next menu level
-//-
-//-   submenus (Array)  - submenus
-mixin _create_submenus(submenus)
-  - var item_path_tail
-  - var li_class
-  ul.nav.nav-list
-    - each item in submenus
-      - item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
-      
-      //- highlight item if it part of api path
-      - if (api_path_tail.indexOf(item_path_tail) > -1 || self.head.apiPath === item.to)
-        li_class = 'active'
-      -else
-        li_class = ''
-
-      li(class=li_class)
-        - if (item.to)
-          a(href=item.link)= self.t(item.title)
-        - else
-          | #{self.t(item.title)}
-          
-        - if (item.childs && item.childs.length)
-          mixin _create_submenus(item.childs)
-
-
-//- Create admin top menu
-//-
-//-   menus (Object)  - menu container nodeca.config.menus.<menu_name>
-mixin sidebar_menu(menus)
-  - var item_path_tail
-    - each item in menus
-      - var item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
-      //- display item only for current app
-      - if (api_path_tail.indexOf(item_path_tail) > -1)
-        - if (item.childs)
-          mixin _create_submenus(item.childs)
-
-
 - if (self.menus.admin && self.menus.admin.navbar)
   .well.sidebar-nav
-    mixin sidebar_menu(self.menus.admin.navbar)
+    - var item_path_tail
+    - var li_class
+    - each app_level_item in self.menus.admin.navbar
+      //- display items only for current app
+      - item_path_tail = app_level_item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
+      - if (api_path_tail.indexOf(item_path_tail) > -1)
+        - if (app_level_item.childs)
+          //- first level user groups, users and etc
+          ul.nav.nav-list
+            - each first_level_item in app_level_item.childs
+              - item_path_tail= first_level_item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
+              
+              //- highlight item if it part of api path
+              - if (api_path_tail.indexOf(item_path_tail) > -1 || self.head.apiPath === first_level_item.to)
+                li_class = 'active'
+              -else
+                li_class = ''
+
+              li(class=li_class)
+                - if (first_level_item.to)
+                  a(href=first_level_item.link)= self.t(first_level_item.title)
+                - else
+                  | #{self.t(first_level_item.title)}
+                
+                - if (first_level_item.childs && first_level_item.childs.length)
+                  //- second level actions for example add user group
+                  ul.nav.nav-list
+                    - each second_level_menu in first_level_item.childs
+                      - item_path_tail= second_level_menu.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
+                      
+                      //- highlight item if it part of api path
+                      - if (api_path_tail.indexOf(item_path_tail) > -1 || self.head.apiPath === second_level_menu.to)
+                        li_class = 'active'
+                      -else
+                        li_class = ''
+
+                      li(class=li_class)
+                        - if (second_level_menu.to)
+                          a(href=second_level_menu.link)= self.t(second_level_menu.title)
+                        - else
+                          | #{self.t(second_level_menu.title)}
