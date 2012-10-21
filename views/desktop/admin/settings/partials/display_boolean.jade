@@ -1,0 +1,6 @@
+mixin display_boolean(name, value, handler)
+  .row-fluid
+    - if (handler)
+      input.span12(type='checkbox', name=name, value='true', checked=value, data-on-change=handler)
+    - else
+      input.span12(type='checkbox', name=name, value='true', checked=value)
