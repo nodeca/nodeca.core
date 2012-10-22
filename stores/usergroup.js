@@ -11,11 +11,19 @@ var Store = require('nlib').Settings.Store;
 ////////////////////////////////////////////////////////////////////////////////
 
 
-module.exports = new Store({
+var UsergroupStore = new Store({
   get: function (key, params, options, callback) {
-    callback(null, { value: true });
+    callback(null, {
+      value: UsergroupStore.getDefaultValue(key)
+    });
   },
   set: function (values, params, callback) {
     callback('Not implemented yet');
   }
 });
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+module.exports = UsergroupStore;

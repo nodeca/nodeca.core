@@ -22,7 +22,7 @@ var GlobalStore = new Store({
       var value = (doc || {}).value;
 
       if (undefined === value) {
-        value = (GlobalStore.getSchema(key) || {})['default'];
+        value = GlobalStore.getDefaultValue(key);
       }
 
       callback(err, { value: value });
