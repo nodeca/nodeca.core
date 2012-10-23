@@ -56,7 +56,7 @@ module.exports = function render(viewsTree, path, locals, layout, skipBaseLayout
   if (!!view) {
     html = view(locals);
   } else {
-    nodeca.logger.warn("View <" + path + "> not found");
+    nodeca.logger.error("View <" + path + "> not found");
     throw new Error('View <' + path + '> not found.');
   }
 
@@ -68,7 +68,7 @@ module.exports = function render(viewsTree, path, locals, layout, skipBaseLayout
       var fn = nodeca.shared.getByPath(viewsTree.layouts, path);
 
       if (!_.isFunction(fn)) {
-        nodeca.logger.warn("Layout " + path + " not found");
+        nodeca.logger.debug("Layout " + path + " not found");
         return;
       }
 

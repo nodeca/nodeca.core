@@ -109,14 +109,8 @@ module.exports.page = function page(apiPath, locals, layout, callback) {
       );
     }
 
-    // inject statistical information
-    nodeca.client.common.stats.inject(locals);
-
     // restore opacity
-    $content.stop().fadeTo('fast', 1, function () {
-      nodeca.client.common.floatbar.init();
-    });
-
+    $content.stop().fadeTo('fast', 1);
     callback();
   });
 };
