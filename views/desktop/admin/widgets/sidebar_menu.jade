@@ -6,45 +6,30 @@
 
 
 - if (self.menus.admin && self.menus.admin.navbar)
-  .well.sidebar-nav
-    - var item_path_tail
-    - var li_class
-    - each app_level_item in self.menus.admin.navbar
-      //- display items only for current app
-      - item_path_tail = app_level_item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
-      - if (api_path_tail.indexOf(item_path_tail) > -1)
-        - if (app_level_item.childs)
-          //- first level user groups, users and etc
-          ul.nav.nav-list
-            - each first_level_item in app_level_item.childs
-              - item_path_tail= first_level_item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
+  - var item_path_tail
+  - var menu_active_class
+
+  - each app_level_item in self.menus.admin.navbar
+
+    //- display items only for current app
+    - item_path_tail = app_level_item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
+    - if (api_path_tail.indexOf(item_path_tail) > -1)
+      - if (app_level_item.childs)
+
+        ul.nav.nav-list
+          - each first_level_item in app_level_item.childs
+            - item_path_tail= first_level_item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
+            
+            //- highlight sub-items (check by api path)
+            - if (api_path_tail.indexOf(item_path_tail) > -1 || self.head.apiPath === first_level_item.to)
+              menu_active_class = '_active'
+            - else
+              menu_active_class = ''
+
+            li.nav-header(class=menu_active_class) #{self.t(first_level_item.title)}
               
-              //- highlight item if it part of api path
-              - if (api_path_tail.indexOf(item_path_tail) > -1 || self.head.apiPath === first_level_item.to)
-                li_class = 'active'
-              -else
-                li_class = ''
-
-              li(class=li_class)
-                - if (first_level_item.to)
-                  a(href=first_level_item.link)= self.t(first_level_item.title)
-                - else
-                  | #{self.t(first_level_item.title)}
-                
-                - if (first_level_item.childs && first_level_item.childs.length)
-                  //- second level actions for example add user group
-                  ul.nav.nav-list
-                    - each second_level_menu in first_level_item.childs
-                      - item_path_tail= second_level_menu.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
-                      
-                      //- highlight item if it part of api path
-                      - if (api_path_tail.indexOf(item_path_tail) > -1 || self.head.apiPath === second_level_menu.to)
-                        li_class = 'active'
-                      -else
-                        li_class = ''
-
-                      li(class=li_class)
-                        - if (second_level_menu.to)
-                          a(href=second_level_menu.link)= self.t(second_level_menu.title)
-                        - else
-                          | #{self.t(second_level_menu.title)}
+            //- Submenus
+            - if (first_level_item.childs && first_level_item.childs.length)
+              - each second_level_menu in first_level_item.childs
+                li(class=menu_active_class)
+                  a(href=second_level_menu.link) #{self.t(second_level_menu.title)}

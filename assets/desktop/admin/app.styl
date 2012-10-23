@@ -1,7 +1,6 @@
 /**
 
  *= require bootstrap/bootstrap_admin
- *= require bootstrap/bootstrap-responsive
  *= require fontello/icons
 
  *= require_self
@@ -20,5 +19,25 @@
 body
   padding-top 60px
 
+// Simple 2-columns layout
+.main
+  margin-left 210px
 .sidebar-nav
+  width 180px
+
+// Sidebar
+.sidebar-nav
+  position fixed
+  top 60px
+
   padding 10px 0
+
+  .nav-list
+    // active state
+    & > .nav-header._active
+    & > ._active > a:link
+      background-color darken(white, 1%)
+
+    // adjust left offset
+    & > li > a
+      padding-left 20px
