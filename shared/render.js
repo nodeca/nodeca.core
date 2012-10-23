@@ -51,7 +51,7 @@ function get_layout_stack(layout) {
  *  `content` property will be previously rendered layout.
  **/
 module.exports = function render(viewsTree, path, locals, layout, skipBaseLayout) {
-  var html, view = nodeca.shared.getByPath(viewsTree, path);
+  var html, stack, curr, view = nodeca.shared.getByPath(viewsTree, path);
 
   if (!!view) {
     html = view(locals);
@@ -61,20 +61,25 @@ module.exports = function render(viewsTree, path, locals, layout, skipBaseLayout
   }
 
   if (layout) {
-    layout = (_.isArray(layout) ? layout.slice() : get_layout_stack(layout));
-    layout = (!!skipBaseLayout ? layout.slice(1) : layout).reverse();
+    stack = (_.isArray(layout) ? layout.slice() : get_layout_stack(layout));
 
-    _.each(layout, function (path) {
-      var fn = nodeca.shared.getByPath(viewsTree.layouts, path);
+    if (!!skipBaseLayout) {
+      // remove first (base) layout
+      stack.shift();
+    }
 
-      if (!_.isFunction(fn)) {
-        nodeca.logger.warn("Layout " + path + " not found");
-        return;
+    while (stack.length) {
+      curr = stack.shift();
+      view = nodeca.shared.getByPath(viewsTree.layouts, curr);
+
+      if (!_.isFunction(view)) {
+        nodeca.logger.debug("Layout " + curr + " not found");
+        continue;
       }
 
       locals.content = html;
-      html = fn(locals);
-    });
+      html = view(locals);
+    }
   }
 
   return html;

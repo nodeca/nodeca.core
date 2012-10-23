@@ -1,8 +1,0 @@
-i18n:
-  en-US:
-    admin:
-      setting:
-        category:
-          ug_common: Common
-        members_visible: Are group members visible?
-        members_visible_help: Members are searcheable and counted in site statistics.
