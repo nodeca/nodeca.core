@@ -46,7 +46,7 @@ module.exports.commandLineArguments = [
 ////////////////////////////////////////////////////////////////////////////////
 
 
-require('should');
+nodeca.components.chai.should();
 
 
 // Lookup file names at the given `path`.
