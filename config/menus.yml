@@ -9,4 +9,8 @@ menus:
   admin:
     navbar:
       system:
-        to: admin.dashboard
+        submenu:
+          settings:
+            submenu:
+              options:
+                to: admin.settings.global.index
