@@ -128,6 +128,14 @@
       "css": "more",
       "code": 11015,
       "src": "entypo"
+    },
+    {
+      "uid": "c77fd2fd065b5fe16d6f2b41e190b266",
+      "orig_css": "pencil",
+      "orig_code": 9998,
+      "css": "edit",
+      "code": 9998,
+      "src": "entypo"
     }
   ]
 }

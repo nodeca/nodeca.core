@@ -27,6 +27,7 @@
 
 .icon-more:before { content: '\2b07'; } /* '⬇' */
 .icon-options:before { content: '\2699'; } /* '⚙' */
+.icon-edit:before { content: '\270e'; } /* '✎' */
 .icon-check:before { content: '\2713'; } /* '✓' */
 .icon-vote-up:before { content: '\2191'; } /* '↑' */
 .icon-vote-down:before { content: '\2193'; } /* '↓' */
