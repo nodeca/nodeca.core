@@ -23,11 +23,18 @@ var $notice;
 
 function hide() {
   clearTimeout(timeout);
-  $notice.hide();
+
+  if ($notice) {
+    // $notice might not be yet initialized when request
+    // succeded BEFORE the notification show()
+    $notice.hide();
+  }
+
+  return;
 }
 
 
-function show() {
+function show(message) {
   // make sure previous timeout was cleared
   clearTimeout(timeout);
 
@@ -36,10 +43,9 @@ function show() {
     $notice.appendTo('body').find('.close').click(hide);
   }
 
-  // schedule showing new message in next 500 ms
-  timeout = setTimeout(function () {
-    $notice.show();
-  }, 500);
+  $notice.find('.message').html(message).show();
+
+  return;
 }
 
 
@@ -54,6 +60,20 @@ function show() {
  *      nodeca.client.common.init.io_progress();
  **/
 module.exports = function () {
-  nodeca.io.on('rpc.request',   show);
-  nodeca.io.on('rpc.complete',  hide);
+  nodeca.io.on('rpc.complete', hide);
+
+  nodeca.io.on('rpc.request', function () {
+    clearTimeout(timeout);
+
+    // schedule showing new message in next 500 ms
+    timeout = setTimeout(function () {
+      show(nodeca.runtime.t('common.io.progress'));
+    }, 500);
+  });
+
+  nodeca.io.on('rpc.error', function (err) {
+    if (nodeca.io.EWRONGVER === err.code) {
+      show(nodeca.runtime.t('common.io.error.version_mismatch'));
+    }
+  });
 };
