@@ -31,7 +31,7 @@
                         "xregexp"     : "~ 2.0.0",
                         "mocha"       : "~ 1.6.0",
                         "should"      : "~ 1.2.0",
-                        "memoize"     : "~ 0.2.3"
+                        "memoizee"    : "~ 0.2.3"
                       },
   "devDependencies" : {
                         "jshint"  : "~ 0.9.1"
