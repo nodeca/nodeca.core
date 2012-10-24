@@ -1,4 +1,10 @@
 mixin display_boolean(name, value, handler, help_text)
+  - console.log(value);
+
+  //- type cast value
+  - if (value === '0' || value === 'false')
+    - value = null
+  
   .switch
     - if (handler)
       input(type='hidden', name=name, value='0')
