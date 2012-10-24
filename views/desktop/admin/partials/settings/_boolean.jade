@@ -1,9 +1,8 @@
 mixin display_boolean(name, value, handler, help_text)
-  .row-fluid
-    - if (handler)
-      input.span12(type='checkbox', name=name, value='true', checked=value, data-on-change=handler)
-    - else
-      input.span12(type='checkbox', name=name, value='true', checked=value)
+  - if (handler)
+    input(type='checkbox', name=name, value='true', checked=value, data-on-change=handler)
+  - else
+    input(type='checkbox', name=name, value='true', checked=value)
 
-    - if (help_text)
-      span.help-block #{help_text}
+  - if (help_text)
+    span.help-block #{help_text}
