@@ -28,7 +28,7 @@ h1= self.t('admin.setting.category.' + self.category_name)
 
 form(name="settings", action="#")
   ul
-    -each setting, name in self.category
+    - each setting, name in self.category
       li
         .setting
           .setting_header

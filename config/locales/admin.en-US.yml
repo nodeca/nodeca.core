@@ -1,6 +1,10 @@
 i18n:
   en-US:
     admin:
+      phrases:
+        yes: "Yes"
+        no: "No"
+
       core:
         title: Nodeca admin panel
       menus:
