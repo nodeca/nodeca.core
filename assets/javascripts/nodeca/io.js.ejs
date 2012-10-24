@@ -106,7 +106,7 @@
     }
 
     // fill in defaults
-    options   = options || {};
+    options   = options || {_retryOnCsrfError: true};
     callback  = callback || $.noop;
 
     //
@@ -143,6 +143,19 @@
       if (data.version !== nodeca.runtime.version) {
         data.error = error(io.EWRONGVER, 'Client version does not match server.');
         delete data.response;
+      }
+
+      // if invalid CSRF token error and retry is allowed
+      if (data.error && nodeca.io.INVALID_CSRF_TOKEN === data.error.code && options._retryOnCsrfError) {
+        // renew CSRF token
+        nodeca.runtime.csrf = error.data;
+
+        // only one attempt to retry is allowed
+        options._retryOnCsrfError = false;
+
+        // try again
+        io.apiTree(name, params, options, callback);
+        return;
       }
 
       if (data.error) {
