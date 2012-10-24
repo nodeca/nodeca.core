@@ -1,7 +1,4 @@
 .switch
-
-
-.switch
   width 120px
   height 21px
   padding 2px
@@ -33,7 +30,7 @@
       width 50%
       height 100%
 
-      background-color red
+      background-color lighten(red, 50%)
       background-image linear-gradient(top, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0))
       box-shadow 0 1px 1px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.45)
 
@@ -56,7 +53,7 @@
       content attr(data-no)
       right 0
 
-      color darken(red, 50%)
+      color darken(red, 0%)
       text-shadow 0 1px 0 rgba(255, 255, 255, 0.5)
 
   input
@@ -70,9 +67,9 @@
     &:checked ~ label
       > i
         left 0
-        background-color green
+        background-color lighten(green, 40%)
       &:before
-        color darken(green, 50%)
+        color darken(green, 30%)
         text-shadow 0 1px 0 rgba(255, 255, 255, 0.5)
       &:after
         color grayLighter
