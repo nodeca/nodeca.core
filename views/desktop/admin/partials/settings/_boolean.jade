@@ -1,9 +1,9 @@
 mixin display_boolean(name, value, handler, help_text)
   .switch
     - if (handler)
-      input(type='checkbox', id=name, name=name, checked=value, data-on-change=handler)
+      input(type='checkbox', id='s_' + name, name=name, checked=value, data-on-change=handler)
     - else
-      input(type='checkbox', id=name, name=name, checked=value)
+      input(type='checkbox', id='s_' + name, name=name, checked=value)
     label(for=name, data-yes=self.t('admin.phrases.yes'), data-no=self.t('admin.phrases.no')): i
 
   - if (help_text)

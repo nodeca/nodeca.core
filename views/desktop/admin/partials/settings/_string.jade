@@ -1,9 +1,9 @@
 mixin display_number(name, value, handler, help_text)
   .row-fluid
     - if (handler)
-      input(type="text", name=name, value=value, data-on-input=handler)
+      input(type="text", id='s_' + name, name=name, value=value, data-on-input=handler)
     - else
-      input(type="text", name=name, value=value)
+      input(type="text", id='s_' + name, name=name, value=value)
 
     - if (help_text)
       span.help-block #{help_text}
