@@ -17,15 +17,32 @@ var Model = nodeca.models.stores.GlobalSettings;
 
 
 var GlobalStore = new Store({
-  get: function (key, params, options, callback) {
-    Model.findOne({ _id: key }, 'value', function (err, doc) {
-      var value = (doc || {}).value;
+  get: function (keys, params, options, callback) {
+    var results = {};
 
-      if (undefined === value) {
-        value = GlobalStore.getDefaultValue(key);
+    async.forEach(keys, function (key, next) {
+      Model.findOne({ _id: key }, 'value', function (err, doc) {
+        if (err) {
+          next(err);
+          return;
+        }
+
+        var value = (doc || {}).value;
+
+        if (undefined === value) {
+          value = GlobalStore.getDefaultValue(key);
+        }
+
+        results[key] = { value: value };
+        next();
+      });
+    }, function (err) {
+      if (err) {
+        callback(err);
+        return;
       }
 
-      callback(err, { value: value });
+      callback(null, results);
     });
   },
   set: function (values, params, callback) {
