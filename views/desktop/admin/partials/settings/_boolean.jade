@@ -12,7 +12,7 @@ mixin display_boolean(name, value, handler, help_text)
     - else
       input(type='hidden', name=name, value='0')
       input(type='checkbox', id='s_' + name, value='1', name=name, checked=value)
-    label(for='s_' + name, data-yes=self.t('admin.phrases.yes'), data-no=self.t('admin.phrases.no')): i
+    label(for='s_' + name, data-yes=self.t('admin.phrases.setting.yes'), data-no=self.t('admin.phrases.setting.no')): i
 
   - if (help_text)
     span.help-block #{help_text}

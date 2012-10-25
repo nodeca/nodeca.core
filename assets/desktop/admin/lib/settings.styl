@@ -1,0 +1,25 @@
+//
+// Settings
+//
+
+// Dim inherited settings
+//
+.control-group.inherited
+  .control-label
+    opacity .4
+  .cg-control
+    opacity .4
+
+// Head block above settings list
+//
+legend + .cg-head
+  background-color lighten(yellow, 90%)
+  margin-top -20px
+  padding-top 20px
+
+// Filter settings visibility
+//
+.show_inherited .control-group.overriden
+  display none
+.show_overriden .control-group.inherited
+  display none

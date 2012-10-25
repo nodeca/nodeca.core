@@ -2,9 +2,15 @@ i18n:
   en-US:
     admin:
       phrases:
-        yes: "Yes"
-        no: "No"
-        override: Override
+        setting:
+          yes: "Yes"
+          no: "No"
+          override: Override
+          filter:
+            label: Filter settings
+            show_all: show all
+            show_inherited: show inherited only
+            show_overriden: show overriden only 
 
       core:
         title: Nodeca admin panel

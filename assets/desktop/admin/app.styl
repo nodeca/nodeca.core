@@ -16,57 +16,7 @@
 @import '../common/lib/notifications.styl'
 //@import '../common/lib/breadcrumbs.styl'
 
+@import './layout.base.styl'
+
 @import './lib/switch.styl'
-
-
-body
-  padding-top 60px
-
-// Simple 2-columns layout
-.main
-  margin-left 210px
-.sidebar-nav
-  width 180px
-
-// Sidebar
-//
-.sidebar-nav
-  position fixed
-  top 60px
-
-  padding 10px 0
-
-  .nav-list
-    // active state
-    & > .nav-header._active
-    & > ._active > a
-      background-color darken(white, 1%)
-
-    // adjust left offset
-    & > li > a
-      padding-left 20px
-
-// Setting
-//
-.control-group.inherited
-  .control-label
-    opacity .4
-  .cg-control
-    opacity .4
-
-
-//
-// Overrides
-//
-
-// form help-texts tweak (smaller & lighter)
-//
-.form-horizontal .help-block
-  color grayLight
-  font-size 90%
-  margin-top 5px
-
-// fix for links without href (with JS handlers)
-//
-a
-  cursor pointer
+@import './lib/settings.styl'
