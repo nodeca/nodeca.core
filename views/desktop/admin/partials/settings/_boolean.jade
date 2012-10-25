@@ -7,11 +7,11 @@ mixin display_boolean(name, value, handler, help_text)
   
   .switch
     - if (handler)
-      input(type='hidden', name=name, value='0')
-      input(type='checkbox', id='s_' + name, value='1', name=name, checked=value, data-on-change=handler)
+      input(type='hidden', name='s_' + name, value='0')
+      input(type='checkbox', id='s_' + name, value='1', name='s_' + name, checked=value, data-on-change=handler)
     - else
-      input(type='hidden', name=name, value='0')
-      input(type='checkbox', id='s_' + name, value='1', name=name, checked=value)
+      input(type='hidden', name='s_' + name, value='0')
+      input(type='checkbox', id='s_' + name, value='1', name='s_' + name, checked=value)
     label(for='s_' + name, data-yes=self.t('admin.phrases.setting.yes'), data-no=self.t('admin.phrases.setting.no')): i
 
   - if (help_text)
