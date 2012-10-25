@@ -4,6 +4,7 @@ i18n:
       phrases:
         yes: "Yes"
         no: "No"
+        override: Override
 
       core:
         title: Nodeca admin panel
