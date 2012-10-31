@@ -6,11 +6,11 @@
  **/
 
 /**
- *  client.common
+ *  client.admin
  **/
 
 /**
- *  client.common.init
+ *  client.admin.init
  **/
 
 
@@ -39,7 +39,7 @@ function show(message) {
   clearTimeout(timeout);
 
   if (!$notice) {
-    $notice = $(nodeca.client.common.render.template('common.io_progress'));
+    $notice = $(nodeca.client.admin.render.template('admin.io_progress'));
     $notice.appendTo('body').find('.close').click(hide);
   }
 
@@ -50,14 +50,14 @@ function show(message) {
 
 
 /**
- *  client.common.init.io_progress()
+ *  client.admin.init.io_progress()
  *
  *  Assigns rpc before/after request handlers showing/hiding "loading" notice.
  *
  *
  *  ##### Example
  *
- *      nodeca.client.common.init.io_progress();
+ *      nodeca.client.admin.init.io_progress();
  **/
 module.exports = function () {
   nodeca.io.on('rpc.complete', hide);
@@ -67,13 +67,13 @@ module.exports = function () {
 
     // schedule showing new message in next 500 ms
     timeout = setTimeout(function () {
-      show(nodeca.runtime.t('common.io.progress'));
+      show(nodeca.runtime.t('admin.io.progress'));
     }, 500);
   });
 
   nodeca.io.on('rpc.error', function (err) {
     if (nodeca.io.EWRONGVER === err.code) {
-      show(nodeca.runtime.t('common.io.error.version_mismatch'));
+      show(nodeca.runtime.t('admin.io.error.version_mismatch'));
     }
   });
 };

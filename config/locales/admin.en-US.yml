@@ -12,6 +12,14 @@ i18n:
             show_inherited: show inherited only
             show_overriden: show overriden only 
 
+      io:
+        progress: Loading...
+        error:
+          version_mismatch: Application version outdated. Please, reload page.
+          invalid_csrf_token: Security token expired. Pease, try again.
+          application_fuckup: Application Error. Try again later.
+          communication_timeout: Communication problems. Try again later.
+
       core:
         title: Nodeca admin panel
       menus:
