@@ -1,7 +1,7 @@
 "use strict";
 
 
-/*global nodeca, _*/
+/*global N, underscore*/
 
 
 // stdlib
@@ -14,16 +14,17 @@ var basename  = path.basename;
 
 
 // 3rd-party
-var NLib      = require('nlib');
-var Async     = require('nlib').Vendor.Async;
-var Mocha     = require('mocha');
+var _         = underscore;
+var chai      = require('chai');
+var async     = require('async');
+var mocha     = require('mocha');
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
 module.exports.parserParameters = {
-  version: nodeca.runtime.version,
+  version: N.runtime.version,
   addHelp: true,
   help: 'run test suites',
   description: 'Run all tests of enabled apps'
@@ -46,7 +47,7 @@ module.exports.commandLineArguments = [
 ////////////////////////////////////////////////////////////////////////////////
 
 
-nodeca.components.chai.should();
+chai.should();
 
 
 // Lookup file names at the given `path`.

@@ -1,0 +1,18 @@
+packages:
+  admin:
+    server:
+      root:       "./server/admin"
+      include:    "*.js"
+      exclude:    "/(^|\\/)_.*/"
+
+  common:
+    server:
+      root:       "./server/common"
+      include:    "*.js"
+      exclude:    "/(^|\\/)_.*/"
+
+  core:
+    server:
+      root:       "./server"
+      include:    "/^(assets|static)\\.js$/"
+      apiPrefix:  ~

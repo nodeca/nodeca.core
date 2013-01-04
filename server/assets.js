@@ -6,7 +6,7 @@
  **/
 
 
-/*global nodeca*/
+/*global N*/
 
 
 // 3rd-party
@@ -14,7 +14,7 @@ var Mincer  = require('mincer');
 
 
 // internal
-var logger = nodeca.logger.getLogger('server.assets');
+var logger = N.logger.getLogger('server.assets');
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -43,7 +43,7 @@ function call_mincer_server(req, res) {
   var assets;
 
   if (!server) {
-    assets = nodeca.runtime.assets,
+    assets = N.runtime.assets,
     server = new Mincer.Server(assets.environment, assets.manifest);
     server.log = assets_logger;
   }
@@ -64,7 +64,7 @@ var params_schema = {
     required: true
   }
 };
-nodeca.validate(params_schema);
+N.validate(params_schema);
 
 
 /**
@@ -76,7 +76,7 @@ nodeca.validate(params_schema);
  **/
 module.exports = function serve_assets(params, callback) {
   if (!this.origin.http) {
-    callback(nodeca.io.BAD_REQUEST);
+    callback(N.io.BAD_REQUEST);
     return;
   }
 

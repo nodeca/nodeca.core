@@ -6,7 +6,7 @@
  **/
 
 
-/*global nodeca*/
+/*global N*/
 
 
 // stdlib
@@ -21,8 +21,8 @@ var send = require('send');
 ////////////////////////////////////////////////////////////////////////////////
 
 
-var root    = path.join(nodeca.runtime.apps[0].root, 'public/root');
-var logger  = nodeca.logger.getLogger('server.static');
+var root    = path.join(N.runtime.mainApp.root, 'public/root');
+var logger  = N.logger.getLogger('server.static');
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@ var params_schema = {
     required: true
   }
 };
-nodeca.validate(params_schema);
+N.validate(params_schema);
 
 
 /**
@@ -51,7 +51,7 @@ module.exports = function (params, callback) {
   var req, res;
 
   if (!this.origin.http) {
-    callback(nodeca.io.BAD_REQUEST);
+    callback(N.io.BAD_REQUEST);
     return;
   }
 
@@ -59,7 +59,7 @@ module.exports = function (params, callback) {
   res = this.origin.http.res;
 
   if ('GET' !== req.method && 'HEAD' !== req.method) {
-    callback(nodeca.io.BAD_REQUEST);
+    callback(N.io.BAD_REQUEST);
     return;
   }
 
@@ -67,14 +67,14 @@ module.exports = function (params, callback) {
     .root(root)
     .on('error', function (err) {
       if (404 === err.status) {
-        callback(nodeca.io.NOT_FOUND);
+        callback(N.io.NOT_FOUND);
         return;
       }
 
       callback(err);
     })
     .on('directory', function () {
-      callback(nodeca.io.BAD_REQUEST);
+      callback(N.io.BAD_REQUEST);
     })
     .on('end', function () {
       logger.info('%s - "%s %s HTTP/%s" %d "%s" - %s',
