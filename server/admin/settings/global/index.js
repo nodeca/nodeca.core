@@ -18,14 +18,14 @@
  **/
 
 
-/*global nodeca*/
+/*global N*/
 
 
 // Validate input parameters
 //
 var params_schema = {
 };
-nodeca.validate(params_schema);
+N.validate(params_schema);
 
 
 /**
@@ -34,6 +34,6 @@ nodeca.validate(params_schema);
  *  Global settings
  **/
 module.exports = function (params, next) {
-  this.response.data.categories = nodeca.settings.getStore('global').getCategories();
+  this.response.data.categories = N.settings.getStore('global').getCategories();
   next();
 };

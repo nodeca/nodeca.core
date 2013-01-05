@@ -1,10 +1,10 @@
 'use strict';
 
 
-/*global nodeca*/
+/*global N*/
 
 
-nodeca.filters.before('admin', function setLayout(params, next) {
+N.filters.before('admin', function setLayout(params, next) {
   this.response.layout = 'admin.base';
   next();
 });

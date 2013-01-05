@@ -10,14 +10,14 @@
  **/
 
 
-/*global nodeca*/
+/*global N*/
 
 
 // Validate input parameters
 //
 var params_schema = {
 };
-nodeca.validate(params_schema);
+N.validate(params_schema);
 
 
 /**

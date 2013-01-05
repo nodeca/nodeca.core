@@ -1,7 +1,7 @@
 'use strict';
 
 
-/*global nodeca, _*/
+/*global N, underscore*/
 
 
 /**
@@ -21,7 +21,7 @@
  **/
 
 
-/*global nodeca*/
+var _ = underscore;
 
 
 // Validate input parameters
@@ -33,7 +33,7 @@ var params_schema = {
     required: true
   }
 };
-nodeca.validate(params_schema);
+N.validate(params_schema);
 
 
 /**
@@ -47,9 +47,9 @@ module.exports = function (params, next) {
 
   data.category_name = category_name;
 
-  nodeca.settings.getStore('global').fetchSettingsByCategory(category_name, function (err, settings) {
+  N.settings.getStore('global').fetchSettingsByCategory(category_name, function (err, settings) {
     _.each(settings, function (obj, key) {
-      _.defaults(obj, nodeca.settings.getStore('global').getSchema(key));
+      _.defaults(obj, N.settings.getStore('global').getSchema(key));
     });
 
     data.category = settings;
