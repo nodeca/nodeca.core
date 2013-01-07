@@ -1,3 +1,10 @@
+bundles:
+  frontend:
+    - core
+    - common
+    - admin
+
+
 packages:
   admin:
     server:
