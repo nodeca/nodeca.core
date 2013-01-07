@@ -5,10 +5,20 @@ packages:
       include:    "*.js"
       exclude:    "/(^|\\/)_.*/"
 
+    views:
+      root:       "./views/desktop/admin"
+      include:    "*.jade"
+      exclude:    "/(^|\\/)_.*/"
+
   common:
     server:
       root:       "./server/common"
       include:    "*.js"
+      exclude:    "/(^|\\/)_.*/"
+
+    views:
+      root:       "./views/desktop/common"
+      include:    "*.jade"
       exclude:    "/(^|\\/)_.*/"
 
   core:
@@ -16,3 +26,9 @@ packages:
       root:       "./server"
       include:    "/^(assets|static)\\.js$/"
       apiPrefix:  ~
+
+    views:
+      root:       "./views/desktop/layouts"
+      include:    "*.jade"
+      exclude:    "/(^|\\/)_.*/"
+      apiPrefix:  "layouts"
