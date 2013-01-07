@@ -1,31 +1,11 @@
 'use strict';
 
 
-/**
- *  server
- **/
+module.exports = function (N, apiPath) {
+  N.validate(apiPath, {});
 
-/**
- *  server.admin
- **/
-
-
-/*global N*/
-
-
-// Validate input parameters
-//
-var params_schema = {
-};
-N.validate(params_schema);
-
-
-/**
- *  server.admin.dashboard(params, callback) -> Void
- *
- *  Administration dashboard
- **/
-module.exports = function (params, next) {
-  this.response.data.now = (new Date).toString();
-  next();
+  return function (params, next) {
+    this.response.data.now = (new Date).toString();
+    next();
+  };
 };

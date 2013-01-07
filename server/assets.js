@@ -6,80 +6,72 @@
  **/
 
 
-/*global N*/
-
-
 // 3rd-party
 var Mincer  = require('mincer');
 
 
-// internal
-var logger = N.logger.getLogger('server.assets');
-
-
 ////////////////////////////////////////////////////////////////////////////////
 
 
-var server;
+module.exports = function (N, apiPath) {
+  var
+  logger = N.logger.getLogger('server.assets'),
+  server = null; // see getServer() below
 
+  //
+  // Formats and writes log event into our logger
+  //
 
-// Formats and writes log event into our logger
-//
-function assets_logger(level, event) {
-  logger[level]('%s - "%s %s HTTP/%s" %d "%s" - %s',
-                event.remoteAddress,
-                event.method,
-                event.url,
-                event.httpVersion,
-                event.code,
-                event.headers['user-agent'],
-                event.message);
-}
-
-
-
-// helper to pass request to the lazy-loaded miner server
-function call_mincer_server(req, res) {
-  var assets;
-
-  if (!server) {
-    assets = N.runtime.assets,
-    server = new Mincer.Server(assets.environment, assets.manifest);
-    server.log = assets_logger;
+  function logAssets(level, event) {
+    logger[level]('%s - "%s %s HTTP/%s" %d "%s" - %s',
+                  event.remoteAddress,
+                  event.method,
+                  event.url,
+                  event.httpVersion,
+                  event.code,
+                  event.headers['user-agent'],
+                  event.message);
   }
 
-  server.handle(req, res);
-}
+  //
+  // lazy-loaded server
+  //
 
+  function getServer() {
+    if (!server) {
+      server = new Mincer.Server(N.runtime.assets.environment,
+                                 N.runtime.assets.manifest);
+      server.log = logAssets;
+    }
 
-////////////////////////////////////////////////////////////////////////////////
-
-
-
-// Validate input parameters
-//
-var params_schema = {
-  path: {
-    type: "string",
-    required: true
-  }
-};
-N.validate(params_schema);
-
-
-/**
- *  server.assets(params, callback) -> Void
- *
- *  - **HTTP only**
- *
- *  Mincer assets server middleware.
- **/
-module.exports = function serve_assets(params, callback) {
-  if (!this.origin.http) {
-    callback(N.io.BAD_REQUEST);
-    return;
+    return server;
   }
 
-  this.origin.http.req.url = params.path;
-  call_mincer_server(this.origin.http.req, this.origin.http.res);
+  //
+  // Validate input parameters
+  //
+
+  N.validate(apiPath, {
+    path: {
+      type: "string",
+      required: true
+    }
+  });
+
+  /**
+   *  server.assets(params, callback) -> Void
+   *
+   *  - **HTTP only**
+   *
+   *  Mincer assets server middleware.
+   **/
+  return function (params, callback) {
+    if (!this.origin.http) {
+      callback(N.io.BAD_REQUEST);
+      return;
+    }
+
+    this.origin.http.req.url = params.path;
+    getServer().handle(this.origin.http.req, this.origin.http.res);
+  };
 };
