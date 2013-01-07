@@ -17,6 +17,11 @@ packages:
       include:    "*.jade"
       exclude:    "/(^|\\/)_.*/"
 
+    styles:
+      root:       "./assets"
+      main:       "desktop/admin/app.styl"
+      include:    "desktop/admin/**.styl"
+
   common:
     server:
       root:       "./server/common"
@@ -27,6 +32,11 @@ packages:
       root:       "./views/desktop/common"
       include:    "*.jade"
       exclude:    "/(^|\\/)_.*/"
+
+    styles:
+      root:       "./assets"
+      main:       "desktop/common/app.styl"
+      include:    "desktop/common/**.styl"
 
   core:
     server:
