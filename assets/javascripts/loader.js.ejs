@@ -4,7 +4,7 @@
 
 
 /*jshint browser:true,node:false*/
-/*global yepnope, nodeca*/
+/*global yepnope*/
 
 
 var loadAssets = window.loadAssets = (function () {
@@ -37,7 +37,6 @@ var loadAssets = window.loadAssets = (function () {
 
   function loadAssets(namespace, callback) {
     var resources = [];
-
 
     if (!assets[namespace] || !!assets[namespace].loaded) {
       (callback || noop)();
@@ -120,9 +119,9 @@ var loadAssets = window.loadAssets = (function () {
     //
 
     loadResources(resources, function () {
-      var scope = nodeca.client['admin' === namespace ? 'admin' : 'common'];
+      var scope = window.N.client['admin' === namespace ? 'admin' : 'common'];
 
-      if (_.isFunction(scope.init)) {
+      if (window._.isFunction(scope.init)) {
         scope.init();
       };
     });

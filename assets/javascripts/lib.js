@@ -11,4 +11,4 @@
 
 //= require_tree ./lib
 
-//= require nodeca
+//= require n

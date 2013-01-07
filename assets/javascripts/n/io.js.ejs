@@ -1,28 +1,26 @@
 /**
- *  nodeca.io
+ *  N.io
  *
- *  This module provides realtime communication methods for nodeca/nlib based
+ *  This module provides realtime communication methods for Nlib based
  *  applications.
  **/
 
 
-//= depend_on nodeca
+//= depend_on javascripts/n
 
 
-/*global window, $, _, nodeca*/
+/*global window, $, _, N*/
 
 
 (function () {
   'use strict';
 
 
-  var events = { 'before.rpc': [], 'after.rpc': [] },
-      // last xhr to allow interrupt it
-      last_xhr = null;
-
-
+  var
+  // last xhr to allow interrupt it
+  last_xhr = null,
   // exported IO object
-  var io = nodeca.io = <%- JSON.stringify(nodeca('io')) %>;
+  io = N.io = <%- JSON.stringify(N.io) %>;
 
 
   // error constructor
@@ -34,63 +32,22 @@
 
 
   //
-  // Events
-  //
-
-
-  function emit(name, args) {
-    if (!events[name]) {
-      return;
-    }
-
-    args = args || [];
-
-    $.each(events[name], function (i, func) {
-      try {
-        func.apply(null, args);
-      } catch (err) {
-        // do not interrupt event handlers chain
-        // !!! THIS SHOULD NEVER HAPPEN !!!
-        nodeca.logger.error(err);
-      }
-    });
-  }
-
-
-  /**
-   *  nodeca.io.on(name, callback) -> Void
-   *
-   *  ##### Known events
-   *
-   *  - `rpc.request`
-   *  - `rpc.complete`
-   **/
-  io.on = function on(name, callback) {
-    if (!events[name]) {
-      events[name] = [];
-    }
-
-    events[name].push(callback);
-  };
-
-
-  //
   // Main API
   //
 
 
   /**
-   *  nodeca.io.apiTree(name, params, options, callback) -> Void
-   *  nodeca.io.apiTree(name, params[, callback]) -> Void
-   *  nodeca.io.apiTree(name, callback) -> Void
+   *  N.io.apiTree(name, params, options, callback) -> Void
+   *  N.io.apiTree(name, params[, callback]) -> Void
+   *  N.io.apiTree(name, callback) -> Void
    **/
   io.apiTree = function apiTree(name, params, options, callback) {
     var xhr, payload;
 
     payload = {
-      version:  nodeca.runtime.version,
+      version:  N.runtime.version,
       method:   name,
-      csrf:     nodeca.runtime.csrf
+      csrf:     N.runtime.csrf
     };
 
     // Scenario: apiTree(name, callback);
@@ -125,8 +82,8 @@
     // Send request
     //
 
-    nodeca.logger.debug('API3 Sending request', payload);
-    emit('rpc.request');
+    N.logger.debug('API3 Sending request', payload);
+    N.emit('io.request');
 
     xhr = last_xhr = $.post('/io/rpc', payload);
 
@@ -137,17 +94,17 @@
     xhr.success(function (data) {
       data = data || {};
 
-      nodeca.logger.debug('API3 Received data', data);
+      N.logger.debug('API3 Received data', data);
 
-      if (data.version !== nodeca.runtime.version) {
+      if (data.version !== N.runtime.version) {
         data.error = error(io.EWRONGVER, 'Client version does not match server.');
         delete data.response;
       }
 
       // if invalid CSRF token error and retry is allowed
-      if (data.error && nodeca.io.INVALID_CSRF_TOKEN === data.error.code && options._retryOnCsrfError) {
+      if (data.error && N.io.INVALID_CSRF_TOKEN === data.error.code && options._retryOnCsrfError) {
         // renew CSRF token
-        nodeca.runtime.csrf = error.data;
+        N.runtime.csrf = error.data;
 
         // only one attempt to retry is allowed
         options._retryOnCsrfError = false;
@@ -158,10 +115,10 @@
       }
 
       if (data.error) {
-        emit('rpc.error', [data.error]);
+        N.emit('io.error', data.error);
       }
 
-      emit('rpc.complete');
+      N.emit('io.complete');
 
       // run actual callback
       callback(data.error, data.response);
@@ -180,13 +137,13 @@
         return;
       }
 
-      nodeca.logger.error('Failed RPC call: ' + status, jqXHR);
+      N.logger.error('Failed RPC call: ' + status, jqXHR);
 
       // any non-abort error - is communication problem
-      err = error(nodeca.io.ECOMMUNICATION, 'Communication error');
+      err = error(N.io.ECOMMUNICATION, 'Communication error');
 
-      emit('rpc.error', [err]);
-      emit('rpc.complete');
+      N.emit('io.error', err);
+      N.emit('io.complete');
 
       callback(err);
     });
