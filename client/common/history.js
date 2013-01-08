@@ -14,7 +14,7 @@
  **/
 
 
-/*global $, nodeca, window, document, loadAssets*/
+/*global $, N, window, document, loadAssets*/
 
 
 var History = window.History; // History.js
@@ -57,7 +57,7 @@ function normalizeURL(url) {
  *
  *  ##### Example
  *
- *      nodeca.client.common.history.init();
+ *      N.client.common.history.init();
  **/
 module.exports.init = function () {
   if (!History.enabled) {
@@ -85,7 +85,7 @@ module.exports.init = function () {
   function find_match_data(url, anchor) {
     var parts   = String(url).split('#'),
         href    = String(parts[0]),
-        match   = nodeca.runtime.router.match(href);
+        match   = N.runtime.router.match(href);
 
     // make sure anchor is an empty string or an id with hash prefix
     anchor = String(anchor || parts[1] || '').replace(/^#?(.*)/, '$1');
@@ -102,8 +102,8 @@ module.exports.init = function () {
   function exec_api3_call(data, callback) {
     var match = data[0], href = data[1], anchor = data[2];
 
-    nodeca.io.apiTree(match.meta, match.params, function (err, msg) {
-      if (err && (nodeca.io.REDIRECT === err.code)) {
+    N.io.rpc(match.meta, match.params, function (err, msg) {
+      if (err && (N.io.REDIRECT === err.code)) {
         // note, that we try to keep anchor, if exists.
         // that's important for moved threads & last pages redirects
 
@@ -115,7 +115,7 @@ module.exports.init = function () {
         return;
       }
 
-      if (err && (nodeca.io.ECONNECTION === err.code)) {
+      if (err && (N.io.ECONNECTION === err.code)) {
         // No need to do anything.
         // User already notified that he needs to try again later
         return;
@@ -198,7 +198,7 @@ module.exports.init = function () {
       return;
     }
 
-    nodeca.client.common.render.page(data.view, data.locals, data.layout, function () {
+    N.client.common.render.page(data.view, data.locals, data.layout, function () {
       // scroll to element only when we handle user click
       if (allowScrollTo) {
         // if anchor is given try to find matching element
@@ -272,7 +272,7 @@ module.exports.init = function () {
 
     exec_api3_call([
       { meta: apiPath, params: params },
-      nodeca.runtime.router.linkTo(apiPath, params),
+      N.runtime.router.linkTo(apiPath, params),
       anchor
     ], History.pushState);
   };

@@ -37,11 +37,11 @@
 
 
   /**
-   *  N.io.apiTree(name, params, options, callback) -> Void
-   *  N.io.apiTree(name, params[, callback]) -> Void
-   *  N.io.apiTree(name, callback) -> Void
+   *  N.io.rpc(name, params, options, callback) -> Void
+   *  N.io.rpc(name, params[, callback]) -> Void
+   *  N.io.rpc(name, callback) -> Void
    **/
-  io.apiTree = function apiTree(name, params, options, callback) {
+  io.rpc = function rpc(name, params, options, callback) {
     var xhr, payload;
 
     payload = {
@@ -50,13 +50,13 @@
       csrf:     N.runtime.csrf
     };
 
-    // Scenario: apiTree(name, callback);
+    // Scenario: rpc(name, callback);
     if (_.isFunction(params)) {
       callback = params;
       params   = options  = {};
     }
 
-    // Scenario: apiTree(name, params[, callback]);
+    // Scenario: rpc(name, params[, callback]);
     if (_.isFunction(options)) {
       callback = options;
       options = {};
@@ -110,7 +110,7 @@
         options._retryOnCsrfError = false;
 
         // try again
-        io.apiTree(name, params, options, callback);
+        io.rpc(name, params, options, callback);
         return;
       }
 

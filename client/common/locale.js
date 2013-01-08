@@ -1,15 +1,15 @@
 'use strict';
 
 
-/*global window, nodeca*/
+/*global window, N*/
 
 
 module.exports = function ($el) {
   var locale = $el.data('locale');
 
-  nodeca.server.common.locale({ locale: locale }, function (err) {
+  N.io.rpc('common.locale', { locale: locale }, function (err) {
     if (!err) {
-      nodeca.runtime.locale = locale;
+      N.runtime.locale = locale;
       window.location.reload();
     }
   });
