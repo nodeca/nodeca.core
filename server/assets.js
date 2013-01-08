@@ -16,13 +16,14 @@ var Mincer  = require('mincer');
 module.exports = function (N, apiPath) {
   var
   logger = N.logger.getLogger('server.assets'),
-  server = null; // see getServer() below
+  server = new Mincer.Server(N.runtime.assets.environment,
+                             N.runtime.assets.manifest);
 
   //
   // Formats and writes log event into our logger
   //
 
-  function logAssets(level, event) {
+  server.log = function logAssets(level, event) {
     logger[level]('%s - "%s %s HTTP/%s" %d "%s" - %s',
                   event.remoteAddress,
                   event.method,
@@ -31,21 +32,7 @@ module.exports = function (N, apiPath) {
                   event.code,
                   event.headers['user-agent'],
                   event.message);
-  }
-
-  //
-  // lazy-loaded server
-  //
-
-  function getServer() {
-    if (!server) {
-      server = new Mincer.Server(N.runtime.assets.environment,
-                                 N.runtime.assets.manifest);
-      server.log = logAssets;
-    }
-
-    return server;
-  }
+  };
 
   //
   // Validate input parameters
@@ -72,6 +59,6 @@ module.exports = function (N, apiPath) {
     }
 
     this.origin.http.req.url = params.path;
-    getServer().handle(this.origin.http.req, this.origin.http.res);
+    server.handle(this.origin.http.req, this.origin.http.res);
   };
 };
