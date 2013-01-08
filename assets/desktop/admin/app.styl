@@ -1,22 +1,12 @@
 /**
-
  *= require vendor/bootstrap/bootstrap_admin
  *= require vendor/fontello/icons
-
+ *= require styles
  *= require_self
-
  **/
 
-@import 'nib'
-@import '../common/variables.styl'
+@import "nib"
+@import "@common/variables"
 
-//@import '../common/bootstrap_override.styl'
-
-@import '../common/lib/nojs.styl'
-@import '../common/lib/notifications.styl'
-//@import '../common/lib/breadcrumbs.styl'
-
-@import './layout.base.styl'
-
-@import './lib/switch.styl'
-@import './lib/settings.styl'
+@import "@common/lib/nojs.styl"
+@import "@common/lib/notifications.styl"
