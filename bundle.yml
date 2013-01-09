@@ -38,6 +38,14 @@ packages:
       main:       "desktop/common/app.styl"
       include:    "desktop/common/**.styl"
 
+    models:
+      root:       "./models"
+      include:    "**.js"
+
+    stores:
+      root:       "./stores"
+      include:    "**.js"
+
   core:
     server:
       root:       "./server"

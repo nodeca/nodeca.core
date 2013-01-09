@@ -1,35 +1,24 @@
 'use strict';
 
 
-/**
- *  models
- **/
+var Mongoose = require('mongoose');
+var Schema   = Mongoose.Schema;
 
 
-/**
- *  class models.user_group
- *
- *  Description of the model.
- **/
+////////////////////////////////////////////////////////////////////////////////
 
 
-/*global nodeca*/
-
-var mongoose = nodeca.components.mongoose;
-
-
-/**
- *  new models.user_group()
- **/
-module.exports = new mongoose.Schema({
-  // shortcut name for the group
-  name:     { type: String },
-  // human readable title
-  title:    { type: String },
-  settings: { type: mongoose.Schema.Types.Mixed, default: {}}
-});
+module.exports = function (N, apiPath) {
+  var UserGroup = new Schema({
+    // shortcut name for the group
+    name:     { type: String },
+    // human readable title
+    title:    { type: String },
+    settings: { type: Schema.Types.Mixed, default: {}}
+  });
 
 
-module.exports.__init__ = function () {
-  return mongoose.model('user_group', module.exports);
+  UserGroup.__init__ = function () {
+    return Mongoose.model(apiPath, UserGroup);
+  };
 };

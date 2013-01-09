@@ -1,31 +1,21 @@
 'use strict';
 
 
-/**
- *  models
- **/
+var Mongoose = require('mongoose');
+var Schema   = Mongoose.Schema;
 
 
-/**
- *  class models.app_settings
- *
- *  Description of the model.
- **/
+////////////////////////////////////////////////////////////////////////////////
 
 
-/*global nodeca*/
-
-var mongoose = nodeca.components.mongoose;
-
-/**
- *  new models.app_settings()
- **/
-module.exports = new mongoose.Schema({
-  app_name: { type: String },
-  settings: { type: mongoose.Schema.Types.Mixed, default: {}}
-});
+module.exports = function (N, apiPath) {
+  var AppSettings = new Schema({
+    app_name: { type: String },
+    settings: { type: Schema.Types.Mixed, default: {}}
+  });
 
 
-module.exports.__init__ = function () {
-  return mongoose.model('app_settings', module.exports);
+  AppSettings.__init__ = function () {
+    return Mongoose.model(apiPath, AppSettings);
+  };
 };
