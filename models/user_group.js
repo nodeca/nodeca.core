@@ -21,4 +21,7 @@ module.exports = function (N, apiPath) {
   UserGroup.__init__ = function () {
     return Mongoose.model(apiPath, UserGroup);
   };
+
+
+  return UserGroup;
 };

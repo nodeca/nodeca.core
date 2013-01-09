@@ -18,4 +18,7 @@ module.exports = function (N, apiPath) {
   AppSettings.__init__ = function () {
     return Mongoose.model(apiPath, AppSettings);
   };
+
+
+  return AppSettings;
 };
