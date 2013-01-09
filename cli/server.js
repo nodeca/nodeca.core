@@ -31,6 +31,9 @@ module.exports.commandLineArguments = [
 module.exports.run = function (args, callback) {
 
   async.series([
+    function (next) { N.logger.debug('Init tree...'); next(); },
+    require('../lib/system/init/tree'),
+
     function (next) { N.logger.debug('Init app...'); next(); },
     require('../lib/system/init/app'),
 
