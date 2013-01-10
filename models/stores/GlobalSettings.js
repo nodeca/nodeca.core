@@ -8,7 +8,7 @@ var Schema   = Mongoose.Schema;
 ////////////////////////////////////////////////////////////////////////////////
 
 
-module.exports = function (N, apiPath) {
+module.exports = function (N, collectionName) {
   var GlobalSettings = new Schema({
     _id: { type: String, unique: true},
     value: { type: Schema.Types.Mixed, default: {}}
@@ -41,7 +41,7 @@ module.exports = function (N, apiPath) {
 
 
   GlobalSettings.__init__ = function __init__() {
-    return Mongoose.model(apiPath, GlobalSettings);
+    return Mongoose.model(collectionName, GlobalSettings);
   };
 
 

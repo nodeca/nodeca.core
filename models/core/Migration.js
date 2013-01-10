@@ -7,7 +7,7 @@ var Mongoose = require('mongoose');
 ////////////////////////////////////////////////////////////////////////////////
 
 
-module.exports = function (N, apiPath) {
+module.exports = function (N, collectionName) {
   /**
    *  new models.core.Migration()
    *
@@ -61,17 +61,9 @@ module.exports = function (N, apiPath) {
 
 
   Migration.__init__ = function __init__() {
-    return Mongoose.model(apiPath, Migration);
+    return Mongoose.model(collectionName, Migration);
   };
 
 
   return Migration;
 };
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-
