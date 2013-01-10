@@ -29,15 +29,13 @@ module.exports.commandLineArguments = [
 
 
 module.exports.run = function (args, callback) {
-
   async.series([
-    function (next) { N.logger.debug('Init tree...'); next(); },
-    require('../lib/system/init/tree'),
-
-    function (next) { N.logger.debug('Init app...'); next(); },
-    require('../lib/system/init/app'),
-
-    function (next) { N.logger.debug('Init server...'); next(); },
+    require('../lib/system/init/bundle'),
+    require('../lib/system/init/redis'),
+    require('../lib/system/init/mongoose'),
+    require('../lib/system/init/models'),
+    require('../lib/system/init/stores'),
+    require('../lib/system/init/router'),
     require('../lib/system/init/server')
   ], function (err) {
     if (err) {
