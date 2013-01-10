@@ -16,9 +16,8 @@ var N = window.N = (function (N) {
   N.runtime         = JSON.parse($('meta[name="runtime"]').attr('content'));
   N.runtime.env     = <%- JSON.stringify(N.runtime.env) %>;
   N.runtime.version = <%- JSON.stringify(N.runtime.version) %>;
-  N.runtime.locale  = "en-US";
   N.runtime.router  = new Pointer();
-  N.runtime.i18n    = new BabelFish({});
+  N.runtime.i18n    = new BabelFish(<%- JSON.stringify(N.config.locales["default"]) %>);
 
   // translations injector
   N.runtime.i18n.load = function loadTranslations(lang, data) {
