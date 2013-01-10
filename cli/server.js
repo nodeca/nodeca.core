@@ -34,8 +34,10 @@ module.exports.run = function (args, callback) {
     require('../lib/system/init/mongoose'),
     require('../lib/system/init/models'),
     require('../lib/system/init/stores'),
-    require('../lib/system/init/router'),
     require('../lib/system/init/bundle'),
+    // router needs to go after bundle,
+    // as server tree got polluted in bundle
+    require('../lib/system/init/router'),
     require('../lib/system/init/server')
   ], function (err) {
     if (err) {
