@@ -30,12 +30,12 @@ module.exports.commandLineArguments = [
 
 module.exports.run = function (args, callback) {
   async.series([
-    require('../lib/system/init/bundle'),
     require('../lib/system/init/redis'),
     require('../lib/system/init/mongoose'),
     require('../lib/system/init/models'),
     require('../lib/system/init/stores'),
     require('../lib/system/init/router'),
+    require('../lib/system/init/bundle'),
     require('../lib/system/init/server')
   ], function (err) {
     if (err) {
