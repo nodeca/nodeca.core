@@ -15,6 +15,10 @@ var loadAssets = window.loadAssets = (function () {
   var assets;
 
 
+  // hash that keeps track on loaded assets
+  var loaded = {};
+
+
   // check if `obj` is a function
   function isFunction(obj) {
     return '[object Function]' === Object.prototype.toString.call(obj);
@@ -35,31 +39,50 @@ var loadAssets = window.loadAssets = (function () {
   function noop() {}
 
 
-  // TODO: track already loaded resources
+  // helper that reports about unknown namespace
+  function unknownNamespaceError(namespace) {
+    alert("namespace " + namespace + " has no resources");
+  }
 
 
   function loadAssets(namespace, callback) {
-    var resources = [];
+    var resources = [], data = ;
 
-    if (!assets[namespace] || !!assets[namespace].loaded) {
-      (callback || noop)();
+    callback = callback || noop;
+
+    if (!assets[namespace]) {
+      unknownNamespaceError(namespace);
+      callback();
       return;
     }
 
-    resources = resources.concat(assets[namespace].css || []);
-    resources = resources.concat(assets[namespace].js || []);
+    if (assets[namespace].css && !loaded[assets[namespace].css]) {
+      resources.push(assets[namespace].css);
+    }
+
+    if (assets[namespace].js && !loaded[assets[namespace].js]) {
+      resources.push(assets[namespace].js);
+    }
+
+    if (!resources.length) {
+      callback();
+      return;
+    }
 
     yepnope({
       load:     resources,
       complete: function () {
-        assets[namespace].loaded = true;
-        (callback || noop)();
+        forEach(resources, function (res) {
+          loaded[res] = true;
+        });
+
+        callback();
       }
     });
   }
 
 
-  // internal helper used by loadAssets, init that loads resources and fires
+  // internal helper used by loadAssets.init() that loads resources and fires
   // callback only once all resources were injected.
   function loadResources(resources, callback) {
     var i, count = resources.length;
@@ -85,16 +108,13 @@ var loadAssets = window.loadAssets = (function () {
 
   // loads all necessary shims and libraries and assets for given namespace
   loadAssets.init = function init(assetsMap, namespace) {
-    var resources = [], namespaces;
+    var resources = [];
 
     // set internal assets map
     assets = assetsMap;
 
     // init can be called only once
     loadAssets.init = noop;
-
-    // set list of requried namespaces
-    namespaces = 'admin' === namespace ? [namespace] : ['common', namespace];
 
     //
     // Fill resources with shims and polyfills
@@ -108,30 +128,41 @@ var loadAssets = window.loadAssets = (function () {
     });
 
     //
-    // Add resource with assets of required namespaces
+    // Make sure required namespace has resources
     //
 
-    forEach(namespaces, function (ns) {
-      if (assets[ns] && assets[ns].js && assets[ns].js.length) {
-        resources.push({ load: assets[ns].js });
-      }
-    });
+    if (!data) {
+      unknownNamespaceError(namespace);
+      return;
+    }
+
+    //
+    // Notify that initial assets were loaded.
+    // CSS files must be explicitly loaded within layout.
+    //
+
+
+    if (assets[namespace].css) {
+      loaded[assets[namespace].css] = true;
+    }
+
+    if (assets[namespace].js) {
+      loaded[assets[namespace].js] = true;
+      resources.push({ load: assets[namespace].js });
+    }
 
     //
     // Queue assets injections
     //
 
     loadResources(resources, function () {
-      var scope = window.N.client['admin' === namespace ? 'admin' : 'common'];
-
-      if (window._.isFunction(scope.init)) {
-        scope.init();
-      };
+      N.emit('init_complete');
     });
   };
 
 
   return loadAssets;
 }());
+
 
 // vim: filetype=javascript:syntax=javascript
