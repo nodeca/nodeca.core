@@ -1,112 +1,107 @@
 "use strict";
 
 
-/*global nodeca*/
+/*global N*/
 
-// nodeca
-var NLib = require('nlib');
 
-var Async = NLib.Vendor.Async;
+// 3rd-party
+var async = require('async');
 
-module.exports.commandName = "migrate";
 
-module.exports.parserParameters = {
-  addHelp: true,
-  description: 'Without args show new migrations. With ' +
-    ' `--all` run all migrations.',
-  help: 'run migrations'
+////////////////////////////////////////////////////////////////////////////////
+
+
+exports.commandName       = "migrate";
+exports.parserParameters  = {
+  addHelp:      true,
+  help:         'run migrations',
+  description:  'Without args show new migrations. With ' +
+                ' `--all` run all migrations.'
 };
 
 module.exports.commandLineArguments = [
   {
     args: ['--all'],
     options: {
-      help: 'run all migrations',
+      help:   'run all migrations',
       action: 'storeTrue'
     }
   }
 ];
 
 module.exports.run = function (args, callback) {
-  Async.series([
-    require('../lib/init/redis'),
-    require('../lib/init/mongoose'),
-    NLib.InitStages.loadModels,
+  async.series([
+    require('../lib/system/init/redis'),
+    require('../lib/system/init/mongoose'),
+    require('../lib/system/init/models'),
   ], function (err) {
     if (err) {
       callback(err);
       return;
     }
 
-    var Migration = nodeca.models.core.Migration;
-    var migrator = nodeca.runtime.migrator;
+    var Migration       = N.models.core.Migration;
+    var checkMigrations = require('../lib/system/migrator').checkMigrations;
 
     // fetch used migrations from db
-    Migration.getLastState(function (err, last_state) {
+    Migration.getLastState(function (err, currentMigrations) {
+      var outstandingMigrations;
+
       if (err) {
         callback(err);
         return;
       }
 
-      // find new migrations
-      migrator.checkMigrations(last_state, function (err, new_migrations) {
+      outstandingMigrations = checkMigrations(currentMigrations);
+
+      if (0 === outstandingMigrations.length) {
+        console.log(args.all  ? 'Already up-to-date.'
+                              : 'You have no outstanding migrations');
+        process.exit(0);
+      }
+
+      function formatMigrationTitle(migration) {
+        return migration.appName + ':' + migration.step;
+      }
+
+      if (!args.all) {
+        console.log('You have ' + outstandingMigrations.length +
+                    ' outstanding migration(s):\n');
+
+        outstandingMigrations.forEach(function (migration) {
+          console.log('  ' + formatMigrationTitle(migration));
+        });
+
+        console.log('\nRun `migrate` command with `--all` to apply them.');
+        process.exit(0);
+      }
+
+      console.log('Applying ' + outstandingMigrations.length +
+                  ' outstanding migration(s):\n');
+
+      async.forEachSeries(outstandingMigrations, function (migration, next) {
+        process.stdout.write('  ' + formatMigrationTitle(migration) + ' ... ');
+
+        migration.up(function (err) {
+          if (err) {
+            console.log('FATAL');
+            next(err);
+            return;
+          }
+
+          // All ok. Write step to db
+          Migration.markPassed(migration.appName, migration.step, function (err) {
+            console.log(err ? 'FAILED' : 'OK');
+            next(err);
+          });
+        });
+      }, function (err) {
         if (err) {
           callback(err);
           return;
         }
 
-        if (0 === new_migrations.length) {
-          console.log(args.all ? 'Already up-to-date.' :
-                      'You have no outstanding migrations');
-          process.exit(0);
-        }
-
-        if (!args.all) {
-          console.log('You have ' + new_migrations.length +
-                      ' outstanding migration(s):\n');
-        } else {
-          console.log('Applying ' + new_migrations.length +
-                      ' outstanding migration(s):\n');
-        }
-
-        Async.forEachSeries(new_migrations, function (migration, next_migration) {
-          var migration_title = '  ' + migration.app_name + ':' + migration.step;
-
-          if (!args.all) {
-            console.log(migration_title);
-            next_migration();
-            return;
-          }
-
-          migrator.runMigration(migration, function (err) {
-            if (err) {
-              next_migration(err);
-              return;
-            }
-
-            // All ok. Write step to db
-            Migration.markPassed(migration.app_name, migration.step, function (err) {
-              if (!err) {
-                console.log(migration_title + ' -- success');
-              } else {
-                console.log(migration_title + ' -- failed');
-              }
-
-              next_migration(err);
-            });
-          });
-        }, function (err) {
-          if (err) {
-            callback(err);
-            return;
-          }
-
-          if (!args.all) {
-            console.log('\nRun `migrate` command with `--all` to apply them.');
-          }
-
-          process.exit(0);
-        });
+        process.exit(0);
       });
     });
   });
