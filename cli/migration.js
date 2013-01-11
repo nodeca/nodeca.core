@@ -80,14 +80,13 @@ module.exports.run = function (args, callback) {
                   ' outstanding migration(s):\n');
 
       async.forEachSeries(outstandingMigrations, function (migration, next) {
-        process.stdout.write('  ' + formatMigrationTitle(migration) + ' ... ');
-
         migration.up(function (err) {
           if (err) {
-            console.log('FATAL');
             next(err);
             return;
           }
+
+          process.stdout.write('  ' + formatMigrationTitle(migration) + ' ... ');
 
           // All ok. Write step to db
           Migration.markPassed(migration.appName, migration.step, function (err) {
