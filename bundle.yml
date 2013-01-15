@@ -1,7 +1,12 @@
 bundles:
   frontend:
+    - lib
     - core
     - common
+
+  backend:
+    - lib
+    - core
     - admin
 
 
@@ -49,3 +54,10 @@ packages:
       include:    "*.jade"
       exclude:    "/(^|\\/)_.*/"
       apiPrefix:  "layouts"
+
+  lib:
+    bin:
+      root:       "./assets"
+      include:
+        - lib.js
+        - loader.js
