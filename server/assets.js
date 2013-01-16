@@ -38,12 +38,12 @@ module.exports = function (N, apiPath) {
   // Validate input parameters
   //
 
-  N.validate(apiPath, {
+  N.validate(apiPath, { additionalProperties: true, properties: {
     path: {
       type: "string",
       required: true
     }
-  });
+  }});
 
   /**
    *  server.assets(params, callback) -> Void
