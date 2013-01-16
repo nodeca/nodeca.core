@@ -26,13 +26,15 @@ module.exports = function (N, apiPath) {
   // Validate input parameters
   //
 
-  N.validate(apiPath, { additionalProperties: true, properties: {
-    file: {
-      type: "string",
-      required: true
+  N.validate(apiPath, {
+    additionalProperties: true,
+    properties: {
+      file: {
+        type: "string",
+        required: true
+      }
     }
-  }});
-
+  });
 
   /**
    *  server.static(params, callback) -> Void
