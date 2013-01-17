@@ -1,11 +1,10 @@
 "use strict";
 
 
-/*global nodeca, _*/
+/*global N, _*/
 
 
-var NLib  = require('nlib');
-var Async = NLib.Vendor.Async;
+var async = require("async");
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -21,7 +20,7 @@ function sort_nums_asc(a, b) {
 
 
 module.exports.parserParameters = {
-  version:      nodeca.runtime.version,
+  version:      N.runtime.version,
   addHelp:      true,
   help:         'list registeres filters',
   description:  'List registered filters'
@@ -43,10 +42,11 @@ module.exports.commandLineArguments = [
 
 module.exports.run = function (args, callback) {
   Async.series([
-    require('../lib/init/redis'),
-    require('../lib/init/mongoose'),
-    NLib.InitStages.loadModels,
-    NLib.InitStages.loadServerApiSubtree
+    require('../lib/system/init/redis'),
+    require('../lib/system/init/mongoose'),
+    require('../lib/system/init/models'),
+    // bundle loads server
+    require('../lib/system/init/bundle')
   ], function (err) {
     if (err) {
       callback(err);
@@ -57,7 +57,7 @@ module.exports.run = function (args, callback) {
       return args.apiPaths.length && !_.include(args.apiPaths, apiPath || 'global');
     }
 
-    _.each(nodeca.filters.__hooks__, function (hooks, apiPath) {
+    _.each(N.filters.__hooks__, function (hooks, apiPath) {
       if (skipApiPath(apiPath)) {
         return;
       }
@@ -66,7 +66,7 @@ module.exports.run = function (args, callback) {
       console.log(apiPath || '<GLOBAL>');
 
       ['before', 'after', 'ensure'].forEach(function (chain) {
-        var prios = Object.keys(nodeca.filters.__hooks__[apiPath][chain].__sequences__);
+        var prios = Object.keys(N.filters.__hooks__[apiPath][chain].__sequences__);
 
         if (!prios.length) {
           return;
@@ -75,7 +75,7 @@ module.exports.run = function (args, callback) {
         console.log('  *** ' + chain + ':');
 
         prios.sort(sort_nums_asc).forEach(function (prio) {
-          _.each(nodeca.filters.__hooks__[apiPath][chain].__sequences__[prio], function (filter) {
+          _.each(N.filters.__hooks__[apiPath][chain].__sequences__[prio], function (filter) {
             console.log('   ' + prio + ' ' + (filter.func.name || '<anonymous>'));
 
             if (filter.exclude.length) {
