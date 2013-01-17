@@ -7,7 +7,7 @@
 // 3rd-party
 var _     = underscore;
 var async = require('async');
-var Store = require('nlib').Settings.Store;
+var Store = require('nlib/lib/nlib/settings/store');
 
 
 ////////////////////////////////////////////////////////////////////////////////
