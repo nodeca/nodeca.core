@@ -12,7 +12,7 @@ var async = require('async');
 ////////////////////////////////////////////////////////////////////////////////
 
 
-module.exports = function (N, apiPath) {
+module.exports = function (N) {
   var Model = N.models.stores.GlobalSettings;
 
   var GlobalStore = N.settings.createStore({
