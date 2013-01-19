@@ -7,7 +7,6 @@
 // 3rd-party
 var _     = underscore;
 var async = require('async');
-var Store = require('nlib/lib/nlib/settings/store');
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -16,7 +15,7 @@ var Store = require('nlib/lib/nlib/settings/store');
 module.exports = function (N, apiPath) {
   var Model = N.models.stores.GlobalSettings;
 
-  var GlobalStore = new Store({
+  var GlobalStore = N.settings.createStore({
     get: function (keys, params, options, callback) {
       var results = {};
 
