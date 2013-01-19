@@ -1,14 +1,14 @@
-//= require jquery/jquery
-//= require powertip/jquery.powertip
+//= require vendor/jquery/jquery
+//= require vendor/powertip/jquery.powertip
 
-//= require underscore
-//= require bootstrap/bootstrap
+//= require vendor/underscore
+//= require vendor/bootstrap/bootstrap
 //= require babelfish-runtime
 //= require pointer
-//= require history/history.adapter.jquery
-//= require history/history
-//= require jade/runtime
+//= require vendor/history/history.adapter.jquery
+//= require vendor/history/history
+//= require vendor/jade/runtime
 
 //= require_tree ./lib
 
-//= require n
+//= require ./n
