@@ -44,23 +44,23 @@ module.exports = function (N, apiPath) {
    *  Middleware that serves static assets from `public/root` directory under the
    *  main application root path.
    **/
-  return function (params, callback) {
+  return function (env, callback) {
     var req, res;
 
-    if (!this.origin.http) {
+    if (!env.origin.http) {
       callback(N.io.BAD_REQUEST);
       return;
     }
 
-    req = this.origin.http.req;
-    res = this.origin.http.res;
+    req = env.origin.http.req;
+    res = env.origin.http.res;
 
     if ('GET' !== req.method && 'HEAD' !== req.method) {
       callback(N.io.BAD_REQUEST);
       return;
     }
 
-    send(req, params.file)
+    send(req, env.params.file)
       .root(root)
       .on('error', function (err) {
         if (404 === err.status) {

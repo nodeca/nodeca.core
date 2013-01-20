@@ -19,9 +19,9 @@ module.exports = function (N, apiPath) {
     }
   });
 
-  return function (params, next) {
-    var data = this.response.data;
-    var category_name = params.id;
+  return function (env, next) {
+    var data = env.response.data;
+    var category_name = env.params.id;
 
     data.category_name = category_name;
 

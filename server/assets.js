@@ -55,13 +55,13 @@ module.exports = function (N, apiPath) {
    *
    *  Mincer assets server middleware.
    **/
-  return function (params, callback) {
-    if (!this.origin.http) {
+  return function (env, callback) {
+    if (!env.origin.http) {
       callback(N.io.BAD_REQUEST);
       return;
     }
 
-    this.origin.http.req.url = params.path;
-    server.handle(this.origin.http.req, this.origin.http.res);
+    env.origin.http.req.url = env.params.path;
+    server.handle(env.origin.http.req, env.origin.http.res);
   };
 };
