@@ -17,6 +17,11 @@ packages:
       include:    "*.js"
       exclude:    "/(^|\\/)_.*/"
 
+    client:
+      root:       "./client/admin"
+      include:    "*.js"
+      exclude:    "/(^|\\/)_.*/"
+
     views:
       root:       "./views/desktop/admin"
       include:    "*.jade"
@@ -59,5 +64,5 @@ packages:
     bin:
       root:       "./assets"
       include:
-        - javascritps/lib.js
-        - javascritps/loader.js
+        - javascripts/lib.js
+        - javascripts/loader.js.ejs

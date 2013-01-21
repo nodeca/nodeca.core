@@ -1,5 +1,5 @@
-//= require modernizr.custom
-//= require yepnope
+//= require vendor/modernizr.custom
+//= require vendor/yepnope
 //= require_self
 
 
@@ -46,7 +46,7 @@ var loadAssets = window.loadAssets = (function () {
 
 
   function loadAssets(namespace, callback) {
-    var resources = [], data = ;
+    var resources = [];
 
     callback = callback || noop;
 
@@ -124,14 +124,22 @@ var loadAssets = window.loadAssets = (function () {
       //  JSON is required for Opera < 11 + IE < 8
       //  See: http://caniuse.com/json
       test: !!window.JSON,
-      nope: <%- JSON.stringify(asset_path('json2.js')) %>
+      nope: <%- JSON.stringify(asset_path('vendor/json2.js')) %>
+    });
+
+    //
+    // Make sure initial loader will include library
+    //
+
+    resources.push({
+      load: <%- JSON.stringify(asset_path('javascripts/lib.js')) %>
     });
 
     //
     // Make sure required namespace has resources
     //
 
-    if (!data) {
+    if (!assets[namespace]) {
       unknownNamespaceError(namespace);
       return;
     }
@@ -140,7 +148,6 @@ var loadAssets = window.loadAssets = (function () {
     // Notify that initial assets were loaded.
     // CSS files must be explicitly loaded within layout.
     //
-
 
     if (assets[namespace].css) {
       loaded[assets[namespace].css] = true;

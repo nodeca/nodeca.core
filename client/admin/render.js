@@ -23,7 +23,7 @@ var helpers  = {};
 ////////////////////////////////////////////////////////////////////////////////
 
 
-helpers.t = nodeca.runtime.t;
+helpers.t = N.runtime.t;
 
 
 helpers.date = function (value, format) {
