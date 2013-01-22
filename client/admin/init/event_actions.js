@@ -14,15 +14,18 @@
  **/
 
 
-/*global $, _, nodeca, loadAssets*/
+/*global $, _, N, loadAssets*/
+
+
+var getByPath = require("../../../lib/getByPath");
 
 
 function handleAction(event, $el, apiPath) {
   loadAssets(apiPath.split('.').shift(), function () {
-    var func = nodeca.shared.getByPath(nodeca.client, apiPath);
+    var func = getByPath(N.client, apiPath);
 
     if (!_.isFunction(func)) {
-      nodeca.logger.error('Action ' + apiPath + ' not found');
+      N.logger.error('Action ' + apiPath + ' not found');
       return;
     }
 

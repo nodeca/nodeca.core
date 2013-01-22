@@ -1,29 +1,12 @@
 'use strict';
 
 
-/**
- *  client
- **/
-
-/**
- *  client.admin
- **/
+/*global $, underscore, N*/
 
 
-/*global $, _, nodeca*/
+N.once("init_complete", function () {
+  var _ = underscore;
 
-
-/**
- *  client.admin.init()
- *
- *  Assigns all necessary event listeners and handlers.
- *
- *
- *  ##### Example
- *
- *      nodeca.client.admin.init();
- **/
-module.exports = function () {
   $(function () {
     // Bootstrap.Collapse calls e.preventDefault() only when there's no
     // data-target attribute. We don't want URL to be changed, so we are
@@ -48,9 +31,9 @@ module.exports = function () {
   // Underscore, treats all objects with `length` proprerty as an array,
   // thus it can't be used here.
   //
-  $.each(nodeca.client.admin.init, function (idx, func) {
+  $.each(N.client.admin.init, function (idx, func) {
     if (_.isFunction(func)) {
       func();
     }
   });
-};
+});

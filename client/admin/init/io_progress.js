@@ -14,11 +14,14 @@
  **/
 
 
-/*global $, nodeca*/
+/*global $, N*/
 
 
 var timeout;
 var $notice;
+
+
+var render = require("../../../lib/system/render/client");
 
 
 function hide() {
@@ -39,7 +42,7 @@ function show(message) {
   clearTimeout(timeout);
 
   if (!$notice) {
-    $notice = $(nodeca.client.admin.render.template('admin.io_progress'));
+    $notice = $(render.template('admin.io_progress'));
     $notice.appendTo('body').find('.close').click(hide);
   }
 
@@ -60,20 +63,20 @@ function show(message) {
  *      nodeca.client.admin.init.io_progress();
  **/
 module.exports = function () {
-  nodeca.io.on('rpc.complete', hide);
+  N.on('rpc.complete', hide);
 
-  nodeca.io.on('rpc.request', function () {
+  N.on('rpc.request', function () {
     clearTimeout(timeout);
 
     // schedule showing new message in next 500 ms
     timeout = setTimeout(function () {
-      show(nodeca.runtime.t('admin.io.progress'));
+      show(N.runtime.t('admin.io.progress'));
     }, 500);
   });
 
-  nodeca.io.on('rpc.error', function (err) {
-    if (nodeca.io.EWRONGVER === err.code) {
-      show(nodeca.runtime.t('admin.io.error.version_mismatch'));
+  N.on('rpc.error', function (err) {
+    if (N.io.EWRONGVER === err.code) {
+      show(N.runtime.t('admin.io.error.version_mismatch'));
     }
   });
 };

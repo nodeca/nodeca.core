@@ -1,10 +1,12 @@
-//= require vendor/eventemitter2
 //= require vendor/underscore
+//= require ./wire
 
 //= require_self
 //= require_tree ./n
 
+
 window.underscore  = window._;
+
 
 var N = window.N = (function (N) {
   'use strict';
@@ -78,7 +80,7 @@ var N = window.N = (function (N) {
 
 
   return N;
-}(new EventEmitter2));
+}(new Wire));
 
 
 // vim: syntax=javascript
