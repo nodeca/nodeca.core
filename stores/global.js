@@ -1,11 +1,8 @@
 'use strict';
 
 
-/*global underscore*/
 
-
-// 3rd-party
-var _     = underscore;
+var _     = require('underscore');
 var async = require('async');
 
 

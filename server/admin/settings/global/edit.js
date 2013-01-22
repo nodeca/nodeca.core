@@ -1,10 +1,7 @@
 'use strict';
 
 
-/*global underscore*/
-
-
-var _ = underscore;
+var _ = require('underscore');
 
 
 ////////////////////////////////////////////////////////////////////////////////
