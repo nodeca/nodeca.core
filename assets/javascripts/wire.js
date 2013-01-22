@@ -317,44 +317,24 @@ window.Wire = (function () {
 
 
   /**
-  *  Wire#stat([channel][, options]) -> String
-  *  - `channel` (String):
-  *    List info about specified channel only.
-  *  - options (Object):
+  *  Wire#stat() -> Object
   *
-  *  Returns statistics that includes by default all channels list alphabetically
-  *  sorted with subscribers count; For each sbscriber it shows names and count
-  *  of times it was triggered by far.
+  *  Returns full statictics about all channels. Only channels without wildcards
+  *  are displayed. Each channel has following structures:
   *
-  *  ##### Options
-  *
-  *  - `subscribers` (Boolean, Default: true): List subscribers with their names
-  *    and amount of times they were fired.
+  *  ```
+  *  {
+  *    name: channnelName,
+  *    listeners: Array[handlerStat]
+  *  }
+  *  ```
   **/
-  Wire.prototype.stat = function (channel, options) {
-    var channels;
+  Wire.prototype.stat = function () {
+    var self = this;
 
-    if (channel && !options && _.isObject(channel)) {
-      options = channel;
-      channel = null;
-    }
-
-    options   = _.extend({ subscribers: true }, options);
-    channels  = channel ? [channel] : _.keys(this.__knownChannels__);
-
-    return _.map(channels, function (name) {
-      var
-      stash   = this.getHandlers(name),
-      result  = name + " (" + stash.length + ")";
-
-      if (options.subscribers) {
-        result += "\n" + _.map(stash, function (wh) {
-          return "  " + (wh.func.name || "<anonymous>") + " (" + wh.ncalled + ")";
-        });
-      }
-
-      return result;
-    }).join("\n\n");
+    return _.map(this.__knownChannels__, function (count, name) {
+      return { name : name, listeners: self.getHandlers(name) };
+    });
   };
 
 
