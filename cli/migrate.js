@@ -30,9 +30,8 @@ module.exports.run = function (N, args, callback) {
 
   async.series(
     _.map([
-      require('../lib/system/init/redis'),
-      require('../lib/system/init/mongoose'),
       require('../lib/system/init/models'),
+      require('../lib/system/init/stores'),
     ], function (fn) { return async.apply(fn, N); })
 
     , function (err) {
