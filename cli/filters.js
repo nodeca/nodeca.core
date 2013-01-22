@@ -26,14 +26,24 @@ module.exports.parserParameters = {
 
 module.exports.commandLineArguments = [
   {
-    args:     [ '--api-path' ],
+    args:     [ '-m', '--mask' ],
     options: {
-      dest:         'apiPaths',
-      help:         'Limit output list to the given API path only',
-      action:       'append',
+      dest:   'mask',
+      help:   'Limit output list to the given pattern only (search by substring)',
+      type:   'string',
       defaultValue: []
     }
+  },
+
+  {
+    args:     [ '-s', '--short' ],
+    options: {
+      dest:   'short',
+      help:   'Limit output list to the given API path only',
+      action: 'storeTrue'
+    }
   }
+
 ];
 
 
@@ -58,34 +68,28 @@ module.exports.run = function (N, args, callback) {
         return args.apiPaths.length && !_.include(args.apiPaths, apiPath || 'global');
       }
 
-      _.each(N.filters.__hooks__, function (hooks, apiPath) {
-        if (skipApiPath(apiPath)) {
+      console.log('\n');
+
+      _.each(N.wire.stat(), function (hook) {
+        // try to filter by pattern, if set
+        if (args.mask && (-1 === hook.name.indexOf(args.mask))) {
           return;
         }
 
-        console.log('\n');
-        console.log(apiPath || '<GLOBAL>');
-
-        ['before', 'after', 'ensure'].forEach(function (chain) {
-          var prios = Object.keys(N.filters.__hooks__[apiPath][chain].__sequences__);
-
-          if (!prios.length) {
-            return;
-          }
-
-          console.log('  *** ' + chain + ':');
-
-          prios.sort(sort_nums_asc).forEach(function (prio) {
-            _.each(N.filters.__hooks__[apiPath][chain].__sequences__[prio], function (filter) {
-              console.log('   ' + prio + ' ' + (filter.func.name || '<anonymous>'));
-
-              if (filter.exclude.length) {
-                console.log('    excluding:');
-                console.log('    - ' + filter.exclude.join('\n    - '));
-              }
-            });
+        if (args.short) {
+          // short formst
+          console.log('- ' + hook.name);
+        } else {
+          // long format
+          console.log('\n' + hook.name + ' -->\n');
+          _.each(hook.listeners, function (handler) {
+            console.log(
+              '  - ' + (handler.func.name || "<anonymous>") +
+              '        prio: ' + handler.priority + ',  cnt: ' + handler.ncalled +
+              (handler.ensure ? ',  permanent' : '')
+            );
           });
-        });
+        }
       });
 
       console.log('\n');
