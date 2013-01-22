@@ -1,16 +1,13 @@
 "use strict";
 
 
-/*global N, underscore*/
-
-
 // stdlib
 var fs        = require('fs');
 var path      = require('path');
 
 
 // 3rd-party
-var _         = underscore;
+var _         = require('underscore');
 var chai      = require('chai');
 var async     = require('async');
 var Mocha     = require('mocha');
@@ -27,7 +24,6 @@ chai.should();
 
 
 module.exports.parserParameters = {
-  version: N.runtime.version,
   addHelp: true,
   help: 'run test suites',
   description: 'Run all tests of enabled apps'
@@ -50,47 +46,51 @@ module.exports.commandLineArguments = [
 ////////////////////////////////////////////////////////////////////////////////
 
 
-module.exports.run = function (args, callback) {
+module.exports.run = function (N, args, callback) {
   if (!process.env.NODECA_ENV) {
     callback("You must provide NODECA_ENV in order to run nodeca test");
     return;
   }
 
-  async.series([
-    require('../lib/system/init/redis'),
-    require('../lib/system/init/mongoose'),
-    require('../lib/system/init/models'),
-    require('../lib/system/init/stores'),
-    require('../lib/system/init/check_migrations'),
-    require('../lib/system/init/bundle'),
-    // router needs to go after bundle,
-    // as server tree got polluted in bundle
-    require('../lib/system/init/router'),
+  async.series(
+    _.map([
+      require('../lib/system/init/redis'),
+      require('../lib/system/init/mongoose'),
+      require('../lib/system/init/models'),
+      require('../lib/system/init/stores'),
+      require('../lib/system/init/check_migrations'),
+      require('../lib/system/init/bundle'),
+      // router needs to go after bundle,
+      // as server tree got polluted in bundle
+      require('../lib/system/init/router'),
 
-    function (next) {
-      var mocha = new Mocha();
+      function (next) {
+        var mocha = new Mocha();
 
-      mocha.reporter('spec');
-      mocha.ui('bdd');
+        mocha.reporter('spec');
+        mocha.ui('bdd');
 
-      _.each(N.runtime.apps, function (app) {
-        if (!args.app || args.app === app.name) {
-          fstools.walkSync(app.root + '/test', function (file) {
-            if ((/\.js$/).test(file) && '.' !== path.basename(file)[0]) {
-              mocha.files.push(file);
-            }
-          });
-        }
-      });
+        _.each(N.runtime.apps, function (app) {
+          if (!args.app || args.app === app.name) {
+            fstools.walkSync(app.root + '/test', function (file) {
+              if ((/\.js$/).test(file) && '.' !== path.basename(file)[0]) {
+                mocha.files.push(file);
+              }
+            });
+          }
+        });
 
-      mocha.run(next);
+        mocha.run(next);
+      }
+    ], function (fn) { return async.apply(fn, N); })
+
+    , function (err) {
+      if (err) {
+        callback(err);
+        return;
+      }
+
+      process.exit(0);
     }
-  ], function (err) {
-    if (err) {
-      callback(err);
-      return;
-    }
-
-    process.exit(0);
-  });
+  );
 };

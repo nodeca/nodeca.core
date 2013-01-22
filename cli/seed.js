@@ -1,15 +1,13 @@
 "use strict";
 
 
-/*global N*/
-
-
 // stdlib
 var path  = require('path');
 var fs    = require('fs');
 
 
 // 3rd-party
+var _ = require('underscore');
 var async   = require("async");
 var fstools = require("fs-tools");
 
@@ -22,15 +20,6 @@ var SEEDS_DIR = 'db/seeds';
 
 ////////////////////////////////////////////////////////////////////////////////
 
-
-function get_app_path(app_name) {
-  for (var i = 0; i < N.runtime.apps.length; i++) {
-    if (app_name === N.runtime.apps[i].name) {
-      return N.runtime.apps[i].root;
-    }
-  }
-  return null;
-}
 
 function seed_run(app_name, seed_path, callback) {
   console.log('Applying seed...\n');
@@ -96,85 +85,98 @@ module.exports.commandLineArguments = [
   },
 ];
 
-module.exports.run = function (args, callback) {
+module.exports.run = function (N, args, callback) {
   var app_name = args.app;
   var seed_name = args.seed;
   var seed_pos =  args.number ? args.number - 1 : -1;
 
-  async.series([
-    require('../lib/system/init/redis'),
-    require('../lib/system/init/mongoose'),
-    require('../lib/system/init/models'),
-    require('../lib/system/init/stores'),
-    require('../lib/system/init/check_migrations'),
-  ], function (err) {
-    if (err) {
-      callback(err);
-      return;
+  function get_app_path(app_name) {
+    for (var i = 0; i < N.runtime.apps.length; i++) {
+      if (app_name === N.runtime.apps[i].name) {
+        return N.runtime.apps[i].root;
+      }
     }
+    return null;
+  }
 
-    // execute seed by name
-    if (!!app_name && !!seed_name) {
-      var env = N.runtime.env;
-      if ('development' !== env && 'testing' !== env && !args.force) {
-        console.log('Error: Can\'t run seed from ' + env + ' enviroment. Please, use -f to force.');
-        process.exit(1);
+  async.series(
+    _.map([
+      require('../lib/system/init/redis'),
+      require('../lib/system/init/mongoose'),
+      require('../lib/system/init/models'),
+      require('../lib/system/init/stores'),
+      require('../lib/system/init/check_migrations'),
+    ], function (fn) { return async.apply(fn, N); })
+
+    , function (err) {
+      if (err) {
+        callback(err);
+        return;
       }
 
-      var seed_path = path.join(get_app_path(app_name), SEEDS_DIR, seed_name);
-      if (!fs.existsSync(seed_path)) {
-        console.log('Error: Application "' + app_name + '"does not have "' + seed_name);
-        process.exit(1);
-      }
+      // execute seed by name
+      if (!!app_name && !!seed_name) {
+        var env = N.runtime.env;
+        if ('development' !== env && 'testing' !== env && !args.force) {
+          console.log('Error: Can\'t run seed from ' + env + ' enviroment. Please, use -f to force.');
+          process.exit(1);
+        }
 
-      seed_run(app_name, seed_path, callback);
-    }
-    else {
-      var apps;
-      if (app_name) {
-        apps = [{name: app_name, root: get_app_path(app_name)}];
+        var seed_path = path.join(get_app_path(app_name), SEEDS_DIR, seed_name);
+        if (!fs.existsSync(seed_path)) {
+          console.log('Error: Application "' + app_name + '"does not have "' + seed_name);
+          process.exit(1);
+        }
+
+        seed_run(app_name, seed_path, callback);
       }
       else {
-        apps = N.runtime.apps;
+        var apps;
+        if (app_name) {
+          apps = [{name: app_name, root: get_app_path(app_name)}];
+        }
+        else {
+          apps = N.runtime.apps;
+        }
+
+        // collect seeds
+        var seed_list = [];
+        async.forEachSeries(apps, function (app, next_app) {
+          var seed_dir = path.join(app.root, SEEDS_DIR);
+          fstools.walk(seed_dir, /w*\.js$/, function (file, stats, next_file) {
+            seed_list.push({
+              name: app.name,
+              seed_path: file
+            });
+            next_file();
+          }, next_app);
+        }, function (err) {
+          if (err) {
+            callback(err);
+            return;
+          }
+
+          if (!!args.number && seed_list[seed_pos]) {
+            // execute seed by number
+            seed_run(seed_list[seed_pos].name, seed_list[seed_pos].seed_path, callback);
+          } else {
+            // display seed list
+            if (!!args.number) {
+              console.log(args.number + ' seed not found\n');
+            }
+
+            console.log('Available seeds:\n');
+
+            for (var i = 0; i < seed_list.length; i++) {
+              console.log('  ' + (i + 1) + '. ' + seed_list[i].name + ': ' + path.basename(seed_list[i].seed_path));
+            }
+
+            console.log('\nSeeds are shown in `<APP>: <SEED_NAME>` form.');
+            console.log('See `seed --help` for details');
+            process.exit(0);
+          }
+        });
       }
-
-      // collect seeds
-      var seed_list = [];
-      async.forEachSeries(apps, function (app, next_app) {
-        var seed_dir = path.join(app.root, SEEDS_DIR);
-        fstools.walk(seed_dir, /w*\.js$/, function (file, stats, next_file) {
-          seed_list.push({
-            name: app.name,
-            seed_path: file
-          });
-          next_file();
-        }, next_app);
-      }, function (err) {
-        if (err) {
-          callback(err);
-          return;
-        }
-
-        if (!!args.number && seed_list[seed_pos]) {
-          // execute seed by number
-          seed_run(seed_list[seed_pos].name, seed_list[seed_pos].seed_path, callback);
-        } else {
-          // display seed list
-          if (!!args.number) {
-            console.log(args.number + ' seed not found\n');
-          }
-
-          console.log('Available seeds:\n');
-
-          for (var i = 0; i < seed_list.length; i++) {
-            console.log('  ' + (i + 1) + '. ' + seed_list[i].name + ': ' + path.basename(seed_list[i].seed_path));
-          }
-
-          console.log('\nSeeds are shown in `<APP>: <SEED_NAME>` form.');
-          console.log('See `seed --help` for details');
-          process.exit(0);
-        }
-      });
     }
-  });
+  );
 };

@@ -1,18 +1,14 @@
 "use strict";
 
 
-/*global N, underscore*/
-
-
 // 3rd-party
-var _     = underscore;
+var _     = require('underscore');
 var async = require('async');
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
 module.exports.parserParameters = {
-  version:      N.runtime.version,
   addHelp:      true,
   help:         'Create user and assign with some groups',
   description:  'Create user '
@@ -73,126 +69,130 @@ module.exports.commandLineArguments = [
 ];
 
 
-module.exports.run = function (args, callback) {
-  async.series([
-    require('../lib/system/init/redis'),
-    require('../lib/system/init/mongoose'),
-    require('../lib/system/init/models'),
-    require('../lib/system/init/stores'),
-    require('../lib/system/init/check_migrations')
-  ], function (err) {
-    var user      = null;
-    var to_add    = {};
-    var to_remove = [];
+module.exports.run = function (N, args, callback) {
+  async.series(
+    _.map([
+      require('../lib/system/init/redis'),
+      require('../lib/system/init/mongoose'),
+      require('../lib/system/init/models'),
+      require('../lib/system/init/stores'),
+      require('../lib/system/init/check_migrations')
+    ], function (fn) { return async.apply(fn, N); })
 
-    // FIXME check to_remove and to_add intersection
-    async.series([
-      // fetch usergroups
-      function (callback) {
-        var UserGroup = N.models.users.UserGroup;
+    , function (err) {
+      var user      = null;
+      var to_add    = {};
+      var to_remove = [];
 
-        UserGroup.find().select('_id short_name').exec(function (err, docs) {
-          if (err) {
-            callback(err);
-            return;
-          }
+      // FIXME check to_remove and to_add intersection
+      async.series([
+        // fetch usergroups
+        function (callback) {
+          var UserGroup = N.models.users.UserGroup;
 
-          docs.forEach(function (group) {
-            if (args.mark_to_remove.indexOf(group.short_name) !== -1) {
-              to_remove.push(group._id.toString());
-            }
-            if (args.mark_to_add.indexOf(group.short_name) !== -1) {
-              to_add[group._id.toString()] = group;
-            }
-          });
-
-          // FIXME check all groups were found from both lists?
-          callback();
-        });
-      },
-
-      // find or create user
-      function (callback) {
-        // FIXME test existing login and email
-        var User = N.models.users.User;
-        var auth = new N.models.users.AuthLink();
-
-        if ('add' === args.action) {
-          // FIXME user revalidator for pass and email test
-          if (!args.pass || !args.email) {
-            callback('Invalid password or email');
-            return;
-          }
-
-          user = new User({
-            nick: args.user,
-            joined_ts: new Date
-          });
-
-          user.save(function (err) {
+          UserGroup.find().select('_id short_name').exec(function (err, docs) {
             if (err) {
               callback(err);
               return;
             }
 
-            var provider = auth.providers.create({
-              'type': 'plain',
-              'email': args.email
+            docs.forEach(function (group) {
+              if (args.mark_to_remove.indexOf(group.short_name) !== -1) {
+                to_remove.push(group._id.toString());
+              }
+              if (args.mark_to_add.indexOf(group.short_name) !== -1) {
+                to_add[group._id.toString()] = group;
+              }
             });
 
-            provider.setPass(args.pass);
-
-            auth.user_id = user._id;
-            auth.providers.push(provider);
-
-            auth.save(callback);
-          });
-        } else {
-          User.findOne({nick: args.user}).exec(function (err, doc) {
-            if (err) {
-              callback(err);
-              return;
-            }
-            if (!user) {
-              callback('User not found, check name or use `add`');
-            }
-            user = doc;
+            // FIXME check all groups were found from both lists?
             callback();
           });
-        }
-      },
+        },
 
-      // update groups
-      function (callback) {
-        if (!_.isEmpty(to_remove) && !_.isEmpty(user.usergroups)) {
-          user.usergroups = user.usergroups.filter(function (group) {
-            return to_remove.indexOf(group.toString()) === -1;
-          });
-        }
-        if (!_.isEmpty(to_add)) {
-          // remove from to_add list already assigned groups
-          user.usergroups.forEach(function (group) {
-            var group_id = group.toString();
-            if (to_add[group_id]) {
-              to_add = _.without(to_add, group_id);
+        // find or create user
+        function (callback) {
+          // FIXME test existing login and email
+          var User = N.models.users.User;
+          var auth = new N.models.users.AuthLink();
+
+          if ('add' === args.action) {
+            // FIXME user revalidator for pass and email test
+            if (!args.pass || !args.email) {
+              callback('Invalid password or email');
+              return;
             }
-          });
-          if (!_.isEmpty(to_add)) {
-            _.values(to_add).forEach(function (group) {
-              user.usergroups.push(group);
+
+            user = new User({
+              nick: args.user,
+              joined_ts: new Date
+            });
+
+            user.save(function (err) {
+              if (err) {
+                callback(err);
+                return;
+              }
+
+              var provider = auth.providers.create({
+                'type': 'plain',
+                'email': args.email
+              });
+
+              provider.setPass(args.pass);
+
+              auth.user_id = user._id;
+              auth.providers.push(provider);
+
+              auth.save(callback);
+            });
+          } else {
+            User.findOne({nick: args.user}).exec(function (err, doc) {
+              if (err) {
+                callback(err);
+                return;
+              }
+              if (!user) {
+                callback('User not found, check name or use `add`');
+              }
+              user = doc;
+              callback();
             });
           }
-        }
-        user.save(callback);
-      }
-    ], function (err) {
-      if (err) {
-        console.log(err + "\n");
-        process.exit(0);
-      }
+        },
 
-      console.log('OK\n');
-      process.exit(0);
-    });
-  });
+        // update groups
+        function (callback) {
+          if (!_.isEmpty(to_remove) && !_.isEmpty(user.usergroups)) {
+            user.usergroups = user.usergroups.filter(function (group) {
+              return to_remove.indexOf(group.toString()) === -1;
+            });
+          }
+          if (!_.isEmpty(to_add)) {
+            // remove from to_add list already assigned groups
+            user.usergroups.forEach(function (group) {
+              var group_id = group.toString();
+              if (to_add[group_id]) {
+                to_add = _.without(to_add, group_id);
+              }
+            });
+            if (!_.isEmpty(to_add)) {
+              _.values(to_add).forEach(function (group) {
+                user.usergroups.push(group);
+              });
+            }
+          }
+          user.save(callback);
+        }
+      ], function (err) {
+        if (err) {
+          console.log(err + "\n");
+          process.exit(0);
+        }
+
+        console.log('OK\n');
+        process.exit(0);
+      });
+    }
+  );
 };
