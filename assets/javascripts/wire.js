@@ -188,13 +188,6 @@ window.Wire = (function () {
       throw "Function must accept exactly 1 (sync) or 2 (async) arguments";
     }
 
-    if (_.isArray(channel)) {
-      _.each(channel, function (channel) {
-        this.on(channel, options, handler);
-      }, this);
-      return;
-    }
-
     if (!channel) {
       throw "Channel is required. Use `**` if you want 'any channel'.";
     }
@@ -287,13 +280,6 @@ window.Wire = (function () {
   *  `handler` is not given.
   **/
   Wire.prototype.off = function (channel, handler) {
-    if (_.isArray(channel)) {
-      _.each(channel, function (channel) {
-        this.on(channel, options, handler);
-      }, this);
-      return;
-    }
-
     // got channel handler (no wildcards)
     if (-1 === channel.indexOf('*')) {
       this.__knownChannels__[channel] -= 1;
