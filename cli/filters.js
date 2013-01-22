@@ -29,7 +29,7 @@ module.exports.commandLineArguments = [
     args:     [ '-m', '--mask' ],
     options: {
       dest:   'mask',
-      help:   'Limit output list to the given pattern only (search by substring)',
+      help:   'Show only channels, containing MASK in name',
       type:   'string',
       defaultValue: []
     }
@@ -39,7 +39,7 @@ module.exports.commandLineArguments = [
     args:     [ '-s', '--short' ],
     options: {
       dest:   'short',
-      help:   'Limit output list to the given API path only',
+      help:   'Hide details, show channel names only',
       action: 'storeTrue'
     }
   }
@@ -84,9 +84,11 @@ module.exports.run = function (N, args, callback) {
           console.log('\n' + hook.name + ' -->\n');
           _.each(hook.listeners, function (handler) {
             console.log(
-              '  - ' + (handler.func.name || "<anonymous>") +
-              '        prio: ' + handler.priority + ',  cnt: ' + handler.ncalled +
-              (handler.ensure ? ',  permanent' : '')
+              '  - ' +
+              '[' + handler.priority + '] ' +
+              (handler.func.name || "<anonymous>") +
+              '     (cnt: ' + handler.ncalled + ')' +
+              (handler.ensure ? '    !permanent' : '')
             );
           });
         }
