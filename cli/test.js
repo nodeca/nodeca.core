@@ -2,7 +2,6 @@
 
 
 // stdlib
-var fs        = require('fs');
 var path      = require('path');
 
 
@@ -59,29 +58,7 @@ module.exports.run = function (N, args, callback) {
       require('../lib/system/init/models'),
       require('../lib/system/init/stores'),
       require('../lib/system/init/check_migrations'),
-      require('../lib/system/init/bundle'),
-      // router needs to go after bundle,
-      // as server tree got polluted in bundle
-      require('../lib/system/init/router'),
-
-      function (next) {
-        var mocha = new Mocha();
-
-        mocha.reporter('spec');
-        mocha.ui('bdd');
-
-        _.each(N.runtime.apps, function (app) {
-          if (!args.app || args.app === app.name) {
-            fstools.walkSync(app.root + '/test', function (file) {
-              if ((/\.js$/).test(file) && '.' !== path.basename(file)[0]) {
-                mocha.files.push(file);
-              }
-            });
-          }
-        });
-
-        mocha.run(next);
-      }
+      require('../lib/system/init/bundle')
     ], function (fn) { return async.apply(fn, N); })
 
     , function (err) {
@@ -90,7 +67,42 @@ module.exports.run = function (N, args, callback) {
         return;
       }
 
-      process.exit(0);
+      var mocha = new Mocha();
+      var applications = N.runtime.apps;
+
+      mocha.reporter('spec');
+      mocha.ui('bdd');
+
+      // if app set, chack that it's valid
+      if (args.app) {
+        if (!_.find(applications, function (app) { return app.name === args.app; })) {
+          console.log('Invalid application name: ' + args.app);
+          console.log(
+            'Valid apps are:  ',
+             _.map(applications, function (app) { return app.name; }).join(', ')
+          );
+          process.exit(1);
+        }
+      }
+
+      _.each(applications, function (app) {
+        if (!args.app || args.app === app.name) {
+          fstools.walkSync(app.root + '/test', function (file) {
+            if ((/\.js$/).test(file) && '.' !== path.basename(file)[0]) {
+              mocha.files.push(file);
+            }
+          });
+        }
+      });
+
+      mocha.run(function (err) {
+        if (err) {
+          callback(err);
+          return;
+        }
+
+        process.exit(0);
+      });
     }
   );
 };
