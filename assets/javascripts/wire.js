@@ -149,7 +149,7 @@ window.Wire = (function () {
     channels = _.isArray(channels) ? channels.slice() : [channels];
 
     function walk(err) {
-      var chhan;
+      var chan;
 
       if (err || !channels.length) {
         callback(err);
@@ -232,8 +232,6 @@ window.Wire = (function () {
   *  Same as [[Wire#on]] but runs handler one time only.
   **/
   Wire.prototype.once = function (channel, options, handler) {
-    var self = this;
-
     if (!handler) {
       handler = options;
       options = null;
