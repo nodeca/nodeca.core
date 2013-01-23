@@ -3,7 +3,7 @@
  **/
 
 
-/*global _*/
+/*global _, window*/
 
 
 window.Wire = (function () {
@@ -237,7 +237,7 @@ window.Wire = (function () {
       options = null;
     }
 
-    options = _.extend(options || {}, { once: true })
+    options = _.extend(options || {}, { once: true });
     this.on(channel, options, handler);
   };
 
