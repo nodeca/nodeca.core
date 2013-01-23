@@ -44,7 +44,7 @@ module.exports = function (N, apiPath) {
    *  Middleware that serves static assets from `public/root` directory under the
    *  main application root path.
    **/
-  return function (env, callback) {
+  N.wire.on(apiPath, function (env, callback) {
     var req, res;
 
     if (!env.origin.http) {
@@ -84,5 +84,5 @@ module.exports = function (N, apiPath) {
                     http.STATUS_CODES[res.statusCode]);
       })
       .pipe(res);
-  };
+  });
 };
