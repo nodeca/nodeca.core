@@ -1,3 +1,6 @@
+// Show / apply seeds
+//
+
 "use strict";
 
 
@@ -7,7 +10,6 @@ var fs    = require('fs');
 
 
 // 3rd-party
-var _ = require('underscore');
 var async   = require("async");
 var fstools = require("fs-tools");
 

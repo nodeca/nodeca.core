@@ -1,7 +1,9 @@
+// Show / run migrations
+//
+
 "use strict";
 
 
-var _ = require('underscore');
 var async = require('async');
 
 
@@ -30,7 +32,7 @@ module.exports.run = function (N, args, callback) {
 
   N.wire.emit([
       'init:models',
-      'init:stores',
+      'init:stores'
     ], N,
 
     function (err) {

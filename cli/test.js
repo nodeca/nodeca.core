@@ -7,16 +7,9 @@ var path      = require('path');
 
 // 3rd-party
 var _         = require('underscore');
-var chai      = require('chai');
-var async     = require('async');
 var Mocha     = require('mocha');
 var fstools   = require('fs-tools');
 
-
-////////////////////////////////////////////////////////////////////////////////
-
-
-chai.should();
 
 
 ////////////////////////////////////////////////////////////////////////////////

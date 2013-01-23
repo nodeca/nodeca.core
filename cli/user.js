@@ -11,7 +11,7 @@ var async = require('async');
 module.exports.parserParameters = {
   addHelp:      true,
   help:         'Create user and assign with some groups',
-  description:  'Create user '
+  description:  'Create user'
 };
 
 
@@ -78,6 +78,11 @@ module.exports.run = function (N, args, callback) {
     ], N,
 
     function (err) {
+      if (err) {
+        callback(err);
+        return;
+      }
+
       var user      = null;
       var to_add    = {};
       var to_remove = [];
@@ -85,12 +90,12 @@ module.exports.run = function (N, args, callback) {
       // FIXME check to_remove and to_add intersection
       async.series([
         // fetch usergroups
-        function (callback) {
+        function (next) {
           var UserGroup = N.models.users.UserGroup;
 
           UserGroup.find().select('_id short_name').exec(function (err, docs) {
             if (err) {
-              callback(err);
+              next(err);
               return;
             }
 
@@ -104,12 +109,12 @@ module.exports.run = function (N, args, callback) {
             });
 
             // FIXME check all groups were found from both lists?
-            callback();
+            next();
           });
         },
 
         // find or create user
-        function (callback) {
+        function (next) {
           // FIXME test existing login and email
           var User = N.models.users.User;
           var auth = new N.models.users.AuthLink();
@@ -117,7 +122,7 @@ module.exports.run = function (N, args, callback) {
           if ('add' === args.action) {
             // FIXME user revalidator for pass and email test
             if (!args.pass || !args.email) {
-              callback('Invalid password or email');
+              next('Invalid password or email');
               return;
             }
 
@@ -128,7 +133,7 @@ module.exports.run = function (N, args, callback) {
 
             user.save(function (err) {
               if (err) {
-                callback(err);
+                next(err);
                 return;
               }
 
@@ -142,25 +147,25 @@ module.exports.run = function (N, args, callback) {
               auth.user_id = user._id;
               auth.providers.push(provider);
 
-              auth.save(callback);
+              auth.save(next);
             });
           } else {
             User.findOne({nick: args.user}).exec(function (err, doc) {
               if (err) {
-                callback(err);
+                next(err);
                 return;
               }
               if (!user) {
-                callback('User not found, check name or use `add`');
+                next('User not found, check name or use `add`');
               }
               user = doc;
-              callback();
+              next();
             });
           }
         },
 
         // update groups
-        function (callback) {
+        function (next) {
           if (!_.isEmpty(to_remove) && !_.isEmpty(user.usergroups)) {
             user.usergroups = user.usergroups.filter(function (group) {
               return to_remove.indexOf(group.toString()) === -1;
@@ -180,12 +185,12 @@ module.exports.run = function (N, args, callback) {
               });
             }
           }
-          user.save(callback);
+          user.save(next);
         }
       ], function (err) {
         if (err) {
-          console.log(err + "\n");
-          process.exit(0);
+          callback("User creation error: " + String(err.message || err));
+          return;
         }
 
         console.log('OK\n');
