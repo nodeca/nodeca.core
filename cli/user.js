@@ -70,14 +70,14 @@ module.exports.commandLineArguments = [
 
 
 module.exports.run = function (N, args, callback) {
-  async.series(
-    _.map([
-      require('../lib/system/init/models'),
-      require('../lib/system/init/stores'),
-      require('../lib/system/init/check_migrations')
-    ], function (fn) { return async.apply(fn, N); })
 
-    , function (err) {
+  N.wire.emit([
+      'init:models',
+      'init:stores',
+      'init:migrations'
+    ], N,
+
+    function (err) {
       var user      = null;
       var to_add    = {};
       var to_remove = [];

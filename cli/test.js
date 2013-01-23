@@ -51,15 +51,15 @@ module.exports.run = function (N, args, callback) {
     return;
   }
 
-  async.series(
-    _.map([
-      require('../lib/system/init/models'),
-      require('../lib/system/init/stores'),
-      require('../lib/system/init/check_migrations'),
-      require('../lib/system/init/bundle')
-    ], function (fn) { return async.apply(fn, N); })
+  N.wire.emit([
+      'init:models',
+      'init:stores',
+      'init:migrations',
+      'init:bundle',
+      'init:server'
+    ], N,
 
-    , function (err) {
+    function (err) {
       if (err) {
         callback(err);
         return;

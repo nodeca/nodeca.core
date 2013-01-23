@@ -28,13 +28,12 @@ module.exports.commandLineArguments = [
 
 module.exports.run = function (N, args, callback) {
 
-  async.series(
-    _.map([
-      require('../lib/system/init/models'),
-      require('../lib/system/init/stores'),
-    ], function (fn) { return async.apply(fn, N); })
+  N.wire.emit([
+      'init:models',
+      'init:stores',
+    ], N,
 
-    , function (err) {
+    function (err) {
       if (err) {
         callback(err);
         return;
