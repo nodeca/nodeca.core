@@ -32,4 +32,17 @@ module.exports = function (N, apiPath) {
     env.origin.http.req.url = env.params.path;
     N.runtime.assets.server.handle(env.origin.http.req, env.origin.http.res);
   });
+
+  // Exclude unused midlewares. Only `before` filter are actial,
+  // since `on` handler terminates futher processing.
+  //
+  N.wire.skip(apiPath, [
+    'cookies_start',
+    'session_start',
+    'puncher_start',
+    'csrf_protect',
+    'locale_inject',
+    ]
+  );
+
 };

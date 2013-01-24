@@ -70,8 +70,7 @@ module.exports.run = function (N, args, callback) {
           _.each(hook.listeners, function (handler) {
             console.log(
               '  - ' +
-              '[' + handler.priority + '] ' +
-              (handler.func.name || "<anonymous>") +
+              '[' + handler.priority + '] ' + handler.name +
               '     (cnt: ' + handler.ncalled + ')' +
               (handler.ensure ? '    !permanent' : '')
             );
