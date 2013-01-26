@@ -10,7 +10,7 @@ var async = require('async');
 
 
 module.exports = function (N) {
-  var Model = N.models.stores.GlobalSettings;
+  var Model = N.models.core.GlobalSettings;
 
   var GlobalStore = N.settings.createStore({
     get: function (keys, params, options, callback) {

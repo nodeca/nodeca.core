@@ -21,7 +21,7 @@ module.exports = function (N, collectionName) {
 
 
   /**
-   *  models.stores.GlobalSettings.set(key, value, callback) -> Void
+   *  models.core.GlobalSettings.set(key, value, callback) -> Void
    **/
   GlobalSettings.statics.set = function (key, value, callback) {
     var model = this;
