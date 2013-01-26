@@ -30,7 +30,7 @@ module.exports = function (N, apiPath) {
     }
 
     // keep original url for log
-    env.origin.http.req.orig_url = env.origin.http.req.url
+    env.origin.http.req.orig_url = env.origin.http.req.url;
 
     env.origin.http.req.url = env.params.path;
     N.runtime.assets.server.handle(env.origin.http.req, env.origin.http.res);
