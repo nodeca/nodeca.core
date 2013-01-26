@@ -16,7 +16,7 @@ module.exports = function (N, apiPath) {
     }
   });
 
-  N.wire.on(apiPath, function (env, next) {
+  N.wire.on(apiPath, function (env, callback) {
     var data = env.response.data;
     var category_name = env.params.id;
 
@@ -30,7 +30,7 @@ module.exports = function (N, apiPath) {
 
         data.category = settings;
 
-        next(err);
+        callback(err);
       });
   });
 };
