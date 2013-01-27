@@ -31,15 +31,15 @@ packages:
       root:       "./client/admin"
       include:    "i18n/*.yml"
 
-    styles:
-      root:       "./assets"
-      main:       "desktop/admin/app.styl"
-      include:    "desktop/admin/**.styl"
-
     #styles:
     #  root:       "./client/admin"
     #  main:       "app.styl"
     #  include:    "*.styl"
+
+    styles:
+      root:       "./assets"
+      main:       "desktop/admin/app.styl"
+      include:    "desktop/admin/**.styl"
 
     server:
       root:       "./server/admin"
