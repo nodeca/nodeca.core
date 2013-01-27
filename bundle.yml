@@ -1,72 +1,134 @@
 bundles:
   frontend:
     - lib
+    - core
     - common
 
   backend:
     - lib
+    - core
     - admin
 
 
 packages:
+  #admin:
+  #  client:
+  #    root:       "./client/admin"
+  #    include:    "*.js"
+  #    exclude:    "/(^|\\/)_.*/"
+
+  #  views:
+  #    root:       "./client/admin"
+  #    include:    "*.jade"
+  #    exclude:    "/(^|\\/)_.*/"
+
+  #  i18n_client:
+  #    root:       "./client/admin"
+  #    include:    "i18n/*.yml"
+
+  #  styles:
+  #    root:       "./client/admin"
+  #    main:       "app.styl"
+  #    include:    "*.styl"
+
+  #  server:
+  #    root:       "./server/admin"
+  #    include:    "*.js"
+  #    exclude:    "/(^|\\/)_.*/"
+
+  #  i18n_server:
+  #    root:       "./server/admin"
+  #    include:    "i18n/*.yml"
+
+
+  #common:
+  #  client:
+  #    root:       "./client/common"
+  #    include:    "*.js"
+  #    exclude:    "/(^|\\/)_.*/"
+
+  #  views:
+  #    root:       "./client/common"
+  #    include:    "*.jade"
+  #    exclude:    "/(^|\\/)_.*/"
+
+  #  i18n_client:
+  #    root:       "./client/common"
+  #    include:    "i18n/*.yml"
+
+  #  styles:
+  #    root:       "./client/common"
+  #    main:       "app.styl"
+  #    include:    "*.styl"
+
+  #  server:
+  #    root:       "./server/common"
+  #    include:    "*.js"
+  #    exclude:    "/(^|\\/)_.*/"
+
+  #  i18n_server:
+  #    root:       "./server/common"
+  #    include:    "i18n/*.yml"
+
+
+  #lib:
+  #  bin:
+  #    root:       "./assets"
+  #    include:
+  #      - javascripts/lib.js
+  #      - javascripts/loader.js.ejs
+
+
   admin:
+    server:
+      root:       "./server/admin"
+      include:    "*.js"
+      exclude:    "/(^|\\/)_.*/"
+
     client:
       root:       "./client/admin"
       include:    "*.js"
       exclude:    "/(^|\\/)_.*/"
 
     views:
-      root:       "./client/admin"
+      root:       "./views/desktop/admin"
       include:    "*.jade"
       exclude:    "/(^|\\/)_.*/"
 
-    i18n_client:
-      root:       "./client/admin"
-      include:    "i18n/*.yml"
-
     styles:
-      root:       "./client/admin"
-      main:       "app.styl"
-      include:    "*.styl"
-
-    server:
-      root:       "./server/admin"
-      include:    "*.js"
-      exclude:    "/(^|\\/)_.*/"
-
-    i18n_server:
-      root:       "./server/admin"
-      include:    "i18n/*.yml"
+      root:       "./assets"
+      main:       "desktop/admin/app.styl"
+      include:    "desktop/admin/**.styl"
 
 
   common:
-    client:
-      root:       "./client/common"
-      include:    "*.js"
-      exclude:    "/(^|\\/)_.*/"
-
-    views:
-      root:       "./client/common"
-      include:    "*.jade"
-      exclude:    "/(^|\\/)_.*/"
-
-    i18n_client:
-      root:       "./client/common"
-      include:    "i18n/*.yml"
-
-    styles:
-      root:       "./client/common"
-      main:       "app.styl"
-      include:    "*.styl"
-
     server:
       root:       "./server/common"
       include:    "*.js"
       exclude:    "/(^|\\/)_.*/"
 
-    i18n_server:
-      root:       "./server/common"
-      include:    "i18n/*.yml"
+    views:
+      root:       "./views/desktop/common"
+      include:    "*.jade"
+      exclude:    "/(^|\\/)_.*/"
+
+    styles:
+      root:       "./assets"
+      main:       "desktop/common/app.styl"
+      include:    "desktop/common/**.styl"
+
+
+  core:
+    server:
+      root:       "./server"
+      include:    "/^(assets|static)\\.js$/"
+      apiPrefix:  ~
+
+    views:
+      root:       "./views/desktop/layouts"
+      include:    "*.jade"
+      exclude:    "/(^|\\/)_.*/"
+      apiPrefix:  "layouts"
 
 
   lib:
