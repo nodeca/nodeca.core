@@ -6,7 +6,7 @@ var path      = require('path');
 
 
 // 3rd-party
-var _         = require('underscore');
+var _         = require('lodash');
 var Mocha     = require('mocha');
 var fstools   = require('fs-tools');
 
