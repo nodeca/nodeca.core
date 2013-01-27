@@ -18,8 +18,7 @@ var send = require('send');
 ////////////////////////////////////////////////////////////////////////////////
 
 
-module.exports = function (N) {
-  var apiPath = "server:static";
+module.exports = function (N, apiPath) {
   var root    = path.join(N.runtime.mainApp.root, 'public/root');
   var logger  = N.logger.getLogger('server.static');
 

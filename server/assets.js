@@ -1,9 +1,7 @@
 'use strict';
 
 
-module.exports = function (N) {
-  var apiPath = "server:assets";
-
+module.exports = function (N, apiPath) {
   //
   // Validate input parameters
   //
