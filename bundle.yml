@@ -93,10 +93,12 @@ packages:
 
   core:
     server:
-      root:       "./server"
-      include:    "/^(assets|static)\\.js$/"
+      root:       "./server/core"
+      include:    "*.js"
+      exclude:    "/(^|\\/)_.*/"
       apiPrefix:  ~
 
+    # Remove later, client layout should be in `common` 
     views:
       root:       "./views/desktop/layouts"
       include:    "*.jade"
