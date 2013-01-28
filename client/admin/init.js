@@ -1,11 +1,10 @@
 'use strict';
 
 
-/*global $, underscore, N*/
+/*global $, _, N*/
 
 
 N.once("init_complete", function () {
-  var _ = underscore;
 
   $(function () {
     // Bootstrap.Collapse calls e.preventDefault() only when there's no
