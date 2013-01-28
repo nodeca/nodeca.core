@@ -2,15 +2,18 @@ router:
   map:
     admin.dashboard:
       "/": ~
+
     admin.settings.global.index:
       "/settings": ~
+
     admin.settings.global.edit:
       "/settings/{id}":
         id: /\w+/
 
-    assets:
-      "/{path}":
+    core.assets:
+      "/assets/{path}":
         path: /.+/
-    static:
-      "/{file}":
+
+    core.static:
+      "/static/{file}":
         file: /favicon.ico|robots.txt|snippet.png/

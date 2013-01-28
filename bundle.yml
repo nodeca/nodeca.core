@@ -96,7 +96,6 @@ packages:
       root:       "./server/core"
       include:    "*.js"
       exclude:    "/(^|\\/)_.*/"
-      apiPrefix:  ~
 
     # Remove later, client layout should be in `common` 
     views:
