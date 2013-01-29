@@ -128,14 +128,6 @@ var loadAssets = window.loadAssets = (function () {
     });
 
     //
-    // Make sure initial loader will include library
-    //
-
-    resources.push({
-      load: <%- JSON.stringify(asset_path('javascripts/lib.js')) %>
-    });
-
-    //
     // Make sure required namespace has resources
     //
 
