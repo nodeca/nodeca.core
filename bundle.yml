@@ -106,8 +106,11 @@ packages:
 
 
   lib:
+    client:
+      root:       "./assets"
+      main:       "javascripts/lib.js"
+
     bin:
       root:       "./assets"
       include:
-        - javascripts/lib.js
         - javascripts/loader.js.ejs
