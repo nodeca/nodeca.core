@@ -1,3 +1,8 @@
+bind:
+  admin:
+    mount: /admin
+
+
 router:
   map:
     admin.dashboard:
