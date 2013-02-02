@@ -15,17 +15,17 @@ packages:
     client:
       root:       "./client/admin"
       include:    "*.js"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     #views:
     #  root:       "./client/admin"
     #  include:    "*.jade"
-    #  exclude:    "/(^|\\/)_.*/"
+    #  exclude:    "/(^|\\/|\\\\)_.*/"
 
     views:
       root:       "./views/desktop/admin"
       include:    "*.jade"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     i18n_client:
       root:       "./client/admin"
@@ -44,7 +44,7 @@ packages:
     server:
       root:       "./server/admin"
       include:    "*.js"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     i18n_server:
       root:       "./server/admin"
@@ -55,17 +55,17 @@ packages:
     client:
       root:       "./client/common"
       include:    "*.js"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     #views:
     #  root:       "./client/common"
     #  include:    "*.jade"
-    #  exclude:    "/(^|\\/)_.*/"
+    #  exclude:    "/(^|\\/|\\\\)_.*/"
 
     views:
       root:       "./views/desktop/common"
       include:    "*.jade"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     i18n_client:
       root:       "./client/common"
@@ -84,7 +84,7 @@ packages:
     server:
       root:       "./server/common"
       include:    "*.js"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     i18n_server:
       root:       "./server/common"
@@ -95,13 +95,13 @@ packages:
     server:
       root:       "./server/core"
       include:    "*.js"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     # Remove later, client layout should be in `common` 
     views:
       root:       "./views/desktop/layouts"
       include:    "*.jade"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
       apiPrefix:  "layouts"
 
 

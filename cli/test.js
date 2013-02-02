@@ -79,6 +79,11 @@ module.exports.run = function (N, args, callback) {
       _.each(applications, function (app) {
         if (!args.app || args.app === app.name) {
           fstools.walkSync(app.root + '/test', function (file) {
+            // skip files when
+            // - filename starts with _, e.g.: /foo/bar/_baz.js
+            // - dirname in path starts _, e.g. /foo/_bar/baz.js
+            if (file.match(/(^|\/|\\)_/)) { return; }
+
             if ((/\.js$/).test(file) && '.' !== path.basename(file)[0]) {
               mocha.files.push(file);
             }

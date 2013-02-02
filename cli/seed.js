@@ -142,7 +142,15 @@ module.exports.run = function (N, args, callback) {
         var seed_list = [];
         async.forEachSeries(apps, function (app, next_app) {
           var seed_dir = path.join(app.root, SEEDS_DIR);
-          fstools.walk(seed_dir, /w*\.js$/, function (file, stats, next_file) {
+          fstools.walk(seed_dir, /\.js$/, function (file, stats, next_file) {
+            // skip files when
+            // - filename starts with _, e.g.: /foo/bar/_baz.js
+            // - dirname in path starts _, e.g. /foo/_bar/baz.js
+            if (file.match(/(^|\/|\\)_/)) {
+              next_file();
+              return;
+            }
+
             seed_list.push({
               name: app.name,
               seed_path: file
