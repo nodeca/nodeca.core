@@ -81,9 +81,19 @@ module.exports.run = function (N, args, callback) {
                     ' outstanding migration(s):\n');
 
         async.forEachSeries(outstandingMigrations, function (migration, next) {
+          var up;
+
           process.stdout.write('  ' + formatMigrationTitle(migration) + ' ... ');
 
-          migration.up(N, function (err) {
+          try {
+            up = require(migration.filename).up;
+          } catch (err) {
+            console.log('FAILED');
+            next(err);
+            return;
+          }
+
+          up(N, function (err) {
             if (err) {
               console.log('FAILED');
               next(err);
