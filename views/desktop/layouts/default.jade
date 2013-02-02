@@ -93,13 +93,6 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
                   data-on-click='common.locale',
                   data-locale=locale)= self.t('common.language.' + locale)
 
-        li.dropup
-          a.dropdown-toggle(href='#',data-toggle='dropdown') Theme
-            b.caret
-          ul.dropdown-menu
-            li: a(href='#') Black & White
-            li: a(href='#') Yellow
-
       .nojs
         .alert.alert-error #{self.t('common.nojs')} 
 
