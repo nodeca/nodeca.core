@@ -23,10 +23,10 @@ var SEEDS_DIR = 'db/seeds';
 ////////////////////////////////////////////////////////////////////////////////
 
 
-function seed_run(app_name, seed_path, callback) {
+function seed_run(N, app_name, seed_path, callback) {
   console.log('Applying seed...\n');
 
-  require(seed_path)(function (err) {
+  require(seed_path)(N, function (err) {
     var prefix = '  ' + app_name + ':' + path.basename(seed_path) + ' -- ';
 
     if (err) {
@@ -56,7 +56,7 @@ module.exports.commandLineArguments = [
   {
     args: ['-f'],
     options: {
-      help: 'run without env checking',
+      help: 'force run without env checking',
       action: 'storeTrue'
     }
   },
@@ -127,7 +127,7 @@ module.exports.run = function (N, args, callback) {
           process.exit(1);
         }
 
-        seed_run(app_name, seed_path, callback);
+        seed_run(N, app_name, seed_path, callback);
       }
       else {
         var apps;
@@ -157,7 +157,7 @@ module.exports.run = function (N, args, callback) {
 
           if (!!args.number && seed_list[seed_pos]) {
             // execute seed by number
-            seed_run(seed_list[seed_pos].name, seed_list[seed_pos].seed_path, callback);
+            seed_run(N, seed_list[seed_pos].name, seed_list[seed_pos].seed_path, callback);
           } else {
             // display seed list
             if (!!args.number) {

@@ -83,7 +83,7 @@ module.exports.run = function (N, args, callback) {
         async.forEachSeries(outstandingMigrations, function (migration, next) {
           process.stdout.write('  ' + formatMigrationTitle(migration) + ' ... ');
 
-          migration.up(function (err) {
+          migration.up(N, function (err) {
             if (err) {
               console.log('FAILED');
               next(err);
