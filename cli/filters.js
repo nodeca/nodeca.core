@@ -39,6 +39,9 @@ module.exports.commandLineArguments = [
 
 module.exports.run = function (N, args, callback) {
 
+  // Reduce log level
+  N.logger.setLevel('info');
+
   N.wire.emit([
       'init:models',
       'init:stores',
