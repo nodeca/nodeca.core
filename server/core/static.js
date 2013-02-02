@@ -27,6 +27,8 @@ module.exports = function (N, apiPath) {
   //
 
   N.validate(apiPath, {
+    // DON'T validate unknown params - those can sexists,
+    // if someone requests '/myfile.txt?xxxx' instead of '/myfile.txt/
     additionalProperties: true,
     properties: {
       file: {
