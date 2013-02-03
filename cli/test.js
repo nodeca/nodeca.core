@@ -46,7 +46,6 @@ module.exports.run = function (N, args, callback) {
 
   N.wire.emit([
       'init:models',
-      'init:stores',
       'init:migrations',
       'init:bundle',
       'init:server'
