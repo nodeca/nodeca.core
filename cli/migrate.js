@@ -52,7 +52,7 @@ module.exports.run = function (N, args, callback) {
           return;
         }
 
-        outstandingMigrations = checkMigrations(currentMigrations);
+        outstandingMigrations = checkMigrations(N, currentMigrations);
 
         if (0 === outstandingMigrations.length) {
           console.log(args.all  ? 'Already up-to-date.'
