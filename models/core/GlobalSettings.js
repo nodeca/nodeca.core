@@ -14,11 +14,9 @@ module.exports = function (N, collectionName) {
     value: { type: Schema.Types.Mixed, default: {}}
   }, {strict: true});
 
-
   GlobalSettings.statics.get = function () {
 
   };
-
 
   /**
    *  models.core.GlobalSettings.set(key, value, callback) -> Void
@@ -40,10 +38,13 @@ module.exports = function (N, collectionName) {
   };
 
 
-  GlobalSettings.__init__ = function __init__() {
-    return Mongoose.model(collectionName, GlobalSettings);
-  };
+  N.wire.on("init:models", function emit_init_GlobalSettings(__, callback) {
+    N.wire.emit("init:models." + collectionName, GlobalSettings, callback);
+  });
 
+  N.wire.on("init:models." + collectionName, function init_model_GlobalSettings(schema, callback) {
+    N.models[collectionName] = Mongoose.model(collectionName, schema);
+    callback();
+  });
 
-  return GlobalSettings;
 };

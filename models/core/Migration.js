@@ -60,10 +60,12 @@ module.exports = function (N, collectionName) {
   };
 
 
-  Migration.__init__ = function __init__() {
-    return Mongoose.model(collectionName, Migration);
-  };
+  N.wire.on("init:models", function emit_init_Migration(__, callback) {
+    N.wire.emit("init:models." + collectionName, Migration, callback);
+  });
 
-
-  return Migration;
+  N.wire.on("init:models." + collectionName, function init_model_Migration(schema, callback) {
+    N.models[collectionName] = Mongoose.model(collectionName, schema);
+    callback();
+  });
 };
