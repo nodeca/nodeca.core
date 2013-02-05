@@ -79,7 +79,7 @@
     // Send request
     //
 
-    N.logger.debug('API3 Sending request', payload);
+    N.logger.debug('RPC request', payload);
     N.emit('io.request');
 
     xhr = last_xhr = $.post('/io/rpc', payload);
@@ -91,7 +91,7 @@
     xhr.success(function (data) {
       data = data || {};
 
-      N.logger.debug('API3 Received data', data);
+      N.logger.debug('RPC reply data', data);
 
       if (data.version !== N.runtime.version) {
         data.error = error(io.EWRONGVER, 'Client version does not match server.');
