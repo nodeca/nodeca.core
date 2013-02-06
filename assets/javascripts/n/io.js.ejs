@@ -101,7 +101,7 @@
       // if invalid CSRF token error and retry is allowed
       if (data.error && N.io.INVALID_CSRF_TOKEN === data.error.code && options._retryOnCsrfError) {
         // renew CSRF token
-        N.runtime.csrf = error.data;
+        N.runtime.csrf = error.data.token;
 
         // only one attempt to retry is allowed
         options._retryOnCsrfError = false;

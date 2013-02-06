@@ -13,6 +13,7 @@ var http = require('http');
 
 // 3rd-party
 var send = require('send');
+var _    = require('lodash');
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -21,6 +22,9 @@ var send = require('send');
 module.exports = function (N, apiPath) {
   var root    = path.join(N.runtime.mainApp.root, 'public/root');
   var logger  = N.logger.getLogger('server.static');
+
+  // Handle http requests only
+  apiPath = apiPath.slice(0,-1) + 'http';
 
   //
   // Validate input parameters
@@ -49,13 +53,8 @@ module.exports = function (N, apiPath) {
   N.wire.on(apiPath, function (env, callback) {
     var req, res;
 
-    if (!env.origin.http) {
-      callback(N.io.BAD_REQUEST);
-      return;
-    }
-
-    req = env.origin.http.req;
-    res = env.origin.http.res;
+    req = env.origin.req;
+    res = env.origin.res;
 
     if ('GET' !== req.method && 'HEAD' !== req.method) {
       callback(N.io.BAD_REQUEST);
@@ -88,15 +87,14 @@ module.exports = function (N, apiPath) {
       .pipe(res);
   });
 
-  // Exclude unused midlewares. Only `before` filter are actial,
-  // since `on` handler terminates futher processing.
+  // Exclude unused midlewares (only `before` filter are actial
+  // since `on` handler terminates futher processing)
   //
-  N.wire.skip(apiPath, [
-    'cookies_start',
-    'session_start',
-    'puncher_start',
-    'csrf_protect',
-    'locale_inject',
-    ]
-  );
+  // Real handler has priority = 0, everything else is garbage
+  //
+  _.each(N.wire.getHandlers(apiPath), function (handler) {
+    if (0 !== handler.priority) {
+      N.wire.skip(apiPath, handler.name);
+    }
+  });
 };

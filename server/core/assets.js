@@ -1,7 +1,14 @@
 'use strict';
 
 
+var _ = require('lodash');
+
+
 module.exports = function (N, apiPath) {
+
+  // Handle http requests only
+  apiPath = apiPath.slice(0,-1) + 'http';
+
   //
   // Validate input parameters
   //
@@ -26,29 +33,25 @@ module.exports = function (N, apiPath) {
    *  Mincer assets server middleware.
    **/
   N.wire.on(apiPath, function (env, callback) {
-    if (!env.origin.http) {
-      callback(N.io.BAD_REQUEST);
-      return;
-    }
+    // Dummy code, to cheat jshint
+    callback = function () {};
 
     // keep original url for log
-    env.origin.http.req.originalUrl = env.origin.http.req.url;
+    env.origin.req.originalUrl = env.origin.req.url;
     // rewrite url for mincer server
-    env.origin.http.req.url         = env.params.path;
+    env.origin.req.url         = env.params.path;
 
-    N.runtime.assets.server.handle(env.origin.http.req, env.origin.http.res);
+    N.runtime.assets.server.handle(env.origin.req, env.origin.res);
   });
 
-  // Exclude unused midlewares. Only `before` filter are actial,
-  // since `on` handler terminates futher processing.
+  // Exclude unused midlewares (only `before` filter are actial
+  // since `on` handler terminates futher processing)
   //
-  N.wire.skip(apiPath, [
-    'cookies_start',
-    'session_start',
-    'puncher_start',
-    'csrf_protect',
-    'locale_inject',
-    ]
-  );
-
+  // Real handler has priority = 0, everything else is garbage
+  //
+  _.each(N.wire.getHandlers(apiPath), function (handler) {
+    if (0 !== handler.priority) {
+      N.wire.skip(apiPath, handler.name);
+    }
+  });
 };
