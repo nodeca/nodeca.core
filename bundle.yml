@@ -1,12 +1,11 @@
 bundles:
-  lib:
-    - lib
-
   frontend:
+    - lib
     - core
     - common
 
   backend:
+    - lib
     - core
     - admin
 
