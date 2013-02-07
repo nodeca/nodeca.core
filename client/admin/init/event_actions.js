@@ -25,7 +25,7 @@ function handleAction(event, $el, apiPath) {
     var func = getByPath(N.client, apiPath);
 
     if (!_.isFunction(func)) {
-      N.logger.error('Action ' + apiPath + ' not found');
+      N.logger.error('Action %s not found', apiPath);
       return;
     }
 
