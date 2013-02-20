@@ -1,17 +1,21 @@
 bundles:
-  frontend:
+  lib:
     - lib
+
+  frontend:
     - core
     - common
 
   backend:
-    - lib
     - core
     - admin
 
 
 packages:
   admin:
+    depends:
+      - lib
+
     client:
       root:       "./client/admin"
       include:    "*.js"
@@ -52,6 +56,9 @@ packages:
 
 
   common:
+    depends:
+      - lib
+
     client:
       root:       "./client/common"
       include:    "*.js"
