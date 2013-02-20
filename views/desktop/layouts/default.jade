@@ -3,7 +3,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
   head
     include ../common/head
 
-    each ns in ['common', self.head.apiPath.split('.').shift()]
+    each ns in self.head.assets[self.head.apiPath.split('.').shift()].load
       - if (self.head.assets[ns])
         each asset in self.head.assets[ns].css
           link(rel='stylesheet', href=asset)
