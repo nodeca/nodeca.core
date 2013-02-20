@@ -142,17 +142,17 @@ var loadAssets = window.loadAssets = (function () {
     // CSS files must be explicitly loaded within layout.
     //
 
-    if (assets[namespace].css) {
-      loaded[assets[namespace].css] = true;
-    }
+    forEach(assets[namespace].load, function (dependency) {
+      if (assets[dependency].css) {
+        loaded[assets[dependency].css] = true;
+      }
 
-    if (assets[namespace].js) {
-      loaded[assets[namespace].js] = true;
+      if (assets[dependency].js) {
+        loaded[assets[dependency].js] = true;
 
-      forEach(assets[namespace].load, function (pkgName) {
-        resources.push({ load: assets[pkgName].js });
-      });
-    }
+        resources.push({ load: assets[dependency].js });
+      }
+    });
 
     //
     // Queue assets injections
