@@ -55,13 +55,15 @@ var loadAssets = window.loadAssets = (function () {
       return;
     }
 
-    if (assets[namespace].css && !loaded[assets[namespace].css]) {
-      resources.push(assets[namespace].css);
-    }
+    forEach(assets[namespace].load, function (dependency) {
+      if (assets[dependency].css && !loaded[assets[dependency].css]) {
+        resources.push(assets[dependency].css);
+      }
 
-    if (assets[namespace].js && !loaded[assets[namespace].js]) {
-      resources.push(assets[namespace].js);
-    }
+      if (assets[dependency].js && !loaded[assets[dependency].js]) {
+        resources.push(assets[dependency].js);
+      }
+    });
 
     if (!resources.length) {
       callback();
