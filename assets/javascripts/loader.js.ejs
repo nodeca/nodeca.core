@@ -146,6 +146,13 @@ var loadAssets = window.loadAssets = (function () {
 
     if (assets[namespace].js) {
       loaded[assets[namespace].js] = true;
+
+      if (assets[namespace].dep) {
+        forEach(assets[namespace].dep, function (dependence) {
+          resources.push({ load: assets[dependence].js });
+        });
+      }
+
       resources.push({ load: assets[namespace].js });
     }
 
