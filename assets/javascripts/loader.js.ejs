@@ -39,7 +39,7 @@ var loadAssets = window.loadAssets = (function () {
 
 
   // helper that reports about unknown package
-  function unknownNamespaceError(pkgName) {
+  function unknownPackageError(pkgName) {
     alert("Package " + pkgName + " has no resources");
   }
 
@@ -50,7 +50,7 @@ var loadAssets = window.loadAssets = (function () {
     callback = callback || noop;
 
     if (!assets[pkgName]) {
-      unknownNamespaceError(pkgName);
+      unknownPackageError(pkgName);
       callback();
       return;
     }
@@ -133,7 +133,7 @@ var loadAssets = window.loadAssets = (function () {
     //
 
     if (!assets[pkgName]) {
-      unknownNamespaceError(pkgName);
+      unknownPackageError(pkgName);
       return;
     }
 
