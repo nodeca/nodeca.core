@@ -10,48 +10,33 @@ var loadAssets = window.loadAssets = (function () {
   'use strict';
 
 
-  // assets map for package names only - set with loadAssets.init()
+  // Assets map for package names only - set with loadAssets.init()
   var assets;
 
 
-  // hash that keeps track on loaded assets
+  // Hash table that keeps track on loaded assets.
   var loaded = {};
 
 
-  // check if `obj` is a function
-  function isFunction(obj) {
-    return '[object Function]' === Object.prototype.toString.call(obj);
-  }
+  // Simple cross-browser `forEach` iterator for arrays.
+  function forEach(array, iterator) {
+    var index, length;
 
-
-  // Simple cross-browser `forEach` iterator for `Arrays`
-  function forEach(arr, iter) {
-    var i, l;
-
-    for (i = 0, l = arr.length; i < l; i++) {
-      iter(arr[i], i);
+    for (index = 0, length = array.length; index < length; index += 1) {
+      iterator(array[index], index);
     }
   }
 
 
-  // cached non-operable function
+  // Cached non-operable function.
   function noop() {}
-
-
-  // helper that reports about unknown package
-  function unknownPackageError(pkgName) {
-    alert("Package " + pkgName + " has no resources");
-  }
 
 
   function loadAssets(pkgName, callback) {
     var resources = [];
 
-    callback = callback || noop;
-
     if (!assets[pkgName]) {
-      unknownPackageError(pkgName);
-      callback();
+      callback(new Error('Package "' + pkgName + '" has no resources.'));
       return;
     }
 
@@ -65,102 +50,60 @@ var loadAssets = window.loadAssets = (function () {
       }
     });
 
-    if (!resources.length) {
-      callback();
-      return;
+    if (resources.length) {
+      yepnope({
+        load: resources,
+        complete: function () {
+          forEach(resources, function (res) { loaded[res] = true; });
+          callback();
+        }
+      });
     }
-
-    yepnope({
-      load:     resources,
-      complete: function () {
-        forEach(resources, function (res) {
-          loaded[res] = true;
-        });
-
-        callback();
-      }
-    });
   }
 
 
-  // internal helper used by loadAssets.init() that loads resources and fires
-  // callback only once all resources were injected.
-  function loadResources(resources, callback) {
-    var i, count = resources.length;
-
-    // fired once all queued scripts were injected
-    function complete() {
-      count--;
-
-      if (0 === count) {
-        callback();
-      }
-    }
-
-    // assign complete calback for each resource object
-    for (i = 0; i < count; i++) {
-      resources[i].complete = complete;
-    }
-
-    // queue resources
-    yepnope(resources);
-  }
-
-
-  // loads all necessary shims and libraries and assets for given package
+  // Loads all necessary shims and libraries and assets for given package.
   loadAssets.init = function init(assetsMap, pkgName) {
-    var resources = [];
+    var shims = [];
 
-    // set internal assets map
+    function initComplete() {
+      loadAssets(pkgName, function () {
+        if (window.N) {
+          window.N.emit('init_complete');
+        } else {
+          alert('Nodeca error: Cannot access "N" sandbox object after ' +
+                'loading main package of this page. Ensure "lib" package ' +
+                'is declared in the dependency list of that package.');
+        }
+      });
+    }
+
+    // Set internal assets map.
     assets = assetsMap;
 
-    // init can be called only once
+    // Init can be called only once.
     loadAssets.init = noop;
 
-    //
-    // Fill resources with shims and polyfills
-    //
-
-    resources.push({
-      //  JSON is required for Opera < 11 + IE < 8
-      //  See: http://caniuse.com/json
-      test: !!window.JSON,
-      nope: <%- JSON.stringify(asset_path('vendor/json2.js')) %>
-    });
-
-    //
-    // Make sure required package has resources
-    //
-
-    if (!assets[pkgName]) {
-      unknownPackageError(pkgName);
-      return;
-    }
-
-    //
-    // Notify that initial assets were loaded.
-    // CSS files must be explicitly loaded within layout.
-    //
-
+    // Mark all stylesheets of the given package as loaded, since they are
+    // included to head of the page.
     forEach(assets[pkgName].loadingQueue, function (dependency) {
       if (assets[dependency].css) {
         loaded[assets[dependency].css] = true;
       }
-
-      if (assets[dependency].js) {
-        loaded[assets[dependency].js] = true;
-
-        resources.push({ load: assets[dependency].js });
-      }
     });
 
-    //
-    // Queue assets injections
-    //
+    // Choose needed polyfills.
+    if (!window.JSON) {
+      // JSON is required for Opera < 11 + IE < 8
+      //See: http://caniuse.com/json
+      shims.push(<%- JSON.stringify(asset_path('vendor/json2.js')) %>);
+    }
 
-    loadResources(resources, function () {
-      N.emit('init_complete');
-    });
+    if (shims.length) {
+      yepnope({load: shims, complete: initComplete});
+    } else {
+      initComplete();
+    }
   };
 
 
