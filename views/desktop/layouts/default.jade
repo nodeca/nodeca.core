@@ -3,9 +3,9 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
   head
     include ../common/head
 
-    - if (self.head.assets[self.head.apiPath.split('.').shift()])
-      each pkgName in self.head.assets[self.head.apiPath.split('.').shift()].loadingQueue
-        link(rel='stylesheet', href=self.head.assets[pkgName].css)
+    - if (self.head.stylesheets[self.head.apiPath.split('.').shift()])
+      each cssPath in self.head.stylesheets[self.head.apiPath.split('.').shift()]
+        link(rel='stylesheet', href=cssPath)
 
     //if lt IE 9
       script(type="text/javascript", src=self.asset_path('es5-shim.js'))
