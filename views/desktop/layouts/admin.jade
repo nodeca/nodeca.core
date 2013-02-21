@@ -4,7 +4,9 @@ html.no-js
     include ../common/head
 
     - if (self.head.assets.admin)
-      link(rel='stylesheet', href=self.head.assets.admin.css)
+      each pkgName in self.head.assets.admin.loadingQueue
+        - if (self.head.assets[pkgName].css)
+          link(rel='stylesheet', href=self.head.assets[pkgName].css)
 
     //if lt IE 9
       script(type="text/javascript", src=self.asset_path('es5-shim.js'))
