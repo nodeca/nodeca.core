@@ -55,7 +55,7 @@ var loadAssets = window.loadAssets = (function () {
       return;
     }
 
-    forEach(assets[pkgName].load, function (dependency) {
+    forEach(assets[pkgName].loadingQueue, function (dependency) {
       if (assets[dependency].css && !loaded[assets[dependency].css]) {
         resources.push(assets[dependency].css);
       }
@@ -142,7 +142,7 @@ var loadAssets = window.loadAssets = (function () {
     // CSS files must be explicitly loaded within layout.
     //
 
-    forEach(assets[pkgName].load, function (dependency) {
+    forEach(assets[pkgName].loadingQueue, function (dependency) {
       if (assets[dependency].css) {
         loaded[assets[dependency].css] = true;
       }
