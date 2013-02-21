@@ -10,7 +10,7 @@ var loadAssets = window.loadAssets = (function () {
   'use strict';
 
 
-  // assets map for namespaces only - set with loadAssets.init()
+  // assets map for package names only - set with loadAssets.init()
   var assets;
 
 
@@ -38,24 +38,24 @@ var loadAssets = window.loadAssets = (function () {
   function noop() {}
 
 
-  // helper that reports about unknown namespace
-  function unknownNamespaceError(namespace) {
-    alert("namespace " + namespace + " has no resources");
+  // helper that reports about unknown package
+  function unknownNamespaceError(pkgName) {
+    alert("Package " + pkgName + " has no resources");
   }
 
 
-  function loadAssets(namespace, callback) {
+  function loadAssets(pkgName, callback) {
     var resources = [];
 
     callback = callback || noop;
 
-    if (!assets[namespace]) {
-      unknownNamespaceError(namespace);
+    if (!assets[pkgName]) {
+      unknownNamespaceError(pkgName);
       callback();
       return;
     }
 
-    forEach(assets[namespace].load, function (dependency) {
+    forEach(assets[pkgName].load, function (dependency) {
       if (assets[dependency].css && !loaded[assets[dependency].css]) {
         resources.push(assets[dependency].css);
       }
@@ -107,8 +107,8 @@ var loadAssets = window.loadAssets = (function () {
   }
 
 
-  // loads all necessary shims and libraries and assets for given namespace
-  loadAssets.init = function init(assetsMap, namespace) {
+  // loads all necessary shims and libraries and assets for given package
+  loadAssets.init = function init(assetsMap, pkgName) {
     var resources = [];
 
     // set internal assets map
@@ -129,11 +129,11 @@ var loadAssets = window.loadAssets = (function () {
     });
 
     //
-    // Make sure required namespace has resources
+    // Make sure required package has resources
     //
 
-    if (!assets[namespace]) {
-      unknownNamespaceError(namespace);
+    if (!assets[pkgName]) {
+      unknownNamespaceError(pkgName);
       return;
     }
 
@@ -142,7 +142,7 @@ var loadAssets = window.loadAssets = (function () {
     // CSS files must be explicitly loaded within layout.
     //
 
-    forEach(assets[namespace].load, function (dependency) {
+    forEach(assets[pkgName].load, function (dependency) {
       if (assets[dependency].css) {
         loaded[assets[dependency].css] = true;
       }
