@@ -45,7 +45,7 @@ window.loadAssets = (function () {
   // `preload` parameter is an optional array of URLs which are needed to load
   // before the given package.
   function loadAssets(pkgName, preload, callback) {
-    var resources = [];
+    var resources;
 
     if (2 === arguments.length) {
       callback = preload;
@@ -56,6 +56,9 @@ window.loadAssets = (function () {
       callback(new Error('Package "' + pkgName + '" has no resources.'));
       return;
     }
+
+    // Copy the preload array to allow pushing without side-effects.
+    resources = preload ? preload.slice(0) : resources;
 
     forEach(assets[pkgName].loadingQueue, function (dependency) {
       var pkgDist = assets[dependency];
@@ -70,7 +73,7 @@ window.loadAssets = (function () {
     });
 
     yepnope({
-      load: (preload ? preload.concat(resources) : resources),
+      load: resources,
       complete: function () {
         forEach(resources, function (res) { loaded[res] = true; });
         callback();
