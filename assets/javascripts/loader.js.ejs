@@ -13,12 +13,13 @@ var loadAssets = window.loadAssets = (function () {
   // Mapping of package names to package metadata for all available packages at
   // the currect locale. The metadata is an object consists of three keys:
   //
-  //   `js` is a path to a bundle with JavaScript part of the package.
-  //   `css` is the same but for CSS.
-  //   `loadingQueue` is an array of package names which are needed to load in
-  //   order to load _this_ package. It contains the given package too.
+  //   assets.js[package]           - URL to bundle, containing this package's JS
+  //   assets.css[package]          - URL to bundle, containing this package's CSS
+  //   assets.loadingQueue[package] - sorted list of dependencies, including this
+  //                                  package (just list of package names)
   //
   // This variable is initialized by `loadAssets.init()`.
+
   var assets;
 
 
