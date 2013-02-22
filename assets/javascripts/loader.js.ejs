@@ -41,8 +41,16 @@ window.loadAssets = (function () {
   function noop() {}
 
 
-  function loadAssets(pkgName, callback) {
+  // Load a package with all of associated assets ans dependences.
+  // `preload` parameter is an optional array of URLs which are needed to load
+  // before the given package.
+  function loadAssets(pkgName, preload, callback) {
     var resources = [];
+
+    if (2 === arguments.length) {
+      callback = preload;
+      preload  = null;
+    }
 
     if (!assets[pkgName]) {
       callback(new Error('Package "' + pkgName + '" has no resources.'));
@@ -61,33 +69,19 @@ window.loadAssets = (function () {
       }
     });
 
-    if (resources.length) {
-      yepnope({
-        load: resources,
-        complete: function () {
-          forEach(resources, function (res) { loaded[res] = true; });
-          callback();
-        }
-      });
-    }
+    yepnope({
+      load: (preload ? preload.concat(resources) : resources),
+      complete: function () {
+        forEach(resources, function (res) { loaded[res] = true; });
+        callback();
+      }
+    });
   }
 
 
   // Loads all necessary shims and libraries and assets for given package.
   loadAssets.init = function init(assetsMap, pkgName) {
     var shims = [];
-
-    function initComplete() {
-      loadAssets(pkgName, function () {
-        if (window.N) {
-          window.N.emit('init_complete');
-        } else {
-          alert('Nodeca error: Cannot access "N" sandbox object after ' +
-                'loading main package of this page. Ensure "lib" package ' +
-                'is declared in the dependency list of that package.');
-        }
-      });
-    }
 
     // Set internal assets map.
     assets = assetsMap;
@@ -110,11 +104,15 @@ window.loadAssets = (function () {
       shims.push(<%- JSON.stringify(asset_path('vendor/json2.js')) %>);
     }
 
-    if (shims.length) {
-      yepnope({load: shims, complete: initComplete});
-    } else {
-      initComplete();
-    }
+    loadAssets(pkgName, shims, function () {
+      if (window.N) {
+        window.N.emit('init_complete');
+      } else {
+        alert('Nodeca error: Cannot access "N" sandbox object after ' +
+              'loading main package of this page. Ensure "lib" package ' +
+              'is declared in the dependency list of that package.');
+      }
+    });
   };
 
 
