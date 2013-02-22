@@ -11,7 +11,7 @@ var Schema   = Mongoose.Schema;
 module.exports = function (N, collectionName) {
   var GlobalSettings = new Schema({
     _id: { type: String, unique: true},
-    value: { type: Schema.Types.Mixed, default: {}}
+    value: { type: Schema.Types.Mixed, 'default': {}}
   }, {strict: true});
 
   GlobalSettings.statics.get = function () {
