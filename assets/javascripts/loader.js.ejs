@@ -58,7 +58,7 @@ window.loadAssets = (function () {
     }
 
     if (!assets[pkgName]) {
-      callback(new Error('Package "' + pkgName + '" has no resources.'));
+      callback(new Error('We dont know such package (' + pkgName + ')'));
       return;
     }
 
