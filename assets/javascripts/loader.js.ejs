@@ -50,12 +50,14 @@ var loadAssets = window.loadAssets = (function () {
     }
 
     forEach(assets[pkgName].loadingQueue, function (dependency) {
-      if (assets[dependency].css && !loaded[assets[dependency].css]) {
-        resources.push(assets[dependency].css);
+      var pkgDist = assets[dependency];
+
+      if (pkgDist.css && !loaded[pkgDist.css]) {
+        resources.push(pkgDist.css);
       }
 
-      if (assets[dependency].js && !loaded[assets[dependency].js]) {
-        resources.push(assets[dependency].js);
+      if (pkgDist.js && !loaded[pkgDist.js]) {
+        resources.push(pkgDist.js);
       }
     });
 
