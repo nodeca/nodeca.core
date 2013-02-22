@@ -58,7 +58,7 @@ window.loadAssets = (function () {
     }
 
     // Copy the preload array to allow pushing without side-effects.
-    resources = preload ? preload.slice(0) : resources;
+    resources = preload ? preload.slice(0) : [];
 
     forEach(assets[pkgName].loadingQueue, function (dependency) {
       var pkgDist = assets[dependency];
