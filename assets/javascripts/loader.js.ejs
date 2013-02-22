@@ -37,6 +37,11 @@ window.loadAssets = (function () {
   }
 
 
+  function isFunction(object) {
+    return '[object Function]' === Object.prototype.toString.call(object);
+  }
+
+
   // Cached non-operable function.
   function noop() {}
 
@@ -47,7 +52,7 @@ window.loadAssets = (function () {
   function loadAssets(pkgName, preload, callback) {
     var resources;
 
-    if (2 === arguments.length) {
+    if (isFunction(preload)) {
       callback = preload;
       preload  = null;
     }
