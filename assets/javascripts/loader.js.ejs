@@ -9,6 +9,8 @@
 window.loadAssets = (function () {
   'use strict';
 
+  var URL_JSON2_SHIM  = <%- JSON.stringify(asset_path('vendor/json2.js')) %>;
+    , URL_ES5_SHIM    = <%- JSON.stringify(asset_path('vendor/es5-shim.js')) %>;
 
   // Mapping of package names to package metadata for all available packages at
   // the currect locale. The metadata is an object consists of three keys:
@@ -109,7 +111,11 @@ window.loadAssets = (function () {
     if (!window.JSON) {
       // JSON is required for Opera < 11 + IE < 8
       //See: http://caniuse.com/json
-      shims.push(<%- JSON.stringify(asset_path('vendor/json2.js')) %>);
+      shims.push(URL_JSON2_SHIM);
+    }
+    if (!Function.prototype.bind) {
+      // http://kangax.github.com/es5-compat-table/
+      shims.push(URL_ES5_SHIM);
     }
 
     loadAssets(pkgName, shims, function () {
