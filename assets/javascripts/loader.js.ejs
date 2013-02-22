@@ -105,7 +105,7 @@ window.loadAssets = (function () {
       }
     });
 
-    // Choose needed polyfills.
+    // Choose necessary polyfills.
     if (!window.JSON) {
       // JSON is required for Opera < 11 + IE < 8
       //See: http://caniuse.com/json
@@ -116,16 +116,11 @@ window.loadAssets = (function () {
       if (window.N) {
         window.N.emit('init_complete');
       } else {
-        alert('Nodeca error: Cannot access "N" sandbox object after ' +
-              'loading main package of this page. Ensure "lib" package ' +
-              'is declared in the dependency list of that package.');
+        alert('Init error: failed to load core JS files. Refresh page & try again.' +
+              'If problem still exists - contact administrator.');
       }
     });
   };
 
-
   return loadAssets;
 }());
-
-
-// vim: filetype=javascript:syntax=javascript
