@@ -178,7 +178,7 @@
 
       modules[name].module = {exports: {}};
 
-      modules[name].init.call(
+      modules[name].body.call(
         modules[name].module.exports
       , modules[name].module.exports
       , modules[name].module
@@ -192,11 +192,11 @@
   }
 
 
-  function define(name, apiPath, root, init) {
+  function define(name, apiPath, root, body) {
     modules[name] = {
-      root: root
+      root:    root
     , apiPath: apiPath
-    , init: init
+    , body:    body
     };
   }
 
