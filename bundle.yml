@@ -113,6 +113,10 @@ packages:
 
 
   lib:
+    vendor:
+      - "lodash"
+      - jquery: "./assets/vendor/jquery/jquery.js"
+
     client:
       root:       "./assets"
       main:       "javascripts/lib.js"
