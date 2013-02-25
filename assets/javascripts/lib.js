@@ -1,4 +1,7 @@
+//= require vendor/jquery/jquery
 //= require vendor/powertip/jquery.powertip
+
+//= require vendor/lodash
 
 //= require vendor/bootstrap/bootstrap
 //= require babelfish-runtime
