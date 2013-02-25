@@ -21,7 +21,6 @@
   //                                  package (just list of package names)
   //
   // This variable is initialized by `loadAssets.init()`.
-
   var assets;
 
 
@@ -29,6 +28,17 @@
   var loaded = {};
 
 
+  // Hash-table storage of all the defined modules (from the loaded packages).
+  // A key may be either an absolute path to module files or alias name of the
+  // module. An associated value is the module's metadata object. Such objects
+  // have the following structure:
+  //
+  //   `root`    - Absolute path to the module's directory.
+  //   `apiPath` - Nodeca API path to use with Wire.
+  //               Example: "admin.users.usergroups.create"
+  //   `body`    - Function with all actual code of the module.
+  //               It's executed on the first require.
+  //
   var modules = {};
 
 
@@ -132,6 +142,7 @@
   };
 
 
+  // Resolves `path` relative to `root` and add ".js" extension if no any other.
   function resolvePath(root, path) {
     var result, directory, filename;
 
@@ -164,12 +175,17 @@
   }
 
 
+  // Global-only require used to initialize the loaded packages.
   function require(name) {
     if (!modules[name]) {
       throw new Error('Unknown module "' + name + '"');
     }
 
+    // If it's a first require of the given module, initialize it first.
     if (!modules[name].module) {
+
+      // Local `t` (translate) function for use only within this module.
+      // It allows to use phrase strings relative to the module's API path.
       function __t__(phrase, params) {
         if ('.' === phrase.charAt(0)) {
           phrase = phrase.substr(1);
@@ -179,12 +195,15 @@
         return N.runtime.t(phrase, params);
       }
 
+      // Local `require` function for use only within this module.
+      // It resolves the given path relative to the module's root directory.
       function __require__(path) {
         return require(resolvePath(modules[name].root, path));
       }
 
       modules[name].module = {exports: {}};
 
+      // Execute the module's `body` function. It will populate the exports.
       modules[name].body.call(
         modules[name].module.exports
       , modules[name].module.exports
@@ -199,6 +218,7 @@
   }
 
 
+  // Defines a module. See comment on `modules` variable for details.
   function define(name, apiPath, root, body) {
     modules[name] = {
       root:    root
