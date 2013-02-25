@@ -6,7 +6,7 @@
 /*global yepnope*/
 
 
-window.loadAssets = (function () {
+(function (global) {
   'use strict';
 
   var URL_JSON2_SHIM  = <%- JSON.stringify(asset_path('vendor/json2.js')) %>
@@ -27,6 +27,9 @@ window.loadAssets = (function () {
 
   // Track loaded URLs (as keys, values are just `true`)
   var loaded = {};
+
+
+  var modules = {};
 
 
   // Simple cross-browser `forEach` iterator for arrays.
@@ -128,5 +131,77 @@ window.loadAssets = (function () {
     });
   };
 
-  return loadAssets;
-}());
+
+  function resolvePath(root, path) {
+    var result, directory;
+
+    path = path.split('/');
+
+    if ('.' === path[0] || '..' === path[0]) {
+      result = root.split('/');
+    } else {
+      result = [];
+    }
+
+    while (0 !== path.length) {
+      directory = path.shift();
+
+      if ('..' === directory) {
+        result.pop();
+      } else if ('.' !== directory) {
+        result.push(directory);
+      }
+    }
+
+    return result.join('/');
+  }
+
+
+  function require(name) {
+    if (!modules[name]) {
+      throw new Error('Unknown module "' + name + '"');
+    }
+
+    if (!modules[name].module) {
+      function __t__(phrase, params) {
+        if ('.' === phrase.charAt(0)) {
+          phrase = phrase.substr(1);
+        } else {
+          phrase = modules[name].apiPath + '.' + phrase;
+        }
+        return N.runtime.t(phrase, params);
+      }
+
+      function __require__(path) {
+        return require(resolvePath(modules[name].root, path));
+      }
+
+      modules[name].module = {exports: {}};
+
+      modules[name].init.call(
+        modules[name].module.exports
+      , modules[name].module.exports
+      , modules[name].module
+      , __require__
+      , window.N
+      , __t__
+      );
+    }
+
+    return modules[name].module.exports;
+  }
+
+
+  function define(name, apiPath, root, init) {
+    modules[name] = {
+      root: root
+    , apiPath: apiPath
+    , init: init
+    };
+  }
+
+
+  global.loadAssets = loadAssets;
+  global.require    = require;
+  global.define     = define;
+})(window);
