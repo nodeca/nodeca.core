@@ -176,13 +176,13 @@
 
 
   // Global-only require used to initialize the loaded packages.
-  function require(name) {
-    if (!modules[name]) {
-      throw new Error('Unknown module "' + name + '"');
+  function require(id) {
+    if (!modules[id]) {
+      throw new Error('Unknown module "' + id + '"');
     }
 
     // If it's a first require of the given module, initialize it first.
-    if (!modules[name].module) {
+    if (!modules[id].module) {
 
       // Local `t` (translate) function for use only within this module.
       // It allows to use phrase strings relative to the module's API path.
@@ -190,7 +190,7 @@
         if ('.' === phrase.charAt(0)) {
           phrase = phrase.substr(1);
         } else {
-          phrase = modules[name].apiPath + '.' + phrase;
+          phrase = modules[id].apiPath + '.' + phrase;
         }
         return N.runtime.t(phrase, params);
       }
@@ -198,29 +198,29 @@
       // Local `require` function for use only within this module.
       // It resolves the given path relative to the module's root directory.
       function __require__(path) {
-        return require(resolvePath(modules[name].root, path));
+        return require(resolvePath(modules[id].root, path));
       }
 
-      modules[name].module = {exports: {}};
+      modules[id].module = {exports: {}};
 
       // Execute the module's `body` function. It will populate the exports.
-      modules[name].body.call(
-        modules[name].module.exports
-      , modules[name].module.exports
-      , modules[name].module
+      modules[id].body.call(
+        modules[id].module.exports
+      , modules[id].module.exports
+      , modules[id].module
       , __require__
       , window.N
       , __t__
       );
     }
 
-    return modules[name].module.exports;
+    return modules[id].module.exports;
   }
 
 
   // Defines a module. See comment on `modules` variable for details.
-  function define(name, apiPath, root, body) {
-    modules[name] = {
+  function define(id, apiPath, root, body) {
+    modules[id] = {
       root:    root
     , apiPath: apiPath
     , body:    body
