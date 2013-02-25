@@ -37,34 +37,47 @@ var N = window.N = (function (N) {
   // Create cross-browser log wrapper
   //
   (function () {
-    var dumb;
-
-    if (!window.console.log) {
-      dumb = $.noop;
-    } else {
-      dumb = function (a, b, c, d, e) {
-        try {
-          window.console.log(a, b, c, d, e);
-        } catch (e) {
-          // do nothing
-        }
-      };
-    }
-
     N.logger = {};
 
     _.each(['assert', 'error', 'info', 'warn', 'debug'], function (level) {
-      if (!window.console[level]) {
-        N.logger[level] = dumb;
-      } else {
-        N.logger[level] = function (a, b, c, d, e) {
-          try {
-            window.console[level](a, b, c, d, e);
-          } catch (e) {
-            // do nothing
-          }
-        };
-      }
+      N.logger[level] = function (object) {
+        var message
+          , parameters = arguments
+          , index      = 1; // Format argument index; Always starts from 1.
+
+        if (!window.console) {
+          return;
+        }
+
+        if ('string' === typeof object) { // Format string.
+          message = object.replace(/%[sdj%]/, function (match) {
+            if (index >= parameters.length) {
+              return match;
+            }
+
+            switch (match) {
+            case '%%':
+              return '%';
+            case '%s':
+              return String(parameters[index++]);
+            case '%d':
+              return Number(parameters[index++]);
+            case '%j':
+              return JSON.stringify(parameters[index++]);
+            default:
+              return match;
+            }
+          });
+        } else { // Simple object.
+          message = JSON.stringify(object);
+        }
+
+        if (window.console[level]) {
+          window.console[level](message);
+        } else {
+          window.console.log(message);
+        }
+      };
     });
   }());
 
