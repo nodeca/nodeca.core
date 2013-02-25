@@ -208,6 +208,11 @@
   }
 
 
+  // Expose these to simplify the debugging.
+  require.modules = modules;
+  require.resolve = resolvePath;
+
+
   global.loadAssets = loadAssets;
   global.require    = require;
   global.define     = define;
