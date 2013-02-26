@@ -39,7 +39,7 @@ var N = window.N = (function (N) {
   (function () {
     N.logger = {};
 
-    _.each(['assert', 'error', 'info', 'warn', 'debug'], function (level) {
+    ['assert', 'error', 'info', 'warn', 'debug'].forEach(function (level) {
       N.logger[level] = function (object) {
         var message
           , parameters = arguments
@@ -87,7 +87,7 @@ var N = window.N = (function (N) {
 
 
   // fill in routes
-  _.each(<%- jetson(N.runtime.client_routes) %>, function (v) {
+  (<%- jetson(N.runtime.client_routes) -%>).forEach(function (v) {
     N.runtime.router.addRoute(v[0], v[1]);
   });
 
