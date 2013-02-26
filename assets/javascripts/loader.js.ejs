@@ -15,10 +15,10 @@
   // Mapping of package names to package metadata for all available packages at
   // the currect locale. The metadata is an object consists of three keys:
   //
-  //   assets.js[package]           - URL to bundle, containing this package's JS
-  //   assets.css[package]          - URL to bundle, containing this package's CSS
-  //   assets.loadingQueue[package] - sorted list of dependencies, including this
-  //                                  package (just list of package names)
+  //   `js`            - URL to bundle, containing this package's JS
+  //   `css`           - URL to bundle, containing this package's CSS
+  //   `packagesQueue` - sorted list of dependencies, including this
+  //                     package (just list of package names)
   //
   // This variable is initialized by `loadAssets.init()`.
   var assets;
@@ -80,7 +80,7 @@
     // Copy the preload array to allow pushing without side-effects.
     resources = preload ? preload.slice(0) : [];
 
-    forEach(assets[pkgName].loadingQueue, function (dependency) {
+    forEach(assets[pkgName].packagesQueue, function (dependency) {
       var pkgDist = assets[dependency];
 
       if (pkgDist.css && !loaded[pkgDist.css]) {
@@ -114,7 +114,7 @@
 
     // Mark all stylesheets of the given package as loaded, since they are
     // included to head of the page.
-    forEach(assets[pkgName].loadingQueue, function (dependency) {
+    forEach(assets[pkgName].packagesQueue, function (dependency) {
       if (assets[dependency].css) {
         loaded[assets[dependency].css] = true;
       }
