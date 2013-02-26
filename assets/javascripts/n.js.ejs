@@ -45,7 +45,7 @@ var N = window.N = (function (N) {
           , parameters = arguments
           , index      = 1; // Format argument index; Always starts from 1.
 
-        if (!window.console) {
+        if (!(window.console && window.console.log)) {
           return;
         }
 
@@ -72,10 +72,14 @@ var N = window.N = (function (N) {
           message = JSON.stringify(object);
         }
 
-        if (window.console[level]) {
-          window.console[level](message);
-        } else {
-          window.console.log(message);
+        try {
+          if (window.console[level]) {
+            window.console[level](message);
+          } else {
+            window.console.log(message);
+          }
+        } catch (err) {
+          // Do nothing.
         }
       };
     });
