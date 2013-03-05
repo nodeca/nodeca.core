@@ -1,0 +1,14 @@
+#content
+  != self.partial('@admin.blocks.sidebar_menu')
+
+  .main
+    != self.partial('@admin.blocks.breadcrumbs');
+
+    ul.breadcrumbs
+      li: a(href='#') Breadcrumbs
+      li: a(href='#') Should
+      li: a(href='#') Be
+      li: a(href='#') Here
+
+    h1 Hello World
+    p= self.now

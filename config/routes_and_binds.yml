@@ -8,12 +8,12 @@ router:
     admin.dashboard:
       "/": ~
 
-    admin.settings.global.index:
-      "/settings": ~
+    #admin.settings.global.index:
+    #  "/settings": ~
 
-    admin.settings.global.edit:
-      "/settings/{id}":
-        id: /\w+/
+    #admin.settings.global.edit:
+    #  "/settings/{id}":
+    #    id: /\w+/
 
     core.assets:
       "/assets/{path}":

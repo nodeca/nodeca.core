@@ -32,24 +32,25 @@ mixin _fetch_breadcrumbs(menu, result)
         mixin _fetch_breadcrumbs(item.childs, result)
 
 
-- if (self.menus.admin && self.menus.admin.navbar && !self.widgets.breadcrumbs)
-  - self.widgets.breadcrumbs = []
-  mixin _fetch_breadcrumbs(self.menus.admin.navbar, self.widgets.breadcrumbs)
-  - if (self.widgets.breadcrumbs.length)
-    //- if current api path != last breadcrumb element
-    //- then add page title
-    - if ( self.widgets.breadcrumbs.slice(-1)[0].tail !== api_path_tail)
-      - self.widgets.breadcrumbs.push({ text: self.head.title });
+#breadcrumbs
+  - if (self.menus.admin && self.menus.admin.navbar && !self.widgets.breadcrumbs)
+    - self.widgets.breadcrumbs = []
+    mixin _fetch_breadcrumbs(self.menus.admin.navbar, self.widgets.breadcrumbs)
+    - if (self.widgets.breadcrumbs.length)
+      //- if current api path != last breadcrumb element
+      //- then add page title
+      - if ( self.widgets.breadcrumbs.slice(-1)[0].tail !== api_path_tail)
+        - self.widgets.breadcrumbs.push({ text: self.head.title });
 
-- if (self.widgets.breadcrumbs && self.widgets.breadcrumbs.length)
-  - last_element = self.widgets.breadcrumbs.pop()
-  ul.breadcrumb
-    - each item in self.widgets.breadcrumbs
-      li
-        - if (item.route)
-          a(href=self.link_to(item.route))= item.text
-        - else
-          | #{item.text}
-        span.divider: /
-    li.active
-      | #{last_element.text}
+  - if (self.widgets.breadcrumbs && self.widgets.breadcrumbs.length)
+    - last_element = self.widgets.breadcrumbs.pop()
+    ul.breadcrumb
+      - each item in self.widgets.breadcrumbs
+        li
+          - if (item.route)
+            a(href=self.link_to(item.route))= item.text
+          - else
+            | #{item.text}
+          span.divider: /
+      li.active
+        | #{last_element.text}

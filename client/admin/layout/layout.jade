@@ -1,7 +1,7 @@
 !!!
 html.no-js
   head
-    include ../common/head
+    include ./_head
 
     - if (self.head.stylesheets.admin)
       each cssPath in self.head.stylesheets.admin
@@ -16,7 +16,7 @@ html.no-js
 
   body
 
-    include ../admin/partials/_topnav_menu
+    include ./_topnav_menu
 
     - if (self.menus.admin && self.menus.admin.navbar)
       nav.navbar.navbar-fixed-top
@@ -25,7 +25,7 @@ html.no-js
             mixin topnav_menu(self.menus.admin.navbar)
 
     .container-fluid
-      #content!= self.content
+      != self.content
 
     .nojs
       .alert.alert-error #{self.t('common.nojs')}
