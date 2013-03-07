@@ -18,7 +18,9 @@ router:
     core.assets:
       "/assets/{path}":
         path: /.+/
+        responder: bin
 
     core.static:
       "/{file}":
         file: /favicon.ico|robots.txt|snippet.png/
+        responder: bin
