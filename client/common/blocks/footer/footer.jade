@@ -1,0 +1,25 @@
+footer#footer.container.page-footer
+  ul.page-footer-nav.clearfix
+    li: a(href='#') About
+    li: a(href='#') Contacts
+    li: a(href='#') Terms
+    li: a(href='#') Help
+
+    li.dropup
+      a.dropdown-toggle(href='#',data-toggle='dropdown') Language
+        b.caret
+      ul.dropdown-menu
+        each locale in self.enabled_locales
+          li
+            a(href='#',
+              data-on-click='common.locale',
+              data-locale=locale)= self.t('language.' + locale)
+
+  .nojs
+    .alert.alert-error #{self.t('nojs')} 
+
+  p.copyright
+    | Powered by 
+    a(href='#') Nodeca
+    | , social platform by 
+    a(href='#') RC Design

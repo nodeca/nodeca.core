@@ -1,9 +1,9 @@
 !!! 5
 html.no-js(itemscope, itemtype='http://schema.org/WebPage')
   head
-    include ../common/head
+    include ./_head
 
-    - if (self.head.stylesheets[self.head.apiPath.split('.').shift()])
+    - if (self.head.apiPath.split('.').shift())
       each cssPath in self.head.stylesheets[self.head.apiPath.split('.').shift()]
         link(rel='stylesheet', href=cssPath)
 
@@ -11,10 +11,10 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
       script(type="text/javascript", src=self.asset_path('es5-shim.js'))
 
     script(type="text/javascript")
-      !{self.asset_include('loader.js')}
+      !{self.asset_include('javascripts/loader.js')}
       loadAssets.init(
         !{JSON.stringify(self.head.assets)},
-        '!{self.head.apiPath.split(".").shift()}'
+        !{JSON.stringify(self.head.apiPath.split(".").shift())}
       );
 
     script(type="text/javascript")
@@ -40,7 +40,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
           .nav-collapse.collapse
 
-            include ../common/navbar_menu
+            != self.partial('@common.blocks.navbar_menu')
 
             form.navbar-search
               input.input-medium.search-query(type='text', placeholder='Search')
@@ -51,7 +51,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
               - if (self.menus.common && self.menus.common.admin && self.menus.common.admin.length > 0)
                 ul.nav
                   - each item in self.menus.common.admin
-                    li: a(href=item.link, target='_blank')= self.t(item.title)
+                    li: a(href=item.link, target='_blank')= self.t('@' + item.title)
 
             - if (self.runtime.is_member)
               ul.nav.pull-right
@@ -62,45 +62,19 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
                   ul.dropdown-menu
                     li: a(href='#') Admin
                     li.divider
-                    li: a(href=self.link_to('users.profile'))= self.t('common.auth.profile')
+                    li: a(href=self.link_to('users.profile'))= self.t('@common.auth.profile')
                     li: a.icon-check(href='#') No images (fast)
                     li.divider
-                    li: a(href=self.link_to('users.auth.logout'))= self.t('common.auth.logout')
+                    li: a(href=self.link_to('users.auth.logout'))= self.t('@common.auth.logout')
             - else
               ul.nav.pull-right
-                li: a(href=self.link_to('users.auth.login.show'))= self.t('common.auth.login')
-                li: a(href=self.link_to('users.auth.register.show'))= self.t('common.auth.register')
-               
-
-    #content.container!= self.content
+                li: a(href=self.link_to('users.auth.login.show'))= self.t('@common.auth.login')
+                li: a(href=self.link_to('users.auth.register.show'))= self.t('@common.auth.register')
 
 
-    footer.container.page-footer
-      ul.page-footer-nav.clearfix
-        li: a(href='#') About
-        li: a(href='#') Contacts
-        li: a(href='#') Terms
-        li: a(href='#') Help
+    .container!= self.content
 
-        li.dropup
-          a.dropdown-toggle(href='#',data-toggle='dropdown') Language
-            b.caret
-          ul.dropdown-menu
-            each locale in self.nodeca('config.locales.enabled')
-              li
-                a(href='#',
-                  data-on-click='common.locale',
-                  data-locale=locale)= self.t('common.language.' + locale)
-
-      .nojs
-        .alert.alert-error #{self.t('common.nojs')} 
-
-      p.copyright
-        | Powered by 
-        a(href='#') Nodeca
-        | , social platform by 
-        a(href='#') RC Design
-
+    != self.partial('@common.blocks.footer')
 
     .debug.hidden-phone
       .container

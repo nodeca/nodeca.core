@@ -6,10 +6,6 @@ i18n:
         admin:
           dashboard: Admin
 
-      language:
-        en-US: English
-        ru-RU: Русский
-
       io:
         progress: Loading...
         error:
@@ -17,8 +13,6 @@ i18n:
           invalid_csrf_token: Security token expired. Pease, try again.
           application_fuckup: Application Error. Try again later.
           communication_timeout: Communication problems. Try again later.
-
-      nojs: This site will not work without javascript!
 
       pagination:
         dropdown_label: 'Jump to:'
