@@ -53,23 +53,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
                   - each item in self.menus.common.admin
                     li: a(href=item.link, target='_blank')= self.t('@' + item.title)
 
-            - if (self.runtime.is_member)
-              ul.nav.pull-right
-                li.dropdown
-                  a.dropdown-toggle.icon-user(href='#', data-toggle='dropdown')
-                    | #{self.runtime.user_name}
-                    b.caret
-                  ul.dropdown-menu
-                    li: a(href='#') Admin
-                    li.divider
-                    li: a(href=self.link_to('users.profile'))= self.t('@common.auth.profile')
-                    li: a.icon-check(href='#') No images (fast)
-                    li.divider
-                    li: a(href=self.link_to('users.auth.logout'))= self.t('@common.auth.logout')
-            - else
-              ul.nav.pull-right
-                li: a(href=self.link_to('users.auth.login.show'))= self.t('@common.auth.login')
-                li: a(href=self.link_to('users.auth.register.show'))= self.t('@common.auth.register')
+            != self.partial('@common.blocks.auth_toolbar')
 
 
     .container!= self.content
