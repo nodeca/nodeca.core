@@ -16,5 +16,6 @@ mixin breadcrumb_step(tail)
     span(itemprop='child', itemscope, itemtype='http://schema.org/Breadcrumb')
       mixin breadcrumb_step(tail.slice(1))
 
-.breadcrumbs(itemprop='breadcrumb', itemscope, itemtype='http://schema.org/Breadcrumb')
-  mixin breadcrumb_step(self.widgets.breadcrumbs)
+
+#breadcrumbs.breadcrumbs(itemprop='breadcrumb', itemscope, itemtype='http://schema.org/Breadcrumb')
+  mixin breadcrumb_step(self.blocks.breadcrumbs)

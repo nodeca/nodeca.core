@@ -79,9 +79,12 @@ packages:
       include:    "i18n/*.yml"
 
     styles:
-      root:       "./assets"
-      main:       "desktop/common/app.styl"
-      include:    "desktop/common/**.styl"
+      root:       "./"
+      main:       "assets/desktop/common/app.styl"
+      exclude:    "/(^|\\/|\\\\)_.*/"
+      include:
+        - "assets/desktop/common/**.styl"
+        - "client/common/**.styl"
 
     #styles:
     #  root:       "./client/common"

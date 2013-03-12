@@ -14,11 +14,6 @@ i18n:
           application_fuckup: Application Error. Try again later.
           communication_timeout: Communication problems. Try again later.
 
-      pagination:
-        dropdown_label: 'Jump to:'
-        dropdown_placeholder: Page number
-        dropdown_button: Go!
-
       recaptcha:
         change_image: Change image
         captcha: Captcha code
