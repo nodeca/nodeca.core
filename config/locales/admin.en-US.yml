@@ -3,9 +3,6 @@ i18n:
     admin:
       phrases:
         setting:
-          yes: "Yes"
-          no: "No"
-          override: Override
           filter:
             label: Filter settings
             show_all: show all
