@@ -21,11 +21,6 @@ packages:
       include:    "*.js"
       exclude:    "/(^|\\/|\\\\)_.*/"
 
-    #views:
-    #  root:       "./client/admin"
-    #  include:    "*.jade"
-    #  exclude:    "/(^|\\/|\\\\)_.*/"
-
     views:
       root:       "./client/admin"
       include:    "*.jade"
@@ -35,15 +30,11 @@ packages:
       root:       "./client/admin"
       include:    "i18n/*.yml"
 
-    #styles:
-    #  root:       "./client/admin"
-    #  main:       "app.styl"
-    #  include:    "*.styl"
-
     styles:
-      root:       "./assets"
-      main:       "desktop/admin/app.styl"
-      include:    "desktop/admin/**.styl"
+      root:       "."
+      main:       "assets/desktop/admin/app.styl"
+      include:    "client/admin/**.styl"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     server:
       root:       "./server/admin"
@@ -64,11 +55,6 @@ packages:
       include:    "*.js"
       exclude:    "/(^|\\/|\\\\)_.*/"
 
-    #views:
-    #  root:       "./client/common"
-    #  include:    "*.jade"
-    #  exclude:    "/(^|\\/|\\\\)_.*/"
-
     views:
       root:       "./client/common"
       include:    "*.jade"
@@ -79,17 +65,10 @@ packages:
       include:    "i18n/*.yml"
 
     styles:
-      root:       "./"
+      root:       "."
       main:       "assets/desktop/common/app.styl"
+      include:    "client/common/**.styl"
       exclude:    "/(^|\\/|\\\\)_.*/"
-      include:
-        - "assets/desktop/common/**.styl"
-        - "client/common/**.styl"
-
-    #styles:
-    #  root:       "./client/common"
-    #  main:       "app.styl"
-    #  include:    "*.styl"
 
     server:
       root:       "./server/common"

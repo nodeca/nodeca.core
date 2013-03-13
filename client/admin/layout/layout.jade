@@ -1,7 +1,23 @@
 !!!
 html.no-js
   head
-    include ./_head
+    //- http://validator.w3.org  recommendation
+    meta(charset='UTF-8')
+
+    //- defaults for mobile devices, from twitter bootstrap.
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+
+    - if (self.head)
+      - if (self.head.title)
+        title #{self.head.title}
+      //- description
+      - if (self.head.desc)
+        meta(name='description', content=self.head.desc)
+      //- keywords
+      - if (self.head.keywords)
+        meta(name='description', content=self.head.keywords)
+
+    meta(name="runtime", content=JSON.stringify(self.runtime))
 
     - if (self.head.stylesheets.admin)
       each cssPath in self.head.stylesheets.admin
@@ -14,8 +30,7 @@ html.no-js
       !{self.asset_include('javascripts/loader.js')}
       loadAssets.init(!{JSON.stringify(self.head.assets)}, 'admin');
 
-  body
-
+  body#admin-layout
     include ./_topnav_menu
 
     - if (self.menus.admin && self.menus.admin.navbar)
@@ -28,4 +43,4 @@ html.no-js
       != self.content
 
     .nojs
-      .alert.alert-error #{self.t('common.nojs')}
+      .alert.alert-error #{self.t('nojs')}
