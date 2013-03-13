@@ -30,7 +30,7 @@ html.no-js
       !{self.asset_include('javascripts/loader.js')}
       loadAssets.init(!{JSON.stringify(self.head.assets)}, 'admin');
 
-  body#admin-layout
+  body
     include ./_topnav_menu
 
     - if (self.menus.admin && self.menus.admin.navbar)
