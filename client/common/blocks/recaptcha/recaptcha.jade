@@ -1,0 +1,28 @@
+- var public_key = self.public_key
+- var errors     = self.errors || {}
+
+.control-group.captcha-image
+  .controls
+    span#recaptcha_image
+    div.captcha-reload
+      a(tabindex=-1, href="javascript:Recaptcha.reload();Recaptcha.focus_response_field();")= self.t('change_image')
+
+- var _recaptcha_class = errors.recaptcha ? 'error' : ''
+- var _recaptcha_help  = errors.recaptcha ? errors.recaptcha : self.t('captcha_help')
+
+.control-group(class=_recaptcha_class)
+  label.control-label(for='recaptcha_response_field')= self.t('captcha')
+  .controls
+    .row-fluid
+      input.span12(id="recaptcha_response_field", name="recaptcha_response_field", type='text')
+      span.help-block #{_recaptcha_help}
+
+script
+  yepnope({
+    load: "http://www.google.com/recaptcha/api/js/recaptcha_ajax.js",
+    complete: function () {
+      Recaptcha.create("#{public_key}", 'recaptcha_div', {
+        theme: 'custom'
+      });
+    }
+  });

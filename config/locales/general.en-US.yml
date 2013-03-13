@@ -13,8 +13,3 @@ i18n:
           invalid_csrf_token: Security token expired. Pease, try again.
           application_fuckup: Application Error. Try again later.
           communication_timeout: Communication problems. Try again later.
-
-      recaptcha:
-        change_image: Change image
-        captcha: Captcha code
-        captcha_help: Enter 2 words from the image above.
