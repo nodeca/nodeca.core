@@ -56,7 +56,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
           .nav-collapse.collapse
 
-            != self.partial('@common.blocks.navbar_menu')
+            != self.partial('@common.blocks.navbar_menu', { apiPath: self.head.apiPath, menu: self.menus.common })
 
             form.navbar-search
               input.input-medium.search-query(type='text', placeholder='Search')
@@ -70,12 +70,12 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
                     li: a(href=item.link, target='_blank')= self.t('@' + item.title)
 
             //- NOTE: This block is located in `nodeca.users`
-            != self.partial('@common.blocks.auth_toolbar')
+            != self.partial('@common.blocks.auth_toolbar', { is_member: self.runtime.is_member, user_name: self.runtime.user_name })
 
 
     .container!= self.content
 
-    != self.partial('@common.blocks.footer')
+    != self.partial('@common.blocks.footer', { locales: self.enabled_locales })
 
     .debug.hidden-phone
       .container

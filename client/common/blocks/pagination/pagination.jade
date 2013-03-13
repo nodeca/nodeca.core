@@ -27,10 +27,10 @@ mixin _pagination_dropdown_menu(route, params)
 
 
 //- cast int types for safety (router returns parameters as strings)
-- route    = self.blocks.pagination.route
-- params   = self.blocks.pagination.params
-- current  = +self.blocks.pagination.current
-- max_page = +self.blocks.pagination.max_page
+- route    = self.route
+- params   = self.params
+- current  = +self.current
+- max_page = +self.max_page
 
 
 ul.pagination

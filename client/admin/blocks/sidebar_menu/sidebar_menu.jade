@@ -3,14 +3,14 @@
   - var MENU_BASE_NS_LEVEL = 3
   //- need cut base of api path ('admin')
   - var API_PATH_BASE_NS_LEVEL = 1
-  - var api_path_tail = self.head.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
+  - var api_path_tail = self.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
 
 
-  - if (self.menus.admin && self.menus.admin.navbar)
+  - if (self.menu && self.menu.navbar)
     - var item_path_tail
     - var menu_active_class
 
-    - each app_level_item in self.menus.admin.navbar
+    - each app_level_item in self.menu.navbar
 
       //- display items only for current app
       - item_path_tail = app_level_item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
@@ -22,7 +22,7 @@
               - item_path_tail= first_level_item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
               
               //- highlight sub-items (check by api path)
-              - if (api_path_tail.indexOf(item_path_tail) > -1 || self.head.apiPath === first_level_item.to)
+              - if (api_path_tail.indexOf(item_path_tail) > -1 || self.apiPath === first_level_item.to)
                 menu_active_class = '_active'
               - else
                 menu_active_class = ''

@@ -2,7 +2,7 @@
 - var MENU_BASE_NS_LEVEL = 3
 //- need cut base of api path ('admin')
 - var API_PATH_BASE_NS_LEVEL = 1
-- var api_path_tail = self.head.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
+- var api_path_tail = self.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
 - var last_element
 
 
@@ -33,19 +33,19 @@ mixin _fetch_breadcrumbs(menu, result)
 
 
 #breadcrumbs
-  - if (self.menus.admin && self.menus.admin.navbar && !self.widgets.breadcrumbs)
-    - self.widgets.breadcrumbs = []
-    mixin _fetch_breadcrumbs(self.menus.admin.navbar, self.widgets.breadcrumbs)
-    - if (self.widgets.breadcrumbs.length)
+  - if (self.menu && self.menu.navbar && !self.path)
+    - self.path = []
+    mixin _fetch_breadcrumbs(self.menu.navbar, self.path)
+    - if (self.path.length)
       //- if current api path != last breadcrumb element
       //- then add page title
-      - if ( self.widgets.breadcrumbs.slice(-1)[0].tail !== api_path_tail)
-        - self.widgets.breadcrumbs.push({ text: self.head.title });
+      - if (self.path.slice(-1)[0].tail !== api_path_tail)
+        - self.path.push({ text: self.head.title });
 
-  - if (self.widgets.breadcrumbs && self.widgets.breadcrumbs.length)
-    - last_element = self.widgets.breadcrumbs.pop()
+  - if (self.path && self.path.length)
+    - last_element = self.path.pop()
     ul.breadcrumb
-      - each item in self.widgets.breadcrumbs
+      - each item in self.path
         li
           - if (item.route)
             a(href=self.link_to(item.route))= item.text

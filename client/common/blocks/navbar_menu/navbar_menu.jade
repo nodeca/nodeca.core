@@ -1,7 +1,7 @@
-- if (self.menus.common)
+- if (self.menu)
   ul#navbar_menu.nav
-    - each item in self.menus.common.navbar
-      - var ns = self.head.apiPath.split('.').shift(), item_ns = item.to.split('.').shift();
+    - each item in self.menu.navbar
+      - var ns = self.apiPath.split('.').shift(), item_ns = item.to.split('.').shift();
       - if (ns === item_ns)
         li(data-api3-path=item_ns, class='active'): a(href=item.link)= self.t(item.title)
       - else
