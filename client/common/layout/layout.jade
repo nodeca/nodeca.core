@@ -1,9 +1,25 @@
 !!! 5
 html.no-js(itemscope, itemtype='http://schema.org/WebPage')
   head
-    include ./_head
+    //- http://validator.w3.org  recommendation
+    meta(charset='UTF-8')
 
-    - if (self.head.apiPath.split('.').shift())
+    //- defaults for mobile devices, from twitter bootstrap.
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+
+    - if (self.head)
+      - if (self.head.title)
+        title #{self.head.title}
+      //- description
+      - if (self.head.desc)
+        meta(name='description', content=self.head.desc)
+      //- keywords
+      - if (self.head.keywords)
+        meta(name='description', content=self.head.keywords)
+
+    meta(name="runtime", content=JSON.stringify(self.runtime))
+
+    - if (self.head.stylesheets[self.head.apiPath.split('.').shift()])
       each cssPath in self.head.stylesheets[self.head.apiPath.split('.').shift()]
         link(rel='stylesheet', href=cssPath)
 
@@ -14,7 +30,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
       !{self.asset_include('javascripts/loader.js')}
       loadAssets.init(
         !{JSON.stringify(self.head.assets)},
-        !{JSON.stringify(self.head.apiPath.split(".").shift())}
+        '!{self.head.apiPath.split(".").shift()}'
       );
 
     script(type="text/javascript")
@@ -53,6 +69,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
                   - each item in self.menus.common.admin
                     li: a(href=item.link, target='_blank')= self.t('@' + item.title)
 
+            //- NOTE: This block is located in `nodeca.users`
             != self.partial('@common.blocks.auth_toolbar')
 
 

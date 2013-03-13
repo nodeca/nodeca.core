@@ -33,7 +33,7 @@ mixin _pagination_dropdown_menu(route, params)
 - max_page = +self.blocks.pagination.max_page
 
 
-ul#pagination.pagination
+ul.pagination
   //- first page always displayed, except when current == 1.
   //- (then we skip first half of paginator)
   - if (current > 1)
