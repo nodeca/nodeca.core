@@ -97,6 +97,7 @@ packages:
   lib:
     vendor:
       - "lodash"
+      - "jquery": null # jQuery is embeded via Mincer.
       - "nodeca.core/lib/system/render/common.js"
       - "nodeca.core/lib/system/date.js"
 
