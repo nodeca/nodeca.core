@@ -108,3 +108,4 @@ packages:
         - javascripts/loader.js.ejs
         - vendor/es5-shim.js
         - vendor/json2.js
+        - vendor/fontello/src/font/nodeca.*
