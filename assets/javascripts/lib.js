@@ -16,6 +16,8 @@
 //= require client
 
 
+'use strict';
+
 /*global define, window*/
 
 
