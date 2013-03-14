@@ -12,6 +12,14 @@
   var URL_JSON2_SHIM  = <%- JSON.stringify(asset_path('vendor/json2.js')) %>
     , URL_ES5_SHIM    = <%- JSON.stringify(asset_path('vendor/es5-shim.js')) %>;
 
+
+  // Regexp allows to split a file path to a basename and an extname.
+  //
+  // FILE_EXT_REGEXP.exec('foo/bar.js') === ['foo/bar.js', 'foo/bar', '.js']
+  //
+  var FILE_EXT_REGEXP = /^(.+?)(\.[^.]+)?$/;
+
+
   // Mapping of package names to package metadata for all available packages at
   // the currect locale. The metadata is an object consists of three keys:
   //
@@ -142,9 +150,9 @@
   };
 
 
-  // Resolves `path` relative to `root` and add ".js" extension if no any other.
+  // Resolves `path` relative to `root`.
   function resolvePath(root, path) {
-    var result, directory, filename;
+    var result, directory;
 
     path = path.split('/');
 
@@ -162,13 +170,6 @@
       } else if ('.' !== directory) {
         result.push(directory);
       }
-    }
-
-    filename = result[result.length - 1];
-
-    // Set ".js" file extension if the filename has no explicit extension.
-    if (!(/\.[^.]+/.test(filename))) {
-      result[result.length - 1] = filename + '.js';
     }
 
     return result.join('/');
@@ -201,7 +202,7 @@
         return require(resolvePath(modules[id].root, path));
       }
 
-      modules[id].module = {exports: {}};
+      modules[id].module = { exports: {} };
 
       // Execute the module's `body` function. It will populate the exports.
       modules[id].body.call(
@@ -220,11 +221,30 @@
 
   // Defines a module. See comment on `modules` variable for details.
   function define(id, apiPath, root, body) {
-    modules[id] = {
+    var definition, extensions, match;
+    
+    definition = {
       root:    root
     , apiPath: apiPath
     , body:    body
     };
+
+    extensions = ['', '.js'];
+    match = FILE_EXT_REGEXP.exec(id);
+
+    if (!match) {
+      throw new Error('Invalid module identifier: ' + String(id));
+    }
+
+    if (match[2]) {
+      extensions.push(match[2]);
+    }
+
+    // Register the new module with all possible combinations of basename
+    // and file extensions.
+    forEach(extensions, function (ext) {
+      modules[match[1] + ext] = definition;
+    });
   }
 
 
