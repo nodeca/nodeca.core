@@ -11,3 +11,4 @@
 //= require_tree ./lib
 
 //= require ./n
+//= require client
