@@ -97,6 +97,9 @@ packages:
   lib:
     vendor:
       - "lodash"
+
+      # TODO: Remove these when client-side `require` will resolve package names.
+      # The following is needed only to allow requiring by "nodeca.core/"-paths.
       - "nodeca.core/lib/system/render/common.js"
       - "nodeca.core/lib/system/date.js"
 
