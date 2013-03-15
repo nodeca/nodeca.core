@@ -202,7 +202,10 @@
         return require(resolvePath(modules[id].root, path));
       }
 
-      modules[id].module = { exports: {} };
+      modules[id].module = {
+        apiPath: modules[id].apiPath
+      , exports: {}
+      };
 
       // Execute the module's `body` function. It will populate the exports.
       modules[id].body.call(
