@@ -1,3 +1,3 @@
-define(<%= name %>, <%= apiPath %>, <%= root %>, function (exports, module, require, N, t) {
+define(<%= JSON.stringify(name) %>, <%= JSON.stringify(apiPath) %>, <%= JSON.stringify(root) %>, function (exports, module, require, N, t) {
   <%= source %>
 });

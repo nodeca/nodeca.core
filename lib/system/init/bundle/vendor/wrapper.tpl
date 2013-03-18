@@ -1,4 +1,4 @@
-define(<%= name %>, null, <%= root %>, function (exports, module, require, N, t) {
+define(<%= JSON.stringify(name) %>, null, <%= JSON.stringify(root) %>, function (exports, module, require, N, t) {
   <%= source %>
 });
-require(<%= name %>);
+require(<%= JSON.stringify(name) %>);
