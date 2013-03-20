@@ -99,9 +99,10 @@ packages:
       - "lodash"
 
     client:
-      root:       "."
-      main:       "assets/javascripts/n.js.ejs"
-      include:    "client/lib/**.js"
+      root:       "./client/lib"
+      main:       "n.js.ejs"
+      include:    "**.js"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     bin:
       root:       "./assets"
