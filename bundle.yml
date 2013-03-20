@@ -100,7 +100,7 @@ packages:
 
     client:
       root:       "."
-      main:       "assets/javascripts/lib.js"
+      main:       "assets/javascripts/n.js.ejs"
       include:    "client/lib/**.js"
 
     bin:

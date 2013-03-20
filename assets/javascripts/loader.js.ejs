@@ -3,14 +3,14 @@
 //= require_self
 
 
-/*global yepnope*/
+/*global window, yepnope*/
 
 
-(function (global) {
+window.NodecaLoader = (function () {
   'use strict';
 
-  var URL_JSON2_SHIM  = <%- JSON.stringify(asset_path('vendor/json2.js')) %>
-    , URL_ES5_SHIM    = <%- JSON.stringify(asset_path('vendor/es5-shim.js')) %>;
+  var URL_JSON2_SHIM = <%- JSON.stringify(asset_path('vendor/json2.js')) %>
+    , URL_ES5_SHIM   = <%- JSON.stringify(asset_path('vendor/es5-shim.js')) %>;
 
 
   // Regexp allows to split a file path to a basename and an extname.
@@ -48,6 +48,11 @@
   //               It's executed on the first require.
   //
   var modules = {};
+
+
+  // Sandbox object passed as an argument to each module.
+  // It should be filled via `NodecaLoader.execute`.
+  var N = {};
 
 
   // Simple cross-browser `forEach` iterator for arrays.
@@ -140,10 +145,10 @@
     }
 
     loadAssets(pkgName, shims, function () {
-      if (window.N) {
-        window.N.emit('init_complete');
+      if (N.wire) {
+        N.wire.emit('init_complete');
       } else {
-        alert('Init error: failed to load core JS files. Refresh page & try again.' +
+        alert('Init error: failed to load core JS files. Refresh page & try again. ' +
               'If problem still exists - contact administrator.');
       }
     });
@@ -213,7 +218,7 @@
       , modules[id].module.exports
       , modules[id].module
       , __require__
-      , window.N
+      , N
       , __t__
       );
     }
@@ -251,12 +256,20 @@
   }
 
 
-  // Expose these to simplify the debugging.
-  require.modules = modules;
-  require.resolve = resolvePath;
+  // Instantly executes the given `body` function passing `N` and `require`
+  // as arguments.
+  function execute(body) {
+    body.call(N, N, require);
+  }
 
 
-  global.loadAssets = loadAssets;
-  global.require    = require;
-  global.define     = define;
-})(window);
+  return {
+    sandbox:    N
+  , modules:    modules
+  , loadAssets: loadAssets
+  , resolve:    resolvePath
+  , require:    require
+  , define:     define
+  , execute:    execute
+  };
+})();

@@ -28,7 +28,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
     script(type="text/javascript")
       !{self.asset_include('javascripts/loader.js')}
-      loadAssets.init(
+      NodecaLoader.loadAssets.init(
         !{JSON.stringify(self.head.assets)},
         '!{self.head.apiPath.split(".").shift()}'
       );

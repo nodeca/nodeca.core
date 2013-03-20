@@ -1,16 +1,27 @@
-//= require system/wire
-//= require_self
-//= require ./io
+//= require vendor/jquery/jquery
+//= require vendor/powertip/jquery.powertip
+
+//= require vendor/bootstrap/bootstrap
+//= require vendor/history/history.adapter.jquery
+//= require vendor/history/history
+//= require vendor/jade/runtime
+
+//= require_tree ./lib
 
 
-var N = window.N = (function (N) {
+/*global NodecaLoader*/
+
+
+NodecaLoader.execute(function (N, require) {
   'use strict';
 
+  var Wire      = require('nodeca.core/lib/system/wire');
   var Pointer   = require('pointer');
   var BabelFish = require('babelfish');
 
-  N.views   = {};
-  N.client  = {};
+  N.wire   = new Wire();
+  N.views  = {};
+  N.client = {};
 
   N.runtime         = JSON.parse($('meta[name="runtime"]').attr('content'));
   N.runtime.env     = <%- JSON.stringify(N.runtime.env) %>;
@@ -36,66 +47,11 @@ var N = window.N = (function (N) {
     return N.runtime.i18n.hasPhrase(N.runtime.locale, phrase);
   };
 
-  // Create cross-browser log wrapper
-  //
-  (function () {
-    N.logger = {};
-
-    ['assert', 'error', 'info', 'warn', 'debug'].forEach(function (level) {
-      N.logger[level] = function (object) {
-        var message
-          , parameters = arguments
-          , index      = 1; // Format argument index; Always starts from 1.
-
-        if (!(window.console && window.console.log)) {
-          return;
-        }
-
-        if ('string' === typeof object) { // Format string.
-          message = object.replace(/%[sdj%]/, function (match) {
-            if (index >= parameters.length) {
-              return match;
-            }
-
-            switch (match) {
-            case '%%':
-              return '%';
-            case '%s':
-              return String(parameters[index++]);
-            case '%d':
-              return Number(parameters[index++]);
-            case '%j':
-              return JSON.stringify(parameters[index++]);
-            default:
-              return match;
-            }
-          });
-        } else { // Simple object.
-          message = JSON.stringify(object);
-        }
-
-        try {
-          if (window.console[level]) {
-            window.console[level](message);
-          } else {
-            window.console.log(message);
-          }
-        } catch (err) {
-          // Do nothing.
-        }
-      };
-    });
-  }());
-
-
-  // fill in routes
   (<%- jetson(N.runtime.client_routes) -%>).forEach(function (v) {
     N.runtime.router.addRoute(v[0], v[1]);
   });
 
-
-  return N;
-}(new Wire));
-
-
-// vim: syntax=javascript
+  N.logger         = require('./logger');
+  N.io             = require('./io');
+  N.runtime.render = require('./render');
+});

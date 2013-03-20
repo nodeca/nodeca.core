@@ -1,20 +1,16 @@
-// client-side renderer. Contains local helpers etc and calls common render
+// Client-side renderer. Contains local helpers etc and calls common render
 // method internally.
 
 
 'use strict';
 
+
 /*global N*/
 
 
-/**
- *  client
- **/
-
-
 var _      = require('lodash');
-var render = require('nodeca.core/lib/system/render/common');
 var date   = require('nodeca.core/lib/system/date');
+var render = require('nodeca.core/lib/system/render/common');
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -36,7 +32,7 @@ var tzOffset = (new Date).getTimezoneOffset();
  *  it. The difference between these is that `locals` is only for the specified
  *  template, but `helpers` passes forward to partials.
  **/
-N.runtime.render = function renderWrapper(apiPath, locals, helpers) {
+function renderWrapper(apiPath, locals, helpers) {
   var _helpers = {};
 
   _helpers.t = N.runtime.t;
@@ -58,7 +54,7 @@ N.runtime.render = function renderWrapper(apiPath, locals, helpers) {
   _.extend(_helpers, helpers);
 
   return render(N, apiPath, locals, _helpers);
-};
+}
 
 
-module.exports = render;
+module.exports = renderWrapper;
