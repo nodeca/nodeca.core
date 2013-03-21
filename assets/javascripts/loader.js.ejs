@@ -13,13 +13,6 @@ window.NodecaLoader = (function () {
     , URL_ES5_SHIM   = <%- JSON.stringify(asset_path('vendor/es5-shim.js')) %>;
 
 
-  // Regexp allows to split a file path to a basename and an extname.
-  //
-  // FILE_EXT_REGEXP.exec('foo/bar.js') === ['foo/bar.js', 'foo/bar', '.js']
-  //
-  var FILE_EXT_REGEXP = /^(.+?)(\.[^.]+)?$/;
-
-
   // Mapping of package names to package metadata for all available packages at
   // the currect locale. The metadata is an object consists of three keys:
   //
@@ -62,6 +55,11 @@ window.NodecaLoader = (function () {
     for (index = 0, length = array.length; index < length; index += 1) {
       iterator(array[index], index);
     }
+  }
+
+
+  function isArray(object) {
+    return '[object Array]' === Object.prototype.toString.call(object);
   }
 
 
@@ -155,40 +153,16 @@ window.NodecaLoader = (function () {
   };
 
 
-  // Resolves `path` relative to `root`.
-  function resolvePath(root, path) {
-    var result, directory;
-
-    path = path.split('/');
-
-    if ('.' === path[0] || '..' === path[0]) {
-      result = root.split('/');
-    } else {
-      result = [];
-    }
-
-    while (0 !== path.length) {
-      directory = path.shift();
-
-      if ('..' === directory) {
-        result.pop();
-      } else if ('.' !== directory) {
-        result.push(directory);
-      }
-    }
-
-    return result.join('/');
-  }
-
-
   // Global-only require used to initialize the loaded packages.
   function require(id) {
-    if (!modules[id]) {
+    var target = modules[id];
+
+    if (!target) {
       throw new Error('Unknown module "' + id + '"');
     }
 
     // If it's a first require of the given module, initialize it first.
-    if (!modules[id].module) {
+    if (!target.module) {
 
       // Local `t` (translate) function for use only within this module.
       // It allows to use phrase strings relative to the module's API path.
@@ -196,62 +170,45 @@ window.NodecaLoader = (function () {
         if ('.' === phrase.charAt(0)) {
           phrase = phrase.substr(1);
         } else {
-          phrase = modules[id].apiPath + '.' + phrase;
+          phrase = target.apiPath + '.' + phrase;
         }
         return N.runtime.t(phrase, params);
       }
 
-      // Local `require` function for use only within this module.
-      // It resolves the given path relative to the module's root directory.
-      function __require__(path) {
-        return require(resolvePath(modules[id].root, path));
-      }
-
-      modules[id].module = {
-        apiPath: modules[id].apiPath
+      target.module = {
+        apiPath: target.apiPath
       , exports: {}
       };
 
       // Execute the module's `body` function. It will populate the exports.
-      modules[id].body.call(
-        modules[id].module.exports
-      , modules[id].module.exports
-      , modules[id].module
-      , __require__
+      target.body.call(
+        target.module.exports // this object
       , N
+      , require // pass self
+      , target.module.exports
+      , target.module
       , __t__
       );
     }
 
-    return modules[id].module.exports;
+    return target.module.exports;
   }
 
 
   // Defines a module. See comment on `modules` variable for details.
-  function define(id, apiPath, root, body) {
-    var definition, extensions, match;
-    
-    definition = {
-      root:    root
-    , apiPath: apiPath
-    , body:    body
+  function define(identifiers, apiPath, body) {
+    if (!isArray(identifiers)) {
+      identifiers = [ identifiers ];
+    }
+
+    var definition = {
+      identifiers: identifiers
+    , apiPath:     apiPath
+    , body:        body
     };
 
-    extensions = ['', '.js'];
-    match = FILE_EXT_REGEXP.exec(id);
-
-    if (!match) {
-      throw new Error('Invalid module identifier: ' + String(id));
-    }
-
-    if (match[2]) {
-      extensions.push(match[2]);
-    }
-
-    // Register the new module with all possible combinations of basename
-    // and file extensions.
-    forEach(extensions, function (ext) {
-      modules[match[1] + ext] = definition;
+    forEach(identifiers, function (id) {
+      modules[id] = definition;
     });
   }
 
@@ -259,7 +216,7 @@ window.NodecaLoader = (function () {
   // Instantly executes the given `body` function passing `N` and `require`
   // as arguments.
   function execute(body) {
-    body.call(N, N, require);
+    body.call({}, N, require);
   }
 
 
@@ -267,7 +224,6 @@ window.NodecaLoader = (function () {
     sandbox:    N
   , modules:    modules
   , loadAssets: loadAssets
-  , resolve:    resolvePath
   , require:    require
   , define:     define
   , execute:    execute
