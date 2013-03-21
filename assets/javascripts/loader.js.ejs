@@ -37,7 +37,7 @@ window.NodecaLoader = (function () {
   //   `root`    - Absolute path to the module's directory.
   //   `apiPath` - Nodeca API path to use with Wire.
   //               Example: "admin.users.usergroups.create"
-  //   `body`    - Function with all actual code of the module.
+  //   `func`    - Function with all actual code of the module.
   //               It's executed on the first require.
   //
   var modules = {};
@@ -180,8 +180,8 @@ window.NodecaLoader = (function () {
       , exports: {}
       };
 
-      // Execute the module's `body` function. It will populate the exports.
-      target.body.call(
+      // Execute the module's `func` function. It will populate the exports.
+      target.func.call(
         target.module.exports // this object
       , N
       , require // pass self
@@ -196,7 +196,7 @@ window.NodecaLoader = (function () {
 
 
   // Defines a module. See comment on `modules` variable for details.
-  function define(identifiers, apiPath, body) {
+  function define(identifiers, apiPath, func) {
     if (!isArray(identifiers)) {
       identifiers = [ identifiers ];
     }
@@ -204,7 +204,7 @@ window.NodecaLoader = (function () {
     var definition = {
       identifiers: identifiers
     , apiPath:     apiPath
-    , body:        body
+    , func:        func
     };
 
     forEach(identifiers, function (id) {
@@ -213,10 +213,10 @@ window.NodecaLoader = (function () {
   }
 
 
-  // Instantly executes the given `body` function passing `N` and `require`
+  // Instantly executes the given `func` function passing `N` and `require`
   // as arguments.
-  function execute(body) {
-    body.call({}, N, require);
+  function execute(func) {
+    func.call({}, N, require);
   }
 
 
