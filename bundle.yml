@@ -3,11 +3,9 @@ bundles:
     - lib
 
   frontend:
-    - core
     - common
 
   backend:
-    - core
     - admin
 
 
@@ -17,33 +15,32 @@ packages:
       - lib
 
     client:
-      root:       "./client/admin"
-      include:    "*.js"
-      exclude:    "/(^|\\/|\\\\)_.*/"
+      root: client/admin
+      include: '*.js'
+      exclude: '/(^|\/|\\)_.*/'
 
     views:
-      root:       "./client/admin"
-      include:    "*.jade"
-      exclude:    "/(^|\\/|\\\\)_.*/"
+      root: client/admin
+      include: '*.jade'
+      exclude: '/(^|\/|\\)_.*/'
 
     i18n_client:
-      root:       "./client/admin"
-      include:    "i18n/*.yml"
+      root: client/admin
+      include: 'i18n/*.yml'
 
     styles:
-      root:       "."
-      main:       "assets/desktop/admin/app.styl"
-      include:    "client/admin/**.styl"
-      exclude:    "/(^|\\/|\\\\)_.*/"
+      main: assets/desktop/admin/app.styl
+      include: 'client/admin/**.styl'
+      exclude: '/(^|\/|\\)_.*/'
 
     server:
-      root:       "./server/admin"
-      include:    "*.js"
-      exclude:    "/(^|\\/|\\\\)_.*/"
+      root: server/admin
+      include: '*.js'
+      exclude: '/(^|\/|\\)_.*/'
 
     i18n_server:
-      root:       "./server/admin"
-      include:    "i18n/*.yml"
+      root: server/admin
+      include: 'i18n/*.yml'
 
 
   common:
@@ -51,70 +48,55 @@ packages:
       - lib
 
     client:
-      root:       "./client/common"
-      include:    "*.js"
-      exclude:    "/(^|\\/|\\\\)_.*/"
+      root: client/common
+      include: '*.js'
+      exclude: '/(^|\/|\\)_.*/'
 
     views:
-      root:       "./client/common"
-      include:    "*.jade"
-      exclude:    "/(^|\\/|\\\\)_.*/"
+      root: client/common
+      include: '*.jade'
+      exclude: '/(^|\/|\\)_.*/'
 
     i18n_client:
-      root:       "./client/common"
-      include:    "i18n/*.yml"
+      root: client/common
+      include: 'i18n/*.yml'
 
     styles:
-      root:       "."
-      main:       "assets/desktop/common/app.styl"
-      include:    "client/common/**.styl"
-      exclude:    "/(^|\\/|\\\\)_.*/"
+      main: assets/desktop/common/app.styl
+      include: 'client/common/**.styl'
+      exclude: '/(^|\/|\\)_.*/'
 
     server:
-      root:       "./server/common"
-      include:    "*.js"
-      exclude:    "/(^|\\/|\\\\)_.*/"
+      root: server/common
+      include: '*.js'
+      exclude: '/(^|\/|\\)_.*/'
 
     i18n_server:
-      root:       "./server/common"
-      include:    "i18n/*.yml"
-
-
-  core:
-    server:
-      root:       "./server/core"
-      include:    "*.js"
-      exclude:    "/(^|\\/|\\\\)_.*/"
-
-    # Remove later, client layout should be in `common` 
-    views:
-      root:       "./views/desktop/layouts"
-      include:    "*.jade"
-      exclude:    "/(^|\\/|\\\\)_.*/"
-      apiPrefix:  "layouts"
+      root: server/common
+      include: 'i18n/*.yml'
 
 
   lib:
     vendor:
-      - "lodash"
+      - lodash
 
     client:
-      root:       "./client/lib"
-      main:       "n.js.ejs"
-      include:    "**.js"
-      exclude:    "/(^|\\/|\\\\)_.*/"
+      root: client/lib
+      main: n.js.ejs
+      include: '**.js'
+      exclude: '/(^|\/|\\)_.*/'
 
     bin:
-      root:       "./assets"
+      root: assets
       include:
         - javascripts/loader.js.ejs
         - vendor/es5-shim.js
         - vendor/json2.js
-        - "**.woff"
-        - "**.eot"
-        - "**.tff"
-        - "**.svg"
-        - "**.png"
-        - "**.jpg"
-        - "**.jpeg"
-        - "**.gif"
+        - '**.woff'
+        - '**.eot'
+        - '**.tff'
+        - '**.svg'
+        - '**.png'
+        - '**.jpg'
+        - '**.jpeg'
+        - '**.gif'
