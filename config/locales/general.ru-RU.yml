@@ -1,8 +1,6 @@
 i18n:
   ru-RU:
     common:
-      notice:
-        loading: Загрузка...
       menus:
         admin:
           dashboard: Админ

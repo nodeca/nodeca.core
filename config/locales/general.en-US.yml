@@ -1,12 +1,6 @@
 i18n:
   en-US:
     common:
-
       menus:
         admin:
           dashboard: Admin
-
-      io:
-        progress: Loading...
-        error:
-          version_mismatch: Application version outdated. Please, reload page.

@@ -1,4 +1,8 @@
 en-US:
+  io_progress:
+    loading: Loading...
+    version_mismatch: Application version outdated. Please, reload page.
+
   io_errors:
     invalid_csrf_token: Security token expired. Pease, try again.
     application_fuckup: Application Error. Try again later.
