@@ -35,6 +35,8 @@ var tzOffset = (new Date).getTimezoneOffset();
 function renderWrapper(apiPath, locals, helpers) {
   var _helpers = {};
 
+  _helpers.runtime = N.runtime;
+
   _helpers.t = N.runtime.t;
 
   _helpers.date = function dateWrapper(value, format) {

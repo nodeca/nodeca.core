@@ -103,13 +103,17 @@ window.NodecaLoader = (function () {
       }
     });
 
-    yepnope({
-      load: resources,
-      complete: function () {
-        forEach(resources, function (res) { loaded[res] = true; });
-        callback();
-      }
-    });
+    if (resources.length > 0) {
+      yepnope({
+        load: resources,
+        complete: function () {
+          forEach(resources, function (res) { loaded[res] = true; });
+          callback();
+        }
+      });
+    } else {
+      callback();
+    }
   }
 
 
@@ -144,7 +148,7 @@ window.NodecaLoader = (function () {
 
     loadAssets(pkgName, shims, function () {
       if (N.wire) {
-        N.wire.emit('init_complete');
+        N.wire.emit('navigate.done', window.location.href);
       } else {
         alert('Init error: failed to load core JS files. Refresh page & try again. ' +
               'If problem still exists - contact administrator.');
