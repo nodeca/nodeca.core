@@ -1,16 +1,3 @@
-/**
- *  client
- **/
-
-/**
- *  client.common
- **/
-
-/**
- *  client.common.history
- **/
-
-
 'use strict';
 
 
@@ -153,9 +140,10 @@ if (History.enabled) {
   // Automates content rendering from State data for common cases.
   //
   History.Adapter.bind(window, 'statechange', function (/* event */) {
-    var state = History.getState()
-      , data  = state.data
-      , url   = state.url
+    var state  = History.getState()
+      , data   = state.data
+      , url    = state.url
+      , target = { apiPath: data.route, url: url }
       , $el;
 
     // trigger to skip common rendering when we have custom one
@@ -180,7 +168,7 @@ if (History.enabled) {
       return;
     }
 
-    N.wire.emit('navigate.exit', url, function () {
+    N.wire.emit('navigate.exit', target, function () {
       $('#content').replaceWith(N.runtime.render(data.view, data.locals));
 
       // scroll to element only when we handle user click
@@ -203,7 +191,7 @@ if (History.enabled) {
         allowScrollTo = false;
       }
 
-      N.wire.emit('navigate.done', url);
+      N.wire.emit('navigate.done', target);
     });
   });
 
