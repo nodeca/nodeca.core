@@ -103,6 +103,7 @@ window.NodecaLoader = (function () {
       }
     });
 
+    // NOTE: YepNope will *only* call `complete` when `resources` is not empty.
     if (resources.length > 0) {
       yepnope({
         load: resources,
