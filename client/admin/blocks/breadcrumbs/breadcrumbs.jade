@@ -40,7 +40,7 @@ mixin _fetch_breadcrumbs(menu, result)
       //- if current api path != last breadcrumb element
       //- then add page title
       - if (self.path.slice(-1)[0].tail !== api_path_tail)
-        - self.path.push({ text: self.head.title });
+        - self.path.push({ text: self.title || 'Unknown' });
 
   - if (self.path && self.path.length)
     - last_element = self.path.pop()
