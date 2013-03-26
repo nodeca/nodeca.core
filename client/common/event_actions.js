@@ -16,7 +16,7 @@ var $ = window.jQuery;
 
 
 $(function () {
-  ['click', 'submit', 'input'].forEach(function (action) {
+  ['click', 'submit', 'input', 'change'].forEach(function (action) {
     var eventName = action + '.nodeca.data-api'
       , attribute = '[data-on-' + action + ']';
 
