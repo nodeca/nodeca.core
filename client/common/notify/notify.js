@@ -15,7 +15,7 @@ $(function () {
 });
 
 
-N.wire.on(module.apiPath, function notification(options) {
+N.wire.on('notify', function notification(options) {
   if ('string' === typeof options) {
     options = { message: options };
   }
