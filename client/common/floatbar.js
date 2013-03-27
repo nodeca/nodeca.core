@@ -22,36 +22,36 @@ var $ = window.jQuery;
 
 
 N.wire.on('navigate.done', function () {
-  // fix sub nav on scroll
-  var $win = $(window), $bar = $('#floatbar');
+  var $window   = $(window)
+    , $floatbar = $('#floatbar')
+    , isFixed   = false
+    , navTop;
 
-  // remove previous floatbar handlers (if any)
-  $win.off('.floatbar');
+  // Remove previous floatbar handlers if any.
+  $window.off('.floatbar');
 
-  if (!$bar.length) {
-    // do nothing if there's no floatbar
+  if (0 === $floatbar.length) {
+    // Do nothing if there's no floatbar.
     return;
   }
 
-  var navTop = $bar.offset().top, isFixed = false;
+  navTop  = $floatbar.offset().top;
+  isFixed = false;
 
   function updateFloatbarState() {
-    var scrollTop = $win.scrollTop();
+    var scrollTop = $window.scrollTop();
 
     if (scrollTop >= navTop && !isFixed) {
       isFixed = true;
-      $bar.addClass('floatbar-fixed');
-      return;
-    }
+      $floatbar.addClass('floatbar-fixed');
 
-    if (scrollTop <= navTop && isFixed) {
+    } else if (scrollTop <= navTop && isFixed) {
       isFixed = false;
-      $bar.removeClass('floatbar-fixed');
-      return;
+      $floatbar.removeClass('floatbar-fixed');
     }
   }
 
   updateFloatbarState();
 
-  $win.on('scroll.floatbar', _.throttle(updateFloatbarState, 100));
+  $window.on('scroll.floatbar', _.throttle(updateFloatbarState, 100));
 });
