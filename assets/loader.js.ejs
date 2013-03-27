@@ -153,7 +153,7 @@ window.NodecaLoader = (function () {
 
     loadAssets(pkgName, shims, function () {
       if (N.wire) {
-        N.wire.emit('navigate.done', window.location.href);
+        $(function () { N.wire.emit('navigate.done', window.location.href); });
       } else {
         alert('Init error: failed to load core JS files. Refresh page & try again. ' +
               'If problem still exists - contact administrator.');
@@ -229,7 +229,7 @@ window.NodecaLoader = (function () {
   }
 
 
-  NodecaLoader.sandbox    = N;
+  NodecaLoader.N          = N;
   NodecaLoader.modules    = modules;
   NodecaLoader.loadAssets = loadAssets;
   NodecaLoader.require    = require;

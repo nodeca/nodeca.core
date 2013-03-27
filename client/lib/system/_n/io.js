@@ -120,8 +120,6 @@ function rpc(name, params, options, callback) {
 
     if (data.error) {
       N.wire.emit('io.error', data.error);
-    } else {
-      N.wire.emit('io.success', data.response);
     }
 
     N.wire.emit('io.complete', {

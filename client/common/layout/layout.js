@@ -1,7 +1,7 @@
 'use strict';
 
 
-$(function () {
+N.wire.once('navigate.done', function () {
   //
   // Observe quicksearch focus to tweak icon style
   //
