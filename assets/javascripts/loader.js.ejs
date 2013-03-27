@@ -9,6 +9,10 @@
 window.NodecaLoader = (function () {
   'use strict';
 
+
+  var NodecaLoader = {};
+
+
   var URL_JSON2_SHIM = <%- JSON.stringify(asset_path('vendor/json2.js')) %>
     , URL_ES5_SHIM   = <%- JSON.stringify(asset_path('vendor/es5-shim.js')) %>;
 
@@ -45,7 +49,7 @@ window.NodecaLoader = (function () {
 
   // Sandbox object passed as an argument to each module.
   // It should be filled via `NodecaLoader.execute`.
-  var N = {};
+  var N = { loader: NodecaLoader };
 
 
   // Simple cross-browser `forEach` iterator for arrays.
@@ -225,12 +229,13 @@ window.NodecaLoader = (function () {
   }
 
 
-  return {
-    sandbox:    N
-  , modules:    modules
-  , loadAssets: loadAssets
-  , require:    require
-  , define:     define
-  , execute:    execute
-  };
+  NodecaLoader.sandbox    = N;
+  NodecaLoader.modules    = modules;
+  NodecaLoader.loadAssets = loadAssets;
+  NodecaLoader.require    = require;
+  NodecaLoader.define     = define;
+  NodecaLoader.execute    = execute;
+
+
+  return NodecaLoader;
 })();
