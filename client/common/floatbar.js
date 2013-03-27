@@ -1,24 +1,7 @@
-/**
- *  client
- **/
-
-/**
- *  client.common
- **/
-
-/**
- *  client.common.floatbar
- **/
-
-
 'use strict';
 
 
-/*global N, window*/
-
-
 var _ = require('lodash');
-var $ = window.jQuery;
 
 
 N.wire.on('navigate.done', function () {

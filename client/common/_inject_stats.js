@@ -9,12 +9,6 @@
 'use strict';
 
 
-/*global N, window*/
-
-
-var $ = window.jQuery;
-
-
 var $puncher_stats = null;
 
 

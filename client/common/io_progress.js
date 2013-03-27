@@ -6,12 +6,6 @@
 'use strict';
 
 
-/*global N, t, window*/
-
-
-var $ = window.jQuery;
-
-
 var timeout;
 var $notice;
 

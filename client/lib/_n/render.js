@@ -5,9 +5,6 @@
 'use strict';
 
 
-/*global N*/
-
-
 var _      = require('lodash');
 var date   = require('nodeca.core/lib/system/date');
 var render = require('nodeca.core/lib/system/render/common');

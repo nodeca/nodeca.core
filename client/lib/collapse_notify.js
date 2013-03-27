@@ -1,6 +1,3 @@
-/*global $*/
-
-//
 // Extention for Twitter Bootstrap collepcer
 //
 // Toggles "collepsed" class on element, refered by [data-notify]

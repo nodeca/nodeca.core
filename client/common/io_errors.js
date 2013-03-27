@@ -5,9 +5,6 @@
 'use strict';
 
 
-/*global N, t*/
-
-
 var notify = require('./_notify');
 
 

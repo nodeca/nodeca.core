@@ -9,14 +9,8 @@
 'use strict';
 
 
-/*global NodecaLoader, N, window*/
-
-
-var $ = window.jQuery;
-
-
 function handleAction(apiPath, event) {
-  NodecaLoader.loadAssets(apiPath.split('.')[0], function () {
+  N.loader.loadAssets(apiPath.split('.')[0], function () {
     if (N.wire.has(apiPath)) {
       N.wire.emit(apiPath, event);
     } else {

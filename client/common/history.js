@@ -1,10 +1,6 @@
 'use strict';
 
 
-/*global NodecaLoader, N, window, document*/
-
-
-var $       = window.jQuery;
 var History = window.History; // History.js
 
 
@@ -107,7 +103,7 @@ function exec_api3_call(data, callback) {
     // So we normalie URL to be full one (with protocol, host, etc.)
     href = normalizeURL(href);
 
-    NodecaLoader.loadAssets((msg.view || match.meta).split('.').shift(), function () {
+    N.loader.loadAssets((msg.view || match.meta).split('.').shift(), function () {
       callback({
         view:   msg.view || match.meta,
         layout: msg.layout,

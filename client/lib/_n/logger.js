@@ -13,9 +13,6 @@
 'use strict';
 
 
-/*global window*/
-
-
 ['assert', 'error', 'info', 'warn', 'debug'].forEach(function (level) {
   exports[level] = function (object) {
     var message

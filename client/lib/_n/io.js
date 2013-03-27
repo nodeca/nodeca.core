@@ -9,12 +9,6 @@
 'use strict';
 
 
-/*global N, window*/
-
-
-var $ = window.jQuery;
-
-
 // last xhr to allow interrupt it
 var last_xhr = null;
 

@@ -9,12 +9,6 @@
 'use strict';
 
 
-/*global window*/
-
-
-var $ = window.jQuery;
-
-
 module.exports = function getFormData(form) {
   var data = {};
 

@@ -6,12 +6,6 @@
 'use strict';
 
 
-/*global N, window*/
-
-
-var $ = window.jQuery;
-
-
 N.wire.on('navigate.exit', function navbar_menu_change_active(target) {
   var ns = target.apiPath.split('.').shift();
 

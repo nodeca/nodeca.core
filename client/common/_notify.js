@@ -1,12 +1,6 @@
 'use strict';
 
 
-/*global window*/
-
-
-var $ = window.jQuery;
-
-
 var defaults = {
   info:  { closable: false, autohide: 5000  },
   error: { closable: true,  autohide: 10000 }
