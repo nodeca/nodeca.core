@@ -15,24 +15,38 @@
 var $ = window.jQuery;
 
 
+function handleAction(apiPath, event) {
+  NodecaLoader.loadAssets(apiPath.split('.')[0], function () {
+    if (N.wire.has(apiPath)) {
+      N.wire.emit(apiPath, event);
+    } else {
+      N.logger.error('Unknown client Wire channel: %s', apiPath);
+    }
+  });
+
+  event.preventDefault();
+  return false;
+}
+
+
 $(function () {
-  ['click', 'submit', 'input', 'change'].forEach(function (action) {
-    var eventName = action + '.nodeca.data-api'
-      , attribute = '[data-on-' + action + ']';
+  $('body').on('click.nodeca.data-api', '[data-on-click]', function (event) {
+    var apiPath = $(this).data('onClick');
+    return handleAction(apiPath, event);
+  });
 
-    $('body').on(eventName, attribute, function (event) {
-      var apiPath = $(this).data('on-' + action);
+  $('body').on('submit.nodeca.data-api', '[data-on-submit]', function (event) {
+    var apiPath = $(this).data('onSubmit');
+    return handleAction(apiPath, event);
+  });
 
-      NodecaLoader.loadAssets(apiPath.split('.').shift(), function () {
-        if (N.wire.has(apiPath)) {
-          N.wire.emit(apiPath, event);
-        } else {
-          N.logger.error('Unknown client Wire handler: %s', apiPath);
-        }
-      });
+  $('body').on('input.nodeca.data-api', '[data-on-input]', function (event) {
+    var apiPath = $(this).data('onInput');
+    return handleAction(apiPath, event);
+  });
 
-      event.preventDefault();
-      return false;
-    });
+  $('body').on('change.nodeca.data-api', '[data-on-change]', function (event) {
+    var apiPath = $(this).data('onChange');
+    return handleAction(apiPath, event);
   });
 });
