@@ -86,7 +86,7 @@ function rpc(name, params, options, callback) {
   // Send request
   //
 
-  N.logger.debug('RPC request', payload);
+  N.logger.debug('RPC request: %j', payload);
   N.wire.emit('io.request');
 
   xhr = last_xhr = $.post('/io/rpc', payload);
@@ -98,7 +98,7 @@ function rpc(name, params, options, callback) {
   xhr.success(function (data) {
     data = data || {};
 
-    N.logger.debug('RPC reply data', data);
+    N.logger.debug('RPC reply: %j', data);
 
     if (data.version !== N.runtime.version) {
       data.error = error(exports.EWRONGVER, 'Client version does not match server.');
@@ -120,9 +120,14 @@ function rpc(name, params, options, callback) {
 
     if (data.error) {
       N.wire.emit('io.error', data.error);
+    } else {
+      N.wire.emit('io.success', data.response);
     }
 
-    N.wire.emit('io.complete');
+    N.wire.emit('io.complete', {
+      error:    data.error
+    , response: data.response
+    });
 
     // run actual callback
     callback(data.error, data.response);
