@@ -7,14 +7,19 @@
 
 
 N.wire.on('io.complete', function debug_timeline(info) {
-  if (!info.response || !info.response.data) {
+
+  // Skip if puncher stats not recieved.
+  if (!info.response ||
+      !info.response.data ||
+      !info.response.data.blocks ||
+      !info.response.data.blocks.puncher_stats) {
     return;
   }
 
   var $timeline = $('#debug_timeline');
 
   // Skip if there is no #debug_timeline
-  if (0 === $timeline.lentgh) {
+  if (0 === $timeline.length) {
     return;
   }
 
