@@ -6,6 +6,9 @@
 //= require vendor/history/history
 //= require vendor/jade/runtime
 
+//= require system/_collapse_notify
+//= require system/_notification
+
 //= require_self
 
 //= require client
@@ -50,7 +53,7 @@ window.NodecaLoader.execute(function (N, require) {
     N.runtime.router.addRoute(v[0], v[1]);
   });
 
-  N.logger         = require('./_n/logger');
-  N.io             = require('./_n/io');
-  N.runtime.render = require('./_n/render');
+  N.logger         = require('./_logger');
+  N.io             = require('./_io');
+  N.runtime.render = require('./_render');
 });

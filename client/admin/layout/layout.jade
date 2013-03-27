@@ -27,7 +27,7 @@ html.no-js
       script(type="text/javascript", src=self.asset_path('es5-shim.js'))
 
     script(type="text/javascript")
-      !{self.asset_include('javascripts/loader.js')}
+      !{self.asset_include('loader.js')}
       NodecaLoader.loadAssets.init(!{JSON.stringify(self.head.assets)}, 'admin');
 
   body

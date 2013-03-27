@@ -62,8 +62,9 @@ packages:
       include: 'i18n/*.yml'
 
     styles:
-      main: assets/desktop/common/app.styl
-      include: 'client/common/**.styl'
+      root: client/common
+      main: system/main.styl
+      include: '*.styl'
       exclude: '/(^|\/|\\)_.*/'
 
     server:
@@ -82,21 +83,26 @@ packages:
 
     client:
       root: client/lib
-      main: n.js.ejs
-      include: '**.js'
+      main: system/n.js.ejs
+      include: '*.js'
+      exclude: '/(^|\/|\\)_.*/'
+
+    styles:
+      root: client/lib
+      include: '*.styl'
       exclude: '/(^|\/|\\)_.*/'
 
     bin:
       root: assets
       include:
-        - javascripts/loader.js.ejs
+        - loader.js.ejs
         - vendor/es5-shim.js
         - vendor/json2.js
-        - '**.woff'
-        - '**.eot'
-        - '**.tff'
-        - '**.svg'
-        - '**.png'
-        - '**.jpg'
-        - '**.jpeg'
-        - '**.gif'
+        - '*.woff'
+        - '*.eot'
+        - '*.tff'
+        - '*.svg'
+        - '*.png'
+        - '*.jpg'
+        - '*.jpeg'
+        - '*.gif'

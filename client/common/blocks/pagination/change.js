@@ -1,7 +1,7 @@
 'use strict';
 
 
-var getFormData = require('../../_get_form_data');
+var getFormData = require('nodeca.core/lib/client/get_form_data');
 
 
 N.wire.on(module.apiPath, function pagination_change(event) {
