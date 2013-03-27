@@ -168,30 +168,43 @@ if (History.enabled) {
       return;
     }
 
-    N.wire.emit('navigate.exit', target, function () {
-      $('#content').replaceWith(N.runtime.render(data.view, data.locals));
-
-      // scroll to element only when we handle user click
-      if (allowScrollTo) {
-        // if anchor is given try to find matching element
-        if (data.anchor) {
-          $el = $(data.anchor);
-        }
-
-        // if there were no anchor or thre were no matching element
-        // use `top` element instead
-        if (!$el || !$el.length) {
-          $el = $(document.body);
-        }
-
-        // FIXME: This may not work for Opera. Should check it on jQuery 1.9
-        $("html:not(:animated)").animate({scrollTop: $el.position().top}, 300);
-
-        // disable scrollTo
-        allowScrollTo = false;
+    N.wire.emit('navigate.exit', target, function (err) {
+      if (err) {
+        N.logger.error('%s', err);
       }
 
-      N.wire.emit('navigate.done', target);
+      var content = $(N.runtime.render(data.view, data.locals)).hide();
+
+      $('#content').fadeOut('fast', function () {
+        $(this).replaceWith(content);
+        content.fadeIn('fast');
+
+        N.wire.emit('navigate.done', target, function (err) {
+          if (err) {
+            N.logger.error('%s', err);
+          }
+        });
+
+        // scroll to element only when we handle user click
+        if (allowScrollTo) {
+          // if anchor is given try to find matching element
+          if (data.anchor) {
+            $el = $(data.anchor);
+          }
+
+          // if there were no anchor or thre were no matching element
+          // use `top` element instead
+          if (!$el || !$el.length) {
+            $el = $(document.body);
+          }
+
+          // FIXME: This may not work for Opera. Should check it on jQuery 1.9
+          $("html:not(:animated)").animate({scrollTop: $el.position().top}, 300);
+
+          // disable scrollTo
+          allowScrollTo = false;
+        }
+      });
     });
   });
 
