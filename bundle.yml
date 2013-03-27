@@ -29,8 +29,9 @@ packages:
       include: 'i18n/*.yml'
 
     styles:
-      main: assets/desktop/admin/app.styl
-      include: 'client/admin/**.styl'
+      root: client/admin
+      main: system/main.styl
+      include: '*.styl'
       exclude: '/(^|\/|\\)_.*/'
 
     server:
