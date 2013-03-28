@@ -15,33 +15,27 @@ packages:
       - lib
 
     client:
-      root: client/admin
-      include: '*.js'
-      exclude: '/(^|\/|\\)_.*/'
+      include: client/admin/**.js
+      exclude: /(^|\/|\\)_.*/
 
     views:
-      root: client/admin
-      include: '*.jade'
-      exclude: '/(^|\/|\\)_.*/'
+      include: client/admin/**.jade
+      exclude: /(^|\/|\\)_.*/
 
     i18n_client:
-      root: client/admin
-      include: 'i18n/*.yml'
+      include: client/admin/**i18n/*.yml
 
     styles:
-      root: client/admin
-      main: system/main.styl
-      include: '*.styl'
-      exclude: '/(^|\/|\\)_.*/'
+      main: client/admin/system/main.styl
+      include: client/admin/**.styl
+      exclude: /(^|\/|\\)_.*/
 
     server:
-      root: server/admin
-      include: '*.js'
-      exclude: '/(^|\/|\\)_.*/'
+      include: server/admin/**.js
+      exclude: /(^|\/|\\)_.*/
 
     i18n_server:
-      root: server/admin
-      include: 'i18n/*.yml'
+      include: server/admin/**i18n/*.yml
 
 
   common:
@@ -49,33 +43,27 @@ packages:
       - lib
 
     client:
-      root: client/common
-      include: '*.js'
-      exclude: '/(^|\/|\\)_.*/'
+      include: client/common/**.js
+      exclude: /(^|\/|\\)_.*/
 
     views:
-      root: client/common
-      include: '*.jade'
-      exclude: '/(^|\/|\\)_.*/'
+      include: client/common/**.jade
+      exclude: /(^|\/|\\)_.*/
 
     i18n_client:
-      root: client/common
-      include: 'i18n/*.yml'
+      include: client/common/**i18n/*.yml
 
     styles:
-      root: client/common
-      main: system/main.styl
-      include: '*.styl'
-      exclude: '/(^|\/|\\)_.*/'
+      main: client/common/system/main.styl
+      include: client/common/**.styl
+      exclude: /(^|\/|\\)_.*/
 
     server:
-      root: server/common
-      include: '*.js'
-      exclude: '/(^|\/|\\)_.*/'
+      include: server/common/**.js
+      exclude: /(^|\/|\\)_.*/
 
     i18n_server:
-      root: server/common
-      include: 'i18n/*.yml'
+      include: server/common/**i18n/*.yml
 
 
   lib:
@@ -83,15 +71,13 @@ packages:
       - lodash
 
     client:
-      root: client/lib
-      main: system/n.js.ejs
-      include: '*.js'
-      exclude: '/(^|\/|\\)_.*/'
+      main: client/lib/system/n.js.ejs
+      include: client/lib/**.js
+      exclude: /(^|\/|\\)_.*/
 
     styles:
-      root: client/lib
-      include: '*.styl'
-      exclude: '/(^|\/|\\)_.*/'
+      include: client/lib/**.styl
+      exclude: /(^|\/|\\)_.*/
 
     bin:
       root: assets
@@ -99,11 +85,11 @@ packages:
         - loader.js.ejs
         - vendor/es5-shim.js
         - vendor/json2.js
-        - '*.woff'
-        - '*.eot'
-        - '*.tff'
-        - '*.svg'
-        - '*.png'
-        - '*.jpg'
-        - '*.jpeg'
-        - '*.gif'
+        - '**.woff'
+        - '**.eot'
+        - '**.tff'
+        - '**.svg'
+        - '**.png'
+        - '**.jpg'
+        - '**.jpeg'
+        - '**.gif'
