@@ -45,7 +45,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
       })();
 
   body
-    nav.navbar.navbar-inverse.navbar-fixed-top
+    nav#navbar_menu.navbar.navbar-inverse.navbar-fixed-top
       .navbar-inner
 
         .container
@@ -55,8 +55,17 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
           a.brand(href="/") Nodeca
 
           .nav-collapse.collapse
+            - if (self.menus.common.navbar)
+              ul.nav
+                - each item in self.menus.common.navbar
+                  - var ns = self.head.apiPath.split('.').shift(), item_ns = item.to.split('.').shift();
+                  - if (ns === item_ns)
+                    li(data-api-path=item_ns, class='active'): a(href=item.link)= self.t(item.title)
+                  - else
+                    li(data-api-path=item_ns): a(href=item.link)= self.t(item.title)
 
-            != self.partial('@common.blocks.navbar_menu', { apiPath: self.head.apiPath, menu: self.menus.common })
+                //- Temporary github link
+                li: a(href='https://github.com/nodeca/nodeca',target='_blank') Github
 
             form.navbar-search
               input.input-medium.search-query(type='text', placeholder='Search')
