@@ -32,7 +32,8 @@ N.wire.on('navigate.exit', function navbar_menu_change_active(target) {
     return index;
   }
 
-  tabs = $('#navbar_menu').find('[data-api-path]').removeClass('active');
+  tabs = $('#navbar_menu').find('[data-api-path]');
+  tabs.removeClass('active');
 
   // Select the most specific tab - with the longest API path match.
   active = _.max(tabs, function (tab) {
