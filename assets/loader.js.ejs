@@ -1,5 +1,5 @@
 //= require vendor/modernizr.custom
-//= require vendor/yepnope
+//= require vendor/yepnope/yepnope
 //= require_self
 
 
@@ -13,8 +13,8 @@ window.NodecaLoader = (function () {
   var NodecaLoader = {};
 
 
-  var URL_JSON2_SHIM = <%- JSON.stringify(asset_path('vendor/json2.js')) %>
-    , URL_ES5_SHIM   = <%- JSON.stringify(asset_path('vendor/es5-shim.js')) %>;
+  var URL_JSON2_SHIM = <%- JSON.stringify(asset_path('vendor/json2/json2.js')) %>
+    , URL_ES5_SHIM   = <%- JSON.stringify(asset_path('vendor/es5-shim/es5-shim.js')) %>;
 
 
   // Mapping of package names to package metadata for all available packages at

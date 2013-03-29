@@ -83,8 +83,8 @@ packages:
       root: assets
       include:
         - loader.js.ejs
-        - vendor/es5-shim.js
-        - vendor/json2.js
+        - vendor/es5-shim/es5-shim.js
+        - vendor/json2/json2.js
         - '**.woff'
         - '**.eot'
         - '**.ttf'
