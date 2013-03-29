@@ -1,8 +1,9 @@
 {
   "dependencies": {
-    "jquery"      : "1.9.1",
-    "history.js"  : "*",
-    "json2.js"    : "*",
-    "es5-shim"    : "2.0.8"
+    "jquery"            : "~1.9.1",
+    "history.js"        : "*",
+    "json2.js"          : "*",
+    "es5-shim"          : "~2.0.8",
+    "jquery-inputevent" : "~0.1.5"
   }
 }
