@@ -87,7 +87,7 @@ packages:
         - vendor/json2.js
         - '**.woff'
         - '**.eot'
-        - '**.tff'
+        - '**.ttf'
         - '**.svg'
         - '**.png'
         - '**.jpg'
