@@ -9,6 +9,8 @@ var _      = require('lodash');
 var date   = require('nodeca.core/lib/system/date');
 var render = require('nodeca.core/lib/system/render/common');
 
+// Expose jade runtime to `window.jade`
+require('./jade_runtime.js');
 
 ////////////////////////////////////////////////////////////////////////////////
 
