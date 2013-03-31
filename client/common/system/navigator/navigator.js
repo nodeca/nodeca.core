@@ -282,7 +282,7 @@ N.wire.on('navigate.to', function navigate_to(data, callback) {
 // Bind global a.click handlers
 //
 
-$(function () {
+N.wire.once('navigate.done', { priority: 999 }, function () {
   $('body').on('click', 'a', function (event) {
     var $this = $(this), match;
 
