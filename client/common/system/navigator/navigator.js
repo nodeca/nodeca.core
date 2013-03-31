@@ -115,13 +115,14 @@ function exec_api3_call(data, callback) {
   });
 }
 
-//
 // Global semaphore that allows/dissalows ScrollTo animation.
 // Animation is allowed every time we handle user click.
-//
-
 var allowScrollTo   = false;
-var skipStateChange = false;
+
+
+// Global semaphore that allows/disallows render new #content block
+// when walking over pages using RPC.
+var skipRender = false;
 
 
 if (History.enabled) {
@@ -142,13 +143,6 @@ if (History.enabled) {
       , target = { apiPath: data.route, url: url }
       , $el;
 
-    // trigger to skip common rendering when we have custom one
-    // for example for "more ..." button
-    if (skipStateChange) {
-      skipStateChange = false;
-      return;
-    }
-
     // we have no State data when it's an initial state, so we schedule
     // retreival of data by it's URL and triggering this event once
     // again (via History.replaceState)
@@ -165,95 +159,152 @@ if (History.enabled) {
     }
 
     N.wire.emit('navigate.exit', target, function (err) {
+      var content;
+
       if (err) {
         N.logger.error('%s', err);
       }
 
-      var content = $(N.runtime.render(data.view, data.locals)).hide();
+      if (!skipRender) {
+        content = $(N.runtime.render(data.view, data.locals)).hide();
 
-      $('#content').fadeOut('fast', function () {
-        $(this).replaceWith(content);
-        content.fadeIn('fast');
+        $('#content').fadeOut('fast', function () {
+          $(this).replaceWith(content);
+          content.fadeIn('fast');
 
-        N.wire.emit('navigate.done', target, function (err) {
-          if (err) {
-            N.logger.error('%s', err);
+          N.wire.emit('navigate.done', target, function (err) {
+            if (err) {
+              N.logger.error('%s', err);
+            }
+          });
+
+          // scroll to element only when we handle user click
+          if (allowScrollTo) {
+            // if anchor is given try to find matching element
+            if (data.anchor) {
+              $el = $(data.anchor);
+            }
+
+            // if there were no anchor or thre were no matching element
+            // use `top` element instead
+            if (!$el || !$el.length) {
+              $el = $(document.body);
+            }
+
+            // FIXME: This may not work for Opera. Should check it on jQuery 1.9
+            $("html:not(:animated)").animate({scrollTop: $el.position().top}, 300);
+
+            // disable scrollTo
+            allowScrollTo = false;
           }
         });
+      }
 
-        // scroll to element only when we handle user click
-        if (allowScrollTo) {
-          // if anchor is given try to find matching element
-          if (data.anchor) {
-            $el = $(data.anchor);
-          }
-
-          // if there were no anchor or thre were no matching element
-          // use `top` element instead
-          if (!$el || !$el.length) {
-            $el = $(document.body);
-          }
-
-          // FIXME: This may not work for Opera. Should check it on jQuery 1.9
-          $("html:not(:animated)").animate({scrollTop: $el.position().top}, 300);
-
-          // disable scrollTo
-          allowScrollTo = false;
-        }
-      });
+      // To make Back button work properly.
+      skipRender = false;
     });
-  });
-
-  //
-  // Bind global a.click handlers
-  //
-
-  $(function () {
-    $('body').on('click', 'a', function (event) {
-      var $this = $(this), match;
-
-      if (!!$this.attr('target') || event.isDefaultPrevented()) {
-        // skip links that have `target` attribute specified
-        // and clicks that were already handled
-        return;
-      }
-
-      match = find_match_data($this.attr('href'));
-
-      // Continue as normal for cmd clicks etc
-      if (2 === event.which || event.metaKey) {
-        return true;
-      }
-
-      if (match) {
-        allowScrollTo = true;
-        exec_api3_call(match, History.pushState);
-        event.preventDefault();
-        return false;
-      }
-    });
-  });
-
-
-  N.wire.on('history.update', function history_update(data) {
-    skipStateChange = true;
-
-    History.replaceState({
-      view:   data.payload.view,
-      layout: data.payload.layout,
-      locals: data.payload.data,
-      route:  data.payload.data.head.route
-    }, data.payload.data.head.title, data.url || History.getState().url);
-  });
-
-
-  N.wire.on('navigate.to', function navigate_to(data) {
-    allowScrollTo = true;
-
-    exec_api3_call([
-      { meta: data.apiPath, params: data.params },
-      N.runtime.router.linkTo(data.apiPath, data.params),
-      data.anchor
-    ], History.pushState);
   });
 }
+
+
+// Performes navigation to the given page. `data` may be either a string (href)
+// and an object with keys:
+//
+//    data.href
+//    data.apiPath
+//    data.params
+//    data.replaceState
+//    data.skipRender
+//
+// `href` and `apiPath` parameters are mutually exclusive.
+//
+N.wire.on('navigate.to', function navigate_to(data, callback) {
+  var match, href, anchor, apiPath, params;
+
+  if ('string' === typeof data) {
+    data = { href: data };
+  }
+
+  if (data.href) {
+    match = find_match_data(data.href);
+
+    if (!match) {
+      callback(new Error('Cannot match route ' + data.href));
+      return;
+    }
+
+    apiPath = match[0].meta;
+    params  = match[0].params || {};
+    href    = match[1];
+    anchor  = match[2];
+
+  } else if (data.apiPath) {
+    apiPath = data.apiPath;
+    params  = data.params || {};
+    href    = N.runtime.router.linkTo(apiPath, params);
+    anchor  = '';
+
+    if (!href) {
+      callback(new Error('Cannot build URL for API path "' + apiPath + '"'));
+      return;
+    }
+
+  } else {
+    callback(new Error('Need "href" or "apiPath" parameters to handle ' +
+                       '"navigate.to" event.'));
+    return;
+  }
+
+  if (History.enabled) {
+    exec_api3_call(
+      [ { meta: apiPath, params: params }, href, anchor ]
+    , function (stateData, stateTitle, stateHref) {
+        // NOTE: These are module-wide variables.
+        allowScrollTo = true;
+        skipRender    = data.skipRender || false;
+
+        if (data.replaceState) {
+          History.replaceState(stateData, stateTitle, stateHref);
+        } else {
+          History.pushState(stateData, stateTitle, stateHref);
+        }
+
+        callback();
+      }
+    );
+  } else {
+    // Fallback for old browsers.
+    window.location = href;
+  }
+});
+
+//
+// Bind global a.click handlers
+//
+
+$(function () {
+  $('body').on('click', 'a', function (event) {
+    var $this = $(this), match;
+
+    if (!!$this.attr('target') || event.isDefaultPrevented()) {
+      // skip links that have `target` attribute specified
+      // and clicks that were already handled
+      return;
+    }
+
+    match = find_match_data($this.attr('href'));
+
+    // Continue as normal for cmd clicks etc
+    if (2 === event.which || event.metaKey) {
+      return true;
+    }
+
+    if (match) {
+      allowScrollTo = true;
+      skipRender = false;
+      exec_api3_call(match, History.pushState);
+      event.preventDefault();
+      return false;
+    }
+  });
+});
