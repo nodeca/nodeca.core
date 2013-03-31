@@ -17,7 +17,7 @@ N.wire.once('navigate.done', function () {
 //
 // Update "active" tab of the navbar_menu when moving to another page.
 //
-N.wire.on('navigate.exit', function navbar_menu_change_active(target) {
+N.wire.on('navigate.done', function navbar_menu_change_active(target) {
   var apiPath = target.apiPath, tabs, active;
 
   function matchLengthOf(subject) {

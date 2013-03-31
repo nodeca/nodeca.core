@@ -153,7 +153,13 @@ window.NodecaLoader = (function () {
 
     loadAssets(pkgName, shims, function () {
       if (N.wire) {
-        $(function () { N.wire.emit('navigate.done', window.location.href); });
+        $(function () {
+          N.wire.emit('navigate.done', {
+            url: window.location.href
+            // FIXME: We need a better way to get API path of a start page.
+          , apiPath: N.runtime.router.match(window.location.href).meta
+          });
+        });
       } else {
         alert('Init error: failed to load core JS files. Refresh page & try again. ' +
               'If problem still exists - contact administrator.');

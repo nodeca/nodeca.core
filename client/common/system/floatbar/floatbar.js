@@ -11,7 +11,7 @@ N.wire.on('navigate.done', function () {
     , navTop;
 
   // Remove previous floatbar handlers if any.
-  $window.off('.floatbar');
+  $window.off('scroll.floatbar');
 
   if (0 === $floatbar.length) {
     // Do nothing if there's no floatbar.
