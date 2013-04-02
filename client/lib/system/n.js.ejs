@@ -18,10 +18,6 @@ window.NodecaLoader.execute(function (N, require) {
   var Pointer   = require('pointer');
   var BabelFish = require('babelfish');
 
-  N.wire   = new Wire();
-  N.views  = {};
-  N.client = {};
-
   N.runtime         = JSON.parse($('meta[name="runtime"]').attr('content'));
   N.runtime.env     = <%- JSON.stringify(N.runtime.env) %>;
   N.runtime.version = <%- JSON.stringify(N.runtime.version) %>;
@@ -51,6 +47,7 @@ window.NodecaLoader.execute(function (N, require) {
     N.runtime.router.addRoute(v[0], v[1]);
   });
 
+  N.wire           = new Wire();
   N.logger         = require('./_n/logger');
   N.io             = require('./_n/io');
   N.runtime.render = require('./_n/render');
