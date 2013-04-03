@@ -72,8 +72,7 @@ module.exports.commandLineArguments = [
 module.exports.run = function (N, args, callback) {
 
   N.wire.emit([
-      'init:models',
-      'init:migrations'
+      'init:models'
     ], N,
 
     function (err) {
