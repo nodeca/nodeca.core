@@ -12,50 +12,43 @@ var render = require('nodeca.core/lib/system/render/common');
 // Expose jade runtime to `window.jade`
 require('./jade_runtime.js');
 
+
 ////////////////////////////////////////////////////////////////////////////////
 
 
 var tzOffset = (new Date).getTimezoneOffset();
 
 
-////////////////////////////////////////////////////////////////////////////////
+var DEFAULT_HELPERS = {
+  runtime: N.runtime
 
+, t: N.runtime.t
 
-/**
- *  render(apiPath[, locals[, helpers]]) -> String
- *  - apiPath (String): Template to render, e.g. `forum.index`
- *  - locals (Object): Locals data to pass to the renderer function
- *  - helpers (Object): Helper functions and constants
- *
- *  Renders a template passing `locals` and `helpers` as `self` object within
- *  it. The difference between these is that `locals` is only for the specified
- *  template, but `helpers` passes forward to partials.
- **/
-function renderWrapper(apiPath, locals, helpers) {
-  var _helpers = {};
-
-  _helpers.runtime = N.runtime;
-
-  _helpers.t = N.runtime.t;
-
-  _helpers.date = function dateWrapper(value, format) {
+, date: function date_helper(value, format) {
     return date(value, format, N.runtime.locale, tzOffset);
-  };
+  }
 
-  _helpers.asset_include = function assetsIncludeWrapper() {
+, asset_include: function assets_include_helper() {
     N.logger.error('asset_include() is a server-side only helper, ' +
                    'thus can be used in base layouts only.');
     return '';
-  };
+  }
 
-  _helpers.link_to = function linkToWrapper(name, params) {
+, link_to: function link_to_helper(name, params) {
     return N.runtime.router.linkTo(name, params) || '#';
-  };
-
-  _.extend(_helpers, helpers);
-
-  return render(N, apiPath, locals, _helpers);
-}
+  }
+};
 
 
-module.exports = renderWrapper;
+////////////////////////////////////////////////////////////////////////////////
+
+
+module.exports = function clientRenderWrapper(apiPath, locals, helpers) {
+  if (helpers) {
+    helpers = _.extend({}, DEFAULT_HELPERS, helpers);
+  } else {
+    helpers = DEFAULT_HELPERS;
+  }
+
+  return render(N, apiPath, locals, helpers);
+};
