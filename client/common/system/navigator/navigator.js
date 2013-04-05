@@ -105,11 +105,11 @@ function exec_api3_call(data, callback) {
 
     N.loader.loadAssets((msg.view || match.meta).split('.').shift(), function () {
       callback({
-        view:   msg.view || match.meta,
-        layout: msg.layout,
-        locals: msg.data,
-        route:  msg.data.head.route || match.meta,
-        anchor: anchor
+        apiPath: msg.apiPath || match.meta
+      , view:    msg.view    || match.meta
+      , layout:  msg.layout
+      , locals:  msg.data
+      , anchor:  anchor
       }, msg.data.head.title, href);
     });
   });
@@ -140,8 +140,12 @@ if (History.enabled) {
     var state  = History.getState()
       , data   = state.data
       , url    = state.url
-      , target = { apiPath: data.route, url: url }
-      , $el;
+      , target = { apiPath: data.apiPath, url: url }
+      , $el
+      // View template helpers.
+      , helpers = {
+        getApiPath: function () { return data.apiPath; }
+      };
 
     // we have no State data when it's an initial state, so we schedule
     // retreival of data by it's URL and triggering this event once
@@ -166,7 +170,7 @@ if (History.enabled) {
       }
 
       if (!skipRender) {
-        content = $(N.runtime.render(data.view, data.locals)).hide();
+        content = $(N.runtime.render(data.view, data.locals, helpers)).hide();
 
         $('#content').fadeOut('fast', function () {
           $(this).replaceWith(content);
