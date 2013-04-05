@@ -23,7 +23,7 @@ function handleAction(apiPath, event) {
 }
 
 
-$(function () {
+N.wire.once('navigate.done', function () {
   $('body').on('click.nodeca.data-api', '[data-on-click]', function (event) {
     var apiPath = $(this).data('onClick');
     return handleAction(apiPath, event);
