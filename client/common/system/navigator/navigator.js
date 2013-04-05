@@ -144,7 +144,7 @@ if (History.enabled) {
       , $el
       // View template helpers.
       , helpers = {
-        getApiPath: function () { return data.apiPath; }
+        get_apipath: function () { return data.apiPath; }
       };
 
     // we have no State data when it's an initial state, so we schedule

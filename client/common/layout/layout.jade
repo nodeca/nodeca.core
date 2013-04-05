@@ -19,8 +19,8 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
     meta(name="runtime", content=JSON.stringify(self.runtime))
 
-    - if (self.head.stylesheets[self.getApiPath().split('.').shift()])
-      each cssPath in self.head.stylesheets[self.getApiPath().split('.').shift()]
+    - if (self.head.stylesheets[self.get_apipath().split('.').shift()])
+      each cssPath in self.head.stylesheets[self.get_apipath().split('.').shift()]
         link(rel='stylesheet', href=cssPath)
 
     //if lt IE 9
@@ -30,7 +30,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
       !{self.asset_include('loader.js')}
       NodecaLoader.loadAssets.init(
         !{JSON.stringify(self.head.assets)},
-        '!{self.getApiPath().split(".").shift()}'
+        '!{self.get_apipath().split(".").shift()}'
       );
 
     script(type="text/javascript")
@@ -58,7 +58,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
             - if (self.menus.common.navbar)
               ul.nav
                 - each item in self.menus.common.navbar
-                  - var ns = self.getApiPath().split('.').shift(), item_ns = item.to.split('.').shift();
+                  - var ns = self.get_apipath().split('.').shift(), item_ns = item.to.split('.').shift();
                   - if (ns === item_ns)
                     li(data-api-path=item_ns, class='active'): a(href=item.link)= self.t(item.title)
                   - else
