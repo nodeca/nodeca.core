@@ -290,9 +290,15 @@ N.wire.once('navigate.done', { priority: 999 }, function () {
   $('body').on('click', 'a', function (event) {
     var $this = $(this), match;
 
-    if ($this.attr('target') || $this.data('target') || event.isDefaultPrevented()) {
+    if ($this.attr('target') || event.isDefaultPrevented()) {
       // skip links that have `target` attribute specified
       // and clicks that were already handled
+      return;
+    }
+
+    if ($this.data('target')) {
+      // Skip links handled by Bootstrap plugins.
+      // TODO: Probably we should find more convenient way for this.
       return;
     }
 
