@@ -42,8 +42,7 @@ module.exports.run = function (N, args, callback) {
         return;
       }
 
-      var Migration       = N.models.core.Migration;
-      var checkMigrations = require('../lib/system/migrator').checkMigrations;
+      var Migration = N.models.Migration;
 
       // fetch used migrations from db
       Migration.getLastState(function (err, currentMigrations) {
@@ -54,7 +53,7 @@ module.exports.run = function (N, args, callback) {
           return;
         }
 
-        outstandingMigrations = checkMigrations(N, currentMigrations);
+        outstandingMigrations = Migration.checkMigrations(N, currentMigrations);
 
         if (0 === outstandingMigrations.length) {
           console.log(args.all  ? 'Already up-to-date.'
