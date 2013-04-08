@@ -141,11 +141,7 @@ if (History.enabled) {
       , data   = state.data
       , url    = state.url
       , target = { apiPath: data.apiPath, url: url }
-      , $el
-      // View template helpers.
-      , helpers = {
-        get_apipath: function () { return data.apiPath; }
-      };
+      , $el;
 
     // we have no State data when it's an initial state, so we schedule
     // retreival of data by it's URL and triggering this event once
@@ -170,7 +166,7 @@ if (History.enabled) {
       }
 
       if (!skipRender) {
-        content = $(N.runtime.render(data.view, data.locals, helpers)).hide();
+        content = $(N.runtime.render(data.view, data.locals, { apiPath: data.apiPath })).hide();
 
         $('#content').fadeOut('fast', function () {
           $(this).replaceWith(content);
