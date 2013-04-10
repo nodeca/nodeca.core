@@ -31,75 +31,6 @@ function normalizeURL(url) {
 }
 
 
-// Returns a normalized options object for `navigate.to` wire handler:
-//
-//    options.href
-//    options.apiPath
-//    options.params
-//    options.history - optional function; default is `History.pushState`
-//    options.render  - optional function; default is `navigationRender`
-//
-// `href` and `apiPath` parameters are calculated from each other.
-// So they are mutually exclusive.
-//
-function normalizeOptions(options) {
-  var match, href, anchor, apiPath, params;
-
-  if ('string' === typeof options) {
-    options = { href: options };
-  }
-
-  if (options.href) {
-    match = N.runtime.router.match(options.href);
-
-    if (!match) {
-      throw new Error('Cannot match route ' + options.href);
-    }
-
-    apiPath = match.meta;
-    params  = match.params || {};
-    href    = options.href.split('#')[0];
-    anchor  = options.href.split('#')[1] || '';
-
-  } else if (options.apiPath) {
-    apiPath = options.apiPath;
-    params  = options.params || {};
-    href    = N.runtime.router.linkTo(apiPath, params);
-    anchor  = options.anchor || '';
-
-    if (!href) {
-      throw new Error('Cannot build URL for API path "' + apiPath + '"');
-    }
-
-    // Drop hash-prefix if exists.
-    // Needed when we take the anchor from `window.location.hash`.
-    if ('#' === anchor.charAt(0)) {
-      anchor = anchor.slice(1);
-    }
-
-  } else {
-    throw new Error('Need "href" or "apiPath" parameters to handle ' +
-                    '"navigate.to" event.');
-  }
-
-  // History.JS does not plays well with full URLs but without protocols:
-  //
-  //  http://example.com/foo.html  -- OK
-  //  /foo.html                    -- OK
-  //  //example.com/foo.html       -- becomes /example.com/foo.html
-  //
-  // So we normalize URL to be full one (with protocol, host, etc.)
-  return {
-    href:    normalizeURL(anchor ? (href + '#' + anchor) : href)
-  , anchor:  anchor
-  , apiPath: apiPath
-  , params:  params
-  , render:  options.render
-  , history: options.history
-  };
-}
-
-
 // Default renderer for `navigate.to` event.
 // Used to render content when user clicks a link.
 //
@@ -144,13 +75,71 @@ function historyRender(data, callback) {
 var __renderCallback__ = historyRender;
 
 
+// Performs RPC navigation to the specified page. Allowed options:
+//
+//    options.href
+//    options.apiPath
+//    options.params
+//    options.render       - optional function; default is `navigationRender`
+//    options.replaceState - `true` to use `History.replaceState` instead of
+//                           `History.pushState`
+//
+// `href` and `apiPath` parameters are calculated from each other.
+// So they are mutually exclusive.
+//
 N.wire.on('navigate.to', function navigate_to(options, callback) {
-  try {
-    options = normalizeOptions(options);
-  } catch (err) {
-    callback(err);
+  var match, href, anchor, apiPath, params;
+
+  if ('string' === typeof options) {
+    options = { href: options };
+  }
+
+  if (options.href) {
+    match = N.runtime.router.match(options.href);
+
+    // Can't match route - perform normal page loading to show 404 error page.
+    if (!match) {
+      window.location = normalizeURL(options.href);
+      callback();
+      return;
+    }
+
+    apiPath = match.meta;
+    params  = match.params || {};
+    href    = options.href.split('#')[0];
+    anchor  = options.href.split('#')[1] || '';
+
+  } else if (options.apiPath) {
+    apiPath = options.apiPath;
+    params  = options.params || {};
+    href    = N.runtime.router.linkTo(apiPath, params);
+    anchor  = options.anchor || '';
+
+    if (!href) {
+      callback(new Error('Cannot build URL for API path "' + apiPath + '"'));
+      return;
+    }
+
+    // Drop hash-prefix if exists.
+    // Needed when we take the anchor from `window.location.hash`.
+    if ('#' === anchor.charAt(0)) {
+      anchor = anchor.slice(1);
+    }
+
+  } else {
+    callback(new Error('Need "href" or "apiPath" parameters to handle ' +
+                       '"navigate.to" event.'));
     return;
   }
+
+  // History.JS does not plays well with full URLs but without protocols:
+  //
+  //  http://example.com/foo.html  -- OK
+  //  /foo.html                    -- OK
+  //  //example.com/foo.html       -- becomes /example.com/foo.html
+  //
+  // So we normalize URL to be full one (with protocol, host, etc.)
+  href = normalizeURL(anchor ? (href + '#' + anchor) : href);
 
   // Fallback for old browsers.
   if (!History.enabled) {
@@ -159,13 +148,14 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
     return;
   }
 
-  N.io.rpc(options.apiPath, options.params, function (err, response) {
+  // History is enabled - try RPC navigation.
+  N.io.rpc(apiPath, params, function (err, response) {
     if (err && N.io.REDIRECT === err.code) {
       // Note, that we try to keep anchor, if exists.
       // That's important for moved threads and last pages redirects.
       N.wire.emit('navigate.to', {
         urlPath: err.head.Location
-      , anchor:  options.anchor || window.location.hash
+      , anchor:  anchor || window.location.hash
       , render:  options.render
       , history: options.history
       }, callback);
@@ -186,7 +176,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       //   so we redirect user to show him an error page.
       //
       // - Version mismatch, so we call action by HTTP to update client.
-      window.location = options.href;
+      window.location = href;
       callback();
       return;
     }
@@ -197,22 +187,28 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       // TODO: Prevent double page requesting. The server should not perform
       // database queries on RPC when the client is not intending to use the
       // response data. Like in this situation.
-      window.location = options.href;
+      window.location = href;
       callback();
       return;
     }
 
-    N.loader.loadAssets((response.view || options.apiPath).split('.')[0], function () {
+    N.loader.loadAssets((response.view || apiPath).split('.')[0], function () {
       var state = {
-        apiPath: options.apiPath
-      , anchor:  options.anchor
-      , view:    response.view   || options.apiPath
+        apiPath: apiPath
+      , anchor:  anchor
+      , view:    response.view   || apiPath
       , layout:  response.layout || null
       , locals:  response.data   || {}
       };
 
       __renderCallback__ = options.render || navigationRender;
-      (options.history || History.pushState)(state, response.data.head.title, options.href);
+
+      if (options.replaceState) {
+        History.replaceState(state, response.data.head.title, href);
+      } else {
+        History.pushState(state, response.data.head.title, href);
+      }
+
       callback();
     });
   });
@@ -274,13 +270,13 @@ N.wire.once('navigate.done', { priority: 999 }, function () {
     if ($this.attr('target') || event.isDefaultPrevented()) {
       // skip links that have `target` attribute specified
       // and clicks that were already handled
-      return false;
+      return true;
     }
 
     if ($this.data('target')) {
       // Skip links handled by Bootstrap plugins.
       // TODO: Probably we should find more convenient way for this.
-      return false;
+      return true;
     }
 
     // Continue as normal for cmd clicks etc
