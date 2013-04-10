@@ -34,7 +34,7 @@ function normalizeURL(url) {
 // Default renderer for `navigate.to` event.
 // Used to render content when user clicks a link.
 //
-function navigationRender(data, callback) {
+function renderNewContent(data, callback) {
   var content = $(N.runtime.render(data.view, data.locals, {
     apiPath: data.apiPath
   })).hide();
@@ -54,7 +54,7 @@ function navigationRender(data, callback) {
 
 // Used to render content when user presses Back/Forward buttons.
 //
-function historyRender(data, callback) {
+function renderFromHistory(data, callback) {
   var content = $(N.runtime.render(data.view, data.locals, {
     apiPath: data.apiPath
   })).hide();
@@ -67,12 +67,19 @@ function historyRender(data, callback) {
 }
 
 
-// Reference a function to be used on next fire of history 'statechange' event
+// Reference to a function to be used on next fire of history 'statechange' event
 // to perform content injection/replacement.
 //
-// NOTE: The event handler *always* resets this variable to `historyRender`
+// NOTE: The event handler *always* resets this variable to `renderFromHistory`
 // after each call.
-var __renderCallback__ = historyRender;
+var __renderCallback__ = renderFromHistory;
+
+
+// Reference to a function to be used by history 'statechange' handler after
+// content rendering is done.
+//
+// NOTE: The event handler *always* resets this variable to null after each call.
+var __completeCallback__ = null;
 
 
 // Performs RPC navigation to the specified page. Allowed options:
@@ -80,7 +87,7 @@ var __renderCallback__ = historyRender;
 //    options.href
 //    options.apiPath
 //    options.params
-//    options.render       - optional function; default is `navigationRender`
+//    options.render       - optional function; default is `renderNewContent`
 //    options.replaceState - `true` to use `History.replaceState` instead of
 //                           `History.pushState`
 //
@@ -88,7 +95,7 @@ var __renderCallback__ = historyRender;
 // So they are mutually exclusive.
 //
 N.wire.on('navigate.to', function navigate_to(options, callback) {
-  var match, href, anchor, apiPath, params;
+  var match, href, anchor, apiPath, params, errorReport;
 
   if ('string' === typeof options) {
     options = { href: options };
@@ -97,7 +104,8 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
   if (options.href) {
     match = N.runtime.router.match(options.href);
 
-    // Can't match route - perform normal page loading to show 404 error page.
+    // It's an external link or 404 error if route is not matched. So perform
+    // regular page requesting via HTTP.
     if (!match) {
       window.location = normalizeURL(options.href);
       callback();
@@ -116,7 +124,11 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
     anchor  = options.anchor || '';
 
     if (!href) {
-      callback(new Error('Cannot build URL for API path "' + apiPath + '"'));
+      errorReport = 'Invalid parameters passed to `navigate.to` event: ' +
+                    JSON.stringify(options);
+
+      window.alert(errorReport);
+      callback(new Error(errorReport));
       return;
     }
 
@@ -127,8 +139,12 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
     }
 
   } else {
-    callback(new Error('Need "href" or "apiPath" parameters to handle ' +
-                       '"navigate.to" event.'));
+    errorReport = 'Not enough parameters for `navigate.to` event. ' +
+                  'Need `href` or `apiPath` at least: ' +
+                  JSON.stringify(options);
+
+    window.alert(errorReport);
+    callback(new Error(errorReport));
     return;
   }
 
@@ -154,7 +170,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       // Note, that we try to keep anchor, if exists.
       // That's important for moved threads and last pages redirects.
       N.wire.emit('navigate.to', {
-        urlPath: err.head.Location
+        href:    err.head.Location
       , anchor:  anchor || window.location.hash
       , render:  options.render
       , history: options.history
@@ -201,15 +217,16 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       , locals:  response.data   || {}
       };
 
-      __renderCallback__ = options.render || navigationRender;
+      // Set one-use callbacks for history 'statechange' handler.
+      // The handler will reset these to defaults (`renderFromHistory` and null).
+      __renderCallback__   = options.render || renderNewContent;
+      __completeCallback__ = callback;
 
       if (options.replaceState) {
         History.replaceState(state, response.data.head.title, href);
       } else {
         History.pushState(state, response.data.head.title, href);
       }
-
-      callback();
     });
   });
 });
@@ -224,8 +241,16 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 
 if (History.enabled) {
   History.Adapter.bind(window, 'statechange', function () {
-    var state  = History.getState()
-      , target = { apiPath: state.data.apiPath, url: state.url };
+    var state    = History.getState()
+      , target   = { apiPath: state.data.apiPath, url: state.url }
+      , render   = __renderCallback__
+      , complete = __completeCallback__;
+
+    // Reset callbacks to defaults. It's needed to ensure using right renderer
+    // on regular history state changes - when user clicks back/forward buttons
+    // in his browser.
+    __renderCallback__   = renderFromHistory;
+    __completeCallback__ = null;
 
     // We have no state data when it's an initial state, so we schedule
     // retrieval of data by it's URL and triggering this event once
@@ -243,16 +268,15 @@ if (History.enabled) {
         N.logger.error('%s', err);
       }
 
-      __renderCallback__(state.data, function () {
+      render(state.data, function () {
         N.wire.emit('navigate.done', target, function (err) {
           if (err) {
             N.logger.error('%s', err);
           }
 
-          // Reset to default. It's needed to ensure using right renderer on
-          // regular history state changes - when user clicks back/forward
-          // buttons in his browser.
-          __renderCallback__ = historyRender;
+          if (complete) {
+            complete();
+          }
         });
       });
     });
