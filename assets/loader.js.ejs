@@ -152,9 +152,10 @@ window.NodecaLoader = (function () {
     }
 
     loadAssets(pkgName, shims, function () {
-      if (!Object.keys) {
+      if (!window.JSON || !Object.keys) {
         alert('Init error: failed to load browser shims. Refresh page & try again. ' +
               'If problem still exists - contact administrator.');
+        return;
       }
 
       if (N.wire) {
