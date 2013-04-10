@@ -1,0 +1,8 @@
+i18n:
+  en-US:
+    admin:
+      menus:
+        navbar:
+          system: System
+          system.settings: Settings
+          system.settings.options: Options
