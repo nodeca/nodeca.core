@@ -89,7 +89,3 @@ packages:
         - '**.eot'
         - '**.ttf'
         - '**.svg'
-        - '**.png'
-        - '**.jpg'
-        - '**.jpeg'
-        - '**.gif'
