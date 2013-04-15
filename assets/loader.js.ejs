@@ -160,21 +160,20 @@ window.NodecaLoader = (function () {
         return;
       }
 
-      url = location.protocol + '//' + location.host + location.pathname;
+      if (!N.wire) {
+        alert('Init error: failed to load core JS files. Refresh page & try again. ' +
+              'If problem still exists - contact administrator.');
+        return;
+      }
 
-      // TODO: Probably we need a better way to get API path of a start page.
+      // We need URL *without* a hashtag, to properly match it.
+      url = location.protocol + '//' + location.host + location.pathname;
       route = N.runtime.router.match(url);
 
       if (!route) {
         alert('Init error: failed to detect internal identifier (route) of ' +
               'this page. Refresh page & try again. If problem still exists ' +
               '- contact administrator.');
-        return;
-      }
-
-      if (!N.wire) {
-        alert('Init error: failed to load core JS files. Refresh page & try again. ' +
-              'If problem still exists - contact administrator.');
         return;
       }
 
