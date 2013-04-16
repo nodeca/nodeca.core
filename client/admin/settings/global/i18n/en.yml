@@ -1,0 +1,7 @@
+en-US:
+  save: Save
+  cancel: Cancel
+
+  notify:
+    info: Settings group saved.
+    error: Internal server error. Cannot save changes.

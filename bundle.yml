@@ -69,6 +69,7 @@ packages:
   lib:
     vendor:
       - lodash
+      - knockout
 
     client:
       main: client/lib/system/n.js.ejs
