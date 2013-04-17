@@ -1,43 +1,33 @@
 div#content
+  script(type="text/json")!= JSON.stringify(self.settings)
+
   != self.partial('@admin.core.blocks.sidebar_menu', { apiPath: self.apiPath, menu: self.menus.admin })
 
   div.main
-    ul.nav.nav-tabs
-      each name in self.rootGroups
-        li(class=(name === self.activeGroup ? 'active' : null))
-          a(href=self.link_to('admin.core.global_settings.show', { group: name }))
-            h4= self.t('@admin.setting.group.' + name)
+    != self.partial('@admin.core.blocks.breadcrumbs', { apiPath: self.apiPath, menu: self.menus.admin, path: self.blocks.breadcrumbs });
 
     form.form-horizontal(data-bind="submit: $root.save", style="display: none")
-      div(data-bind="foreach: groups")
-        a(data-bind="attr: { href: href }")
-          div
-            h4(data-bind="text: localizedName")
-            span(data-bind="text: localizedHelp")
-
       div(data-bind="foreach: settings")
-        div
-          //- String setting
-          div.control-group(data-bind="if: ('string' === type)")
-            label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
-            div.controls
-              input(type="text", data-bind="value: userValue, valueUpdate: 'keyup', attr: { id: id }")
-              span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+        //- String setting
+        div.control-group(data-bind="if: ('string' === type)")
+          label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
+          div.controls
+            input(type="text", data-bind="value: userValue, valueUpdate: 'keyup', attr: { id: id }")
+            span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
 
-          //- Number setting
-          div.control-group(data-bind="if: ('number' === type)")
-            label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
-            div.controls
-              input(type="number", data-bind="value: userValue, valueUpdate: 'keyup', attr: { id: id }")
-              span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+        //- Number setting
+        div.control-group(data-bind="if: ('number' === type)")
+          label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
+          div.controls
+            input(type="number", data-bind="value: userValue, valueUpdate: 'keyup', attr: { id: id }")
+            span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
 
-          //- Boolean setting
-          div.control-group(data-bind="if: ('boolean' === type)")
-            label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
-            div.controls
-              input(type="checkbox", data-bind="checked: userValue, attr: { id: id }")
-              span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+        //- Boolean setting
+        div.control-group(data-bind="if: ('boolean' === type)")
+          label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
+          div.controls
+            input(type="checkbox", data-bind="checked: userValue, attr: { id: id }")
+            span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
 
       div(data-bind="if: 0 !== settings.length")
         button.btn.btn-primary(type="submit", data-bind="enable: $root.modified")= self.t('save')
-        button.btn(type="reset", data-bind="click: $root.cancel")= self.t('cancel')

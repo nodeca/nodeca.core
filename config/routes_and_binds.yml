@@ -8,8 +8,11 @@ router:
     admin.core.dashboard:
       "/": ~
 
+    admin.core.global_settings.index:
+      "/settings":
+
     admin.core.global_settings.show:
-      "/settings(/{group})":
+      "/settings/{group}":
         group: /\S+/
 
     core.assets:

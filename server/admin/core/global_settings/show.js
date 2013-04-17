@@ -12,22 +12,60 @@ module.exports = function (N, apiPath) {
     }
   });
 
-  N.wire.on(apiPath, function settings_global_show(env) {
-    var rootGroups = env.response.data.rootGroups = [];
 
-    _.forEach(N.config.setting_groups, function (config, name) {
-      if (!config || !config.parent) {
-        rootGroups.push(name);
+  N.wire.on(apiPath, function (env, callback) {
+    var store      = N.settings.getStore('global')
+      , settings   = env.response.data.settings   = []
+      , categories = env.response.data.categories = []
+      , settingsConfig;
+
+    if (!store || !N.config.setting_schemas) {
+      callback();
+      return;
+    }
+
+    settingsConfig = N.config.setting_schemas['global'];
+
+    if (!settingsConfig) {
+      callback();
+      return;
+    }
+
+    _.forEach(settingsConfig, function (config, name) {
+      if (config && env.params.group === (config.group_key || null)) {
+        settings.push(_.extend({ name: name }, config));
       }
     });
 
-    if (env.params.group) {
-      env.response.data.activeGroup = env.params.group;
-    } else {
-      env.status = N.io.REDIRECT;
-      env.headers['Location'] = N.runtime.router.linkTo(env.method, {
-        group: rootGroups[0]
+    settings.sort(function (a, b) {
+      var ap = a.priority || 0
+        , bp = b.priority || 0;
+
+      if (ap === bp) {
+        return a.name.localeCompare(b.name);
+      } else {
+        return ap - bp;
+      }
+    });
+
+    _.forEach(settings, function (config) {
+      if (config.category_key && !_.contains(categories, config.category_key)) {
+        categories.push(config.category_key);
+      }
+    });
+
+    store.get(_.pluck(settings, 'name'), {}, function (err, data) {
+      if (err) {
+        callback(err);
+        return;
+      }
+
+      _.forEach(data, function (result, name) {
+        _.extend(_.find(settings, function (s) { return s.name === name; }),
+                 result);
       });
-    }
+
+      callback();
+    });
   });
 };
