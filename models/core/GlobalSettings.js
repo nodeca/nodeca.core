@@ -23,16 +23,16 @@ module.exports = function (N, collectionName) {
    **/
   GlobalSettings.statics.set = function (key, value, callback) {
     var model = this;
-    model.findOne({_id: key}, function (err, doc) {
+    model.findOne({ _id: key }, function (err, doc) {
       if (err) {
         callback(err);
         return;
       }
 
       if (doc) {
-        model.update({_id: key}, { value: value }, callback);
+        model.update({ _id: key }, { value: value }, callback);
       } else {
-        model.create({_id: key, value: [value]}, callback);
+        model.create({ _id: key, value: value }, callback);
       }
     });
   };

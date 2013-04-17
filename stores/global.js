@@ -43,7 +43,7 @@ module.exports = function (N) {
     },
     set: function (values, params, callback) {
       async.forEach(_.keys(values), function (key, nextKey) {
-        Model.set(key, values[key], nextKey);
+        Model.set(key, values[key].value, nextKey);
       }, callback);
     }
   });
