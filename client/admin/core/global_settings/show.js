@@ -66,7 +66,7 @@ SettingsEditorModel.prototype.save = function save() {
     }
   });
 
-  N.io.rpc('admin.settings.update', { store: 'global', settings: data }, function (err) {
+  N.io.rpc('admin.core.global_settings.update', { store: 'global', settings: data }, function (err) {
     var report = err ? 'error' : 'info';
 
     N.wire.emit('notify', { type: report, message: t('notify.' + report) });
@@ -81,7 +81,7 @@ SettingsEditorModel.prototype.cancel = function cancel() {
 
 
 N.wire.on('navigate.done', function (data) {
-  N.io.rpc('admin.settings.fetch', { store: 'global', group: data.params.group }, function (err, response) {
+  N.io.rpc('admin.core.global_settings.fetch', { store: 'global', group: data.params.group }, function (err, response) {
     if (err) {
       return;
     }

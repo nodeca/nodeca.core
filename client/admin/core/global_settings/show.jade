@@ -1,11 +1,11 @@
 div#content
-  != self.partial('@admin.blocks.sidebar_menu', { apiPath: self.apiPath, menu: self.menus.admin })
+  != self.partial('@admin.core.blocks.sidebar_menu', { apiPath: self.apiPath, menu: self.menus.admin })
 
   div.main
     ul.nav.nav-tabs
       each name in self.rootGroups
         li(class=(name === self.activeGroup ? 'active' : null))
-          a(href=self.link_to('admin.settings.global', { group: name }))
+          a(href=self.link_to('admin.core.global_settings.show', { group: name }))
             h4= self.t('@admin.setting.group.' + name)
 
     form.form-horizontal(data-bind="submit: $root.save", style="display: none")

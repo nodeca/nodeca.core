@@ -26,7 +26,7 @@ packages:
       include: client/admin/**i18n/*.yml
 
     styles:
-      main: client/admin/system/main.styl
+      main: client/admin/core/system/main.styl
       include: client/admin/**.styl
       exclude: /(^|\/|\\)_.*/
 

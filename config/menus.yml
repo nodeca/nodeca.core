@@ -13,5 +13,5 @@ menus:
           settings:
             submenu:
               options:
-                to: admin.settings.global
+                to: admin.core.global_settings.show
                 params: {}
