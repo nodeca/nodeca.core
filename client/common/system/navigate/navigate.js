@@ -82,6 +82,10 @@ var __renderCallback__ = renderFromHistory;
 var __completeCallback__ = null;
 
 
+// API path of current page. Updated via `navigate.done` event.
+var __currentApiPath__ = null;
+
+
 // Performs RPC navigation to the specified page. Allowed options:
 //
 //    options.href
@@ -241,10 +245,15 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 
 if (History.enabled) {
   History.Adapter.bind(window, 'statechange', function () {
-    var state    = History.getState()
-      , target   = { apiPath: state.data.apiPath, url: state.url }
-      , render   = __renderCallback__
-      , complete = __completeCallback__;
+    var state      = History.getState()
+      , exitData   = { apiPath: __currentApiPath__, url: state.url }
+      , exitEvents = ['navigate.exit:' + __currentApiPath__, 'navigate.exit']
+      , doneData   = { apiPath: state.data.apiPath, url: state.url }
+      , doneEvents = ['navigate.done', 'navigate.done:' + state.data.apiPath]
+      , render     = __renderCallback__
+      , complete   = __completeCallback__;
+
+    console.log(exitEvents, doneEvents);
 
     // Reset callbacks to defaults. It's needed to ensure using right renderer
     // on regular history state changes - when user clicks back/forward buttons
@@ -263,13 +272,13 @@ if (History.enabled) {
       return;
     }
 
-    N.wire.emit('navigate.exit', target, function (err) {
+    N.wire.emit(exitEvents, exitData, function (err) {
       if (err) {
         N.logger.error('%s', err);
       }
 
       render(state.data, function () {
-        N.wire.emit('navigate.done', target, function (err) {
+        N.wire.emit(doneEvents, doneData, function (err) {
           if (err) {
             N.logger.error('%s', err);
           }
@@ -282,6 +291,14 @@ if (History.enabled) {
     });
   });
 }
+
+//
+// __currentApiPath__ updater.
+//
+
+N.wire.on('navigate.done', { priority: -999 }, function (data) {
+  __currentApiPath__ = data.apiPath;
+});
 
 //
 // Bind global a.click handler.
