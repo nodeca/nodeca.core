@@ -39,11 +39,11 @@ var DEFAULT_HELPERS = {
   }
 
 , add_raw_data: function add_raw_data_helper(key, data) {
-    if (N.runtime.responseData.hasOwnProperty(key)) {
-      N.logger.warn('Override of %j key in N.runtime.responseData');
+    if (N.runtime.page_data.hasOwnProperty(key)) {
+      N.logger.warn('Override of %j key in N.runtime.page_data');
     }
 
-    N.runtime.responseData[key] = data;
+    N.runtime.page_data[key] = data;
   }
 };
 
