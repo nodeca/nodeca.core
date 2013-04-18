@@ -277,6 +277,9 @@ if (History.enabled) {
         N.logger.error('%s', err);
       }
 
+      // Clear old raw response data. It's collected by view templates.
+      N.runtime.responseData = {};
+
       render(state.data, function () {
         N.wire.emit(doneEvents, doneData, function (err) {
           if (err) {

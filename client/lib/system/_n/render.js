@@ -37,6 +37,14 @@ var DEFAULT_HELPERS = {
 , link_to: function link_to_helper(name, params) {
     return N.runtime.router.linkTo(name, params) || '#';
   }
+
+, add_raw_data: function add_raw_data_helper(key, data) {
+    if (N.runtime.responseData.hasOwnProperty(key)) {
+      N.logger.warn('Override of %j key in N.runtime.responseData');
+    }
+
+    N.runtime.responseData[key] = data;
+  }
 };
 
 

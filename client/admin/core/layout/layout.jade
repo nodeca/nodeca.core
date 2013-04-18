@@ -17,8 +17,6 @@ html.no-js
       - if (self.head.keywords)
         meta(name='description', content=self.head.keywords)
 
-    meta(name="runtime", content=JSON.stringify(self.runtime))
-
     - if (self.head.stylesheets.admin)
       each cssPath in self.head.stylesheets.admin
         link(rel='stylesheet', href=cssPath)
@@ -44,3 +42,6 @@ html.no-js
 
     .nojs
       .alert.alert-error #{self.t('nojs')}
+
+
+    div#runtime(style="display: none")= JSON.stringify(self.runtime)
