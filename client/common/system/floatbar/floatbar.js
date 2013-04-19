@@ -4,7 +4,7 @@
 var _ = require('lodash');
 
 
-var controlTimestamp = null
+var floatbarUid = null
   , offsetTop
   , isFixed;
 
@@ -18,10 +18,11 @@ N.wire.on('navigate.done', function () {
     return;
   }
 
-  // Initialize at first time.
-  if (!controlTimestamp || controlTimestamp !== $floatbar.data('controlTimestamp')) {
-    controlTimestamp = String(Date.now());
-    $floatbar.data('controlTimestamp', controlTimestamp);
+  // offsetTop should be calculated only once, on first page load.
+  // If content is added with "More" button, offset should not be changed.
+  if (!floatbarUid || floatbarUid !== $floatbar.data('floatbarUid')) {
+    floatbarUid = String(Date.now());
+    $floatbar.data('floatbarUid', floatbarUid);
 
     offsetTop = $floatbar.offset().top;
     isFixed   = false;
