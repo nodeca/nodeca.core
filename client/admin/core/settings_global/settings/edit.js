@@ -56,12 +56,8 @@ SettingsEditorModel.prototype.save = function save() {
 };
 
 
-N.wire.on('navigate.done', function (data) {
-  if (data.apiPath !== module.apiPath) {
-    return;
-  }
-
-  var editor = new SettingsEditorModel(JSON.parse($('#content script').text()));
+N.wire.on('navigate.done:' + module.apiPath, function () {
+  var editor = new SettingsEditorModel(N.runtime.page_data.settings);
 
   ko.applyBindings(editor, $('#content').get(0));
   $('#content form[data-bind]:first').show();
