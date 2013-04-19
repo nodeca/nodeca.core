@@ -253,8 +253,6 @@ if (History.enabled) {
       , render     = __renderCallback__
       , complete   = __completeCallback__;
 
-    console.log(exitEvents, doneEvents);
-
     // Reset callbacks to defaults. It's needed to ensure using right renderer
     // on regular history state changes - when user clicks back/forward buttons
     // in his browser.
