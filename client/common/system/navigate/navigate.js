@@ -304,6 +304,14 @@ N.wire.on('navigate.done', { priority: -999 }, function (data) {
 //
 // Bind global a.click handler.
 //
+// NOTE: This handler must have *the lowest* priority. So:
+//
+// - It must be binded to `document`, since root DOM node has the lowest
+//   priotity on event bubbling.
+//
+// - External libraries like Bootstrap must be placed *before* Nodeca client
+//   code to ensure right order of handlers.
+//
 
 N.wire.once('navigate.done', { priority: 999 }, function () {
   $(document).on('click', 'a', function (event) {
