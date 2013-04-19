@@ -4,28 +4,37 @@
 var _ = require('lodash');
 
 
+var controlTimestamp = null
+  , offsetTop
+  , isFixed;
+
+
 N.wire.on('navigate.done', function () {
   var $window   = $(window)
-    , $floatbar = $('#floatbar')
-    , isFixed   = false
-    , navTop;
+    , $floatbar = $('#floatbar');
 
   if (0 === $floatbar.length) {
     // Do nothing if there's no floatbar.
     return;
   }
 
-  navTop  = $floatbar.offset().top;
-  isFixed = false;
+  // Initialize at first time.
+  if (!controlTimestamp || controlTimestamp !== $floatbar.data('controlTimestamp')) {
+    controlTimestamp = String(Date.now());
+    $floatbar.data('controlTimestamp', controlTimestamp);
+
+    offsetTop = $floatbar.offset().top;
+    isFixed   = false;
+  }
 
   function updateFloatbarState() {
     var scrollTop = $window.scrollTop();
 
-    if (scrollTop >= navTop && !isFixed) {
+    if (scrollTop >= offsetTop && !isFixed) {
       isFixed = true;
       $floatbar.addClass('floatbar-fixed');
 
-    } else if (scrollTop <= navTop && isFixed) {
+    } else if (scrollTop <= offsetTop && isFixed) {
       isFixed = false;
       $floatbar.removeClass('floatbar-fixed');
     }
@@ -40,8 +49,4 @@ N.wire.on('navigate.done', function () {
 N.wire.on('navigate.exit', function () {
   // Remove floatbar event handler.
   $(window).off('scroll.floatbar');
-
-  // Get floatbar back to the initial position to ensure next `navigate.done`
-  // handler will obtain correct floatbar offset on next call.
-  $('#floatbar').removeClass('floatbar-fixed');
 });
