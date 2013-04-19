@@ -323,12 +323,6 @@ N.wire.once('navigate.done', { priority: 999 }, function () {
       return;
     }
 
-    if ($this.data('target')) {
-      // Skip links handled by Bootstrap plugins.
-      // TODO: Probably we should find more convenient way for this.
-      return;
-    }
-
     // Continue as normal for cmd clicks etc
     if (2 === event.which || event.metaKey) {
       return;
