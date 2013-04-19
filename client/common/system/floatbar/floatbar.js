@@ -10,9 +10,6 @@ N.wire.on('navigate.done', function () {
     , isFixed   = false
     , navTop;
 
-  // Remove previous floatbar handlers if any.
-  $window.off('scroll.floatbar');
-
   if (0 === $floatbar.length) {
     // Do nothing if there's no floatbar.
     return;
@@ -37,4 +34,14 @@ N.wire.on('navigate.done', function () {
   updateFloatbarState();
 
   $window.on('scroll.floatbar', _.throttle(updateFloatbarState, 100));
+});
+
+
+N.wire.on('navigate.exit', function () {
+  // Remove floatbar event handler.
+  $(window).off('scroll.floatbar');
+
+  // Get floatbar back to the initial position to ensure next `navigate.done`
+  // handler will obtain correct floatbar offset on next call.
+  $('#floatbar').removeClass('floatbar-fixed');
 });
