@@ -1,8 +1,8 @@
 div#content
-  != self.partial('@admin.core.blocks.sidebar_menu', { apiPath: self.apiPath, menu: self.menus.admin })
+  != self.partial('@admin.core.blocks.sidebar_menu', { menu: self.menus.admin })
 
   div.main
-    != self.partial('@admin.core.blocks.breadcrumbs', { apiPath: self.apiPath, menu: self.menus.admin, path: self.blocks.breadcrumbs });
+    != self.partial('@admin.core.blocks.breadcrumbs', { menu: self.menus.admin, path: self.blocks.breadcrumbs });
 
     ul.nav.nav-tabs
       each tabName in self.tabs
@@ -16,7 +16,8 @@ div#content
           each groupName in self.groups[tabName]
             div
               h4
-                a(href=self.link_to('admin.core.global_settings.show', { group: groupName }))
+                a(href=self.link_to('admin.core.settings_global.settings.edit', { group: groupName }))
                   = self.t('@admin.setting.group.' + groupName)
 
-              p= self.t('@admin.setting.group.' + groupName + '_help')
+              if self.t.exists('@admin.setting.group.' + groupName + '_help')
+                p= self.t('@admin.setting.group.' + groupName + '_help')

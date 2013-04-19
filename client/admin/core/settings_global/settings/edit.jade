@@ -1,10 +1,10 @@
 div#content
   script(type="text/json")!= JSON.stringify(self.settings)
 
-  != self.partial('@admin.core.blocks.sidebar_menu', { apiPath: self.apiPath, menu: self.menus.admin })
+  != self.partial('@admin.core.blocks.sidebar_menu', { menu: self.menus.admin })
 
   div.main
-    != self.partial('@admin.core.blocks.breadcrumbs', { apiPath: self.apiPath, menu: self.menus.admin, path: self.blocks.breadcrumbs });
+    != self.partial('@admin.core.blocks.breadcrumbs', { menu: self.menus.admin, path: self.blocks.breadcrumbs });
 
     form.form-horizontal(data-bind="submit: $root.save", style="display: none")
       div(data-bind="foreach: settings")

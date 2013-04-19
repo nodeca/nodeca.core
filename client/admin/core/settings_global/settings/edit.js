@@ -48,7 +48,7 @@ SettingsEditorModel.prototype.save = function save() {
     }
   });
 
-  N.io.rpc('admin.core.global_settings.update', { settings: data }, function (err) {
+  N.io.rpc('admin.core.settings_global.settings.update', { settings: data }, function (err) {
     var report = err ? 'error' : 'info';
 
     N.wire.emit('notify', { type: report, message: t('notify.' + report) });

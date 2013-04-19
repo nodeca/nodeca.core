@@ -5,13 +5,13 @@ bind:
 
 router:
   map:
-    admin.core.dashboard:
+    admin.core.dashboard.show:
       "/": ~
 
-    admin.core.global_settings.index:
+    admin.core.settings_global.groups.show:
       "/settings":
 
-    admin.core.global_settings.show:
+    admin.core.settings_global.settings.edit:
       "/settings/{group}":
         group: /\S+/
 

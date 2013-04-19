@@ -1,7 +1,6 @@
 en-US:
-  show:
+  edit:
     save: Save
-    cancel: Cancel
 
     notify:
       info: Settings group saved.
