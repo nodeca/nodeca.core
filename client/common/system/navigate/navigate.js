@@ -306,24 +306,24 @@ N.wire.on('navigate.done', { priority: -999 }, function (data) {
 //
 
 N.wire.once('navigate.done', { priority: 999 }, function () {
-  $('body').on('click', 'a', function (event) {
+  $(document).on('click', 'a', function (event) {
     var $this = $(this);
 
     if ($this.attr('target') || event.isDefaultPrevented()) {
       // skip links that have `target` attribute specified
       // and clicks that were already handled
-      return true;
+      return;
     }
 
     if ($this.data('target')) {
       // Skip links handled by Bootstrap plugins.
       // TODO: Probably we should find more convenient way for this.
-      return true;
+      return;
     }
 
     // Continue as normal for cmd clicks etc
     if (2 === event.which || event.metaKey) {
-      return true;
+      return;
     }
 
     N.wire.emit('navigate.to', $this.attr('href'), function (err) {
@@ -332,6 +332,6 @@ N.wire.once('navigate.done', { priority: 999 }, function () {
       }
     });
 
-    return false;
+    event.preventDefault();
   });
 });
