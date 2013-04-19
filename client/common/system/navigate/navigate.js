@@ -44,7 +44,7 @@ function renderNewContent(data, callback) {
     content.fadeIn('fast');
 
     $('html:not(:animated)').animate({
-      scrollTop: data.anchor ? ($('#' + data.anchor).position().top) : 0
+      scrollTop: data.anchor ? ($(data.anchor).position().top) : 0
     }, 300);
 
     callback();
@@ -136,12 +136,6 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       return;
     }
 
-    // Drop hash-prefix if exists.
-    // Needed when we take the anchor from `window.location.hash`.
-    if ('#' === anchor.charAt(0)) {
-      anchor = anchor.slice(1);
-    }
-
   } else {
     errorReport = 'Not enough parameters for `navigate.to` event. ' +
                   'Need `href` or `apiPath` at least: ' +
@@ -159,11 +153,16 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
   //  //example.com/foo.html       -- becomes /example.com/foo.html
   //
   // So we normalize URL to be full one (with protocol, host, etc.)
-  href = normalizeURL(anchor ? (href + '#' + anchor) : href);
+  href = normalizeURL(href);
+
+  // Add anchor hash-prefix if not exists.
+  if (anchor && '#' !== anchor.charAt(0)) {
+    anchor = '#' + anchor;
+  }
 
   // Fallback for old browsers.
   if (!History.enabled) {
-    window.location = options.href;
+    window.location = href + anchor;
     callback();
     return;
   }
@@ -196,7 +195,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       //   so we redirect user to show him an error page.
       //
       // - Version mismatch, so we call action by HTTP to update client.
-      window.location = href;
+      window.location = href + anchor;
       callback();
       return;
     }
@@ -207,7 +206,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       // TODO: Prevent double page requesting. The server should not perform
       // database queries on RPC when the client is not intending to use the
       // response data. Like in this situation.
-      window.location = href;
+      window.location = href + anchor;
       callback();
       return;
     }
