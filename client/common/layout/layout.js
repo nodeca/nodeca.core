@@ -37,3 +37,11 @@ N.wire.on('navigate.done', function navbar_menu_change_active(target) {
 
   $(active).addClass('active');
 });
+
+
+//
+// Minimize navbar on navigation. Needed for mobile devices.
+//
+N.wire.on('navigate.exit', function navbar_menu_minimize() {
+  $('.nav-collapse').collapse('hide');
+});
