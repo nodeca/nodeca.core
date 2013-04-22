@@ -24,6 +24,11 @@ module.exports = function (N, apiPath) {
       return;
     }
 
+    env.response.data.head.title =
+      env.helpers.t('admin.core.settings_global.settings.edit.title', {
+        group: env.helpers.t('admin.setting.group.' + env.params.group)
+      });
+
     _.forEach(config, function (schema, name) {
       if (schema.group_key === env.params.group) {
         schemas[name] = schema;

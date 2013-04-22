@@ -12,6 +12,9 @@ module.exports = function (N, apiPath) {
       , groups   = env.response.data.groups = {}
       , settings = N.config.setting_schemas['global'];
 
+    env.response.data.head.title =
+      env.helpers.t('admin.core.settings_global.groups.show.title');
+
     // Collect tabs, i.e. groups without `parent`.
     _.forEach(N.config.setting_groups, function (tabConfig, tabName) {
       if (!tabConfig || !tabConfig.parent) {
