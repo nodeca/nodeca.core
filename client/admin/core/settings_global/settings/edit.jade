@@ -4,6 +4,8 @@ div#content
   div.main
     != self.partial('@admin.core.blocks.breadcrumbs', { menu: self.menus.admin, path: self.blocks.breadcrumbs });
 
+    h1= self.head.title
+
     - self.add_raw_data('setting_schemas', self.setting_schemas);
     - self.add_raw_data('setting_values',  self.setting_values);
 

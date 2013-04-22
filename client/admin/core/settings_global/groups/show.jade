@@ -4,6 +4,8 @@ div#content
   div.main
     != self.partial('@admin.core.blocks.breadcrumbs', { menu: self.menus.admin, path: self.blocks.breadcrumbs });
 
+    h1= self.head.title
+
     ul.nav.nav-tabs
       each tabName in self.tabs
         li(class=(tabName === self.activeTab ? 'active' : ''))
