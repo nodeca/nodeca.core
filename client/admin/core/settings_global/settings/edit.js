@@ -20,8 +20,15 @@ function SettingModel(name, schema, value) {
     value = schema['default'] || '';
   }
 
-  this.savedValue = ko.observable(String(value));
-  this.userValue  = ko.observable(String(value));
+  // Stringify the value for all types handled by 'value' Knockout binding,
+  // to ensure correct isModified behaviour when user changes the input field.
+  // Note: booleans are handled by 'checked' binding.
+  if ('boolean' !== schema.type) {
+    value = String(value);
+  }
+
+  this.savedValue = ko.observable(value);
+  this.userValue  = ko.observable(value);
 
   this.isModified = ko.computed(function () {
     return this.userValue() !== this.savedValue();
