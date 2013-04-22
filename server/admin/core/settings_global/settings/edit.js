@@ -19,6 +19,11 @@ module.exports = function (N, apiPath) {
       , schemas = env.response.data.setting_schemas = {}
       , values  = env.response.data.setting_values  = {};
 
+    if (!N.config.setting_groups.hasOwnProperty(env.params.group)) {
+      callback(N.io.NOT_FOUND);
+      return;
+    }
+
     _.forEach(config, function (schema, name) {
       if (schema.group_key === env.params.group) {
         schemas[name] = schema;
