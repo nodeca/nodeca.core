@@ -13,26 +13,23 @@ div#content
           legend(data-bind="text: $root.categoryNames[$data]")
 
           div(data-bind="foreach: $root.categorySettings[$data]")
-            //- String setting
-            div.control-group(data-bind="if: ('string' === type)")
+            div.control-group
               label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
               div.controls
+                // ko if: 'string' === type
                 input(type="text", data-bind="value: userValue, valueUpdate: 'keyup', attr: { id: id }")
                 span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+                // /ko
 
-            //- Number setting
-            div.control-group(data-bind="if: ('number' === type)")
-              label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
-              div.controls
+                // ko if: 'number' === type
                 input(type="number", data-bind="value: userValue, valueUpdate: 'keyup', attr: { id: id }")
                 span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+                // /ko
 
-            //- Boolean setting
-            div.control-group(data-bind="if: ('boolean' === type)")
-              label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
-              div.controls
+                // ko if: 'boolean' === type
                 input(type="checkbox", data-bind="checked: userValue, attr: { id: id }")
                 span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+                // /ko
 
       div
         button.btn.btn-primary(type="submit", data-bind="enable: $root.isModified")= self.t('save')
