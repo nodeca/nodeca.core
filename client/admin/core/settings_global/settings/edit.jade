@@ -4,30 +4,35 @@ div#content
   div.main
     != self.partial('@admin.core.blocks.breadcrumbs', { menu: self.menus.admin, path: self.blocks.breadcrumbs });
 
-    - self.add_raw_data('settings', self.settings);
+    - self.add_raw_data('setting_schemas', self.setting_schemas);
+    - self.add_raw_data('setting_values',  self.setting_values);
 
-    form.form-horizontal(data-bind="submit: $root.save", style="display: none")
-      div(data-bind="foreach: settings")
-        //- String setting
-        div.control-group(data-bind="if: ('string' === type)")
-          label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
-          div.controls
-            input(type="text", data-bind="value: userValue, valueUpdate: 'keyup', attr: { id: id }")
-            span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+    form.form-horizontal(data-bind="submit: $root.saveChanges", style="display: none")
+      div(data-bind="foreach: categoryKeys")
+        fieldset
+          legend(data-bind="text: $root.categoryNames[$data]")
 
-        //- Number setting
-        div.control-group(data-bind="if: ('number' === type)")
-          label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
-          div.controls
-            input(type="number", data-bind="value: userValue, valueUpdate: 'keyup', attr: { id: id }")
-            span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+          div(data-bind="foreach: $root.categorySettings[$data]")
+            //- String setting
+            div.control-group(data-bind="if: ('string' === type)")
+              label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
+              div.controls
+                input(type="text", data-bind="value: userValue, valueUpdate: 'keyup', attr: { id: id }")
+                span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
 
-        //- Boolean setting
-        div.control-group(data-bind="if: ('boolean' === type)")
-          label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
-          div.controls
-            input(type="checkbox", data-bind="checked: userValue, attr: { id: id }")
-            span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+            //- Number setting
+            div.control-group(data-bind="if: ('number' === type)")
+              label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
+              div.controls
+                input(type="number", data-bind="value: userValue, valueUpdate: 'keyup', attr: { id: id }")
+                span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
 
-      div(data-bind="if: 0 !== settings.length")
-        button.btn.btn-primary(type="submit", data-bind="enable: $root.modified")= self.t('save')
+            //- Boolean setting
+            div.control-group(data-bind="if: ('boolean' === type)")
+              label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
+              div.controls
+                input(type="checkbox", data-bind="checked: userValue, attr: { id: id }")
+                span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+
+      div
+        button.btn.btn-primary(type="submit", data-bind="enable: $root.isModified")= self.t('save')

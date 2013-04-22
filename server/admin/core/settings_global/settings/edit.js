@@ -14,55 +14,25 @@ module.exports = function (N, apiPath) {
 
 
   N.wire.on(apiPath, function (env, callback) {
-    var store      = N.settings.getStore('global')
-      , settings   = env.response.data.settings   = []
-      , categories = env.response.data.categories = []
-      , settingsConfig;
+    var config  = N.config.setting_schemas['global']
+      , store   = N.settings.getStore('global')
+      , schemas = env.response.data.setting_schemas = {}
+      , values  = env.response.data.setting_values  = {};
 
-    if (!store || !N.config.setting_schemas) {
-      callback();
-      return;
-    }
-
-    settingsConfig = N.config.setting_schemas['global'];
-
-    if (!settingsConfig) {
-      callback();
-      return;
-    }
-
-    _.forEach(settingsConfig, function (config, name) {
-      if (config && env.params.group === (config.group_key || null)) {
-        settings.push(_.extend({ name: name }, config));
+    _.forEach(config, function (schema, name) {
+      if (schema.group_key === env.params.group) {
+        schemas[name] = schema;
       }
     });
 
-    settings.sort(function (a, b) {
-      var ap = a.priority || 0
-        , bp = b.priority || 0;
-
-      if (ap === bp) {
-        return a.name.localeCompare(b.name);
-      } else {
-        return ap - bp;
-      }
-    });
-
-    _.forEach(settings, function (config) {
-      if (config.category_key && !_.contains(categories, config.category_key)) {
-        categories.push(config.category_key);
-      }
-    });
-
-    store.get(_.pluck(settings, 'name'), {}, function (err, data) {
+    store.get(_.keys(schemas), {}, function (err, data) {
       if (err) {
         callback(err);
         return;
       }
 
       _.forEach(data, function (result, name) {
-        _.extend(_.find(settings, function (s) { return s.name === name; }),
-                 result);
+        values[name] = result.value;
       });
 
       callback();

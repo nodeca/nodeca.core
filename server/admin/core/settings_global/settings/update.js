@@ -1,6 +1,9 @@
 'use strict';
 
 
+var _ = require('lodash');
+
+
 module.exports = function (N, apiPath) {
   N.validate(apiPath, {
     settings: {
@@ -11,6 +14,12 @@ module.exports = function (N, apiPath) {
 
 
   N.wire.on(apiPath, function (env, callback) {
-    N.settings.set('global', env.params.settings, {}, callback);
+    var settings = {};
+
+    _.forEach(env.params.settings, function (value, name) {
+      settings[name] = { value: value };
+    });
+
+    N.settings.set('global', settings, {}, callback);
   });
 };
