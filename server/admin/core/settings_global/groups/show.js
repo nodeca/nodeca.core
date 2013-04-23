@@ -4,35 +4,54 @@
 var _ = require('lodash');
 
 
+function fetchGroupInfo(name) {
+  var settingsCount = _.where(N.config.setting_schemas['global'], {
+    group_key: name
+  }).length;
+
+  return { name: name, settingsCount: settingsCount };
+}
+
+
 module.exports = function (N, apiPath) {
   N.validate(apiPath, {});
 
   N.wire.on(apiPath, function global_settings_index(env) {
-    var tabs     = env.response.data.tabs   = []
-      , groups   = env.response.data.groups = {}
-      , settings = N.config.setting_schemas['global'];
+    var data = env.response.data;
 
-    env.response.data.head.title =
+    data.head.title =
       env.helpers.t('admin.core.settings_global.groups.show.title');
 
-    // Collect tabs, i.e. groups without `parent`.
-    _.forEach(N.config.setting_groups, function (tabConfig, tabName) {
-      if (!tabConfig || !tabConfig.parent) {
-        tabs.push(tabName);
-        groups[tabName] = [];
+    data.tabs   = [];
+    data.groups = {};
 
-        // Collect groups per tab.
-        _.forEach(N.config.setting_groups, function (groupConfig, groupName) {
-          if (groupConfig && groupConfig.parent === tabName) {
-            groups[tabName].push({
-              name: groupName
-            , settingsCount: _.where(settings, { group_key: groupName }).length
-            });
-          }
-        });
+    //
+    // Collect tabs, i.e. groups without `parent`.
+    //
+
+    _.forEach(N.config.setting_groups, function (config, name) {
+      if (null === config.parent) {
+        data.tabs.push(name);
+        data.groups[name] = [];
       }
     });
 
-    env.response.data.activeTab = tabs[0];
+    data.tabs.sort();
+
+    //
+    // Collect groups per tab.
+    //
+
+    _.forEach(data.tabs, function (tab) {
+      _.forEach(N.config.setting_groups, function (config, name) {
+        if (tab === config.parent) {
+          data.groups[tab].push(fetchGroupInfo(name));
+        }
+      });
+
+      data.groups[tab].sort(function (a, b) {
+        return a.priority - b.priority;
+      });
+    });
   });
 };
