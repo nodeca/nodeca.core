@@ -103,9 +103,12 @@ N.wire.on('navigate.done:' + module.apiPath, function () {
     });
 
     N.io.rpc('admin.core.settings_global.settings.update', { settings: payload }, function (err) {
-      var report = err ? 'error' : 'info';
+      if (err) {
+        N.wire.emit('notify', { type: 'error', message: t('notify_error') });
+        return;
+      }
 
-      N.wire.emit('notify', { type: report, message: t('notify.' + report) });
+      N.wire.emit('notify', { type: 'info', message: t('notify_info') });
     });
   };
 

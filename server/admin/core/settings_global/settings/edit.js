@@ -14,35 +14,37 @@ module.exports = function (N, apiPath) {
 
 
   N.wire.on(apiPath, function (env, callback) {
-    var config  = N.config.setting_schemas['global']
-      , store   = N.settings.getStore('global')
-      , schemas = env.response.data.setting_schemas = {}
-      , values  = env.response.data.setting_values  = {};
+    var config = N.config.setting_schemas['global']
+      , store  = N.settings.getStore('global')
+      , data   = env.response.data;
+
+    data.setting_schemas = {};
+    data.setting_values  = {};
 
     if (!N.config.setting_groups.hasOwnProperty(env.params.group)) {
       callback(N.io.NOT_FOUND);
       return;
     }
 
-    env.response.data.head.title =
+    data.head.title =
       env.helpers.t('admin.core.settings_global.settings.edit.title', {
         group: env.helpers.t('admin.setting.group.' + env.params.group)
       });
 
     _.forEach(config, function (schema, name) {
       if (schema.group_key === env.params.group) {
-        schemas[name] = schema;
+        data.setting_schemas[name] = schema;
       }
     });
 
-    store.get(_.keys(schemas), {}, function (err, data) {
+    store.get(_.keys(data.setting_schemas), {}, function (err, settings) {
       if (err) {
         callback(err);
         return;
       }
 
-      _.forEach(data, function (result, name) {
-        values[name] = result.value;
+      _.forEach(settings, function (result, name) {
+        data.setting_values[name] = result.value;
       });
 
       callback();

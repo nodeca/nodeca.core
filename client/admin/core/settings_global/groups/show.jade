@@ -7,14 +7,14 @@ div#content
     h1= self.head.title
 
     ul.nav.nav-tabs
-      each tabName in self.tabs
-        li(class=(tabName === self.activeTab ? 'active' : ''))
+      each tabName, tabIndex in self.tabs
+        li(class=(0 === tabIndex ? 'active' : ''))
           a(href="#tab_#{tabName}", data-toggle="tab")
             h4= self.t('@admin.setting.group.' + tabName)
 
     div.tab-content
-      each tabName in self.tabs
-        div.tab-pane(id="tab_#{tabName}", class=(tabName === self.activeTab ? 'active' : ''))
+      each tabName, tabIndex in self.tabs
+        div.tab-pane(id="tab_#{tabName}", class=(0 === tabIndex ? 'active' : ''))
           each group in self.groups[tabName]
             div
               h4

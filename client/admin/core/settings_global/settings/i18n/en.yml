@@ -1,7 +1,5 @@
 en-US:
   edit:
     save: Save
-
-    notify:
-      info: Settings group saved.
-      error: Internal server error. Cannot save changes.
+    notify_info: Settings group saved.
+    notify_error: Internal server error. Cannot save changes.
