@@ -31,12 +31,16 @@ module.exports = function (N, apiPath) {
 
     _.forEach(N.config.setting_groups, function (config, name) {
       if (null === config.parent) {
-        data.tabs.push(name);
+        data.tabs.push({ name: name, priority: config.priority });
         data.groups[name] = [];
       }
     });
 
-    data.tabs.sort();
+    data.tabs.sort(function (a, b) {
+      return a.priority - b.priority;
+    });
+
+    data.tabs = _.pluck(data.tabs, 'name');
 
     //
     // Collect groups per tab.
