@@ -5,6 +5,35 @@ var _  = require('lodash');
 var ko = require('knockout');
 
 
+// Module variables, initialized at navigate.done
+var categoryKeys     = null;
+var categoryNames    = null;
+var categorySettings = null;
+var settingModels    = null;
+var isModified       = null;
+
+
+function saveChanges() {
+  var payload = {};
+
+  _.forEach(settingModels, function (setting) {
+    if (setting.isModified()) {
+      payload[setting.name] = setting.userValue();
+      setting.savedValue(setting.userValue());
+    }
+  });
+
+  N.io.rpc('admin.core.settings_global.settings.update', { settings: payload }, function (err) {
+    if (err) {
+      N.wire.emit('notify', { type: 'error', message: t('notify_error') });
+      return;
+    }
+
+    N.wire.emit('notify', { type: 'info', message: t('notify_info') });
+  });
+}
+
+
 function SettingModel(name, schema, value) {
   var tName = 'admin.setting.' + name
     , tHelp = 'admin.setting.' + name + '_help';
@@ -37,14 +66,14 @@ function SettingModel(name, schema, value) {
 
 
 N.wire.on('navigate.done:' + module.apiPath, function () {
-  var inputSchemas     = N.runtime.page_data.setting_schemas
-    , inputValues      = N.runtime.page_data.setting_values
-    , categoryKeys     = []
-    , categoryNames    = {}
-    , categorySettings = {}
-    , settingModels    = []
-    , isModified
-    , saveChanges;
+  var inputSchemas = N.runtime.page_data.setting_schemas
+    , inputValues  = N.runtime.page_data.setting_values;
+
+  // Initialize module variables.
+  categoryKeys     = [];
+  categoryNames    = {};
+  categorySettings = {};
+  settingModels    = [];
 
   // Collect category keys and prepare setting models.
   _.forEach(inputSchemas, function (schema, name) {
@@ -92,26 +121,6 @@ N.wire.on('navigate.done:' + module.apiPath, function () {
     });
   });
 
-  saveChanges = function () {
-    var payload = {};
-
-    _.forEach(settingModels, function (setting) {
-      if (setting.isModified()) {
-        payload[setting.name] = setting.userValue();
-        setting.savedValue(setting.userValue());
-      }
-    });
-
-    N.io.rpc('admin.core.settings_global.settings.update', { settings: payload }, function (err) {
-      if (err) {
-        N.wire.emit('notify', { type: 'error', message: t('notify_error') });
-        return;
-      }
-
-      N.wire.emit('notify', { type: 'info', message: t('notify_info') });
-    });
-  };
-
   ko.applyBindings({
     categoryKeys:     categoryKeys
   , categoryNames:    categoryNames
@@ -125,5 +134,13 @@ N.wire.on('navigate.done:' + module.apiPath, function () {
 
 
 N.wire.on('navigate.exit:' + module.apiPath, function () {
+  // Reset module variables to allow the garbage collector do it's job.
+  categoryKeys     = null;
+  categoryNames    = null;
+  categorySettings = null;
+  settingModels    = null;
+  isModified       = null;
+
+  // Clear Knockout buidings.
   ko.cleanNode($('#content').get(0));
 });

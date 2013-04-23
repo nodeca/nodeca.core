@@ -10,7 +10,7 @@ div#content
     - self.add_raw_data('setting_values',  self.setting_values);
 
     form.form-horizontal(data-bind="submit: $root.saveChanges", style="display: none")
-      div(data-bind="foreach: categoryKeys")
+      div(data-bind="foreach: $root.categoryKeys")
         fieldset
           legend(data-bind="text: $root.categoryNames[$data]")
 
