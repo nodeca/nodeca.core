@@ -166,6 +166,16 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
     anchor = '#' + anchor;
   }
 
+  // Stop here if base URL (all except anchor) haven't changed.
+  if (href === (location.protocol + '//' + location.host + location.pathname)) {
+    if (anchor !== location.hash) {
+      location.hash = anchor;
+    }
+
+    callback();
+    return;
+  }
+
   // Fallback for old browsers.
   if (!History.enabled) {
     window.location = href + anchor;
