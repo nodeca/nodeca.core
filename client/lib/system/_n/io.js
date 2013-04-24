@@ -88,7 +88,7 @@ function rpc(name, params, options, callback) {
 
   N.wire.emit('io.request');
 
-  xhr = last_xhr = $.post('/io/rpc', payload);
+  xhr = last_xhr = $.post('/io/rpc', JSON.stringify(payload));
 
   //
   // Listen for a response
