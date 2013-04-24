@@ -15,8 +15,44 @@
 // ######################################################################## //
 
 
-var castParams = require('nodeca.core/lib/cast_params');
-var History    = window.History; // History.js
+var _ = require('lodash');
+
+
+var History = window.History; // History.js
+
+
+// Takes a params hash (can be nested) and tries to parse each string-value as
+// number or boolean. Returns a new hash with parsed values.
+//
+function castParamTypes(inputValue) {
+  var parsedValue;
+
+  if (_.isArray(inputValue)) {
+    return _.map(inputValue, castParamTypes);
+
+  } else if (_.isObject(inputValue)) {
+    parsedValue = {};
+
+    _.forEach(inputValue, function (value, key) {
+      parsedValue[key] = castParamTypes(value);
+    });
+
+    return parsedValue;
+
+  } else if ('true' === inputValue) {
+    return true;
+
+  } else if ('false' === inputValue) {
+    return false;
+
+  } else if (/^[0-9\.\-]+$/.test(inputValue)) {
+    parsedValue = Number(inputValue);
+    return String(parsedValue) === inputValue ? parsedValue : inputValue;
+
+  } else {
+    return inputValue;
+  }
+}
 
 
 // Returns a normalized URL:
@@ -123,7 +159,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       return;
     }
 
-    match.params = castParams(match.params);
+    match.params = castParamTypes(match.params);
 
     apiPath = match.meta;
     params  = match.params || {};
