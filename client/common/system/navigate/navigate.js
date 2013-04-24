@@ -15,7 +15,8 @@
 // ######################################################################## //
 
 
-var History = window.History; // History.js
+var castParams = require('nodeca.core/lib/cast_params');
+var History    = window.History; // History.js
 
 
 // Returns a normalized URL:
@@ -121,6 +122,8 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       callback();
       return;
     }
+
+    match.params = castParams(match.params);
 
     apiPath = match.meta;
     params  = match.params || {};
