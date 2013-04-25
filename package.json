@@ -17,6 +17,5 @@
                         "chai"    : "*",
                         "mocha"   : "*",
                         "jshint"  : "*"
-                      },
-  "engines"         : { "node": ">= 0.8.0" }
+                      }
 }
