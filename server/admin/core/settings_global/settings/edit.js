@@ -37,7 +37,7 @@ module.exports = function (N, apiPath) {
       }
     });
 
-    store.get(_.keys(data.setting_schemas), {}, function (err, settings) {
+    store.get(_.keys(data.setting_schemas), {}, { skipCache: true }, function (err, settings) {
       if (err) {
         callback(err);
         return;
