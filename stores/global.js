@@ -5,19 +5,15 @@ var _        = require('lodash');
 var memoizee = require('memoizee');
 
 
-var STORAGE_KEY = 'global_settings';
-
-
 module.exports = function (N) {
-  var KeyValueStorage = N.models.core.KeyValueStorage;
+  var GlobalSettings = N.models.core.GlobalSettings;
 
 
   function fetchGlobalSettings(callback) {
-    KeyValueStorage
-        .findOne({ key: STORAGE_KEY })
-        .select('value')
+    GlobalSettings
+        .findOne()
         .setOptions({ lean: true })
-        .exec(function (err, storage) {
+        .exec(function (err, settings) {
 
       if (err) {
         callback(err);
@@ -27,8 +23,8 @@ module.exports = function (N) {
       var result = {};
 
       Object.keys(N.config.setting_schemas.global).forEach(function (name) {
-        if (storage.value && Object.prototype.hasOwnProperty.call(storage.value, name)) {
-          result[name] = { value: storage.value[name] };
+        if (settings && Object.prototype.hasOwnProperty.call(settings.data, name)) {
+          result[name] = { value: settings.data[name] };
         } else {
           result[name] = { value: GlobalStore.getDefaultValue(name) };
         }
@@ -60,24 +56,24 @@ module.exports = function (N) {
       });
     }
   , set: function (values, params, callback) {
-      KeyValueStorage.findOne({ key: STORAGE_KEY }).exec(function (err, storage) {
+      GlobalSettings.findOne().exec(function (err, settings) {
         if (err) {
           callback(err);
           return;
         }
 
-        storage = storage || new KeyValueStorage({ key: STORAGE_KEY, value: {} });
+        settings = settings || new GlobalSettings();
 
         _.forEach(values, function (options, name) {
           if (null === options) {
-            delete storage.value[name];
+            delete settings.data[name];
           } else {
-            storage.value[name] = options.value;
+            settings.data[name] = options.value;
           }
         });
 
-        storage.markModified('value');
-        storage.save(callback);
+        settings.markModified('data');
+        settings.save(callback);
       });
     }
   });
