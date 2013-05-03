@@ -22,8 +22,11 @@ module.exports = function (N) {
 
       var result = {};
 
-      Object.keys(N.config.setting_schemas.global).forEach(function (name) {
-        if (settings && Object.prototype.hasOwnProperty.call(settings.data, name)) {
+      // Fetch setting values written to the database, and use default values
+      // for the others. If settings document does not exists - use default
+      // setting values only.
+      _.forEach(GlobalStore.keys, function (name) {
+        if (settings && _.has(settings.data, name)) {
           result[name] = { value: settings.data[name] };
         } else {
           result[name] = { value: GlobalStore.getDefaultValue(name) };
