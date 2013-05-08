@@ -9,7 +9,7 @@ div#content
     - self.add_raw_data('setting_schemas', self.setting_schemas);
     - self.add_raw_data('setting_values',  self.setting_values);
 
-    form.form-horizontal(data-bind="submit: $root.saveChanges", style="display: none")
+    form.form-horizontal(data-bind="submit: $root.submit", style="display: none")
       div(data-bind="foreach: $root.categoryKeys")
         fieldset
           legend(data-bind="text: $root.categoryNames[$data]")
@@ -19,19 +19,20 @@ div#content
               label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
               div.controls
                 // ko if: 'string' === type
-                input(type="text", data-bind="value: userValue, valueUpdate: 'keyup', attr: { id: id }")
-                span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+                input(type="text", data-bind="value: value, valueUpdate: 'keyup', attr: { id: id }")
                 // /ko
 
                 // ko if: 'number' === type
-                input(type="number", data-bind="value: userValue, valueUpdate: 'keyup', attr: { id: id }")
-                span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+                input(type="number", data-bind="value: value, valueUpdate: 'keyup', attr: { id: id }")
                 // /ko
 
                 // ko if: 'boolean' === type
-                input(type="checkbox", data-bind="checked: userValue, attr: { id: id }")
-                span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+                div.switch
+                  input(type="checkbox", data-bind="checked: value, attr: { id: id }")
+                  label(data-yes=self.t('setting.yes'), data-no=self.t('setting.no'), data-bind="attr: { 'for': id }"): i
                 // /ko
 
+                span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+
       div
-        button.btn.btn-primary(type="submit", data-bind="enable: $root.isModified")= self.t('save')
+        button.btn.btn-primary(type="submit", data-bind="enable: $root.isDirty")= self.t('save')

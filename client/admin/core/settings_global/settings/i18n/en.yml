@@ -1,5 +1,9 @@
 en-US:
   edit:
+    setting:
+      yes: Yes
+      no: No
+
     save: Save
     notify_info: Settings group saved.
     notify_error: Internal server error. Cannot save changes.

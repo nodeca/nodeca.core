@@ -10,16 +10,20 @@ var categoryKeys     = null;
 var categoryNames    = null;
 var categorySettings = null;
 var settingModels    = null;
-var isModified       = null;
+var isDirty          = null;
 
 
-function saveChanges() {
+function submit() {
   var payload = {};
 
   _.forEach(settingModels, function (setting) {
-    if (setting.isModified()) {
-      payload[setting.name] = setting.userValue();
-      setting.savedValue(setting.userValue());
+    if (setting.value.isDirty()) {
+      if ('number' === setting.type) {
+        payload[setting.name] = Number(setting.value());
+      } else {
+        payload[setting.name] = setting.value();
+      }
+      setting.value.markClean();
     }
   });
 
@@ -50,18 +54,13 @@ function SettingModel(name, schema, value) {
   }
 
   // Stringify the value for all types handled by 'value' Knockout binding,
-  // to ensure correct isModified behaviour when user changes the input field.
+  // to ensure correct isDirty behaviour when user changes the input field.
   // Note: booleans are handled by 'checked' binding.
   if ('boolean' !== schema.type) {
     value = String(value);
   }
 
-  this.savedValue = ko.observable(value);
-  this.userValue  = ko.observable(value);
-
-  this.isModified = ko.computed(function () {
-    return this.userValue() !== this.savedValue();
-  }, this);
+  this.value = ko.observable(value).extend({ dirty: false });
 }
 
 
@@ -115,9 +114,9 @@ N.wire.on('navigate.done:' + module.apiPath, function () {
     });
   });
 
-  isModified = ko.computed(function () {
+  isDirty = ko.computed(function () {
     return _.any(settingModels, function (setting) {
-      return setting.isModified();
+      return setting.value.isDirty();
     });
   });
 
@@ -125,8 +124,8 @@ N.wire.on('navigate.done:' + module.apiPath, function () {
     categoryKeys:     categoryKeys
   , categoryNames:    categoryNames
   , categorySettings: categorySettings
-  , isModified:       isModified
-  , saveChanges:      saveChanges
+  , isDirty:          isDirty
+  , submit:           submit
   }, $('#content').get(0));
 
   $('#content form[data-bind]:first').show();
@@ -139,7 +138,7 @@ N.wire.on('navigate.exit:' + module.apiPath, function () {
   categoryNames    = null;
   categorySettings = null;
   settingModels    = null;
-  isModified       = null;
+  isDirty          = null;
 
   // Clear Knockout buidings.
   ko.cleanNode($('#content').get(0));
