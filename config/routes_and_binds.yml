@@ -5,22 +5,22 @@ bind:
 
 router:
   map:
-    admin.core.dashboard.show:
-      "/": ~
+    http.get:
+      admin.core.dashboard.show:
+        "/": ~
 
-    admin.core.settings_global.groups.show:
-      "/settings":
+      admin.core.settings_global.groups.show:
+        "/settings":
 
-    admin.core.settings_global.settings.edit:
-      "/settings/{group}":
-        group: /\S+/
+      admin.core.settings_global.settings.edit:
+        "/settings/{group}":
+          group: /\S+/
 
-    core.assets:
-      "/assets/{path}":
-        path: /.+/
-        responder: bin
+    bin:
+      core.assets:
+        "/assets/{path}":
+          path: /.+/
 
-    core.static:
-      "/{file}":
-        file: /favicon.ico|robots.txt|snippet.png/
-        responder: bin
+      core.static:
+        "/{file}":
+          file: /favicon.ico|robots.txt|snippet.png/

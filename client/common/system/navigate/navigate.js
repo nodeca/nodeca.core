@@ -161,7 +161,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 
     match.params = castParamTypes(match.params);
 
-    apiPath = match.meta;
+    apiPath = match.meta.methods.get;
     params  = match.params || {};
     href    = options.href.split('#')[0];
     anchor  = options.href.split('#')[1] || '';
