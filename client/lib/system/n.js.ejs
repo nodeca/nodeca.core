@@ -40,7 +40,7 @@ window.NodecaLoader.execute(function (N, require) {
   };
 
   (<%- jetson(N.runtime.client_routes) -%>).forEach(function (config) {
-    N.runtime.router.addRoute(config.pattern, config);
+    N.runtime.router.addRoute(config);
   });
 
   N.wire           = new Wire();
