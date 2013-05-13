@@ -18,7 +18,7 @@ div#content
           each group in self.groups[tabName]
             div
               h4
-                a(href=self.link_to('admin.core.global_setting_groups.edit', { group: group.name }))
+                a(href=self.link_to('admin.core.global_settings.edit', { group: group.name }))
                   = self.t('@admin.setting.group.' + group.name)
                 span
                   = self.t('settings_count', { count: group.settingsCount })
