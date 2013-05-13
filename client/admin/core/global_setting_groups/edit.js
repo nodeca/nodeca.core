@@ -27,7 +27,7 @@ function submit() {
     }
   });
 
-  N.io.rpc('admin.core.settings_global.settings.update', { settings: payload }, function (err) {
+  N.io.rpc('admin.core.global_setting_groups.update', { settings: payload }, function (err) {
     if (err) {
       N.wire.emit('notify', { type: 'error', message: t('notify_error') });
       return;

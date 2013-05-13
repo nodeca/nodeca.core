@@ -1,3 +1,6 @@
 en-US:
+  index:
+    title: Global settings
+
   edit:
     title: 'Edit global settings - #{group}'

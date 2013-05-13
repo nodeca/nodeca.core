@@ -6,5 +6,5 @@ i18n:
           core: Core
           core.dashboard: Dashboard
           core.dashboard.show: Show
-          core.settings_global: Global settings
-          core.settings_global.groups.show: Manage
+          core.global_setting_groups: Global settings
+          core.global_setting_groups.index: Manage

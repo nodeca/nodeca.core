@@ -20,7 +20,7 @@ module.exports = function (N, apiPath) {
     var data = env.response.data;
 
     data.head.title =
-      env.helpers.t('admin.core.settings_global.groups.show.title');
+      env.helpers.t('admin.core.global_setting_groups.index.title');
 
     data.tabs   = [];
     data.groups = {};

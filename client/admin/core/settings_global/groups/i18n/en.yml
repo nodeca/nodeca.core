@@ -1,3 +1,0 @@
-en-US:
-  show:
-    settings_count: '(#{count} ((setting|settings)):count)'

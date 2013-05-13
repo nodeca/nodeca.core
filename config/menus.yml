@@ -17,8 +17,8 @@ menus:
               show:
                 to: admin.core.dashboard.show
 
-          settings_global:
-            to: admin.core.settings_global.groups.show
+          global_setting_groups:
+            to: admin.core.global_setting_groups.index
             submenu:
-              groups.show:
-                to: admin.core.settings_global.groups.show
+              index:
+                to: admin.core.global_setting_groups.index

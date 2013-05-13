@@ -1,4 +1,7 @@
 en-US:
+  index:
+    settings_count: '(#{count} ((setting|settings)):count)'
+
   edit:
     setting:
       yes: Yes
