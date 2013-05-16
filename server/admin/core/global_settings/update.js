@@ -21,7 +21,12 @@ module.exports = function (N, apiPath) {
     });
 
     N.settings.set('global', settings, {}, function (err) {
-      callback(err ? N.io.CLIENT_ERROR : null);
+      if (err) {
+        callback({ code: N.io.BAD_REQUEST, message: String(err) });
+        return;
+      }
+
+      callback();
     });
   });
 };
