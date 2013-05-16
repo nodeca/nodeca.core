@@ -28,7 +28,7 @@ module.exports = function (N, apiPath) {
 
     data.head.title =
       env.helpers.t('admin.core.global_settings.edit.title', {
-        group: env.helpers.t('admin.setting.group.' + env.params.group)
+        group: env.helpers.t('admin.core.group_names.' + env.params.group)
       });
 
     _.forEach(config, function (schema, name) {

@@ -39,8 +39,8 @@ function submit() {
 
 
 function SettingModel(name, schema, value) {
-  var tName = 'admin.setting.' + name
-    , tHelp = 'admin.setting.' + name + '_help';
+  var tName = 'admin.core.setting_names.' + name
+    , tHelp = 'admin.core.setting_names.' + name + '_help';
 
   this.id            = 'setting_' + name;
   this.name          = name;
@@ -81,7 +81,7 @@ N.wire.on('navigate.done:' + module.apiPath, function () {
 
     if (!_.contains(categoryKeys, key)) {
       categoryKeys.push(key);
-      categoryNames[key] = N.runtime.t('admin.setting.category.' + key);
+      categoryNames[key] = N.runtime.t('admin.core.category_names.' + key);
     }
 
     if (!categorySettings.hasOwnProperty(key)) {

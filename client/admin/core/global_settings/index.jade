@@ -10,7 +10,7 @@ div#content
       each tabName, tabIndex in self.tabs
         li(class=(0 === tabIndex ? 'active' : ''))
           a(href="#tab_#{tabName}", data-toggle="tab")
-            h4= self.t('@admin.setting.group.' + tabName)
+            h4= self.t('@admin.core.group_names.' + tabName)
 
     div.tab-content
       each tabName, tabIndex in self.tabs
@@ -19,9 +19,9 @@ div#content
             div
               h4
                 a(href=self.link_to('admin.core.global_settings.edit', { group: group.name }))
-                  = self.t('@admin.setting.group.' + group.name)
+                  = self.t('@admin.core.group_names.' + group.name)
                 span
                   = self.t('settings_count', { count: group.settingsCount })
 
-              if self.t.exists('@admin.setting.group.' + group.name + '_help')
-                p= self.t('@admin.setting.group.' + group.name + '_help')
+              if self.t.exists('@admin.core.group_names.' + group.name + '_help')
+                p= self.t('@admin.core.group_names.' + group.name + '_help')
