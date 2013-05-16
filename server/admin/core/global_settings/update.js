@@ -20,6 +20,8 @@ module.exports = function (N, apiPath) {
       settings[name] = { value: value };
     });
 
-    N.settings.set('global', settings, {}, callback);
+    N.settings.set('global', settings, {}, function (err) {
+      callback(err ? N.io.CLIENT_ERROR : null);
+    });
   });
 };

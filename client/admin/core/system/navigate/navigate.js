@@ -238,13 +238,6 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       return;
     }
 
-    if (err && N.io.ECONNECTION === err.code) {
-      // No need to do anything.
-      // User already notified that he needs to try again later.
-      callback(err);
-      return;
-    }
-
     if (err) {
       // Can't deal via RPC - try HTTP. This might be:
       //

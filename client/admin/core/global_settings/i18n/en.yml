@@ -9,4 +9,4 @@ en-US:
 
     save: Save
     notify_info: Settings group saved.
-    notify_error: Internal server error. Cannot save changes.
+    notify_error: Wrong setting values. Cannot save changes.
