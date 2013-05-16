@@ -22,10 +22,7 @@ N.wire.on('io.error', function (err) {
 
   default:
     if (err.message) {
-      N.wire.emit('notify', t('system_error_with_message', {
-        code:    err.code
-      , message: err.message
-      }));
+      N.wire.emit('notify', err.message);
     } else {
       N.wire.emit('notify', t('system_error', { code: err.code }));
     }
