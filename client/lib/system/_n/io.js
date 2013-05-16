@@ -12,7 +12,7 @@ var _ = require('lodash');
 
 
 // Last XMLHttpRequest object used for RPC request to allow interrupt it.
-var __lastRPCRequest__ = null;
+//var __lastRPCRequest__ = null;
 
 
 // IO status/error codes used by RPC and HTTP servers.
@@ -73,15 +73,15 @@ function rpc(name, params, options, callback) {
   callback  = callback || $.noop;
 
   // Interrupt previous RPC request.
-  if (__lastRPCRequest__) {
-    (__lastRPCRequest__.reject || $.noop)();
-    __lastRPCRequest__ = null;
-  }
+  //if (__lastRPCRequest__) {
+  //  (__lastRPCRequest__.reject || $.noop)();
+  //  __lastRPCRequest__ = null;
+  //}
 
   // Send request
   N.wire.emit('io.request');
 
-  xhr = __lastRPCRequest__ = $.post('/io/rpc', JSON.stringify({
+  xhr = /*__lastRPCRequest__ =*/ $.post('/io/rpc', JSON.stringify({
     version: N.runtime.version
   , method:  name
   , csrf:    N.runtime.csrf
@@ -137,10 +137,7 @@ function rpc(name, params, options, callback) {
     N.logger.error('Failed RPC call: %s', status, jqXHR);
 
     // Any non-abort error - is a communication problem.
-    err = {
-      code:    exports.ECOMMUNICATION
-    , message: 'Communication error'
-    };
+    err = { code: exports.ECOMMUNICATION };
 
     N.wire.emit('io.error', err);
     N.wire.emit('io.complete', { error: err, response: null });
