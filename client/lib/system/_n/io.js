@@ -121,7 +121,13 @@ function rpc(name, params, options, callback) {
 
     // Run actual callback only when no error happen or it's a non-system error.
     if (!data.error || isNormalCode(data.error.code)) {
-      callback(data.error, data.response);
+      if (false === callback(data.error, data.response)) {
+        // We use 'false' to determine that the callback wants use default error
+        // handling procedure.
+        if (data.error) {
+          N.wire.emit('io.error', data.error);
+        }
+      }
     }
   });
 

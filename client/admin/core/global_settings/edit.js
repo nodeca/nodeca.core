@@ -29,11 +29,10 @@ function submit() {
 
   N.io.rpc('admin.core.global_settings.update', { settings: payload }, function (err) {
     if (err) {
-      N.wire.emit('notify', { type: 'error', message: t('notify_error') });
-      return;
+      return false;
     }
 
-    N.wire.emit('notify', { type: 'info', message: t('notify_info') });
+    N.wire.emit('notify', { type: 'info', message: t('saved') });
   });
 }
 
