@@ -27,10 +27,5 @@
               - else
                 menu_active_class = ''
 
-              li.nav-header(class=menu_active_class) #{self.t(first_level_item.title)}
-                
-              //- Submenus
-              - if (first_level_item.childs && first_level_item.childs.length)
-                - each second_level_menu in first_level_item.childs
-                  li(class=menu_active_class)
-                    a(href=second_level_menu.link) #{self.t(second_level_menu.title)}
+              li(class=menu_active_class)
+                a(href=first_level_item.link) #{self.t(first_level_item.title)}
