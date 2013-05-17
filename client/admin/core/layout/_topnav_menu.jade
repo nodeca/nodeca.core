@@ -34,7 +34,7 @@ mixin topnav_menu(menus)
   - var li_class
   - var item_path_tail
 
-  ul.nav
+  ul#navbar_menu.nav
     - each item in menus
       - var item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
 
@@ -45,10 +45,10 @@ mixin topnav_menu(menus)
         - li_class = ''
       
       - if (item.childs)
-        li.dropdown(class=li_class)
+        li.dropdown(class=li_class, data-api-path=item.to)
           a.dropdown-toggle(href=item.link, data-toggle='dropdown')= self.t(item.title)
             b.caret
           mixin _create_submenus(item.childs)
       - else
-        li(class=li_class)
+        li(class=li_class, data-api-path=item.to)
           a(href=item.link)= self.t(item.title)
