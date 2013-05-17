@@ -5,7 +5,7 @@ bind:
 
 router:
   http.get:
-    admin.core.dashboard.show:
+    admin.core.dashboard:
       "/": ~
 
     admin.core.global_settings.index:

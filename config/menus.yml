@@ -2,17 +2,17 @@ menus:
   common:
     admin:
       dashboard:
-        to: admin.core.dashboard.show
+        to: admin.core.dashboard
         priority: 500
         check_permissions: true
 
   admin:
     navbar:
       core:
-        to: admin.core.dashboard.show
+        to: admin.core.dashboard
         submenu:
           dashboard:
-            to: admin.core.dashboard.show
+            to: admin.core.dashboard
 
           global_settings:
             to: admin.core.global_settings.index

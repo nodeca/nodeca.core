@@ -4,11 +4,5 @@
   .main
     != self.partial('@admin.core.blocks.breadcrumbs', { menu: self.menus.admin, path: self.blocks.breadcrumbs });
 
-    ul.breadcrumbs
-      li: a(href='#') Breadcrumbs
-      li: a(href='#') Should
-      li: a(href='#') Be
-      li: a(href='#') Here
-
     h1 Hello World
     p= self.now

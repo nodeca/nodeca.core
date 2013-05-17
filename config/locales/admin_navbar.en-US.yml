@@ -5,6 +5,4 @@ i18n:
         navbar:
           core: Core
           core.dashboard: Dashboard
-          core.dashboard.show: Show
           core.global_settings: Global settings
-          core.global_settings.index: Manage
