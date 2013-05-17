@@ -1,6 +1,6 @@
 en-US:
   index:
-    settings_count: '(#{count} ((setting|settings)):count)'
+    settings_count: '#{count} ((setting|settings)):count'
 
   edit:
     setting:

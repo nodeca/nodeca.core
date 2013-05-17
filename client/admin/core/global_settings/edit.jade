@@ -1,38 +1,40 @@
-div#content
+#content
   != self.partial('@admin.core.blocks.sidebar_menu', { menu: self.menus.admin })
 
-  div.main
+  .main
     != self.partial('@admin.core.blocks.breadcrumbs', { menu: self.menus.admin, path: self.blocks.breadcrumbs });
 
-    h1= self.head.title
+    h2= self.head.title
 
     - self.add_raw_data('setting_schemas', self.setting_schemas);
     - self.add_raw_data('setting_values',  self.setting_values);
 
     form.form-horizontal(data-bind="submit: $root.submit", style="display: none")
-      div(data-bind="foreach: $root.categoryKeys")
-        fieldset
-          legend(data-bind="text: $root.categoryNames[$data]")
+      // ko foreach: $root.categoryKeys
+      fieldset
+        legend(data-bind="text: $root.categoryNames[$data]")
+        // ko foreach: $root.categorySettings[$data]
+        .control-group
+          label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
+          .controls
+            // ko if: 'string' === type
+            input(type="text", data-bind="value: value, valueUpdate: 'keyup', attr: { id: id }")
+            // /ko
 
-          div(data-bind="foreach: $root.categorySettings[$data]")
-            div.control-group
-              label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
-              div.controls
-                // ko if: 'string' === type
-                input(type="text", data-bind="value: value, valueUpdate: 'keyup', attr: { id: id }")
-                // /ko
+            // ko if: 'number' === type
+            input(type="number", data-bind="value: value, valueUpdate: 'keyup', attr: { id: id }")
+            // /ko
 
-                // ko if: 'number' === type
-                input(type="number", data-bind="value: value, valueUpdate: 'keyup', attr: { id: id }")
-                // /ko
+            // ko if: 'boolean' === type
+            .switch
+              input(type="checkbox", data-bind="checked: value, attr: { id: id }")
+              label(data-yes=self.t('setting.yes'), data-no=self.t('setting.no'), data-bind="attr: { 'for': id }"): i
+            // /ko
 
-                // ko if: 'boolean' === type
-                div.switch
-                  input(type="checkbox", data-bind="checked: value, attr: { id: id }")
-                  label(data-yes=self.t('setting.yes'), data-no=self.t('setting.no'), data-bind="attr: { 'for': id }"): i
-                // /ko
+            span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+        // /ko
 
-                span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+      // /ko
 
-      div
+      .form-actions
         button.btn.btn-primary(type="submit", data-bind="enable: $root.isDirty")= self.t('save')

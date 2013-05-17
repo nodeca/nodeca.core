@@ -9,10 +9,10 @@ router:
       "/": ~
 
     admin.core.global_settings.index:
-      "/settings":
+      "/core/global_settings":
 
     admin.core.global_settings.edit:
-      "/settings/{group}":
+      "/core/global_settings/{group}":
         group: /\S+/
 
   bin:
