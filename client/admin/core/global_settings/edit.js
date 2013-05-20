@@ -48,6 +48,25 @@ function SettingModel(name, schema, value) {
   this.localizedName = N.runtime.t(tName);
   this.localizedHelp = N.runtime.t.exists(tHelp) ? N.runtime.t(tHelp) : '';
 
+  this.valueOptions = _.map(schema.values, function (option) {
+    var translation;
+
+    // If schema.values come in a prepared form (i.e. array if objects) the use
+    // it as is. Otherwise generate such array manually.
+    // The prepared form is used for auto-generated value sets. (e.g. 'forums')
+    if (_.isObject(option)) {
+      return option;
+    } else {
+      translation = 'admin.core.setting_values.' + name + '.' + option;
+      return {
+        // If there is no translation, assume it isn't needed.
+        // That's true for proper names like 'GMail' for SMTP configuration.
+        title: N.runtime.t.exists(translation) ? N.runtime.t(translation) : option
+      , value: option
+      };
+    }
+  });
+
   if (_.isUndefined(value)) {
     value = schema['default'] || '';
   }

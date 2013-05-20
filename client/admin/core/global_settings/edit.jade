@@ -31,6 +31,10 @@
               label(data-yes=self.t('setting.yes'), data-no=self.t('setting.no'), data-bind="attr: { 'for': id }"): i
             // /ko
 
+            // ko if: 'dropdown' === type
+            select(data-bind="options: valueOptions, optionsText: 'title', optionsValue: 'value', value: value, attr: { id: id }")
+            // /ko
+
             span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
         // /ko
 
