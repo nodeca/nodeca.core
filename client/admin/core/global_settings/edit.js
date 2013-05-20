@@ -99,7 +99,7 @@ N.wire.on('navigate.done:' + module.apiPath, function () {
       priority += setting.priority;
     });
 
-    return priority;
+    return -priority;
   });
 
   // Sort settings within categories.
