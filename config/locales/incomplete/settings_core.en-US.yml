@@ -1,0 +1,6 @@
+i18n:
+  en-US:
+    admin:
+      core:
+        group_names:
+          core: Core

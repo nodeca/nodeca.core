@@ -1,0 +1,43 @@
+i18n:
+  en-US:
+    admin:
+      core:
+        group_names:
+          email: E-mail
+
+        category_names:
+          email_common: Common
+          email_sendmail: Sendmail-specific
+
+        setting_names:
+          #
+          # Common
+          #
+          email_transport: Transport
+          email_transport_help: Protocol, program, or service to use in order to
+            send an email.
+
+          email_header_from: From
+          email_header_from_help: The e-mail address of the sender. All e-mail
+            addresses can be plain "sender@server.com" or formatted
+            "Sender Name <sender@server.com>".
+
+          email_header_charset: Character set
+          email_header_charset_help: Optional output character set for the
+            textual parts.
+
+          #
+          # Sendmail
+          #
+          email_sendmail_path: Path
+          email_sendmail_path_help: Path to Sendmail executable.
+
+          email_sendmail_args: Arguments
+          email_sendmail_args_help: Extra arguments string for Sendmail. See
+            Sendmail manual for details.
+
+
+        setting_values:
+          email_transport:
+            STUB: None (disabled)
+            SENDMAIL: Sendmail

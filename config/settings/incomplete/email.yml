@@ -1,0 +1,49 @@
+setting_groups:
+  email:
+    parent: core
+
+
+setting_schemas:
+  global:
+    #
+    # Common
+    #
+    email_transport:
+      priority: 10
+      group_key: email
+      category_key: email_common
+      type: dropdown
+      values:
+      - STUB     # None (disabled)
+      - SENDMAIL # Sendmail program
+      default: STUB
+
+    email_header_from:
+      priority: 20
+      group_key: email
+      category_key: email_common
+      type: string
+      default: Full Name <name@example.com>
+
+    email_header_charset:
+      priority: 30
+      group_key: email
+      category_key: email_common
+      type: string
+      default: UTF-8
+
+    #
+    # Sendmail
+    #
+    email_sendmail_path:
+      priority: 100
+      group_key: email
+      category_key: email_sendmail
+      type: string
+      default: sendmail
+
+    email_sendmail_args:
+      priority: 200
+      group_key: email
+      category_key: email_sendmail
+      type: string
