@@ -67,18 +67,16 @@ function SettingModel(name, schema, value) {
     }
   });
 
+  // A new, non-saved setting - use dafault value from the schema.
   if (_.isUndefined(value)) {
-    value = schema['default'] || '';
+    value = schema['default'];
   }
 
-  // Stringify the value for all types handled by 'value' Knockout binding,
-  // to ensure correct isDirty behaviour when user changes the input field.
-  // Note: booleans are handled by 'checked' binding.
-  if ('boolean' !== schema.type) {
-    value = String(value);
+  if ('combobox' === schema.type) {
+    this.value = ko.observableArray(value).extend({ dirty: false });
+  } else {
+    this.value = ko.observable(value).extend({ dirty: false });
   }
-
-  this.value = ko.observable(value).extend({ dirty: false });
 }
 
 
