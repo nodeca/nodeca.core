@@ -49,11 +49,6 @@ function SettingModel(name, schema, value) {
   this.localizedHelp = N.runtime.t.exists(tHelp) ? N.runtime.t(tHelp) : '';
   this.valueOptions  = schema.values;
 
-  // A new, non-saved setting - use dafault value from the schema.
-  if (_.isUndefined(value)) {
-    value = schema['default'];
-  }
-
   if ('combobox' === schema.type) {
     this.value = ko.observableArray(value).extend({ dirty: false });
   } else {
