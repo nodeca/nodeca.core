@@ -4,6 +4,8 @@
 var _     = require('lodash');
 var async = require('async');
 
+var computeSchema = require('nodeca.core/lib/settings/compute_schema');
+
 
 module.exports = function (N, apiPath) {
   N.validate(apiPath, {
@@ -29,7 +31,7 @@ module.exports = function (N, apiPath) {
   });
 
 
-  N.wire.before(apiPath, function fetch_setting_schemas(env, callback) {
+  N.wire.before(apiPath, function prepare_setting_schemas(env, callback) {
     var config = N.config.setting_schemas['global'];
 
     async.forEach(_.keys(config), function (name, next) {
@@ -40,26 +42,10 @@ module.exports = function (N, apiPath) {
         return;
       }
 
-      if (_.isFunction(schema.values)) { // Dynamic values set.
-        schema.values(env, function (err, values) {
-          if (err) {
-            next(err);
-            return;
-          }
-
-          // Clone in order to keep original schema untouched.
-          var computedSchema = _.clone(schema);
-
-          // Expose fetches values.
-          computedSchema.values = values;
-
-          env.response.data.setting_schemas[name] = computedSchema;
-          next();
-        });
-      } else { // Static values set or no values.
-        env.response.data.setting_schemas[name] = schema;
-        next();
-      }
+      computeSchema(env, name, schema, function (err, computed) {
+        env.response.data.setting_schemas[name] = computed;
+        next(err);
+      });
     }, callback);
   });
 
