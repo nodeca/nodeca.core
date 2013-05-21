@@ -13,7 +13,7 @@ module.exports = function (N, apiPath) {
   });
 
 
-  N.wire.on(apiPath, function (env, callback) {
+  N.wire.on(apiPath, function global_settings_update(env, callback) {
     var settings = {};
 
     _.forEach(env.params.settings, function (value, name) {
