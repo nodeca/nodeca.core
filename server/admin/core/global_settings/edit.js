@@ -4,8 +4,6 @@
 var _     = require('lodash');
 var async = require('async');
 
-var computeSchema = require('nodeca.core/lib/settings/compute_schema');
-
 
 module.exports = function (N, apiPath) {
   N.validate(apiPath, {
@@ -42,10 +40,19 @@ module.exports = function (N, apiPath) {
         return;
       }
 
-      computeSchema(env, name, schema, function (err, computed) {
-        env.response.data.setting_schemas[name] = computed;
-        next(err);
-      });
+      if (_.isFunction(schema.values)) {
+        // If schema `values` is a function, we need to compute it.
+        schema = _.clone(schema); // Keep original schema untouched.
+        schema.values(function (err, values) {
+          schema.values = values; // Replace the function with computed values.
+          env.response.data.setting_schemas[name] = schema;
+          next(err);
+        });
+      } else {
+        // Otherwise it's a static schema - just expose it as is.
+        env.response.data.setting_schemas[name] = schema;
+        next();
+      }
     }, callback);
   });
 

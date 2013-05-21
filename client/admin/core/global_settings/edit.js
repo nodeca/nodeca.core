@@ -47,7 +47,14 @@ function SettingModel(name, schema, value) {
   this.priority      = schema.priority;
   this.localizedName = N.runtime.t(tName);
   this.localizedHelp = N.runtime.t.exists(tHelp) ? N.runtime.t(tHelp) : '';
-  this.valueOptions  = schema.values;
+
+  this.valueOptions = _.map(schema.values, function (option) {
+    return {
+      name:  option.name
+    , value: option.value
+    , title: N.runtime.t.exists(option.title) ? N.runtime.t(option.title) : option.name
+    };
+  });
 
   if ('combobox' === schema.type) {
     this.value = ko.observableArray(value).extend({ dirty: false });
