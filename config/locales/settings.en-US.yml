@@ -1,0 +1,23 @@
+i18n:
+  en-US:
+    admin:
+      core:
+        group_names:
+          core: Core
+          email: Email
+
+        category_names:
+          email_common: Common
+
+        setting_names:
+          email_transport: Transport
+
+          email_header_from: Outgoing email
+          email_header_from_help: Email address for auto-generated letters
+            (email validation, notifications, etc)
+
+
+        setting_values:
+          email_transport:
+            sendmail: sendmail
+            dummy: dummy (only log, for debug)
