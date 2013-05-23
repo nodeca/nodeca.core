@@ -11,9 +11,9 @@ setting_schemas:
       category_key: email_common
       type: dropdown
       values:
-      - sendmail: SENDMAIL
-      - dummy:    STUB     # only log, for debug
-      default: SENDMAIL
+      - sendmail
+      - dummy    # only log, for debug
+      default: sendmail
 
     email_header_from:
       priority: 20
