@@ -11,8 +11,8 @@ setting_schemas:
       category_key: email_common
       type: dropdown
       values:
-      - sendmail
-      - dummy    # only log, for debug
+      - sendmail: sendmail
+      - dummy:    dummy    # only log, for debug
       default: sendmail
 
     email_header_from:
