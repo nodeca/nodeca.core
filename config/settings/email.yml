@@ -13,7 +13,7 @@ setting_schemas:
       values:
       - sendmail: SENDMAIL
       - dummy:    STUB     # only log, for debug
-      default: sendmail
+      default: SENDMAIL
 
     email_header_from:
       priority: 20
