@@ -4,12 +4,17 @@ i18n:
       core:
         group_names:
           core: Core
+          general: General
           email: Email
 
         category_names:
+          general_common: Common
           email_common: Common
 
         setting_names:
+          general_project_name: Project name
+          general_project_name_help: Used in subject line of automatic email postings.
+
           email_transport: Transport
 
           email_header_from: Outgoing email

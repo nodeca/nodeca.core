@@ -1,0 +1,13 @@
+setting_groups:
+  general:
+    parent: core
+
+
+setting_schemas:
+  global:
+    general_project_name:
+      priority: 10
+      group_key: general
+      category_key: general_common
+      type: string
+      default: Project Name
