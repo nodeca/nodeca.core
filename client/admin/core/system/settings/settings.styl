@@ -6,24 +6,23 @@
 @import "nodeca.core/client/admin/core/_variables"
 
 
-// Dim inherited settings
+// Dim `inherited` setting state
 //
 .control-group.inherited
   .control-label
     opacity .4
-  .cg-control
+  .control-value
     opacity .4
 
-// Head block above settings list
+// Dim `forced` settings state
 //
-legend + .cg-head
-  background-color lighten(yellow, 90%)
-  margin-top -20px
-  padding-top 20px
+.control-group.forced
+  .switch
+    box-shadow: 0 0 0 1px gray inset
+  .control-label
+    font-weight: bold
 
-// Filter settings visibility
-//
-.show_inherited .control-group.overriden
-  display none
-.show_overriden .control-group.inherited
-  display none
+// Add hover to settings line
+.control-group-hover
+  &:hover
+    background-color row-hover
