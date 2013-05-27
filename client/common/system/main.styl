@@ -91,7 +91,7 @@ h3 small { font-size: 14px; }
       color grayDark
 
 
-// topnav underline for avtive item
+// topnav underline for active item
 //
 .navbar .nav .active
   position relative
@@ -107,6 +107,14 @@ h3 small { font-size: 14px; }
 // form help-texts tweak (smaller & lighter)
 //
 .form-horizontal input + .help-block
+.form-horizontal select + .help-block
+.form-horizontal textarea + .help-block
   color grayLight
   font-size 90%
   margin-top 5px
+
+
+// fix for links without href (with JS handlers)
+//
+a
+  cursor pointer
