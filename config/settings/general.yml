@@ -10,4 +10,4 @@ setting_schemas:
       group_key: general
       category_key: general_common
       type: string
-      default: Project Name
+      default: Nodeca
