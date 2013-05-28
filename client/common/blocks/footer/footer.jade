@@ -12,7 +12,7 @@ footer.container.page-footer
         each locale in self.locales
           li
             a(href='#',
-              data-on-click='common.locale',
+              data-on-click='users.set_language',
               data-locale=locale)= self.t('language.' + locale)
 
   .nojs
