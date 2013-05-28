@@ -223,8 +223,8 @@ window.NodecaLoader = (function () {
       // Local `t` (translate) function for use only within this module.
       // It allows to use phrase strings relative to the module's API path.
       function __t__(phrase, params) {
-        if ('.' === phrase.charAt(0)) {
-          phrase = phrase.substr(1);
+        if ('@' === phrase.charAt(0)) {
+          phrase = phrase.slice(1);
         } else {
           phrase = target.apiPath + '.' + phrase;
         }
