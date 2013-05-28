@@ -59,8 +59,8 @@ module.exports = function (N, apiPath) {
 
   N.wire.on(apiPath, function global_settings_edit(env, callback) {
     env.response.data.head.title =
-      env.helpers.t('admin.core.global_settings.edit.title', {
-        group: env.helpers.t('admin.core.group_names.' + env.params.group)
+      env.t('title', {
+        group: env.t('@admin.core.group_names.' + env.params.group)
       });
 
     N.settings.getStore('global').get(_.keys(env.response.data.setting_schemas),

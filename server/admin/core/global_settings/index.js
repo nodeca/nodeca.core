@@ -19,8 +19,7 @@ module.exports = function (N, apiPath) {
   N.wire.on(apiPath, function global_settings_index(env) {
     var data = env.response.data;
 
-    data.head.title =
-      env.helpers.t('admin.core.global_settings.index.title');
+    data.head.title = env.t('title');
 
     data.tabs   = [];
     data.groups = {};
