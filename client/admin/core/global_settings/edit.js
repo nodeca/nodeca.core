@@ -38,21 +38,21 @@ function submit() {
 
 
 function SettingModel(name, schema, value) {
-  var tName = 'admin.core.setting_names.' + name
-    , tHelp = 'admin.core.setting_names.' + name + '_help';
+  var tName = '@admin.core.setting_names.' + name
+    , tHelp = '@admin.core.setting_names.' + name + '_help';
 
   this.id            = 'setting_' + name;
   this.name          = name;
   this.type          = schema.type;
   this.priority      = schema.priority;
-  this.localizedName = N.runtime.t(tName);
-  this.localizedHelp = N.runtime.t.exists(tHelp) ? N.runtime.t(tHelp) : '';
+  this.localizedName = t(tName);
+  this.localizedHelp = t.exists(tHelp) ? t(tHelp) : '';
 
   this.valueOptions = _.map(schema.values, function (option) {
     return {
       name:  option.name
     , value: option.value
-    , title: N.runtime.t.exists(option.title) ? N.runtime.t(option.title) : option.name
+    , title: t.exists('@' + option.title) ? t('@' + option.title) : option.name
     };
   });
 
@@ -81,7 +81,7 @@ N.wire.on('navigate.done:' + module.apiPath, function () {
 
     if (!_.contains(categoryKeys, key)) {
       categoryKeys.push(key);
-      categoryNames[key] = N.runtime.t('admin.core.category_names.' + key);
+      categoryNames[key] = t('@admin.core.category_names.' + key);
     }
 
     if (!categorySettings.hasOwnProperty(key)) {
