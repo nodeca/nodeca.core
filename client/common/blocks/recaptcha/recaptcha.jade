@@ -7,7 +7,7 @@
     div.captcha-reload
       a(tabindex=-1, data-on-click="common.blocks.recaptcha.update") #{self.t('change_image')}
 
-.recaptcha.control_group.control-group(style="display: none")
+.recaptcha.control_group.control-group(data-bind="css: css", style="display: none")
   label.control-label(for='recaptcha_response_field') #{self.t('captcha')}
   .controls
     .row-fluid
