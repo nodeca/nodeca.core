@@ -1,10 +1,13 @@
-.control-group.captcha-image
+//- NOTE: ReCaptcha markup is hidden by default. It will be showed after
+//- invoking of 'common.blocks.recaptcha.create' Wire handler.
+
+.recaptcha.control-group.captcha-image(style="display: none")
   .controls
     span#recaptcha_image
     div.captcha-reload
       a(tabindex=-1, data-on-click="common.blocks.recaptcha.update") #{self.t('change_image')}
 
-.control-group
+.recaptcha.control_group.control-group(style="display: none")
   label.control-label(for='recaptcha_response_field') #{self.t('captcha')}
   .controls
     .row-fluid

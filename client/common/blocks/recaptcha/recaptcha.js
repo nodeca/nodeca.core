@@ -16,6 +16,7 @@ N.wire.on(module.apiPath + '.create', function recaptcha_create(__, callback) {
       window.Recaptcha.create(N.runtime.recaptcha.public_key, 'recaptcha_div', {
         theme: 'custom'
       });
+      $('.recaptcha').show();
       callback();
     }
   });
