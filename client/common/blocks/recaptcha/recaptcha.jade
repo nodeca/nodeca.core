@@ -12,4 +12,5 @@
   .controls
     .row-fluid
       input.span12(id="recaptcha_response_field", name="recaptcha_response_field", type='text')
-      span.help-block #{self.t('captcha_help')}
+      span.help-block(data-bind="ifnot: message") #{self.t('captcha_help')}
+      span.help-block(data-bind="if: message, text: message")
