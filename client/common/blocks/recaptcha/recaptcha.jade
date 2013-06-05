@@ -1,13 +1,13 @@
-//- NOTE: ReCaptcha markup is hidden by default. It will be showed after
-//- invoking of 'common.blocks.recaptcha.create' Wire handler.
+//- NOTE: ReCaptcha markup is hidden by default.
+//- You must control it's visibility manually via Knockout bindings.
 
-.recaptcha.control-group.captcha-image(style="display: none")
+.control-group.captcha-image(data-bind="visible: visible", style="display: none")
   .controls
     span#recaptcha_image
     div.captcha-reload
       a(tabindex=-1, data-on-click="common.blocks.recaptcha.update") #{self.t('change_image')}
 
-.recaptcha.control_group.control-group(data-bind="css: css", style="display: none")
+.control-group(data-bind="visible: visible, css: css", style="display: none")
   label.control-label(for='recaptcha_response_field') #{self.t('captcha')}
   .controls
     .row-fluid
