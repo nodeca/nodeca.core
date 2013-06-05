@@ -1,7 +1,7 @@
 //- NOTE: ReCaptcha markup is hidden by default.
 //- You must control it's visibility manually via Knockout bindings.
 
-.control-group.captcha-image(data-bind="visible: visible", style="display: none")
+.control-group.captcha-image(data-bind="visible: visible, css: css", style="display: none")
   .controls
     span#recaptcha_image
     div.captcha-reload
