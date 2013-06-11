@@ -227,11 +227,6 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
   // History is enabled - try RPC navigation.
   N.io.rpc(apiPath, params, function (err, response) {
     if (err && N.io.REDIRECT === err.code) {
-      if (err.switching_protocols) { // Termporary hack for HTTP/HTTPS switch.
-        window.location = href + anchor;
-        return;
-      }
-
       // Note, that we try to keep anchor, if exists.
       // That's important for moved threads and last pages redirects.
       N.wire.emit('navigate.to', {
