@@ -68,6 +68,19 @@ function normalizeURL(url) {
 }
 
 
+// Checks if URL has same protocol, hostname, and port as the current page.
+//
+function isSameOriginUrl(url) {
+  var a = document.createElement('a');
+
+  a.href = url;
+
+  return a.protocol === location.protocol &&
+         a.hostname === location.hostname &&
+         a.port     === location.port;
+}
+
+
 // Default renderer for `navigate.to` event.
 // Used to render content when user clicks a link.
 //
@@ -227,14 +240,19 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
   // History is enabled - try RPC navigation.
   N.io.rpc(apiPath, params, function (err, response) {
     if (err && N.io.REDIRECT === err.code) {
-      // Note, that we try to keep anchor, if exists.
-      // That's important for moved threads and last pages redirects.
-      N.wire.emit('navigate.to', {
-        href:    err.head.Location
-      , anchor:  anchor || window.location.hash
-      , render:  options.render
-      , history: options.history
-      }, callback);
+      if (isSameOriginUrl(err.head.Location)) {
+        // Note, that we try to keep anchor, if exists.
+        // That's important for moved threads and last pages redirects.
+        N.wire.emit('navigate.to', {
+          href:    err.head.Location
+        , anchor:  anchor || window.location.hash
+        , render:  options.render
+        , history: options.history
+        }, callback);
+      } else {
+        window.location = err.head.Location + (anchor || window.location.hash);
+        callback();
+      }
       return;
     }
 
