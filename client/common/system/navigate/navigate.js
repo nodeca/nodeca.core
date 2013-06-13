@@ -236,9 +236,10 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       // That's important for moved threads and last pages redirects.
       redirectUrl.hash = anchor || window.location.hash;
 
-      // If redirect url and current page have different protocols,
-      // we must switch to that protocol by complete page reload.
-      // It happens when http-user goes to https-only page like "login".
+      // If protocol is changed, we must completely reload the page because
+      // we cannot operate with https from http due to Same-origin policy.
+      // Check for host and port is not needed here - RPC can operate only on
+      // one host and port should be one per protocol.
       if (redirectUrl.protocol !== location.protocol) {
         window.location = redirectUrl.href;
         callback();
