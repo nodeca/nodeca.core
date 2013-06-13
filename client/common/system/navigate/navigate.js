@@ -68,19 +68,6 @@ function normalizeURL(url) {
 }
 
 
-// Checks if URL has same protocol, hostname, and port as the current page.
-//
-function isSameOriginUrl(url) {
-  var a = document.createElement('a');
-
-  a.href = url;
-
-  return a.protocol === location.protocol &&
-         a.hostname === location.hostname &&
-         a.port     === location.port;
-}
-
-
 // Default renderer for `navigate.to` event.
 // Used to render content when user clicks a link.
 //
@@ -240,18 +227,27 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
   // History is enabled - try RPC navigation.
   N.io.rpc(apiPath, params, function (err, response) {
     if (err && N.io.REDIRECT === err.code) {
-      if (isSameOriginUrl(err.head.Location)) {
-        // Note, that we try to keep anchor, if exists.
-        // That's important for moved threads and last pages redirects.
+      var redirectUrl = document.createElement('a');
+
+      // Tricky way to parse URL.
+      redirectUrl.href = err.head.Location;
+
+      // Note, that we try to keep anchor, if exists.
+      // That's important for moved threads and last pages redirects.
+      redirectUrl.hash = anchor || window.location.hash;
+
+      // If redirect url and current page have different protocols,
+      // we must switch to that protocol by complete page reload.
+      // It happens when http-user goes to https-only page like "login".
+      if (redirectUrl.protocol !== location.protocol) {
+        window.location = redirectUrl.href;
+        callback();
+      } else {
         N.wire.emit('navigate.to', {
-          href:    err.head.Location
-        , anchor:  anchor || window.location.hash
+          href:    redirectUrl.href
         , render:  options.render
         , history: options.history
         }, callback);
-      } else {
-        window.location = err.head.Location + (anchor || window.location.hash);
-        callback();
       }
       return;
     }
