@@ -16,7 +16,7 @@ i18n:
           general_project_name_help: Used in subject line of automatic email postings.
 
           general_cookies_domain: Cookies domain
-          general_cookies_domain_help: Leave empty to auto-detect per each request.
+          general_cookies_domain_help: Leave empty to auto-detect. (when site use single domain)
 
           general_session_max_lifetime: Max session lifetime
           general_session_max_lifetime_help: Maximum amount of days of session
