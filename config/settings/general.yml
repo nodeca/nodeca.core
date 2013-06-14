@@ -11,3 +11,9 @@ setting_schemas:
       category_key: general_common
       type: string
       default: Nodeca
+
+    general_cookies_domain:
+      priority: 20
+      group_key: general
+      category_key: general_common
+      type: string

@@ -15,6 +15,9 @@ i18n:
           general_project_name: Project name
           general_project_name_help: Used in subject line of automatic email postings.
 
+          general_cookies_domain: Cookies domain
+          general_cookies_domain_help: Leave empty to auto-detect per each request.
+
           email_transport: Transport
 
           email_header_from: Outgoing email
