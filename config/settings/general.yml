@@ -18,7 +18,7 @@ setting_schemas:
       category_key: general_common
       type: string
 
-    general_session_max_lifetime:
+    general_login_expire_days:
       priority: 30
       group_key: general
       category_key: general_common
