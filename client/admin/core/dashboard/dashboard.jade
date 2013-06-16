@@ -2,7 +2,7 @@
   != self.partial('@admin.core.blocks.sidebar_menu', { menu: self.menus.admin })
 
   .main
-    != self.partial('@admin.core.blocks.breadcrumbs', { menu: self.menus.admin, path: self.blocks.breadcrumbs });
+    != self.partial('@admin.core.blocks.breadcrumbs', { menu: self.menus.admin, path: self.blocks.breadcrumbs })
 
     h1 Hello World
     p= self.now
