@@ -21,14 +21,14 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
       each cssPath in self.head.stylesheets[self.apiPath.split('.').shift()]
         link(rel='stylesheet', href=cssPath)
 
-    script(type="text/javascript")
+    script(type="text/javascript").
       !{self.asset_include('loader.js')}
       NodecaLoader.loadAssets.init(
         !{JSON.stringify(self.head.assets)},
         '!{self.apiPath.split(".").shift()}'
       );
 
-    script(type="text/javascript")
+    script(type="text/javascript").
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-26895916-2']);
       _gaq.push(['_trackPageview']);
