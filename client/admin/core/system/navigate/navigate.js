@@ -227,14 +227,30 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
   // History is enabled - try RPC navigation.
   N.io.rpc(apiPath, params, function (err, response) {
     if (err && N.io.REDIRECT === err.code) {
+      var redirectUrl = document.createElement('a');
+
+      // Tricky way to parse URL.
+      redirectUrl.href = err.head.Location;
+
       // Note, that we try to keep anchor, if exists.
       // That's important for moved threads and last pages redirects.
-      N.wire.emit('navigate.to', {
-        href:    err.head.Location
-      , anchor:  anchor || window.location.hash
-      , render:  options.render
-      , history: options.history
-      }, callback);
+      redirectUrl.hash = anchor || window.location.hash;
+
+      // If protocol is changed, we must completely reload the page to keep
+      // Same-origin policy for RPC.
+      // - port check not required, because port depends on protocol.
+      // - domain check not required, because RPC is available on all domains
+      //   (it uses relative path)
+      if (redirectUrl.protocol !== location.protocol) {
+        window.location = redirectUrl.href;
+        callback();
+      } else {
+        N.wire.emit('navigate.to', {
+          href:    redirectUrl.href
+        , render:  options.render
+        , history: options.history
+        }, callback);
+      }
       return;
     }
 
