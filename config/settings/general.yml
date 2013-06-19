@@ -17,3 +17,17 @@ setting_schemas:
       group_key: general
       category_key: general_common
       type: string
+
+    general_session_expire_hours:
+      priority: 20
+      group_key: general
+      category_key: general_common
+      type: number
+      default: 168
+
+    general_login_expire_days:
+      priority: 30
+      group_key: general
+      category_key: general_common
+      type: number
+      default: 7
