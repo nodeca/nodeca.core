@@ -28,11 +28,11 @@ html.no-js
   body
     include ./_topnav_menu
 
-    - if (self.menus.admin && self.menus.admin.navbar)
+    - if (self.runtime.menus.admin && self.runtime.menus.admin.navbar)
       nav.navbar.navbar-fixed-top
         .navbar-inner
           .container-fluid
-            mixin topnav_menu(self.menus.admin.navbar)
+            mixin topnav_menu(self.runtime.menus.admin.navbar)
 
     .container-fluid
       != self.content

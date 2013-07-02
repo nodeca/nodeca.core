@@ -1,8 +1,8 @@
 #content
-  != self.partial('@admin.core.blocks.sidebar_menu', { menu: self.menus.admin })
+  != self.partial('@admin.core.blocks.sidebar_menu', { menu: self.runtime.menus.admin })
 
   .main
-    != self.partial('@admin.core.blocks.breadcrumbs', { menu: self.menus.admin, path: self.blocks.breadcrumbs })
+    != self.partial('@admin.core.blocks.breadcrumbs', { menu: self.runtime.menus.admin, path: self.blocks.breadcrumbs })
 
     h1= self.head.title
 

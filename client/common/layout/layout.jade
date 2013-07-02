@@ -50,9 +50,9 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
           a.brand(href="/") Nodeca
 
           .nav-collapse.collapse
-            - if (self.menus.common.navbar)
+            - if (self.runtime.menus.common.navbar)
               ul.nav
-                - each item in self.menus.common.navbar
+                - each item in self.runtime.menus.common.navbar
                   - var ns = self.apiPath.split('.').shift(), item_ns = item.to.split('.').shift();
                   - if (ns === item_ns)
                     li(data-api-path=item_ns, class='active'): a(href=item.link)= self.t(item.title)
@@ -68,9 +68,9 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
             // Temporary removed, will go to dropdown
             //
-              - if (self.menus.common && self.menus.common.admin && self.menus.common.admin.length > 0)
+              - if (self.runtime.menus.common && self.runtime.menus.common.admin && self.runtime.menus.common.admin.length > 0)
                 ul.nav
-                  - each item in self.menus.common.admin
+                  - each item in self.runtime.menus.common.admin
                     li: a(href=item.link, target='_blank')= self.t('@' + item.title)
 
             //- NOTE: This block is located in `nodeca.users`
