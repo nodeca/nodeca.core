@@ -66,13 +66,6 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
               input.input-medium.search-query(type='text', placeholder='Search')
               .icon-search
 
-            // Temporary removed, will go to dropdown
-            //
-              - if (self.runtime.menus.common && self.runtime.menus.common.admin && self.runtime.menus.common.admin.length > 0)
-                ul.nav
-                  - each item in self.runtime.menus.common.admin
-                    li: a(href=item.link, target='_blank')= self.t('@' + item.title)
-
             //- NOTE: This block is located in `nodeca.users`
             != self.partial('@common.blocks.auth_toolbar', { is_member: self.runtime.is_member, user_name: self.runtime.user_name })
 
