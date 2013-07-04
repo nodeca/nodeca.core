@@ -264,20 +264,8 @@ window.NodecaLoader = (function () {
 
 
   // Defines a module. See comment on `modules` variable for details.
-  function define(identifiers, apiPath, func) {
-    if (!isArray(identifiers)) {
-      identifiers = [ identifiers ];
-    }
-
-    var definition = {
-      identifiers: identifiers
-    , apiPath:     apiPath
-    , func:        func
-    };
-
-    forEach(identifiers, function (id) {
-      modules[id] = definition;
-    });
+  function define(id, apiPath, func) {
+    modules[id] = { apiPath: apiPath, func: func };
   }
 
 
