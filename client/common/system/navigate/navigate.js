@@ -266,6 +266,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       return;
     }
 
+    /*
     if (response.layout !== N.runtime.layout) {
       // Layout was changed - perform normal page loading.
       //
@@ -276,13 +277,14 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       callback();
       return;
     }
+    */
 
     N.loader.loadAssets((response.view || apiPath).split('.')[0], function () {
       var state = {
         apiPath: apiPath
       , anchor:  anchor
       , view:    response.view   || apiPath
-      , layout:  response.layout || null
+      //, layout:  response.layout || null
       , locals:  response.data   || {}
       };
 
