@@ -1,3 +1,3 @@
-NodecaLoader.define(<%= JSON.stringify(name) %>, null, function (N, require, exports, module, t) {
+NodecaLoader.registerNodeModule(<%= JSON.stringify(name) %>, function (N, require, exports, module) {
   ${source}
 });
