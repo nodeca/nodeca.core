@@ -314,9 +314,7 @@ if (History.enabled) {
   History.Adapter.bind(window, 'statechange', function () {
     var state      = History.getState()
       , exitData   = { apiPath: __currentApiPath__, url: state.url }
-      , exitEvents = ['navigate.exit:' + __currentApiPath__, 'navigate.exit']
       , doneData   = { apiPath: state.data.apiPath, url: state.url }
-      , doneEvents = ['navigate.done', 'navigate.done:' + state.data.apiPath]
       , render     = __renderCallback__
       , complete   = __completeCallback__;
 
@@ -337,23 +335,39 @@ if (History.enabled) {
       return;
     }
 
-    N.wire.emit(exitEvents, exitData, function (err) {
-      if (err) {
-        N.logger.error('%s', err);
+    // Invoke page-specific exit handlers.
+    N.wire.emit(('navigate.exit:' + __currentApiPath__), exitData, function (err) {
+      if (false === err) {
+        return; // Exit is prevented.
       }
 
-      // Clear old raw response data. It's collected by view templates.
-      N.runtime.page_data = {};
+      if (err) {
+        N.logger.error('%s', err); // Log error, but not stop.
+      }
 
-      render(state.data, function () {
-        N.wire.emit(doneEvents, doneData, function (err) {
-          if (err) {
-            N.logger.error('%s', err);
-          }
+      // Invoke global exit-handlers.
+      N.wire.emit('navigate.exit', exitData, function (err) {
+        if (false === err) {
+          return; // Exit is prevented.
+        }
 
-          if (complete) {
-            complete();
-          }
+        if (err) {
+          N.logger.error('%s', err); // Log error, but not stop.
+        }
+
+        // Clear old raw response data. It's collected by view templates.
+        N.runtime.page_data = {};
+
+        render(state.data, function () {
+          N.wire.emit(['navigate.done', 'navigate.done:' + state.data.apiPath], doneData, function (err) {
+            if (err) {
+              N.logger.error('%s', err); // Log error, but not stop.
+            }
+
+            if (complete) {
+              complete();
+            }
+          });
         });
       });
     });
