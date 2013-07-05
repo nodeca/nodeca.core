@@ -208,7 +208,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
   }
 
   // Stop here if base URL (all except anchor) haven't changed.
-  if (href === (location.protocol + '//' + location.host + location.pathname)) {
+  if (!options.force && href === (location.protocol + '//' + location.host + location.pathname)) {
     if (anchor !== location.hash) {
       location.hash = anchor;
     }
@@ -288,16 +288,46 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       , locals:  response.data   || {}
       };
 
-      // Set one-use callbacks for history 'statechange' handler.
-      // The handler will reset these to defaults (`renderFromHistory` and null).
-      __renderCallback__   = options.render || renderNewContent;
-      __completeCallback__ = callback;
+      // Invoke page-specific exit handlers.
+      N.wire.emit(
+        'navigate.exit:' + __currentApiPath__
+      , { apiPath: __currentApiPath__, url: href }
+      , function (err) {
 
-      if (options.replaceState) {
-        History.replaceState(state, response.data.head.title, href);
-      } else {
-        History.pushState(state, response.data.head.title, href);
-      }
+        if (false === err) {
+          return; // Exit is prevented.
+        }
+
+        if (err) {
+          N.logger.error('%s', err); // Log error, but not stop.
+        }
+
+        // Invoke global exit-handlers.
+        N.wire.emit(
+          'navigate.exit'
+        , { apiPath: __currentApiPath__, url: href }
+        , function (err) {
+
+          if (false === err) {
+            return; // Exit is prevented.
+          }
+
+          if (err) {
+            N.logger.error('%s', err); // Log error, but not stop.
+          }
+
+          // Set one-use callbacks for history 'statechange' handler.
+          // The handler will reset these to defaults (`renderFromHistory` and null).
+          __renderCallback__   = !_.isUndefined(options.render) ? options.render : renderNewContent;
+          __completeCallback__ = callback;
+
+          if (options.replaceState) {
+            History.replaceState(state, response.data.head.title, href);
+          } else {
+            History.pushState(state, response.data.head.title, href);
+          }
+        });
+      });
     });
   });
 });
@@ -312,11 +342,9 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 
 if (History.enabled) {
   History.Adapter.bind(window, 'statechange', function () {
-    var state      = History.getState()
-      , exitData   = { apiPath: __currentApiPath__, url: state.url }
-      , doneData   = { apiPath: state.data.apiPath, url: state.url }
-      , render     = __renderCallback__
-      , complete   = __completeCallback__;
+    var state    = History.getState()
+      , render   = __renderCallback__
+      , complete = __completeCallback__;
 
     // Reset callbacks to defaults. It's needed to ensure using right renderer
     // on regular history state changes - when user clicks back/forward buttons
@@ -324,53 +352,44 @@ if (History.enabled) {
     __renderCallback__   = renderFromHistory;
     __completeCallback__ = null;
 
-    // We have no state data when it's an initial state, so we schedule
-    // retrieval of data by it's URL and triggering this event once
-    // again (via History.replaceState).
-    if (!state.data || History.isEmptyObject(state.data)) {
-      N.wire.emit('navigate.to', {
-        href:    state.url
-      , history: History.replaceState
-      });
+    // No render callback - no render required.
+    if (!render) {
+      if (complete) {
+        complete();
+      }
       return;
     }
 
-    // Invoke page-specific exit handlers.
-    N.wire.emit(('navigate.exit:' + __currentApiPath__), exitData, function (err) {
-      if (false === err) {
-        return; // Exit is prevented.
-      }
+    // Clear old raw response data. It's collected by view templates.
+    N.runtime.page_data = {};
 
-      if (err) {
-        N.logger.error('%s', err); // Log error, but not stop.
-      }
-
-      // Invoke global exit-handlers.
-      N.wire.emit('navigate.exit', exitData, function (err) {
-        if (false === err) {
-          return; // Exit is prevented.
-        }
+    render(state.data, function () {
+      N.wire.emit(
+        ['navigate.done', 'navigate.done:' + state.data.apiPath]
+      , { apiPath: state.data.apiPath, url: state.url }
+      , function (err) {
 
         if (err) {
           N.logger.error('%s', err); // Log error, but not stop.
         }
 
-        // Clear old raw response data. It's collected by view templates.
-        N.runtime.page_data = {};
-
-        render(state.data, function () {
-          N.wire.emit(['navigate.done', 'navigate.done:' + state.data.apiPath], doneData, function (err) {
-            if (err) {
-              N.logger.error('%s', err); // Log error, but not stop.
-            }
-
-            if (complete) {
-              complete();
-            }
-          });
-        });
+        if (complete) {
+          complete();
+        }
       });
     });
+  });
+
+  // We have no state data when it's an initial state, so we schedule
+  // retrieval of data by it's URL and triggering this event once
+  // again (via History.replaceState).
+  N.wire.once('navigate.done', { priority: 100 }, function history_init(data, callback) {
+    N.wire.emit('navigate.to', {
+      href:         data.url
+    , replaceState: true
+    , render:       null
+    , force:        true
+    }, callback);
   });
 }
 
@@ -378,7 +397,7 @@ if (History.enabled) {
 // __currentApiPath__ updater.
 //
 
-N.wire.on('navigate.done', { priority: -999 }, function (data) {
+N.wire.on('navigate.done', { priority: -999 }, function apipath_set(data) {
   __currentApiPath__ = data.apiPath;
 });
 
@@ -394,7 +413,7 @@ N.wire.on('navigate.done', { priority: -999 }, function (data) {
 //   code to ensure right order of handlers.
 //
 
-N.wire.once('navigate.done', { priority: 999 }, function () {
+N.wire.once('navigate.done', { priority: 999 }, function navigate_click_handler() {
   $(document).on('click', 'a', function (event) {
     var $this = $(this);
 
