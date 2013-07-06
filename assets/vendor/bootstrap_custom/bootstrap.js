@@ -14,3 +14,6 @@
 // Popover must go AFTER tooltip
 //= require ../bootstrap/js/bootstrap-popover
 
+// Add our collapser extension
+//= require ./bootstrap_collapse_ext
+
