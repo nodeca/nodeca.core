@@ -1,0 +1,16 @@
+// Horizontal comma-separated list
+//
+
+.hlist
+  margin 0
+
+.hlist-item
+  display inline-block
+  // ie7 margin dirty fix (no :after -> artificial margin)
+  *margin-right .8em
+
+  &:after
+    content ','
+    margin-right .5em
+  &:last-child:after
+    content ""

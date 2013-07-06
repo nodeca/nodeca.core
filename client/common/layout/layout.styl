@@ -1,100 +1,20 @@
 @import "nodeca.core/client/common/_variables"
 
 
-// Protect width change between pages nevigation
-//
-
-
 body
   overflow-y scroll
   min-width 200px
 
+// Fix responsive menu elements
+@media (max-width: 979px)
 
-// Horizontal comma-separated list
-//
-.hlist
-  margin 0
-  > li
-    display inline-block
-    // ie7 margin dirty fix (no :after -> artificial margin)
-    *margin-right .8em
+  // update search icon's offset
+  .navbar-search
+    .icon-search
+      top 16px
+      left 23px
 
-    &:after
-      content ','
-      margin-right .5em
-    &:last-child:after
-      content " "
-
-// the same, but for definitions
-.def-hlist
-  margin 0
-  > dt
-    font-weight: normal
-    display inline-block
-  > dd
-    display inline-block
-    &:after
-      content ","
-    &:last-child:after
-      content ""
-
-
-// Universal container for page info
-//
-.page-summary
-  margin-top 20px
-  padding: 20px
-  background-color #fbfbfb
-  border-radius 4px
-  border 1px solid #eee
-  border 1px solid rgba(0,0,0,.05)
-  box-shadow 0 0px 2px rgba(0,0,0,.05)
-  color grayLight
-  font-family sansWideFontFamily
-  > dt
-    font-weight normal
-    color grayDark
-    font-size 13px
-  > dd + dt
-    margin-top 10px
-  > dd
-    font-size 12px
-    &.small
-      font-size 11px
-
-
-// Forms
-//
-.well-form
-  background-color white
-  box-shadow 0 0 10px grayLighter
-
-
-// Messages
-//
-.well-message
-  background-color white
-  box-shadow 0 0 10px grayLighter
-
-
-// Debug area
-//
-.debug
-  margin-top 20px
-  padding 20px 20px 0
-  background-color #fbfbf8  
-  border 1px solid #eee
-  border 1px solid rgba(0,0,0,.05)
-  box-shadow 0 -2px 2px rgba(0,0,0,.05)
-  font-family sansWideFontFamily
-  font-size 12px
-  color #888
-
-#debug_timeline
-  ul
-    list-style none
-  & > ul
-    margin-left 0
-
-.timeline-period
-  color #444
+  // remove active item underline
+  .navbar .nav .active
+    &:before
+      display none

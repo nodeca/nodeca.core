@@ -2,8 +2,8 @@
 
 mixin timeline_scope(scope)
   - var metaline;
-  li
-    span.timeline-period #{scope.elapsed.total.toFixed(2)}ms 
+  li.debug-timeline__item
+    span.debug-timeline__period #{scope.elapsed.total.toFixed(2)}ms 
     | - #{scope.message} 
     - if (scope.elapsed.missed > 0)
       | [missed #{scope.elapsed.missed.toFixed(2)}ms] 
@@ -15,9 +15,9 @@ mixin timeline_scope(scope)
       mixin timeline_items(scope.childs)
 
 mixin timeline_items(scopes)
-  ul
+  ul.debug-timeline__scope
     - each scope in scopes
       mixin timeline_scope(scope)
 
-#debug_timeline
+#debug_timeline.debug-timeline
   mixin timeline_items(self.stats)
