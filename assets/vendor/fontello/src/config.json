@@ -1,140 +1,108 @@
 {
   "name": "nodeca",
+  "css_prefix_text": "icon-",
+  "css_use_suffix": false,
   "glyphs": [
     {
       "uid": "7222571caa5c15f83dcfd447c58d68d9",
-      "orig_css": "search",
-      "orig_code": 59392,
       "css": "search",
       "code": 59392,
       "src": "entypo"
     },
     {
       "uid": "bbd66ef66bb8fa9edde54d9a90b89150",
-      "orig_css": "user",
-      "orig_code": 59393,
       "css": "user",
       "code": 59393,
       "src": "entypo"
     },
     {
       "uid": "14017aae737730faeda4a6fd8fb3a5f0",
-      "orig_css": "ok",
-      "orig_code": 10003,
       "css": "check",
       "code": 10003,
       "src": "entypo"
     },
     {
+      "uid": "815503841e980c848f55e0271deacead",
+      "css": "link",
+      "code": 128279,
+      "src": "entypo"
+    },
+    {
       "uid": "44b9e75612c5fad5505edd70d071651f",
-      "orig_css": "attach",
-      "orig_code": 59394,
       "css": "attach",
       "code": 59394,
       "src": "entypo"
     },
     {
       "uid": "1a7104205ea96e6f40ac716d0ca72f21",
-      "orig_css": "lock",
-      "orig_code": 59395,
       "css": "closed",
       "code": 59395,
       "src": "entypo"
     },
     {
       "uid": "25fc99a30fecc4021fdcae5fff5ba9ac",
-      "orig_css": "eye",
-      "orig_code": 59396,
       "css": "track",
       "code": 59396,
       "src": "entypo"
     },
     {
       "uid": "b08cfe8039de2ce815686aced2caef06",
-      "orig_css": "download",
-      "orig_code": 59397,
       "css": "download",
       "code": 59397,
       "src": "entypo"
     },
     {
       "uid": "b6fc2f656ef87275889422e19550680a",
-      "orig_css": "reply",
-      "orig_code": 59398,
       "css": "reply",
       "code": 59398,
       "src": "entypo"
     },
     {
-      "uid": "1189604bf305b6b03a74685ce60e6632",
-      "orig_css": "doc-text",
-      "orig_code": 59399,
-      "css": "new",
-      "code": 59399,
+      "uid": "c77fd2fd065b5fe16d6f2b41e190b266",
+      "css": "edit",
+      "code": 9998,
       "src": "entypo"
     },
     {
       "uid": "bc64550dd022ce21604f97309b346cea",
-      "orig_css": "cog",
-      "orig_code": 9881,
       "css": "options",
       "code": 9881,
       "src": "entypo"
     },
     {
       "uid": "8704cd847a47b64265b8bb110c8b4d62",
-      "orig_css": "down-open",
-      "orig_code": 9662,
       "css": "expand",
       "code": 9662,
       "src": "entypo"
     },
     {
       "uid": "9c7ff134960bb5a82404e4aeaab366d9",
-      "orig_css": "up-open",
-      "orig_code": 9652,
       "css": "collapse",
       "code": 9652,
       "src": "entypo"
     },
     {
-      "uid": "d5098cb09be5827a2911dbab5af49ad2",
-      "orig_css": "down-thin",
-      "orig_code": 8595,
-      "css": "vote-down",
-      "code": 8595,
-      "src": "entypo"
-    },
-    {
-      "uid": "43c4064ec1260d0e55c37e0467c75cbb",
-      "orig_css": "up-thin",
-      "orig_code": 8593,
-      "css": "vote-up",
-      "code": 8593,
+      "uid": "78944e4652d6f9b8b506eaef331308cd",
+      "css": "more",
+      "code": 58544,
       "src": "entypo"
     },
     {
       "uid": "0222089fb4194cc714dcc1ffd2525c11",
-      "orig_css": "left-bold",
-      "orig_code": 11013,
       "css": "back",
       "code": 11013,
       "src": "entypo"
     },
     {
       "uid": "a30a32d49f80bb534c062ae1743ef433",
-      "orig_css": "down",
-      "orig_code": 11015,
-      "css": "more",
-      "code": 11015,
+      "css": "vote-down",
+      "code": 8595,
       "src": "entypo"
     },
     {
-      "uid": "c77fd2fd065b5fe16d6f2b41e190b266",
-      "orig_css": "pencil",
-      "orig_code": 9998,
-      "css": "edit",
-      "code": 9998,
+      "uid": "dbc97808cba7d0c135c7054e7a85fb86",
+      "css": "vote-up",
+      "code": 8593,
       "src": "entypo"
     }
   ]
