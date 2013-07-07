@@ -3,37 +3,44 @@
 
 // Pagination
 //
-.pagination
+.pgn
   display: inline-block
   font-size 12px
   padding 5px 0
-  > li
-    display: inline-block
-    > a
-      display inline-block
-      transition background-color 0.3s ease
-      border-radius 2px
-      color grayDark
-      padding 0 9px
-      line-height 20px
-      &:hover
-        background-color grayLighter
-      &.more
-        padding: 0 3px;
-      &.current
-        background-color grayDark
-        color white
-        font-weight bold
-        text-decoration none
-        box-shadow 0 0 1px gray
-        &:hover
-          background-color gray          
-    > .dropdown-menu
-      min-width:0
-      padding 7px 10px
-.btn-group > .pagination
-  float left
   margin 0
 
-label.pgn-jump
+.pgn__item
+  display: inline-block
+
+a.pgn__link
+  display inline-block
+  transition background-color 0.3s ease
+  border-radius 2px
+  color grayDark
+  padding 0 9px
+  line-height 20px
+  &:hover
+    background-color grayLighter
+
+.interval > .pgn__link
+  padding: 0 3px;
+
+.current > .pgn__link
+  background-color grayDark
+  color white
+  font-weight bold
+  text-decoration none
+  box-shadow 0 0 1px gray
+  &:hover
+    background-color gray          
+
+//
+// Dropdown menu tweaks
+//
+
+.pgn__label
   margin-bottom 0
+
+.pgn__item > .dropdown-menu
+    min-width:0
+    padding 7px 10px
