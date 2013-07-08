@@ -409,7 +409,6 @@ N.wire.on('navigate.done', { priority: -999 }, function apipath_set(data) {
 N.wire.once('navigate.done', { priority: 999 }, function navigate_click_handler() {
   $(document).on('click', 'a', function (event) {
     var $this = $(this);
-    console.log($this.attr('href'));
 
     if ($this.attr('target') || event.isDefaultPrevented()) {
       // skip links that have `target` attribute specified
