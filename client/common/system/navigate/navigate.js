@@ -208,7 +208,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
   }
 
   // Stop here if base URL (all except anchor) haven't changed.
-  if (!options.force && href === (location.protocol + '//' + location.host + location.pathname)) {
+  if (href === (location.protocol + '//' + location.host + location.pathname)) {
     if (anchor !== location.hash) {
       location.hash = anchor;
     }
@@ -284,50 +284,20 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
         apiPath: apiPath
       , anchor:  anchor
       , view:    response.view   || apiPath
-      //, layout:  response.layout || null
+    //, layout:  response.layout || null
       , locals:  response.data   || {}
       };
 
-      // Invoke page-specific exit handlers.
-      N.wire.emit(
-        'navigate.exit:' + __currentApiPath__
-      , { apiPath: __currentApiPath__, url: href }
-      , function (err) {
+      // Set one-use callbacks for history 'statechange' handler.
+      // The handler will reset these to defaults (`renderFromHistory` and null).
+      __renderCallback__   = options.render || renderNewContent;
+      __completeCallback__ = callback;
 
-        if (false === err) {
-          return; // Exit is prevented.
-        }
-
-        if (err) {
-          N.logger.error('%s', err); // Log error, but not stop.
-        }
-
-        // Invoke global exit-handlers.
-        N.wire.emit(
-          'navigate.exit'
-        , { apiPath: __currentApiPath__, url: href }
-        , function (err) {
-
-          if (false === err) {
-            return; // Exit is prevented.
-          }
-
-          if (err) {
-            N.logger.error('%s', err); // Log error, but not stop.
-          }
-
-          // Set one-use callbacks for history 'statechange' handler.
-          // The handler will reset these to defaults (`renderFromHistory` and null).
-          __renderCallback__   = !_.isUndefined(options.render) ? options.render : renderNewContent;
-          __completeCallback__ = callback;
-
-          if (options.replaceState) {
-            History.replaceState(state, response.data.head.title, href);
-          } else {
-            History.pushState(state, response.data.head.title, href);
-          }
-        });
-      });
+      if (options.replaceState) {
+        History.replaceState(state, response.data.head.title, href);
+      } else {
+        History.pushState(state, response.data.head.title, href);
+      }
     });
   });
 });
@@ -346,50 +316,91 @@ if (History.enabled) {
       , render   = __renderCallback__
       , complete = __completeCallback__;
 
+    // We have no state data for the initial page (received via HTTP responder).
+    // So request that data via RPC and place into History.
+    if (_.isEmpty(state.data)) {
+      var match = _.find(N.runtime.router.matchAll(state.url), function (match) {
+        return _.has(match.meta.methods, 'get');
+      });
+
+      // Can't match initial URL by some reason - just reload the page.
+      // This is internal error. Must not happen on normal Nodeca workflow.
+      if (!match) {
+        window.location = state.url;
+        return;
+      }
+
+      // Retrieve data.
+      N.io.rpc(match.meta.methods.get, castParamTypes(match.params || {}), function (err, response) {
+        var a, data, url;
+
+        // Simple way to parse URL in browser.
+        a = document.createElement('a');
+        a.href = state.url;
+
+        // Result state data.
+        data = {
+          apiPath: match.meta.methods.get
+        , anchor:  a.hash
+        , view:    response.view   || match.meta.methods.get
+      //, layout:  response.layout || null
+        , locals:  response.data   || {}
+        };
+
+        // State URL without anchor. (due to a problem in History.js; see above)
+        url = a.protocol + '//' + a.host + a.pathname;
+
+        History.replaceState(data, state.title, url);
+      });
+      return;
+    }
+
     // Reset callbacks to defaults. It's needed to ensure using right renderer
     // on regular history state changes - when user clicks back/forward buttons
     // in his browser.
     __renderCallback__   = renderFromHistory;
     __completeCallback__ = null;
 
-    // No render callback - no render required.
-    if (!render) {
-      if (complete) {
-        complete();
+    var exitEventData = { apiPath: __currentApiPath__, url: state.url }
+      , doneEventData = { apiPath: state.data.apiPath, url: state.url };
+
+    // Invoke page-specific exit handlers.
+    N.wire.emit(('navigate.exit:' + __currentApiPath__), exitEventData, function (err) {
+      if (false === err) {
+        return; // Exit is prevented.
       }
-      return;
-    }
 
-    // Clear old raw response data. It's collected by view templates.
-    N.runtime.page_data = {};
+      if (err) {
+        N.logger.error('%s', err); // Log error, but not stop.
+      }
 
-    render(state.data, function () {
-      N.wire.emit(
-        ['navigate.done', 'navigate.done:' + state.data.apiPath]
-      , { apiPath: state.data.apiPath, url: state.url }
-      , function (err) {
+      // Invoke global exit-handlers.
+      N.wire.emit('navigate.exit', exitEventData, function (err) {
+        if (false === err) {
+          return; // Exit is prevented.
+        }
 
         if (err) {
           N.logger.error('%s', err); // Log error, but not stop.
         }
 
-        if (complete) {
-          complete();
-        }
+        // Clear old raw response data. It's collected by view templates.
+        N.runtime.page_data = {};
+
+        render(state.data, function () {
+          N.wire.emit(['navigate.done', 'navigate.done:' + state.data.apiPath], doneEventData, function (err) {
+
+            if (err) {
+              N.logger.error('%s', err); // Log error, but not stop.
+            }
+
+            if (complete) {
+              complete();
+            }
+          });
+        });
       });
     });
-  });
-
-  // We have no state data when it's an initial state, so we schedule
-  // retrieval of data by it's URL and triggering this event once
-  // again (via History.replaceState).
-  N.wire.once('navigate.done', { priority: 100 }, function history_init(data, callback) {
-    N.wire.emit('navigate.to', {
-      href:         data.url
-    , replaceState: true
-    , render:       null
-    , force:        true
-    }, callback);
   });
 }
 
