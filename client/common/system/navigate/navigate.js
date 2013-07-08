@@ -201,7 +201,9 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 
   // Stop here if base URL (all except anchor) haven't changed.
   if (href === (location.protocol + '//' + location.host + location.pathname)) {
-    if (anchor !== location.hash) {
+
+    // Update anchor if it's changed and not empty.
+    if ('#' !== anchor && location.hash !== anchor) {
       location.hash = anchor;
     }
 
