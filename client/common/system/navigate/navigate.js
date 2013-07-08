@@ -152,7 +152,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 
   if (options.href) {
     href   = normalizeURL(options.href).split('#')[0];
-    anchor = normalizeURL(options.href).split('#')[1] || '';
+    anchor = normalizeURL(options.href).slice(href.length) || '';
 
     match = _.find(N.runtime.router.matchAll(href), function (match) {
       return _.has(match.meta.methods, 'get');
@@ -202,8 +202,8 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
   // Stop here if base URL (all except anchor) haven't changed.
   if (href === (location.protocol + '//' + location.host + location.pathname)) {
 
-    // Update anchor if it's changed and not empty.
-    if ('#' !== anchor && location.hash !== anchor) {
+    // Update anchor if it's changed.
+    if (location.hash !== anchor) {
       location.hash = anchor;
     }
 
@@ -306,9 +306,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 
 if (History.enabled) {
   History.Adapter.bind(window, 'statechange', function () {
-    var state    = History.getState()
-      , render   = __renderCallback__
-      , complete = __completeCallback__;
+    var state = History.getState();
 
     // We have no state data for the initial page (received via HTTP responder).
     // So request that data via RPC and place into History.
@@ -344,12 +342,17 @@ if (History.enabled) {
         // State URL without anchor. (due to a problem in History.js; see above)
         url = a.protocol + '//' + a.host + a.pathname;
 
+        // We terminate here, but History.replaceState will trigger 'statechange'
+        // again, and we will continue with next part of code.
         History.replaceState(data, state.title, url);
       });
       return;
     }
 
-    // Reset callbacks to defaults. It's needed to ensure using right renderer
+    var render   = __renderCallback__
+      , complete = __completeCallback__;
+
+    // Restore callbacks to defaults. It's needed to ensure using right renderer
     // on regular history state changes - when user clicks back/forward buttons
     // in his browser.
     __renderCallback__   = renderFromHistory;
@@ -358,40 +361,25 @@ if (History.enabled) {
     var exitEventData = { apiPath: __currentApiPath__, url: state.url }
       , doneEventData = { apiPath: state.data.apiPath, url: state.url };
 
-    // Invoke page-specific exit handlers.
-    N.wire.emit(('navigate.exit:' + __currentApiPath__), exitEventData, function (err) {
-      if (false === err) {
-        return; // Exit is prevented.
-      }
-
+    // Invoke exit handlers.
+    N.wire.emit(['navigate.exit:' + __currentApiPath__, 'navigate.exit'], exitEventData, function (err) {
       if (err) {
         N.logger.error('%s', err); // Log error, but not stop.
       }
 
-      // Invoke global exit-handlers.
-      N.wire.emit('navigate.exit', exitEventData, function (err) {
-        if (false === err) {
-          return; // Exit is prevented.
-        }
+      // Clear old raw response data. It's collected by view templates.
+      N.runtime.page_data = {};
 
-        if (err) {
-          N.logger.error('%s', err); // Log error, but not stop.
-        }
+      render(state.data, function () {
+        // Invoke done-handlers.
+        N.wire.emit(['navigate.done', 'navigate.done:' + state.data.apiPath], doneEventData, function (err) {
+          if (err) {
+            N.logger.error('%s', err); // Log error, but not stop.
+          }
 
-        // Clear old raw response data. It's collected by view templates.
-        N.runtime.page_data = {};
-
-        render(state.data, function () {
-          N.wire.emit(['navigate.done', 'navigate.done:' + state.data.apiPath], doneEventData, function (err) {
-
-            if (err) {
-              N.logger.error('%s', err); // Log error, but not stop.
-            }
-
-            if (complete) {
-              complete();
-            }
-          });
+          if (complete) {
+            complete();
+          }
         });
       });
     });
@@ -421,12 +409,7 @@ N.wire.on('navigate.done', { priority: -999 }, function apipath_set(data) {
 N.wire.once('navigate.done', { priority: 999 }, function navigate_click_handler() {
   $(document).on('click', 'a', function (event) {
     var $this = $(this);
-
-    // TODO: Do we really need this? Commented out until the decision.
-    // Always focus the link or blur the current focus at least since browsers
-    // may not allow to focus certain elements.
-    //$(document.activeElement).blur();
-    //$this.focus();
+    console.log($this.attr('href'));
 
     if ($this.attr('target') || event.isDefaultPrevented()) {
       // skip links that have `target` attribute specified
@@ -436,6 +419,12 @@ N.wire.once('navigate.done', { priority: 999 }, function navigate_click_handler(
 
     // Continue as normal for cmd clicks etc
     if (2 === event.which || event.metaKey) {
+      return;
+    }
+
+    if ('#' === $this.attr('href')) {
+      // Prevent clicks on special "button"-links.
+      event.preventDefault();
       return;
     }
 
