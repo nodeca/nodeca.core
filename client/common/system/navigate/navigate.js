@@ -61,6 +61,8 @@ function castParamTypes(inputValue) {
 //  /foo.html                    => http://example.com/foo.html
 //  //example.com/foo.html       => http://example.com/foo.html
 //
+// NOTE: History.JS does not plays well with full URLs but without protocols.
+//
 function normalizeURL(url) {
   var a = document.createElement('a');
   a.href = url;
@@ -149,29 +151,28 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
   }
 
   if (options.href) {
-    match = _.find(N.runtime.router.matchAll(options.href), function (match) {
+    href   = normalizeURL(options.href).split('#')[0];
+    anchor = normalizeURL(options.href).split('#')[1] || '';
+
+    match = _.find(N.runtime.router.matchAll(href), function (match) {
       return _.has(match.meta.methods, 'get');
     });
 
     // It's an external link or 404 error if route is not matched. So perform
     // regular page requesting via HTTP.
     if (!match) {
-      window.location = normalizeURL(options.href);
+      window.location = href + anchor;
       callback();
       return;
     }
 
-    match.params = castParamTypes(match.params);
-
     apiPath = match.meta.methods.get;
-    params  = match.params || {};
-    href    = options.href.split('#')[0];
-    anchor  = options.href.split('#')[1] || '';
+    params = castParamTypes(match.params || {});
 
   } else if (options.apiPath) {
     apiPath = options.apiPath;
     params  = options.params || {};
-    href    = N.runtime.router.linkTo(apiPath, params);
+    href    = normalizeURL(N.runtime.router.linkTo(apiPath, params));
     anchor  = options.anchor || '';
 
     if (!href) {
@@ -192,15 +193,6 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
     callback(new Error(errorReport));
     return;
   }
-
-  // History.JS does not plays well with full URLs but without protocols:
-  //
-  //  http://example.com/foo.html  -- OK
-  //  /foo.html                    -- OK
-  //  //example.com/foo.html       -- becomes /example.com/foo.html
-  //
-  // So we normalize URL to be full one (with protocol, host, etc.)
-  href = normalizeURL(href);
 
   // Add anchor hash-prefix if not exists.
   if (anchor && '#' !== anchor.charAt(0)) {
