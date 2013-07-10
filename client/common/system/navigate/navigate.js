@@ -142,9 +142,6 @@ var __currentApiPath__ = null;
 //    options.href
 //    options.apiPath
 //    options.params
-//    options.render       - optional function; default is `renderNewContent`
-//    options.replaceState - `true` to use `History.replaceState` instead of
-//                           `History.pushState`
 //
 // `href` and `apiPath` parameters are calculated from each other.
 // So they are mutually exclusive.
@@ -245,11 +242,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
         window.location = redirectUrl.href;
         callback();
       } else {
-        N.wire.emit('navigate.to', {
-          href:    redirectUrl.href
-        , render:  options.render
-        , history: options.history
-        }, callback);
+        N.wire.emit('navigate.to', { href: redirectUrl.href }, callback);
       }
       return;
     }
@@ -290,14 +283,10 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 
       // Set one-use callbacks for history 'statechange' handler.
       // The handler will reset these to defaults (`renderFromHistory` and null).
-      __renderCallback__   = options.render || renderNewContent;
+      __renderCallback__   = renderNewContent;
       __completeCallback__ = callback;
 
-      if (options.replaceState) {
-        History.replaceState(state, response.data.head.title, href);
-      } else {
-        History.pushState(state, response.data.head.title, href);
-      }
+      History.pushState(state, response.data.head.title, href);
     });
   });
 });
