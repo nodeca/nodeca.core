@@ -25,6 +25,10 @@ var DEFAULT_OPTIONS = {
     closable: false
   , autohide: 5000
   }
+, warning: {
+    closable: false
+  , autohide: 5000
+  }
 , error: {
     closable: false
   , autohide: 10000
