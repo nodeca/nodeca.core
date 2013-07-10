@@ -112,6 +112,12 @@ function renderFromHistory(data, callback) {
 }
 
 
+// Ignore next History 'statechange' event if true.
+//
+// NOTE: The event handler *always* resets this variable to false after each call.
+var __dryHistoryChange__ = false;
+
+
 // Reference to a function to be used on next fire of history 'statechange' event
 // to perform content injection/replacement.
 //
@@ -296,6 +302,22 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
   });
 });
 
+
+// Replace current History state without data fetching and rendering.
+//
+//   options.href  - full url of new history state. (required)
+//   options.title - new page title. (required)
+//   options.data  - data for history renderer; it will be used when user will
+//                   return to this page using history navigation. (optional)
+//
+N.wire.on('navigate.replace', function navigate_replace(options, callback) {
+  __dryHistoryChange__ = true;
+  __completeCallback__ = callback;
+
+  History.replaceState(options.data || {}, options.title, options.href);
+});
+
+
 //
 // Bind History's statechange handler. It fires when:
 //
@@ -306,7 +328,22 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 
 if (History.enabled) {
   History.Adapter.bind(window, 'statechange', function () {
-    var state = History.getState();
+    var state    = History.getState()
+      , render   = __renderCallback__
+      , complete = __completeCallback__;
+
+    // Dry history change - just reset the flag and callback parameters for next
+    // history state change, and invoke complete callback.
+    if (__dryHistoryChange__) {
+      __dryHistoryChange__ = false;
+      __renderCallback__   = renderFromHistory;
+      __completeCallback__ = null;
+
+      if (complete) {
+        complete();
+      }
+      return;
+    }
 
     // We have no state data for the initial page (received via HTTP responder).
     // So request that data via RPC and place into History.
@@ -348,9 +385,6 @@ if (History.enabled) {
       });
       return;
     }
-
-    var render   = __renderCallback__
-      , complete = __completeCallback__;
 
     // Restore callbacks to defaults. It's needed to ensure using right renderer
     // on regular history state changes - when user clicks back/forward buttons
