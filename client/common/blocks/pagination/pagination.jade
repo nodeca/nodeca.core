@@ -32,6 +32,9 @@ mixin _pagination_dropdown_menu(route, params)
 - current  = +self.current
 - max_page = +self.max_page
 
+//- save page
+- _page = params.page
+
 
 ul.pgn
   //- first page always displayed, except when current == 1.
@@ -89,3 +92,6 @@ ul.pgn
     - params.page = max_page
     li.pgn__item
       a.pgn__link(href=self.link_to(route, params)) #{max_page}
+
+//- restore page
+- params.page = _page
