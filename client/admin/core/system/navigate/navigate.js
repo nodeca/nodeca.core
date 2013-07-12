@@ -135,6 +135,7 @@ var __completeCallback__ = null;
 
 // API path of current page. Updated via `navigate.done` event.
 var __currentApiPath__ = null;
+var __currentParams__  = {};
 
 
 // Performs RPC navigation to the specified page. Allowed options:
@@ -275,6 +276,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
     N.loader.loadAssets((response.view || apiPath).split('.')[0], function () {
       var state = {
         apiPath: apiPath
+      , params:  params
       , anchor:  anchor
       , view:    response.view   || apiPath
     //, layout:  response.layout || null
@@ -359,6 +361,7 @@ if (History.enabled) {
         // Result state data.
         data = {
           apiPath: match.meta.methods.get
+        , params:  castParamTypes(match.params || {})
         , anchor:  a.hash
         , view:    response.view   || match.meta.methods.get
       //, layout:  response.layout || null
@@ -381,8 +384,8 @@ if (History.enabled) {
     __renderCallback__   = renderFromHistory;
     __completeCallback__ = null;
 
-    var exitEventData = { apiPath: __currentApiPath__, url: state.url }
-      , doneEventData = { apiPath: state.data.apiPath, url: state.url };
+    var exitEventData = { apiPath: __currentApiPath__, params: __currentParams__, url: state.url }
+      , doneEventData = { apiPath: state.data.apiPath, params: state.data.params, url: state.url };
 
     // Invoke exit handlers.
     N.wire.emit(['navigate.exit:' + __currentApiPath__, 'navigate.exit'], exitEventData, function (err) {
@@ -415,6 +418,7 @@ if (History.enabled) {
 
 N.wire.on('navigate.done', { priority: -999 }, function apipath_set(data) {
   __currentApiPath__ = data.apiPath;
+  __currentParams__  = data.params;
 });
 
 //
