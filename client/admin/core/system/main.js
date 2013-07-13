@@ -5,8 +5,11 @@
 //= require vendor/jquery-ui/ui/jquery.ui.core
 //= require vendor/jquery-ui/ui/jquery.ui.widget
 //= require vendor/jquery-ui/ui/jquery.ui.mouse
+//= require vendor/jquery-ui/ui/jquery.ui.position
 //= require vendor/jquery-ui/ui/jquery.ui.draggable
 //= require vendor/jquery-ui/ui/jquery.ui.droppable
+//= require vendor/jquery-ui/ui/jquery.ui.menu
+//= require vendor/jquery-ui/ui/jquery.ui.autocomplete
 //= require_self
 //= require client
 
