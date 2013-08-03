@@ -1,0 +1,26 @@
+@import "nodeca.core/client/admin/core/_variables"
+
+// Page breadcrumbs
+//
+//.breadcrumbs
+  
+.breadcrumbs
+  padding 0
+  white-space nowrap
+  margin 0 0 (baseLineHeight/2)
+  overflow hidden
+  text-overflow ellipsis
+  font-size 13px
+
+.breadcrumbs__item
+  display inline-block
+  position relative
+  margin-right 1.2em
+  color grayLighter
+  &:after
+    position absolute
+    content '/' 
+    right -0.8em
+
+a.breadcrumbs__link
+  color grayLighter
