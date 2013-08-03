@@ -31,10 +31,10 @@ html.no-js
     - if (self.runtime.menus.admin && self.runtime.menus.admin.navbar)
       nav.navbar.navbar-fixed-top
         .navbar-inner
-          .container-fluid
+          .container
             mixin topnav_menu(self.runtime.menus.admin.navbar)
 
-    .container-fluid
+    .container
       != self.content
 
     .nojs
