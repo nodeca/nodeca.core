@@ -32,25 +32,24 @@ mixin _fetch_breadcrumbs(menu, result)
         mixin _fetch_breadcrumbs(item.childs, result)
 
 
-#breadcrumbs
-  - if (self.menu && self.menu.navbar && !self.path)
-    - self.path = []
-    mixin _fetch_breadcrumbs(self.menu.navbar, self.path)
-    - if (self.path.length)
-      //- if current api path != last breadcrumb element
-      //- then add page title
-      - if (self.path.slice(-1)[0].tail !== api_path_tail)
-        - self.path.push({ text: self.title });
+- if (self.menu && self.menu.navbar && !self.path)
+  - self.path = []
+  mixin _fetch_breadcrumbs(self.menu.navbar, self.path)
+  - if (self.path.length)
+    //- if current api path != last breadcrumb element
+    //- then add page title
+    - if (self.path.slice(-1)[0].tail !== api_path_tail)
+      - self.path.push({ text: self.title });
 
-  - if (self.path && self.path.length)
-    - last_element = self.path.pop()
-    ul.breadcrumb
-      - each item in self.path
-        li
-          - if (item.route)
-            a(href=self.link_to(item.route))= item.text
-          - else
-            | #{item.text}
-          span.divider: /
-      li.active
-        | #{last_element.text}
+- if (self.path && self.path.length)
+  //- last_element = self.path.pop()
+  ul.breadcrumbs
+    - each item in self.path
+      li.breadcrumbs__item
+        - if (item.route)
+          a.breadcrumbs__link(href=self.link_to(item.route))= item.text
+        - else
+          | #{item.text}
+        //span.divider: /
+    //li.active
+    //  | #{last_element.text}
