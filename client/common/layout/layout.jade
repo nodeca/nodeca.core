@@ -67,7 +67,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
               .icon-search
 
             //- NOTE: This block is located in `nodeca.users`
-            != self.partial('@common.blocks.auth_toolbar', { is_member: self.runtime.is_member, user_name: self.runtime.user_name })
+            != self.partial('@common.blocks.auth_toolbar', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
 
 
     .container!= self.content
