@@ -15,46 +15,6 @@
 //
 
 
-// Shift header sizes (reduce to lower level)
-//
-h1 { font-size: 30px; line-height: 40px; }
-h2 { font-size: 24px; line-height: 40px; }
-h3 { font-size: 18px; line-height: 20px; }
-h4 { font-size: 14px; line-height: 20px; }
-h5 { font-size: 12px; line-height: 20px; }
-
-h1 small { font-size: 18px; }
-h2 small { font-size: 14px; }
-h3 small { font-size: 14px; }
-
-
-// Sticky navbar
-//
-.navbar-fixed-top
-  position static
-  margin-bottom baseLineHeight
-
-
-// Responsive menu button (3 lines) with pure css
-//
-.navbar .btn-navbar > span
-  display block
-  width 20px
-  height 2px
-  border-top 6px double grayLight
-  border-bottom 2px solid grayLight
-  margin 1px 0
-
-
-// Brand text
-//
-.navbar .brand
-  color gray
-  font-weight bold
-  font-family sansWideFontFamily
-  transition color 0.5s ease-in-out
-
-
 // Buttons tweaks
 //
 .btn
@@ -71,40 +31,6 @@ h3 small { font-size: 14px; }
 .btn-large
   padding-top 7px
   padding-bottom 7px
-
-.input-append
-  whitespace nowrap
-
-
-// Search icon
-//
-.navbar-search
-  .search-query
-    padding-left 25px
-    font-size 14px
-    &:focus, &.focused
-      padding-left 25px !important
-      background-color grayLighter !important
-  .icon-search
-    position absolute
-    top 6px
-    left 8px
-    color grayLight
-    &.focused
-      color grayDark
-
-
-// topnav underline for active item
-//
-.navbar .nav .active
-  position relative
-  &:before
-    border-bottom 2px solid gray
-    bottom 0px
-    content ""
-    height 2px
-    position absolute
-    width 100%
 
 
 // form help-texts tweak (smaller & lighter)

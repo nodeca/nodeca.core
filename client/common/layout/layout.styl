@@ -5,6 +5,65 @@ body
   overflow-y scroll
   min-width 200px
 
+
+// Sticky navbar unstics (use this style to remove round corners)
+//
+.navbar-fixed-top
+  position static
+  margin-bottom baseLineHeight
+
+
+// Responsive menu button (3 lines) with pure css
+//
+.navbar .btn-navbar > span
+  display block
+  width 20px
+  height 2px
+  border-top 6px double grayLight
+  border-bottom 2px solid grayLight
+  margin 1px 0
+
+
+// Brand text
+//
+.navbar .brand
+  color gray
+  font-weight bold
+  font-family sansWideFontFamily
+  transition color 0.5s ease-in-out
+
+
+// topnav underline for active item
+//
+.navbar .nav .active
+  position relative
+  &:before
+    border-bottom 2px solid gray
+    bottom 0px
+    content ""
+    height 2px
+    position absolute
+    width 100%
+
+
+// Search icon
+//
+.navbar-search
+  .search-query
+    padding-left 25px
+    font-size 14px
+    &:focus, &.focused
+      padding-left 25px !important
+      background-color grayLighter !important
+  .icon-search
+    position absolute
+    top 6px
+    left 8px
+    color grayLight
+    &.focused
+      color grayDark
+
+
 // Fix responsive menu elements
 @media (max-width: 979px)
 
