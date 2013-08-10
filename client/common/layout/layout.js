@@ -20,7 +20,7 @@ N.wire.once('navigate.done', function () {
 N.wire.on('navigate.done', function navbar_menu_change_active(target) {
   var targetPath = target.apiPath.split('.'), tabs, active;
 
-  tabs = $('#navbar_menu').find('[data-api-path]');
+  tabs = $('.layout__navbar').find('[data-api-path]');
   tabs.removeClass('active');
 
   // Select the most specific tab - with the longest API path match.
