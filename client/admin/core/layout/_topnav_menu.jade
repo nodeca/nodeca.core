@@ -9,7 +9,6 @@
 //-
 //-   submenus (Array)         - submenus 
 mixin _create_submenus(submenus)
-  - var li_class
   - var item_link
   ul.dropdown-menu
     - each item in submenus
@@ -31,24 +30,23 @@ mixin _create_submenus(submenus)
 //-
 //-   menus (Object)  - menu container nodeca.config.menus.<menu_name>
 mixin topnav_menu(menus)
-  - var li_class
+  - var active_state
   - var item_path_tail
 
-  ul#navbar_menu.nav
+  ul.layout__navbar.nav
     - each item in menus
       - var item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
 
       //- highlight current app
       - if (api_path_tail.indexOf(item_path_tail) > -1)
-        - li_class = 'active'
+        - active_state = 'active'
       -else
-        - li_class = ''
+        - active_state = ''
       
       - if (item.childs)
-        li.dropdown(class=li_class, data-api-path=item.to)
-          a.dropdown-toggle(href=item.link, data-toggle='dropdown')= self.t(item.title)
-            b.caret
+        li.dropdown(class=active_state, data-api-path=item.to)
+          a(href=item.link)= self.t(item.title)
           mixin _create_submenus(item.childs)
       - else
-        li(class=li_class, data-api-path=item.to)
+        li(class=active_state, data-api-path=item.to)
           a(href=item.link)= self.t(item.title)
