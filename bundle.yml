@@ -40,12 +40,6 @@ packages:
     i18n_server:
       include: server/admin/**i18n/*.yml
 
-    bin:
-      root: assets/vendor/jquery-ui/themes/flick/
-      include:
-        - images/**.png
-        - images/**.gif
-
 
   common:
     depends:
