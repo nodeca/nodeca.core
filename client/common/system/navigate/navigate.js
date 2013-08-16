@@ -273,12 +273,12 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
     }
     */
 
-    N.loader.loadAssets((response.view || apiPath).split('.')[0], function () {
+    N.loader.loadAssets((apiPath).split('.')[0], function () {
       var state = {
         apiPath: apiPath
       , params:  params
       , anchor:  anchor
-      , view:    response.view   || apiPath
+      , view:    apiPath
     //, layout:  response.layout || null
       , locals:  response.data   || {}
       };
@@ -363,7 +363,7 @@ if (History.enabled) {
           apiPath: match.meta.methods.get
         , params:  castParamTypes(match.params || {})
         , anchor:  a.hash
-        , view:    response.view   || match.meta.methods.get
+        , view:    match.meta.methods.get
       //, layout:  response.layout || null
         , locals:  response.data   || {}
         };
