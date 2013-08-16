@@ -9,10 +9,9 @@
 N.wire.on('io.complete', function debug_timeline(info) {
 
   // Skip if puncher stats not recieved.
-  if (!info.response ||
-      !info.response.data ||
-      !info.response.data.blocks ||
-      !info.response.data.blocks.puncher_stats) {
+  if (!info.res ||
+      !info.res.blocks ||
+      !info.res.blocks.puncher_stats) {
     return;
   }
 
@@ -25,7 +24,7 @@ N.wire.on('io.complete', function debug_timeline(info) {
 
   $timeline.replaceWith(
     N.runtime.render(module.apiPath, {
-      stats: info.response.data.blocks.puncher_stats
+      stats: info.res.blocks.puncher_stats
     })
   );
 });

@@ -17,12 +17,12 @@ module.exports = function (N, apiPath) {
   N.validate(apiPath, {});
 
   N.wire.on(apiPath, function global_settings_index(env) {
-    var data = env.response.data;
+    var res = env.res;
 
-    data.head.title = env.t('title');
+    res.head.title = env.t('title');
 
-    data.tabs   = [];
-    data.groups = {};
+    res.tabs   = [];
+    res.groups = {};
 
     //
     // Collect tabs, i.e. groups without `parent`.
@@ -30,29 +30,29 @@ module.exports = function (N, apiPath) {
 
     _.forEach(N.config.setting_groups, function (config, name) {
       if (null === config.parent) {
-        data.tabs.push({ name: name, priority: config.priority });
-        data.groups[name] = [];
+        res.tabs.push({ name: name, priority: config.priority });
+        res.groups[name] = [];
       }
     });
 
-    data.tabs.sort(function (a, b) {
+    res.tabs.sort(function (a, b) {
       return a.priority - b.priority;
     });
 
-    data.tabs = _.pluck(data.tabs, 'name');
+    res.tabs = _.pluck(res.tabs, 'name');
 
     //
     // Collect groups per tab.
     //
 
-    _.forEach(data.tabs, function (tab) {
+    _.forEach(res.tabs, function (tab) {
       _.forEach(N.config.setting_groups, function (config, name) {
         if (tab === config.parent) {
-          data.groups[tab].push(fetchGroupInfo(name));
+          res.groups[tab].push(fetchGroupInfo(name));
         }
       });
 
-      data.groups[tab].sort(function (a, b) {
+      res.groups[tab].sort(function (a, b) {
         return a.priority - b.priority;
       });
     });

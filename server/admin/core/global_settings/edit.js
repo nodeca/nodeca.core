@@ -24,8 +24,8 @@ module.exports = function (N, apiPath) {
 
 
   N.wire.before(apiPath, function prepare_response_data(env) {
-    env.response.data.setting_schemas = {};
-    env.response.data.setting_values  = {};
+    env.res.setting_schemas = {};
+    env.res.setting_values  = {};
   });
 
 
@@ -45,12 +45,12 @@ module.exports = function (N, apiPath) {
         schema = _.clone(schema); // Keep original schema untouched.
         schema.values(function (err, values) {
           schema.values = values; // Replace the function with computed values.
-          env.response.data.setting_schemas[name] = schema;
+          env.res.setting_schemas[name] = schema;
           next(err);
         });
       } else {
         // Otherwise it's a static schema - just expose it as is.
-        env.response.data.setting_schemas[name] = schema;
+        env.res.setting_schemas[name] = schema;
         next();
       }
     }, callback);
@@ -58,12 +58,12 @@ module.exports = function (N, apiPath) {
 
 
   N.wire.on(apiPath, function global_settings_edit(env, callback) {
-    env.response.data.head.title =
+    env.res.head.title =
       env.t('title', {
         group: env.t('@admin.core.group_names.' + env.params.group)
       });
 
-    N.settings.getStore('global').get(_.keys(env.response.data.setting_schemas),
+    N.settings.getStore('global').get(_.keys(env.res.setting_schemas),
                                       {},
                                       { skipCache: true },
                                       function (err, settings) {
@@ -73,7 +73,7 @@ module.exports = function (N, apiPath) {
       }
 
       _.forEach(settings, function (result, name) {
-        env.response.data.setting_values[name] = result.value;
+        env.res.setting_values[name] = result.value;
       });
 
       callback();

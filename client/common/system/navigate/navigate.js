@@ -223,7 +223,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
   }
 
   // History is enabled - try RPC navigation.
-  N.io.rpc(apiPath, params, function (err, response) {
+  N.io.rpc(apiPath, params, function (err, res) {
     if (err && N.io.REDIRECT === err.code) {
       var redirectUrl = document.createElement('a');
 
@@ -261,7 +261,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
     }
 
     /*
-    if (response.layout !== N.runtime.layout) {
+    if (res.layout !== N.runtime.layout) {
       // Layout was changed - perform normal page loading.
       //
       // TODO: Prevent double page requesting. The server should not perform
@@ -273,14 +273,14 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
     }
     */
 
-    N.loader.loadAssets((apiPath).split('.')[0], function () {
+    N.loader.loadAssets(apiPath.split('.')[0], function () {
       var state = {
         apiPath: apiPath
       , params:  params
       , anchor:  anchor
       , view:    apiPath
-    //, layout:  response.layout || null
-      , locals:  response.data   || {}
+    //, layout:  res.layout || null
+      , locals:  res   || {}
       };
 
       // Set one-use callbacks for history 'statechange' handler.
@@ -288,7 +288,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       __renderCallback__   = renderNewContent;
       __completeCallback__ = callback;
 
-      History.pushState(state, response.data.head.title, href);
+      History.pushState(state, res.head.title, href);
     });
   });
 });
@@ -351,7 +351,7 @@ if (History.enabled) {
       }
 
       // Retrieve data.
-      N.io.rpc(match.meta.methods.get, castParamTypes(match.params || {}), function (err, response) {
+      N.io.rpc(match.meta.methods.get, castParamTypes(match.params || {}), function (err, res) {
         var a, data, url;
 
         // Simple way to parse URL in browser.
@@ -364,8 +364,8 @@ if (History.enabled) {
         , params:  castParamTypes(match.params || {})
         , anchor:  a.hash
         , view:    match.meta.methods.get
-      //, layout:  response.layout || null
-        , locals:  response.data   || {}
+      //, layout:  res.layout || null
+        , locals:  res   || {}
         };
 
         // State URL without anchor. (due to a problem in History.js; see above)
