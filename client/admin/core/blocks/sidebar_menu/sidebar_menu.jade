@@ -4,12 +4,14 @@
 - var API_PATH_BASE_NS_LEVEL = 1
 - var api_path_tail = self.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
 
+- var menu = self.runtime.menus.admin
 
-- if (self.menu && self.menu.navbar)
+
+- if (menu && menu.navbar)
   - var item_path_tail
   - var menu_active_class
 
-  - each app_level_item in self.menu.navbar
+  - each app_level_item in menu.navbar
 
     //- display items only for current app
     - item_path_tail = app_level_item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')

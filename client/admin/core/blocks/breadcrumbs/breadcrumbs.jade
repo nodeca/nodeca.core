@@ -5,6 +5,8 @@
 - var api_path_tail = self.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
 - var last_element
 
+- var menu = self.runtime.menus.admin
+
 
 //- fetch next breadcrumb level
 //-
@@ -32,9 +34,9 @@ mixin _fetch_breadcrumbs(menu, result)
         mixin _fetch_breadcrumbs(item.childs, result)
 
 
-- if (self.menu && self.menu.navbar && !self.path)
+- if (menu && menu.navbar && !self.path)
   - self.path = []
-  mixin _fetch_breadcrumbs(self.menu.navbar, self.path)
+  mixin _fetch_breadcrumbs(menu.navbar, self.path)
   - if (self.path.length)
     //- if current api path != last breadcrumb element
     //- then add page title

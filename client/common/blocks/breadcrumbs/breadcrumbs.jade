@@ -1,3 +1,5 @@
+// Draws breadcrumbs links for frontend
+
 mixin breadcrumb_step(tail)
   //- each item has fields:
   //-   text   (String)  - link text
@@ -18,4 +20,4 @@ mixin breadcrumb_step(tail)
 
 
 .breadcrumbs(itemprop='breadcrumb', itemscope, itemtype='http://schema.org/Breadcrumb')
-  mixin breadcrumb_step(self.path)
+  mixin breadcrumb_step(self.blocks.breadcrumbs)
