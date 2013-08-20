@@ -14,7 +14,7 @@ module.exports = function (N, collectionName) {
   });
 
   Increment.statics.next = function next(name, callback) {
-    var res = this.collection.findAndModify( { key: name }, null, { $inc: { value: 1 } }, { new: true, upsert: true },
+    this.collection.findAndModify( { key: name }, null, { $inc: { value: 1 } }, { new: true, upsert: true },
       function(err, counter) {
         if (err) {
           callback(err, null);
@@ -23,7 +23,7 @@ module.exports = function (N, collectionName) {
         callback(null, counter.value);
       }
     );
-  }
+  };
 
   N.wire.on("init:models", function emit_init_Increment(__, callback) {
     N.wire.emit("init:models." + collectionName, Increment, callback);
