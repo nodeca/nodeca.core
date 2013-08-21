@@ -4,7 +4,7 @@
 //-   blocks.pagination.params   (Object)     - routing params. See routing rules
 //-                                             in config.
 //-   blocks.pagination.current  (String|Int) - current page position
-//-   blocks.pagination.max_page (String|Int) - current page position
+//-   blocks.pagination.max (String|Int) - current page position
 
 
 //- Number of pages before/after current one
@@ -26,11 +26,11 @@ mixin _pagination_dropdown_menu(route, params)
         type='submit') #{self.t('dropdown_button')}
 
 
-//- cast int types for safety (router returns parameters as strings)
 - route    = self.route
 - params   = self.params
+//- cast Numbers, because router/dom can return strings
 - current  = +self.current
-- max_page = +self.max_page
+- max = +self.max
 
 //- save page
 - _page = params.page
@@ -70,7 +70,7 @@ ul.pgn
 
   //- right surrounding pages displayed if current page < (bottom-1)
   - for (var i=1 ; i <= PAGES_INTERVAL; i++) {
-  -   if ((max_page - current) > i )
+  -   if ((max - current) > i )
         - params.page = current + i
         li.pgn__item
           a.pgn__link(href=self.link_to(route, params)) #{current + i}
@@ -78,7 +78,7 @@ ul.pgn
 
   //- right ellipsis displayed, if > 1 pages exists between right
   //- tail of "surrounding" pages and the last one.
-  - if (max_page - current > PAGES_INTERVAL + 1)
+  - if (max - current > PAGES_INTERVAL + 1)
     li.pgn__item.interval.dropdown
       - delete(params.page)
       a.pgn__link.dropdown-toggle(
@@ -88,10 +88,10 @@ ul.pgn
 
   //- last page always displayed, except it's current one
   //- (then we skip last half of paginator)
-  - if (max_page - current !== 0)
-    - params.page = max_page
+  - if (max - current !== 0)
+    - params.page = max
     li.pgn__item
-      a.pgn__link(href=self.link_to(route, params)) #{max_page}
+      a.pgn__link(href=self.link_to(route, params)) #{max}
 
 //- restore page
 - params.page = _page
