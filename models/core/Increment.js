@@ -14,7 +14,7 @@ module.exports = function (N, collectionName) {
   });
 
   Increment.statics.next = function next(name, callback) {
-    this.collection.findAndModify( { key: name }, null, { $inc: { value: 1 } }, { new: true, upsert: true },
+    this.findOneAndUpdate({ key: name }, { $inc: { value: 1 } }, { new: true, upsert: true },
       function(err, counter) {
         if (err) {
           callback(err, null);
