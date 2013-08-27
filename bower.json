@@ -1,4 +1,5 @@
 {
+  "name"        : "nodeca",
   "dependencies": {
     "yepnope"     : "~1.5.4",
     "jquery"      : "~1.10.1",
@@ -6,6 +7,7 @@
     "es5-shim"    : "~2.1.0",
     "history.js"  : "~1.8.0",
     "json2"       : "*",
+    "typeahead.js": "~0.9.3",
     "bootstrap"   : "~2.3.2"
   }
 }
