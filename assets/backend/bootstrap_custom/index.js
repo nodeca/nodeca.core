@@ -1,6 +1,6 @@
 //= //require ../../vendor/bootstrap/js/bootstrap-affix
-//= require ../../vendor/bootstrap/js/bootstrap-alert
-//= require ../../vendor/bootstrap/js/bootstrap-button
+//= //require ../../vendor/bootstrap/js/bootstrap-alert
+//= //require ../../vendor/bootstrap/js/bootstrap-button
 //= //require ../../vendor/bootstrap/js/bootstrap-carousel
 //= require ../../vendor/bootstrap/js/bootstrap-collapse
 //= require ../../vendor/bootstrap/js/bootstrap-dropdown
@@ -12,7 +12,4 @@
 
 // Popover must go AFTER tooltip
 //= require ../../vendor/bootstrap/js/bootstrap-popover
-
-// Add our collapser extension
-//= require ./bootstrap_collapse_ext
 
