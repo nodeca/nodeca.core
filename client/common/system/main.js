@@ -2,7 +2,7 @@
 //= require vendor/history.js/scripts/uncompressed/history.adapter.jquery
 //= require vendor/history.js/scripts/uncompressed/history
 //= require vendor/powertip/jquery.powertip
-//= require vendor/bootstrap_custom/bootstrap
+//= require frontend/bootstrap_custom/bootstrap
 //= require_self
 //= require client
 

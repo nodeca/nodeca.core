@@ -84,5 +84,5 @@ packages:
         - loader.js.ejs
         - vendor/es5-shim/es5-shim.js
         - vendor/json2/json2.js
-        - vendor/icons_frontend/src/font/*
-        - vendor/icons_backend/src/font/*
+        - frontend/icons/src/font/*
+        - backend/icons/src/font/*
