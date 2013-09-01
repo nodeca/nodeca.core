@@ -1,4 +1,4 @@
-//= //require ../../vendor/bootstrap/js/affix
+//= require ../../vendor/bootstrap/js/affix
 //= //require ../../vendor/bootstrap/js/alert
 //= //require ../../vendor/bootstrap/js/button
 //= //require ../../vendor/bootstrap/js/carousel
