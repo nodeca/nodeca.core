@@ -40,41 +40,48 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
       })();
 
   body
-    nav.layout__navbar.navbar.navbar-inverse.navbar-fixed-top
-      .navbar-inner
+    nav.layout__navbar.navbar.navbar-default.navbar-static-top
+      .container
+        .navbar-header
+          button.navbar-toggle(
+            data-toggle='collapse',
+            data-target='.navbar-collapse',
+            type='button'
+          )
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
 
-        .container
-          a.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
-            span
+          a.navbar-brand(href="/") Nodeca
 
-          a.brand(href="/") Nodeca
+        .navbar-collapse.collapse
+          - if (self.runtime.menus.common.navbar)
+            ul.nav.navbar-nav
+              - each item in self.runtime.menus.common.navbar
+                - var ns = self.apiPath.split('.').shift(), item_ns = item.to.split('.').shift();
+                - if (ns === item_ns)
+                  li(data-api-path=item_ns, class='active'): a(href=item.link)= self.t(item.title)
+                - else
+                  li(data-api-path=item_ns): a(href=item.link)= self.t(item.title)
 
-          .nav-collapse.collapse
-            - if (self.runtime.menus.common.navbar)
-              ul.nav
-                - each item in self.runtime.menus.common.navbar
-                  - var ns = self.apiPath.split('.').shift(), item_ns = item.to.split('.').shift();
-                  - if (ns === item_ns)
-                    li(data-api-path=item_ns, class='active'): a(href=item.link)= self.t(item.title)
-                  - else
-                    li(data-api-path=item_ns): a(href=item.link)= self.t(item.title)
+              //- Temporary github link
+              li: a(href='https://github.com/nodeca/nodeca',target='_blank') Github
+          //-
+          form.navbar-form.navbar-left.hidden-sm.visible-md
+            input.form-control(type='text', placeholder='Search')
 
-                //- Temporary github link
-                li: a(href='https://github.com/nodeca/nodeca',target='_blank') Github
-
-            form.navbar-search
-              input.input-medium.search-query(type='text', placeholder='Search')
-              .icon-search
-
-            //- NOTE: This block is located in `nodeca.users`
-            != self.partial('@common.blocks.auth_toolbar', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
+          //- NOTE: This block is located in `nodeca.users`
+          != self.partial('@common.blocks.auth_toolbar', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
 
 
     .container!= self.content
 
     != self.partial('@common.blocks.footer', { locales: self.enabled_locales })
 
-    .debug.hidden-phone
+    .nojs
+      .alert.alert-danger #{self.t('nojs')} 
+
+    .debug.hidden-xs
       .container
         //{{PUNCHER_STATS}}
 

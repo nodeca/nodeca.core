@@ -1,6 +1,5 @@
 /**
  *= require frontend/bootstrap_custom
- *= require frontend/bootstrap_custom/responsive
  *= require frontend/icons
  *= require_self
  *= require styles
@@ -10,37 +9,12 @@
 @import "../_variables"
 
 
-//
-// Bootstrap overrides.
-//
-
-
 // Buttons tweaks
 //
-.btn
-  background-image none
-  transition background-color 0.3s ease-in-out
-  &:hover
-    transition background-color 0.3s ease-in-out
 .btn-icon-only
   min-width 25px
   &:before
     margin 0
-.btn.disabled, .btn[disabled]
-  opacity .4
-.btn-large
-  padding-top 7px
-  padding-bottom 7px
-
-
-// form help-texts tweak (smaller & lighter)
-//
-.form-horizontal input + .help-block
-.form-horizontal select + .help-block
-.form-horizontal textarea + .help-block
-  color grayLight
-  font-size 90%
-  margin-top 5px
 
 
 // fix for links without href (with JS handlers)

@@ -6,7 +6,7 @@
 
 N.wire.on(module.apiPath + '.create', function recaptcha_create(__, callback) {
   yepnope({
-    load: 'http://www.google.com/recaptcha/api/js/recaptcha_ajax.js',
+    load: '//www.google.com/recaptcha/api/js/recaptcha_ajax.js',
     complete: function () {
       if (!window.Recaptcha) {
         callback(new Error('Cannot load ReCaptcha script.'));

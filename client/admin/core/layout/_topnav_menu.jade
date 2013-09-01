@@ -33,7 +33,7 @@ mixin topnav_menu(menus)
   - var active_state
   - var item_path_tail
 
-  ul.layout__navbar.nav
+  ul.layout__navbar.nav.navbar-nav
     - each item in menus
       - var item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
 

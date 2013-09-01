@@ -29,16 +29,15 @@ html.no-js
     include ./_topnav_menu
 
     - if (self.runtime.menus.admin && self.runtime.menus.admin.navbar)
-      nav.navbar.navbar-fixed-top
-        .navbar-inner
-          .container
-            mixin topnav_menu(self.runtime.menus.admin.navbar)
+      nav.navbar.navbar-default.navbar-fixed-top
+        .container
+          mixin topnav_menu(self.runtime.menus.admin.navbar)
 
     .container
       != self.content
 
     .nojs
-      .alert.alert-error #{self.t('nojs')}
+      .alert.alert-danger #{self.t('nojs')}
 
 
     div#runtime(style="display: none")= JSON.stringify(self.runtime)

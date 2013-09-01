@@ -8,6 +8,6 @@
     "history.js"  : "~1.8.0",
     "json2"       : "*",
     "typeahead.js": "~0.9.3",
-    "bootstrap"   : "~2.3.2"
+    "bootstrap"   : "~3.0.0"
   }
 }

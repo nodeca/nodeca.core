@@ -1,16 +1,15 @@
 //- NOTE: ReCaptcha markup is hidden by default.
 //- You must control it's visibility manually via Knockout bindings.
 
-.control-group.recaptcha-image(data-bind="visible: visible, css: css", style="display: none")
-  .controls
+.form-group.recaptcha-image(data-bind="visible: visible, css: css", style="display: none")
+  .col-md-9.col-md-offset-3
     span#recaptcha_image
     div.recaptcha-reload
       a(tabindex=-1, data-on-click="common.blocks.recaptcha.update") #{self.t('change_image')}
 
-.control-group(data-bind="visible: visible, css: css", style="display: none")
-  label.control-label(for="recaptcha_response_field") #{self.t('captcha')}
-  .controls
-    .row-fluid
-      input.span12(id="recaptcha_response_field", name="recaptcha_response_field", type='text')
-      span.help-block(data-bind="ifnot: message") #{self.t('captcha_help')}
-      span.help-block(data-bind="if: message, text: message")
+.form-group(data-bind="visible: visible, css: css", style="display: none")
+  label.control-label.col-md-3(for="recaptcha_response_field") #{self.t('captcha')}
+  .col-md-9
+    input.form-control(id="recaptcha_response_field", name="recaptcha_response_field", type='text')
+    span.help-block(data-bind="ifnot: message") #{self.t('captcha_help')}
+    span.help-block(data-bind="if: message, text: message")

@@ -13,17 +13,18 @@
 
 //- create 'go to page' dropdown menu
 mixin _pagination_dropdown_menu(route, params)
-  form.dropdown-menu(
+  form.dropdown-menu.pgn__menu(
     data-pagination=JSON.stringify({ route: route, params: params }),
     data-on-submit='common.blocks.pagination.change')
     - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
     label.pgn__label.input(for=pgmpid) #{self.t('dropdown_label')}
-    .input-append
-      input.input-small(
+    .input-group
+      input.form-control(
         id=pgmpid, name="page", size='8', type='number', min='1',
         placeholder=self.t('dropdown_placeholder'))
-      button.btn.btn-inverse(
-        type='submit') #{self.t('dropdown_button')}
+      span.input-group-btn
+        button.btn.btn-inverse(
+          type='submit') #{self.t('dropdown_button')}
 
 
 - route    = self.route

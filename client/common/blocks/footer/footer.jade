@@ -1,25 +1,23 @@
-footer.container.page-footer
-  ul.page-footer-nav.clearfix
-    li: a(href='#') About
-    li: a(href='#') Contacts
-    li: a(href='#') Terms
-    li: a(href='#') Help
+footer.container
+  .page-footer
+    ul.page-footer-nav.clearfix
+      li: a(href='#') About
+      li: a(href='#') Contacts
+      li: a(href='#') Terms
+      li: a(href='#') Help
 
-    li.dropup
-      a.dropdown-toggle(href='#',data-toggle='dropdown') Language
-        b.caret
-      ul.dropdown-menu
-        each locale in self.locales
-          li
-            a(href='#',
-              data-on-click='common.set_language',
-              data-locale=locale)= self.t('language.' + locale)
+      li.dropup
+        a.dropdown-toggle(href='#',data-toggle='dropdown') Language
+          b.caret
+        ul.dropdown-menu
+          each locale in self.locales
+            li
+              a(href='#',
+                data-on-click='common.set_language',
+                data-locale=locale)= self.t('language.' + locale)
 
-  .nojs
-    .alert.alert-error #{self.t('nojs')} 
-
-  p.copyright
-    | Powered by 
-    a(href='#') Nodeca
-    | , social platform by 
-    a(href='#') RC Design
+    p.copyright
+      | Powered by 
+      a(href='#') Nodeca
+      | , social platform by 
+      a(href='#') RC Design

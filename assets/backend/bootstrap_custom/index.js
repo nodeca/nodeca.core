@@ -1,15 +1,15 @@
-//= //require ../../vendor/bootstrap/js/bootstrap-affix
-//= //require ../../vendor/bootstrap/js/bootstrap-alert
-//= //require ../../vendor/bootstrap/js/bootstrap-button
-//= //require ../../vendor/bootstrap/js/bootstrap-carousel
-//= require ../../vendor/bootstrap/js/bootstrap-collapse
-//= require ../../vendor/bootstrap/js/bootstrap-dropdown
-//= require ../../vendor/bootstrap/js/bootstrap-modal
-//= //require ../../vendor/bootstrap/js/bootstrap-scrollspy
-//= require ../../vendor/bootstrap/js/bootstrap-tab
-//= require ../../vendor/bootstrap/js/bootstrap-tooltip
-//= require ../../vendor/bootstrap/js/bootstrap-transition
+//= //require ../../vendor/bootstrap/js/affix
+//= //require ../../vendor/bootstrap/js/alert
+//= //require ../../vendor/bootstrap/js/button
+//= //require ../../vendor/bootstrap/js/carousel
+//= require ../../vendor/bootstrap/js/collapse
+//= require ../../vendor/bootstrap/js/dropdown
+//= require ../../vendor/bootstrap/js/modal
+//= //require ../../vendor/bootstrap/js/scrollspy
+//= require ../../vendor/bootstrap/js/tab
+//= //require ../../vendor/bootstrap/js/tooltip
+//= require ../../vendor/bootstrap/js/transition
 
 // Popover must go AFTER tooltip
-//= require ../../vendor/bootstrap/js/bootstrap-popover
+//= //require ../../vendor/bootstrap/js/popover
 

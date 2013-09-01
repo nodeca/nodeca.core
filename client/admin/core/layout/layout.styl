@@ -1,8 +1,7 @@
 @import "nodeca.core/client/admin/core/_variables"
 
-
 body
-  padding-top 60px
+  padding-top 70px
 
 //
 // Simple 2-columns layout
@@ -17,16 +16,12 @@ body
 //
 .layout__navbar .dropdown:hover > .dropdown-menu
   height auto
-  padding 5px 0
   opacity 1
 
-// - hack `display to make opacity work
-// - remove top margin to make hover work properly
+// - hack `display` to make opacity work
 .layout__navbar .dropdown > .dropdown-menu
-  margin-top 0px
   display block
   height 0
-  padding 0
   overflow hidden
   opacity 0
   transition opacity 0.3s ease
