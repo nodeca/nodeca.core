@@ -18,7 +18,7 @@
     - if (api_path_tail.indexOf(item_path_tail) > -1)
       - if (app_level_item.childs)
 
-        ul.sidebar-menu
+        ul.sidebar-menu.nav
           - each first_level_item in app_level_item.childs
             - item_path_tail= first_level_item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
             

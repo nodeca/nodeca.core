@@ -12,13 +12,9 @@
   background-color #f8f8f8
   border-radius 4px
 
-.sidebar-menu__item._active
-  background-color grayLightest
-
 a.sidebar-menu__link
-  display block
-  padding 5px 15px
   color gray
-  &:hover
-    text-decoration none
-    color grayDarker
+
+.sidebar-menu__item._active .sidebar-menu__link
+.sidebar-menu__item._active .sidebar-menu__link:hover
+  background-color darken(grayLightest, 5%)
