@@ -1,4 +1,3 @@
-//= require vendor/jquery/jquery
 //= require vendor/history.js/scripts/uncompressed/history.adapter.jquery
 //= require vendor/history.js/scripts/uncompressed/history
 //= require vendor/powertip/jquery.powertip

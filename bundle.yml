@@ -78,6 +78,11 @@ packages:
       - lodash
       - knockout
 
+    client:
+      main: client/lib/main.js
+      include: client/lib/**.js
+      exclude: /(^|\/|\\)_.*/
+
     bin:
       root: assets
       include:
