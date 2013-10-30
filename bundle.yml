@@ -87,6 +87,8 @@ packages:
       root: assets
       include:
         - loader.js.ejs
+        - mobify_loader.js.ejs
+        - mobify_custom.js
         - vendor/es5-shim/es5-shim.js
         - vendor/json2/json2.js
         - frontend/icons/src/font/*

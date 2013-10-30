@@ -17,6 +17,9 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
       - if (self.head.keywords)
         meta(name='description', content=self.head.keywords)
 
+    script(type="text/javascript").
+      !{self.asset_include('mobify_loader.js')}
+
     - if (self.head.stylesheets[self.apiPath.split('.').shift()])
       each cssPath in self.head.stylesheets[self.apiPath.split('.').shift()]
         link(rel='stylesheet', href=cssPath)
