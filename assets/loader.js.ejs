@@ -1,5 +1,4 @@
 //= require vendor/modernizr.custom
-//= //require vendor/yepnope/yepnope
 //= require vendor/rsvp/rsvp
 //= require ./basket
 //= require_self
@@ -258,16 +257,6 @@ window.NodecaLoader = (function () {
 
     // NOTE: YepNope will *only* call `complete` when `resources` is not empty.
     if (resources.length > 0) {
-    /*
-      yepnope({
-        load: resources,
-        complete: function () {
-          forEach(resources, function (res) { loaded[res] = true; });
-          initClientModules();
-          callback();
-        }
-      });
-    */
 
       var res_list = [];
       forEach(resources, function(url) {
