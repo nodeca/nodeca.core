@@ -1,5 +1,5 @@
 //= require vendor/modernizr.custom
-////= require vendor/yepnope/yepnope
+//= //require vendor/yepnope/yepnope
 //= require vendor/rsvp/rsvp
 //= require ./basket
 //= require_self
@@ -290,6 +290,9 @@ window.NodecaLoader = (function () {
           if (/[.]js$/.test(obj.url)) {
             var script = document.createElement('script');
 
+            // add script name for dev tools
+            obj.data += '\n//@ sourceURL=' + obj.url;
+
             // Have to use .text, since we support IE8,
             // which won't allow appending to a script
             script.text = obj.data;
@@ -299,6 +302,9 @@ window.NodecaLoader = (function () {
 
           if (/[.]css$/.test(obj.url)) {
             var style = document.createElement('style');
+
+            // add style name for dev tools
+            obj.data += '\n/*# sourceURL=' + obj.url + '<url> */';
 
             if(style.styleSheet) style.styleSheet.cssText = obj.data; // IE method
             else style.appendChild(document.createTextNode(obj.data)); // others
@@ -342,7 +348,7 @@ window.NodecaLoader = (function () {
     // Choose necessary polyfills.
     if (!window.JSON) {
       // JSON is required for Opera < 11 + IE < 8
-      //See: http://caniuse.com/json
+      // See: http://caniuse.com/json
       shims.push(URL_JSON2_SHIM);
     }
     if (!Object.keys) {
