@@ -1,9 +1,11 @@
 //= require vendor/modernizr.custom
-//= require vendor/yepnope/yepnope
+////= require vendor/yepnope/yepnope
+//= require vendor/rsvp/rsvp
+//= require ./basket
 //= require_self
 
 
-/*global yepnope*/
+/*global basket*/
 
 
 window.NodecaLoader = (function () {
@@ -88,7 +90,7 @@ window.NodecaLoader = (function () {
     , func: func
     , internal: { exports: {} }
     };
-  };
+  }
 
   function requireNodeModule(path) {
     var module = nodeModules[path];
@@ -130,7 +132,7 @@ window.NodecaLoader = (function () {
     , func: func
     , internal: { exports: {}, apiPath: apiPath }
     };
-  };
+  }
 
   // Initialize client module. Used once per module.
   function initSingleClientModule(module) {
@@ -150,7 +152,7 @@ window.NodecaLoader = (function () {
 
     translationHelper.exists = function translationExistsHelper(phrase) {
       return N.runtime.t.exists(resolveI18nPath(phrase));
-    }
+    };
 
     // Execute the module's `func` function. It will populate the exports.
     module.func.call(
@@ -192,6 +194,33 @@ window.NodecaLoader = (function () {
   NodecaLoader.initClientModules      = initClientModules;
 
 
+  //
+  // Configure `basket.js loader
+  //
+  basket.timeout = 20000;
+
+  // We should avoid store multiple asset versions in localStore.
+  // So, use file name without hash as key. But then we have to check
+  // url's to be sure that version it correct.
+  //
+  basket.isValidItem = function(source, obj) {
+    //return false;
+    // ignore protocol
+    if (source.url.replace(/^https?/i, '') === obj.url.replace (/^https?/i, '')) {
+      return true;
+    }
+    return false;
+  };
+
+  // Storage for loaded resources;
+  var fetched = {};
+
+  // Replace default handler - store resourses instead of execute
+  // Required to inject in proper order;
+  basket.addHandler('default', function(obj) {
+    fetched[obj.url] = obj;
+  });
+
   // Load a package with all of associated assets ans dependences.
   // `preload` parameter is an optional array of URLs which are needed to load
   // before the given package.
@@ -226,8 +255,10 @@ window.NodecaLoader = (function () {
       }
     });
 
+
     // NOTE: YepNope will *only* call `complete` when `resources` is not empty.
     if (resources.length > 0) {
+    /*
       yepnope({
         load: resources,
         complete: function () {
@@ -235,6 +266,54 @@ window.NodecaLoader = (function () {
           initClientModules();
           callback();
         }
+      });
+    */
+
+      var res_list = [];
+      forEach(resources, function(url) {
+        res_list.push({
+          url: url,
+          // storage key = file path without hash
+          key: url.replace(/-[0-9a-f]{32}([.][a-z]+)$/, '$1')
+        });
+      });
+
+      basket.require.apply(basket, res_list).then(function() {
+        // On success
+
+        var head = document.head || document.getElementsByTagName('head')[0];
+        forEach(resources, function(url) {
+          loaded[url] = true;
+
+          var obj = fetched[url];
+
+          if (/[.]js$/.test(obj.url)) {
+            var script = document.createElement('script');
+
+            // Have to use .text, since we support IE8,
+            // which won't allow appending to a script
+            script.text = obj.data;
+            head.appendChild(script);
+            return;
+          }
+
+          if (/[.]css$/.test(obj.url)) {
+            var style = document.createElement('style');
+
+            if(style.styleSheet) style.styleSheet.cssText = obj.data; // IE method
+            else style.appendChild(document.createTextNode(obj.data)); // others
+
+            head.appendChild(style);
+            return;
+          }
+
+        });
+
+        initClientModules();
+        callback();
+      }, function(err) {
+        // On error
+        alert(err ? err : 'Failed to load assets: timeout');
       });
     } else {
       callback();
@@ -279,7 +358,7 @@ window.NodecaLoader = (function () {
       }
 
       if (!N.wire) {
-        alert('Init error: failed to load core JS files. Refresh page & try again. ' +
+        alert('Assets init error. Refresh page & try again. ' +
               'If problem still exists - contact administrator.');
         return;
       }
