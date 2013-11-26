@@ -1,6 +1,6 @@
 //= require vendor/modernizr.custom
 //= require vendor/rsvp/rsvp
-//= require ./basket
+//= require ./bag
 //= require_self
 
 
@@ -194,30 +194,11 @@ window.NodecaLoader = (function () {
 
 
   //
-  // Configure `basket.js loader
+  // Configure `bag.js loader
   //
-  basket.timeout = 20000;
-
-  // We should avoid store multiple asset versions in localStore.
-  // So, use file name without hash as key. But then we have to check
-  // url's to be sure that version it correct.
-  //
-  basket.isValidItem = function(source, obj) {
-    //return false;
-    // ignore protocol
-    if (source.url.replace(/^https?/i, '') === obj.url.replace (/^https?/i, '')) {
-      return true;
-    }
-    return false;
-  };
-
-  // Storage for loaded resources;
-  var fetched = {};
-
-  // Replace default handler - store resourses instead of execute
-  // Required to inject in proper order;
-  basket.addHandler('default', function(obj) {
-    fetched[obj.url] = obj;
+  var bag = new window.Bag({
+    timeout: 20000,
+    stores: ['indexeddb', 'websql']
   });
 
   // Load a package with all of associated assets ans dependences.
@@ -255,7 +236,6 @@ window.NodecaLoader = (function () {
     });
 
 
-    // NOTE: YepNope will *only* call `complete` when `resources` is not empty.
     if (resources.length > 0) {
 
       var res_list = [];
@@ -267,48 +247,18 @@ window.NodecaLoader = (function () {
         });
       });
 
-      basket.require.apply(basket, res_list).then(function() {
-        // On success
+      bag.require(res_list, function(err, data) {
+        if (err) {
+          alert(err ? err : 'Failed to load assets: timeout');
+          return;
+        }
 
-        var head = document.head || document.getElementsByTagName('head')[0];
         forEach(resources, function(url) {
           loaded[url] = true;
-
-          var obj = fetched[url];
-
-          if (/[.]js$/.test(obj.url)) {
-            var script = document.createElement('script');
-
-            // add script name for dev tools
-            obj.data += '\n//@ sourceURL=' + obj.url;
-
-            // Have to use .text, since we support IE8,
-            // which won't allow appending to a script
-            script.text = obj.data;
-            head.appendChild(script);
-            return;
-          }
-
-          if (/[.]css$/.test(obj.url)) {
-            var style = document.createElement('style');
-
-            // add style name for dev tools
-            obj.data += '\n/*# sourceURL=' + obj.url + '<url> */';
-
-            if(style.styleSheet) style.styleSheet.cssText = obj.data; // IE method
-            else style.appendChild(document.createTextNode(obj.data)); // others
-
-            head.appendChild(style);
-            return;
-          }
-
         });
-
+        
         initClientModules();
         callback();
-      }, function(err) {
-        // On error
-        alert(err ? err : 'Failed to load assets: timeout');
       });
     } else {
       callback();
