@@ -6,7 +6,6 @@
     "es5-shim"    : "~2.1.0",
     "history.js"  : "~1.8.0",
     "json2"       : "*",
-    "rsvp"        : "~1.2.0",
     "typeahead.js": "~0.9.3",
     "bootstrap"   : "~3.0.0"
   }
