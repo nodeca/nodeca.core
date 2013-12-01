@@ -30,7 +30,7 @@ module.exports = function (N, apiPath) {
 
 
   N.wire.before(apiPath, function prepare_setting_schemas(env, callback) {
-    var config = N.config.setting_schemas['global'];
+    var config = N.config.setting_schemas.global;
 
     async.forEach(_.keys(config), function (name, next) {
       var schema = config[name];

@@ -5,7 +5,7 @@ var _ = require('lodash');
 
 
 function fetchGroupInfo(name) {
-  var settingsCount = _.where(N.config.setting_schemas['global'], {
+  var settingsCount = _.where(N.config.setting_schemas.global, {
     group_key: name
   }).length;
 
