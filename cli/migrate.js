@@ -1,7 +1,7 @@
 // Show / run migrations
 //
 
-"use strict";
+'use strict';
 
 
 var async = require('async');
@@ -10,7 +10,7 @@ var async = require('async');
 ////////////////////////////////////////////////////////////////////////////////
 
 
-//exports.commandName       = "migrate";
+//exports.commandName       = 'migrate';
 exports.parserParameters  = {
   addHelp:      true,
   help:         'run migrations',

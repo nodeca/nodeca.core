@@ -1,7 +1,7 @@
 // Show / apply seeds
 //
 
-"use strict";
+'use strict';
 
 
 // stdlib
@@ -118,7 +118,7 @@ module.exports.run = function (N, args, callback) {
       if (!!app_name && !!seed_name) {
         var env = N.runtime.env;
         if ('development' !== env && 'testing' !== env && !args.force) {
-          console.log(format("Error: Can't run seed from %s enviroment. Please, use -f to force.", env));
+          console.log(format('Error: Can\'t run seed from %s enviroment. Please, use -f to force.', env));
           process.exit(1);
         }
 

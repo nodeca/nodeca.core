@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 exports.root = __dirname;
 exports.name = 'nodeca.core';

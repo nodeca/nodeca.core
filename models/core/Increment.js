@@ -25,11 +25,11 @@ module.exports = function (N, collectionName) {
     );
   };
 
-  N.wire.on("init:models", function emit_init_Increment(__, callback) {
-    N.wire.emit("init:models." + collectionName, Increment, callback);
+  N.wire.on('init:models', function emit_init_Increment(__, callback) {
+    N.wire.emit('init:models.' + collectionName, Increment, callback);
   });
 
-  N.wire.on("init:models." + collectionName, function init_model_Increment(schema) {
+  N.wire.on('init:models.' + collectionName, function init_model_Increment(schema) {
     N.models[collectionName] = Mongoose.model(collectionName, schema);
   });
 };
