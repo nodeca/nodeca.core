@@ -216,7 +216,7 @@ module.exports = function (N, collectionName) {
     var mongoose = N.runtime.mongoose;
     gfs = grid(mongoose.connection, mongoose.mongo);
 
-    N.wire.emit('init:models.' + collectionName, callback);
+    N.wire.emit('init:models.' + collectionName, File, callback);
   });
 
 
