@@ -203,6 +203,10 @@ module.exports = function (N, collectionName) {
   /*
    * Get GridFS file as stream, by file (id|name)
    */
+
+  // FIXME: replace with native stream and add seek support
+  // https://gist.github.com/psi-4ward/7099001
+  //
   File.getStream = File.prototype.getStream = function (name) {
     var id = name.toHexString ? name : tryParseObjectId(name);
     var options = id ? { _id: id } : { filename: name };
