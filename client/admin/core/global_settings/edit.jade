@@ -14,15 +14,15 @@
       fieldset
         legend(data-bind="text: $root.categoryNames[$data]")
         // ko foreach: $root.categorySettings[$data]
-        .control-group
-          label.control-label(data-bind="text: localizedName, attr: { 'for': id }")
-          .controls
+        .form-group
+          label.control-label.col-md-3(data-bind="text: localizedName, attr: { 'for': id }")
+          .controls.col-md-4
             // ko if: 'string' === type
-            input(type="text", data-bind="value: value, valueUpdate: 'keyup', attr: { id: id }")
+            input.form-control(type="text", data-bind="value: value, valueUpdate: 'keyup', attr: { id: id }")
             // /ko
 
             // ko if: 'number' === type
-            input(type="number", data-bind="value: value, valueUpdate: 'keyup', attr: { id: id }")
+            input.form-control(type="number", data-bind="value: value, valueUpdate: 'keyup', attr: { id: id }")
             // /ko
 
             // ko if: 'boolean' === type
@@ -32,11 +32,11 @@
             // /ko
 
             // ko if: 'dropdown' === type
-            select(data-bind="options: valueOptions, optionsText: 'title', optionsValue: 'value', value: value, attr: { id: id }")
+            select.form-control(data-bind="options: valueOptions, optionsText: 'title', optionsValue: 'value', value: value, attr: { id: id }")
             // /ko
 
             // ko if: 'combobox' === type
-            select(multiple, size="10", data-bind="options: valueOptions, optionsText: 'title', optionsValue: 'value', selectedOptions: value, attr: { id: id }")
+            select.form-control(multiple, size="10", data-bind="options: valueOptions, optionsText: 'title', optionsValue: 'value', selectedOptions: value, attr: { id: id }")
             // /ko
 
             // ko if: localizedHelp
@@ -46,5 +46,7 @@
 
       // /ko
 
-      .form-actions
-        button.btn.btn-primary(type="submit", data-bind="enable: $root.isDirty")= self.t('save')
+      .form-group
+        .col-md-9.col-md-offset-3
+          .form-actions
+            button.btn.btn-primary(type="submit", data-bind="enable: $root.isDirty")= self.t('save')
