@@ -4,7 +4,7 @@
 var _ = require('lodash');
 
 
-function fetchGroupInfo(name) {
+function fetchGroupInfo(N, name) {
   var settingsCount = _.where(N.config.setting_schemas.global, {
     group_key: name
   }).length;
@@ -48,7 +48,7 @@ module.exports = function (N, apiPath) {
     _.forEach(res.tabs, function (tab) {
       _.forEach(N.config.setting_groups, function (config, name) {
         if (tab === config.parent) {
-          res.groups[tab].push(fetchGroupInfo(name));
+          res.groups[tab].push(fetchGroupInfo(N, name));
         }
       });
 
