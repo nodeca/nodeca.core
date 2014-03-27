@@ -39,7 +39,9 @@
             select(multiple, size="10", data-bind="options: valueOptions, optionsText: 'title', optionsValue: 'value', selectedOptions: value, attr: { id: id }")
             // /ko
 
-            span.help-block(data-bind="if: localizedHelp, text: localizedHelp")
+            // ko if: localizedHelp
+            span.help-block(data-bind="text: localizedHelp")
+            // /ko
         // /ko
 
       // /ko

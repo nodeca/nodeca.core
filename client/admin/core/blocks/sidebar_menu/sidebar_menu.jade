@@ -21,12 +21,12 @@
         ul.sidebar-menu.nav
           - each first_level_item in app_level_item.childs
             - item_path_tail= first_level_item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
-            
+
             //- highlight sub-items (check by api path)
             - if (api_path_tail.indexOf(item_path_tail) > -1 || self.apiPath === first_level_item.to)
-              menu_active_class = '_active'
+            -   menu_active_class = '_active'
             - else
-              menu_active_class = ''
+            -   menu_active_class = ''
 
             li.sidebar-menu__item(class=menu_active_class)
               a.sidebar-menu__link(href=first_level_item.link) #{self.t(first_level_item.title)}

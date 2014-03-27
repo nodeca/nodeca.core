@@ -11,5 +11,9 @@
   label.control-label.col-md-3(for="recaptcha_response_field") #{self.t('captcha')}
   .col-md-9
     input.form-control(id="recaptcha_response_field", name="recaptcha_response_field", type='text')
-    span.help-block(data-bind="ifnot: message") #{self.t('captcha_help')}
-    span.help-block(data-bind="if: message, text: message")
+    // ko ifnot: message
+    span.help-block #{self.t('captcha_help')}
+    // /ko
+    // ko if: message
+    span.help-block(data-bind="text: message")
+    // /ko

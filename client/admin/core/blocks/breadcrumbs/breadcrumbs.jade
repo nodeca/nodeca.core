@@ -13,18 +13,18 @@
 //-   menu (Array)   - menu
 //-   result (Array) - breadcrumbs container
 mixin _fetch_breadcrumbs(menu, result)
-  - var item_path_tail
+  - var item_path_tail, item_link
   - each item in menu
     - item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
 
     - if (api_path_tail.indexOf(item_path_tail) > -1)
-      // If ACP item without link, then take link from first chaild
+      //- If ACP item without link, then take link from first child
       - if (!item.to)
-        item_link = item.childs[0].to
+      -   item_link = item.childs[0].to
       - else
-        item_link = item.to
+      -   item_link = item.to
 
-      - result.push({ 
+      - result.push({
       -   text: self.t(item.title),
       -   route: item_link,
       -   tail: item_path_tail
