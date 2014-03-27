@@ -14,11 +14,11 @@
     .tab-content
       each tabName, tabIndex in self.tabs
         .tab-pane(id="tab_#{tabName}", class=(0 === tabIndex ? 'active' : ''))
-          table.table.table-striped.table-hover
+          table.table.table-striped.table-hover.global-settings__table
             each group in self.groups[tabName]
               tr
                 td
-                  h3
+                  h3.global-settings__group-title
                     a(href=self.link_to('admin.core.global_settings.edit', { group: group.name }))
                       = self.t('@admin.core.group_names.' + group.name)
                     |  
