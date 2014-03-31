@@ -77,6 +77,8 @@ packages:
     vendor:
       - lodash
       - knockout
+      - kernel: nodeca.core/lib/system/client/kernel.js
+      - fs: nodeca.core/lib/system/dummy.js
 
     client:
       main: client/lib/main.js
