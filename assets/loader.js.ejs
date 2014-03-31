@@ -87,7 +87,8 @@ window.NodecaLoader = (function () {
   var nodeModulesAliases = {};
 
   function registerNodeModule(path, func) {
-    nodeModules[path] = {
+    // Don't overwrite
+    nodeModules[path] = nodeModules[path] || {
       initialized: false
     , func: func
     , internal: { exports: {} }
@@ -95,7 +96,11 @@ window.NodecaLoader = (function () {
   }
 
   function registerNodeModuleAlias(alias, path) {
-    nodeModulesAliases[alias] = path;
+    if (!/^[a-z0-9._-]+$/g.test(alias)) {
+      throw new Error('Only [ a..z, A..Z, 1..9, ., _, - ] chars allowed for aliases');
+    }
+    // Don't overwrite
+    nodeModulesAliases[alias] = nodeModulesAliases[alias] || path;
   }
 
   function requireNodeModule(path) {
