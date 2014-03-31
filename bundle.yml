@@ -17,7 +17,7 @@ packages:
       - lib
 
     client:
-      main: client/admin/core/system/main.js
+      main: client/admin/core/main.js
       include: client/admin/**.js
       exclude: /(^|\/|\\)_.*/
 
@@ -29,7 +29,7 @@ packages:
       include: client/admin/**i18n/*.yml
 
     styles:
-      main: client/admin/core/system/main.styl
+      main: client/admin/core/main.styl
       include: client/admin/**.styl
       exclude: /(^|\/|\\)_.*/
 
@@ -46,7 +46,7 @@ packages:
       - lib
 
     client:
-      main: client/common/system/main.js
+      main: client/common/main.js
       include: client/common/**.js
       exclude: /(^|\/|\\)_.*/
 
@@ -58,7 +58,7 @@ packages:
       include: client/common/**i18n/*.yml
 
     styles:
-      main: client/common/system/main.styl
+      main: client/common/main.styl
       include: client/common/**.styl
       exclude: /(^|\/|\\)_.*/
 
