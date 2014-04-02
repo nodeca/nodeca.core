@@ -17,7 +17,7 @@ packages:
       - lib
 
     client:
-      main: client/admin/core/main.js
+      main: assets/main_admin.js
       include: client/admin/**.js
       exclude: /(^|\/|\\)_.*/
 
@@ -29,7 +29,7 @@ packages:
       include: client/admin/**i18n/*.yml
 
     styles:
-      main: client/admin/core/main.styl
+      main: assets/main_admin.styl
       include: client/admin/**.styl
       exclude: /(^|\/|\\)_.*/
 
@@ -46,7 +46,7 @@ packages:
       - lib
 
     client:
-      main: client/common/main.js
+      main: assets/main_common.js
       include: client/common/**.js
       exclude: /(^|\/|\\)_.*/
 
@@ -58,7 +58,7 @@ packages:
       include: client/common/**i18n/*.yml
 
     styles:
-      main: client/common/main.styl
+      main: assets/main_common.styl
       include: client/common/**.styl
       exclude: /(^|\/|\\)_.*/
 
@@ -81,7 +81,7 @@ packages:
       - fs: nodeca.core/lib/system/dummy.js
 
     client:
-      main: client/lib/main.js
+      main: assets/main_lib.js
       include: client/lib/**.js
       exclude: /(^|\/|\\)_.*/
 
