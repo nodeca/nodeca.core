@@ -1,14 +1,14 @@
 footer.container
   .page-footer
     ul.page-footer-nav.clearfix
-      li: a(href='#') About
-      li: a(href='#') Contacts
-      li: a(href='#') Terms
-      li: a(href='#') Help
+      li.page-footer-nav__item: a(href='#') About
+      li.page-footer-nav__item: a(href='#') Contacts
+      li.page-footer-nav__item: a(href='#') Terms
+      li.page-footer-nav__item: a(href='#') Help
 
-      li.dropup
+      li.page-footer-nav__item.dropup
         a.dropdown-toggle(href='#',data-toggle='dropdown') Language
-          b.caret
+          span.caret
         ul.dropdown-menu
           each locale in self.locales
             li
@@ -16,7 +16,7 @@ footer.container
                 data-on-click='common.set_language',
                 data-locale=locale)= self.t('language.' + locale)
 
-    p.copyright
+    p.page-footer__copyright
       | Powered by 
       a(href='#') Nodeca
       | , social platform by 
