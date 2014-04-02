@@ -1,2 +1,2 @@
-//= require vendor/jquery/jquery
+//= require vendor/jquery/dist/jquery
 //= require kernel_init
