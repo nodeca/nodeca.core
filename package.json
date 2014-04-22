@@ -11,11 +11,5 @@
   "license"         : { "type": "MIT", "url": "https://github.com/nodeca/nodeca.core/blob/master/LICENSE" },
   "repository"      : { "type": "git", "url": "git://github.com/nodeca/nodeca.core.git" },
 
-  "main"            : "./index.js",
-
-  "devDependencies" : {
-                        "chai"    : "*",
-                        "mocha"   : "*",
-                        "jshint"  : "*"
-                      }
+  "main"            : "./index.js"
 }
