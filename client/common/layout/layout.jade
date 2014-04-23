@@ -7,17 +7,17 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
     //- defaults for mobile devices, from twitter bootstrap.
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
 
-    - if (self.head)
-      - if (self.head.title)
+    if self.head
+      if self.head.title
         title #{self.head.title}
       //- description
-      - if (self.head.desc)
+      if self.head.desc
         meta(name='description', content=self.head.desc)
       //- keywords
-      - if (self.head.keywords)
+      if self.head.keywords
         meta(name='description', content=self.head.keywords)
 
-    - if (self.head.stylesheets[self.apiPath.split('.').shift()])
+    if self.head.stylesheets[self.apiPath.split('.').shift()]
       each cssPath in self.head.stylesheets[self.apiPath.split('.').shift()]
         link(rel='stylesheet', href=cssPath)
 
@@ -28,16 +28,9 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
         '!{self.apiPath.split(".").shift()}'
       );
 
-    script(type="text/javascript").
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-26895916-2']);
-      _gaq.push(['_trackPageview']);
+    if self.inject_header
+      != self.inject_header
 
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
 
   body
     nav.layout__navbar.navbar.navbar-default.navbar-static-top
