@@ -34,9 +34,12 @@ test: lint
 
 
 test-ci: lint
-	rm -rf tmp/nodeca-ci && mkdir -p tmp
-	git clone git://github.com/nodeca/nodeca.git tmp/nodeca-ci
-	cd tmp/nodeca-ci && npm install && NODECA_APP=${NPM_PACKAGE} $(MAKE) test
+	rm -rf ${TMP_PATH}
+	git clone git://github.com/nodeca/nodeca.git ${TMP_PATH}
+	mkdir -p ${TMP_PATH}/node_modules
+	cp -r . ${TMP_PATH}/node_modules/${NPM_PACKAGE}
+	cd ${TMP_PATH} && npm install && NODECA_APP=${NPM_PACKAGE} $(MAKE) test
+	rm -rf ${TMP_PATH}
 
 
 publish:
