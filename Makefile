@@ -36,7 +36,7 @@ test: lint
 test-ci: lint
 	rm -rf tmp/nodeca-ci && mkdir -p tmp
 	git clone git://github.com/nodeca/nodeca.git tmp/nodeca-ci
-	cd tmp/nodeca-ci && NODECA_APP=${NPM_PACKAGE} $(MAKE) dev-deps test
+	cd tmp/nodeca-ci && npm install && NODECA_APP=${NPM_PACKAGE} $(MAKE) test
 
 
 publish:
