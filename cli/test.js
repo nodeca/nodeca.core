@@ -63,7 +63,7 @@ module.exports.run = function (N, args, callback) {
       var applications = N.runtime.apps;
 
       mocha.reporter('spec');
-      mocha.ui('bdd');
+      //mocha.ui('bdd');
 
       // if app set, chack that it's valid
       if (args.app) {
