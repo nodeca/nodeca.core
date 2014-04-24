@@ -8,12 +8,12 @@
 var _         = require('lodash');
 var fs        = require('fs');
 var path      = require('path');
-var streamifier = require('streamifier');
+var sbuffers  = require('stream-buffers');
 var mimoza    = require('mimoza');
 
 var Mongoose  = require('mongoose');
 var grid      = require('gridfs-stream');
-var ObjectId  = Mongoose.Schema.Types.ObjectId;
+var ObjectId  = Mongoose.Types.ObjectId;
 
 function escapeRegexp(source) {
   return String(source).replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
@@ -30,13 +30,17 @@ function tryParseObjectId(string) {
 // Convert `src` (filename|buffer|stream) into readable stream
 //
 function getStream(src) {
+  var sb;
+
   if (_.isString(src)) {
     // file name passed
     return fs.createReadStream(src);
   } else if (src instanceof Buffer) {
     // buffer passed
-    return streamifier(src);
-  } else if (src.Readable) {
+    sb = new sbuffers.ReadableStreamBuffer({ frequency: 0, chunkSize: 32768 });
+    sb.put(src);
+    return sb;
+  } else if (src.readable) {
     return src;
   }
 
@@ -110,7 +114,7 @@ module.exports = function (N, collectionName) {
    * - all (Boolean) - true: delete all related files too
    */
   File.remove = File.prototype.remove = function (name, all, callback) {
-    if (_.isArray(all)) {
+    if (_.isFunction(all)) {
       callback = all;
       all = false;
     }
@@ -147,17 +151,24 @@ module.exports = function (N, collectionName) {
    *
    * Params:
    *
-   * - name (ObjectId|String) - `_id` of root file or `filename` for preview
-   * - all (Boolean) - true: delete all related files too
+   * - src (Mixed) - (buffer|path|stream) with file data. Required.
+   * - opt (Object) - see schema for details. General:
+   *   - _id (ObjectId|String), optional - _id to store in db
+   *   - filename, optional - file name to store in db, `_id` if not set.
+   *     For example '535860e62490c07f0c2eabe3_xxl' for thumbnail of
+   *     '535860e62490c07f0c2eabe3' image.
+   *   - contentType
+   *   - metadata (Object), optional - file metadata
+   *     - origName (String) - original file name (used in downloads)
    */
   File.put = File.prototype.put = function (src, opt, callback) {
     var input = getStream(src);
 
-    var options = _.extend({}, opt()); // protect opt from modifications
+    var options = _.extend({}, opt); // protect opt from modifications
 
     if (!input) { return callback(new Error('File.put: unknown source data')); }
 
-    var _id = options._id || new ObjectId();
+    var _id = options._id || new ObjectId(null);
     _id = _id.toHexString ? _id : tryParseObjectId(_id);
 
     if (!_id) { return callback(new Error('File.put: invalid _id passed')); }
@@ -183,22 +194,20 @@ module.exports = function (N, collectionName) {
       }
     }
 
+    // This 2 lines required to properly set `contentType` field
+    options.content_type = options.contentType;
+    options.mode = 'w';
+
     var output = gfs.createWriteStream(options);
 
-    output.once('finish', callback);
+    output.once('error', callback);
+    output.once('close', function (info) {
+      callback(null, info);
+    });
+
     input.pipe(output);
   };
 
-
-  /*
-   * Get GridFS file as buffer, by file (id|name)
-   * For testing. Using streams is prefered.
-   */
-  File.get = File.prototype.get = function (name, callback) {
-    var id = name.toHexString ? name : tryParseObjectId(name);
-
-    gfs.get(id || name, callback);
-  };
 
   /*
    * Get GridFS file as stream, by file (id|name)
@@ -218,9 +227,24 @@ module.exports = function (N, collectionName) {
   N.wire.on('init:models', function emit_init_File(__, callback) {
     // reuse mongoose connection
     var mongoose = N.runtime.mongoose;
-    gfs = grid(mongoose.connection, mongoose.mongo);
 
-    N.wire.emit('init:models.' + collectionName, File, callback);
+    // connect to database
+    var options = {
+      server  : {
+        socketOptions: { keepAlive: 1 }
+      },
+      replset : {
+        socketOptions: { keepAlive: 1 }
+      }
+    };
+    var conn = mongoose.createConnection(N.config.database.mongo, options);
+    conn.once('open', function () {
+      gfs = grid(conn.db, mongoose.mongo);
+      N.wire.emit('init:models.' + collectionName, File, callback);
+    });
+    /*gfs = grid(mongoose.connection, mongoose.mongo);
+
+    N.wire.emit('init:models.' + collectionName, File, callback);*/
   });
 
 
