@@ -26,4 +26,4 @@ router:
 
     core.gridfs:
       "/files/{bucket}":
-        bucket: /[0-9a-fA-F]{24}(_[0-9a-zA-Z]+)?/
+        bucket: /[0-9a-f]{24}(_[0-9a-z]+)?/
