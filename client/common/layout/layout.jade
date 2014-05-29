@@ -50,21 +50,9 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
           a.navbar-brand(href="/") Nodeca
 
         .navbar-collapse.collapse
-          - if (self.runtime.menus.common && self.runtime.menus.common.navbar)
+          if self.runtime.menus.common && self.runtime.menus.common.navbar
             mixin topnav_menu(self.runtime.menus.common.navbar)
 
-          //-
-            - if (self.runtime.menus.common.navbar)
-              ul.nav.navbar-nav
-                - each item in self.runtime.menus.common.navbar
-                  - var ns = self.apiPath.split('.').shift(), item_ns = item.to.split('.').shift();
-                  - if (ns === item_ns)
-                    li(data-api-path=item_ns, class='active'): a(href=item.link)= self.t(item.title)
-                  - else
-                    li(data-api-path=item_ns): a(href=item.link)= self.t(item.title)
-
-                //- Temporary github link
-                li: a(href='https://github.com/nodeca/nodeca',target='_blank') Github
           //-
           form.navbar-form.navbar-left.hidden-sm
             input.form-control(type='text', placeholder='Search')

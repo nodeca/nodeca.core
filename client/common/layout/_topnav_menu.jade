@@ -11,17 +11,17 @@
 mixin _create_submenus(submenus)
   - var item_link
   ul.dropdown-menu
-    - each item in submenus
-      - if (item.childs)
+    each item in submenus
+      if (item.childs)
         // If ACP item without link, then take link from first chaild
-        - if (!item.link)
+        if (!item.link)
           item_link = item.childs[0].link
-        - else
+        else
           item_link = item.link
         li.dropdown-submenu
           a(href=item_link, tabindex='-1')= self.t(item.title)
           mixin _create_submenus(item.childs)
-      - else
+      else
         li
           a(href=item.link)= self.t(item.title)
 
@@ -33,20 +33,20 @@ mixin topnav_menu(menus)
   - var active_state
   - var item_path_tail
 
-  ul.navbar-hovered.nav.navbar-nav
-    - each item in menus
+  ul.navbar__hovered.nav.navbar-nav
+    each item in menus
       - var item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
 
       //- highlight current app
-      - if (api_path_tail.indexOf(item_path_tail) > -1)
+      if (api_path_tail.indexOf(item_path_tail) > -1)
         - active_state = 'active'
-      -else
+      else
         - active_state = ''
 
-      - if (item.childs)
+      if (item.childs)
         li.dropdown(class=active_state, data-api-path=item.to)
           a(href=item.link)= self.t(item.title)
           mixin _create_submenus(item.childs)
-      - else
+      else
         li(class=active_state, data-api-path=item.to)
           a(href=item.link)= self.t(item.title)

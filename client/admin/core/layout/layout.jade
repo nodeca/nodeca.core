@@ -7,17 +7,17 @@ html.no-js
     //- defaults for mobile devices, from twitter bootstrap.
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
 
-    - if (self.head)
-      - if (self.head.title)
+    if self.head
+      if self.head.title
         title #{self.head.title}
       //- description
-      - if (self.head.desc)
+      if self.head.desc
         meta(name='description', content=self.head.desc)
       //- keywords
-      - if (self.head.keywords)
+      if self.head.keywords
         meta(name='description', content=self.head.keywords)
 
-    - if (self.head.stylesheets.admin)
+    if self.head.stylesheets.admin
       each cssPath in self.head.stylesheets.admin
         link(rel='stylesheet', href=cssPath)
 
@@ -28,7 +28,7 @@ html.no-js
   body
     include ./_topnav_menu
 
-    - if (self.runtime.menus.admin && self.runtime.menus.admin.navbar)
+    if self.runtime.menus.admin && self.runtime.menus.admin.navbar
       nav.navbar.navbar-default.navbar-fixed-top
         .container
           mixin topnav_menu(self.runtime.menus.admin.navbar)

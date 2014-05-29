@@ -37,17 +37,18 @@ body
 
 // Show navbar dropdowns on hover, instead of click
 //
-.layout__navbar .dropdown:hover > .dropdown-menu
-  height auto
-  opacity 1
+.navbar__hovered
+  .dropdown:hover > .dropdown-menu
+    height auto
+    opacity 1
 
-// - hack `display` to make opacity work
-.layout__navbar .dropdown > .dropdown-menu
-  display block
-  height 0
-  overflow hidden
-  opacity 0
-  transition opacity 0.3s ease
+  // - hack `display` to make opacity work
+  .dropdown > .dropdown-menu
+    display block
+    height 0
+    overflow hidden
+    opacity 0
+    transition opacity 0.3s ease
 
 
 // "No JS" message styles
