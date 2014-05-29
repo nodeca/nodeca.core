@@ -33,6 +33,8 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
 
   body
+    include ./_topnav_menu
+
     nav.layout__navbar.navbar.navbar-default.navbar-static-top
       .container
         .navbar-header
@@ -48,17 +50,21 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
           a.navbar-brand(href="/") Nodeca
 
         .navbar-collapse.collapse
-          - if (self.runtime.menus.common.navbar)
-            ul.nav.navbar-nav
-              - each item in self.runtime.menus.common.navbar
-                - var ns = self.apiPath.split('.').shift(), item_ns = item.to.split('.').shift();
-                - if (ns === item_ns)
-                  li(data-api-path=item_ns, class='active'): a(href=item.link)= self.t(item.title)
-                - else
-                  li(data-api-path=item_ns): a(href=item.link)= self.t(item.title)
+          - if (self.runtime.menus.common && self.runtime.menus.common.navbar)
+            mixin topnav_menu(self.runtime.menus.common.navbar)
 
-              //- Temporary github link
-              li: a(href='https://github.com/nodeca/nodeca',target='_blank') Github
+          //-
+            - if (self.runtime.menus.common.navbar)
+              ul.nav.navbar-nav
+                - each item in self.runtime.menus.common.navbar
+                  - var ns = self.apiPath.split('.').shift(), item_ns = item.to.split('.').shift();
+                  - if (ns === item_ns)
+                    li(data-api-path=item_ns, class='active'): a(href=item.link)= self.t(item.title)
+                  - else
+                    li(data-api-path=item_ns): a(href=item.link)= self.t(item.title)
+
+                //- Temporary github link
+                li: a(href='https://github.com/nodeca/nodeca',target='_blank') Github
           //-
           form.navbar-form.navbar-left.hidden-sm
             input.form-control(type='text', placeholder='Search')
@@ -72,7 +78,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
     != self.partial('@common.blocks.footer', { locales: self.enabled_locales })
 
     .nojs
-      .alert.alert-danger #{self.t('nojs')} 
+      .alert.alert-danger #{self.t('nojs')}
 
     .debug.hidden-xs
       .container
