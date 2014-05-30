@@ -33,44 +33,47 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
 
   body
-    include ./_topnav_menu
+    //-include ./_topnav_menu
 
-    nav.layout__navbar.navbar.navbar-default.navbar-static-top
-      .container
-        .navbar-header
-          button.navbar-toggle(
-            data-toggle='collapse',
-            data-target='.navbar-collapse',
-            type='button'
-          )
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
+    //-
+      nav.layout__navbar.navbar.navbar-default.navbar-static-top
+        .container
+          .navbar-header
+            button.navbar-toggle(
+              data-toggle='collapse',
+              data-target='.navbar-collapse',
+              type='button'
+            )
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
 
-          a.navbar-brand(href="/") Nodeca
+            a.navbar-brand(href="/") Nodeca
 
-        .navbar-collapse.collapse
-          if self.runtime.menus.common && self.runtime.menus.common.navbar
-            mixin topnav_menu(self.runtime.menus.common.navbar)
+          .navbar-collapse.collapse
+            if self.runtime.menus.common && self.runtime.menus.common.navbar
+              mixin topnav_menu(self.runtime.menus.common.navbar)
 
-          //-
-          form.navbar-form.navbar-left.hidden-sm
-            input.form-control(type='text', placeholder='Search')
+            //-
+            form.navbar-form.navbar-left.hidden-sm
+              input.form-control(type='text', placeholder='Search')
 
-          //- NOTE: This block is located in `nodeca.users`
-          != self.partial('@common.blocks.auth_toolbar', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
+            //- NOTE: This block is located in `nodeca.users`
+            != self.partial('@common.blocks.auth_toolbar', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
 
 
-    .container!= self.content
+    .layout__container
+      != self.partial('@common.blocks.nav_panel', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings, navbar: self.runtime.menus.common.navbar })
+      .layout__content
+        != self.content
 
-    != self.partial('@common.blocks.footer', { locales: self.enabled_locales })
+        != self.partial('@common.blocks.footer', { locales: self.enabled_locales })
 
-    .nojs
-      .alert.alert-danger #{self.t('nojs')}
+        .nojs
+          .alert.alert-danger #{self.t('nojs')}
 
-    .debug.hidden-xs
-      .container
-        //{{PUNCHER_STATS}}
+        .debug.hidden-xs
+          //{{PUNCHER_STATS}}
 
 
     div#runtime(style="display: none")= JSON.stringify(self.runtime)

@@ -6,13 +6,18 @@
   margin 0 0 (baseLineHeight/2)
   overflow hidden
   text-overflow ellipsis
+  font-size 16px
+  list-style none
+  padding 0
+  line-height 30px
 
-.breadcrumb-link
-  color grayLight
-  position relative
-  margin-right 1.2em
+.breadcrumbs__item
+  display inline-block
+  padding-right .3em
   &:after
-    position absolute
-    content '/' 
+    content ' /'
     color grayLighter
-    right -0.8em
+    margin 0 5px
+
+.breadcrumbs__link
+  color grayLight

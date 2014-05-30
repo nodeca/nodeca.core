@@ -1,0 +1,106 @@
+@import "nodeca.core/client/common/_variables"
+
+
+.nav-panel
+  width navPanelWidth
+  position fixed
+  z-index 1100
+  top 0
+  bottom 0
+  background-color lighten(grayLightest, 60%)
+
+.nav-panel__inner
+  display table
+  height 100%
+  width 100%
+
+.nav-panel__row
+  display table-row
+
+.nav-panel__btn
+  width navPanelWidth
+  height navPanelWidth
+  display table-cell
+  vertical-align middle
+  text-align center
+  font-size 24px
+  color grayLight
+  border-bottom 1px solid grayLightest
+  &:focus
+    outline 0 none
+    color grayLight
+  &:hover
+    color grayLight
+
+.nav-panel__btn-last
+  border-bottom 0 none
+
+.nav-panel__btn-flex
+  height 100%
+
+.nav-panel__btn-icon
+  &:before
+    margin-right 0
+    text-shadow none
+
+
+.nav-panel-overlay
+  position fixed
+  z-index 1090
+  top 0
+  bottom 0
+  width 100%
+  max-width pageMaxWidth
+  left -200%
+  overflow-x hidden
+
+.nav-panel-overlay__link
+  cursor default
+  display block
+  position absolute
+  height 100%
+  width 100%
+  background-color black
+  opacity 0
+  transition: opacity .25s ease-out
+
+
+.nav-panel__menu
+  position absolute
+  height 100%
+  min-width 150px
+  margin-left navPanelWidth
+  background-color #fcfcfc
+  left -300px
+  transition left .25s ease-out
+  box-sizing 0 0 10px grayDark
+  // override bootstrap defaults
+  .navbar-default
+    background-color inherit
+
+.nav-panel__menu-item
+  line-height 30px
+  font-size 16px
+
+a.nav-panel__menu-link
+  color gray
+
+.nav-panel__menu-active
+  .nav-panel-overlay
+    //display block
+    //visibility visible
+    left auto
+  .nav-panel-overlay__link
+    opacity 0.5
+  .nav-panel__menu
+    left 0
+
+
+.icon-scroll-down
+  display none
+
+.nav-panel__scrollback-active
+  .icon-scroll-down
+    display inline
+  .icon-scroll-up
+    display none

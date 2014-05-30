@@ -6,18 +6,17 @@ mixin breadcrumb_step(tail)
   //-   route  (String)  - routing rule (optional). Ex: "forum.thread.show".
   //-   params (Object)  - routing params (optional). See routing rules in config.
   - var item = tail[0];
-  - if (!!item.route)
+  if !!item.route
     //- link
-    a.breadcrumb-link(itemprop='url', href=self.link_to(item.route, item.params))
-      span(itemprop='name')= item.text
-  - else
-    //- text only 
-    span(itemprop='name')= item.text
-  - if (tail.length > 1)
+    li.breadcrumbs__item
+      a.breadcrumbs__link(href=self.link_to(item.route, item.params))= item.text
+  else
+    //- text only
+    li.breadcrumbs__item= item.text
+  if tail.length > 1
     //- next sublevel
-    span(itemprop='child', itemscope, itemtype='http://schema.org/Breadcrumb')
-      mixin breadcrumb_step(tail.slice(1))
+    mixin breadcrumb_step(tail.slice(1))
 
 
-.breadcrumbs(itemprop='breadcrumb', itemscope, itemtype='http://schema.org/Breadcrumb')
+ul.breadcrumbs(itemprop='breadcrumb', itemscope, itemtype='http://schema.org/Breadcrumb')
   mixin breadcrumb_step(self.blocks.breadcrumbs)

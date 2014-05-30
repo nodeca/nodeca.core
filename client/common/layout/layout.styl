@@ -1,12 +1,40 @@
 @import "nodeca.core/client/common/_variables"
 
+// this rule stretch background on short pages
+html
+body
+  height 100%
+
 
 body
   overflow-y scroll
   min-width 200px
+  background-color lighten(grayLightest, 30%)
+
+.layout__container
+  margin-left auto
+  margin-right auto
+  max-width pageMaxWidth
+  background-color white
+  min-height 100%
+
+.layout__nav-panel
+  width navPanelWidth
+  position fixed
+  z-index 1100
+  top 0
+  bottom 0
+  background-color lighten(grayLightest, 60%)
+
+.layout__content
+  padding-top (gridGutterWidth / 2)
+  padding-left (gridGutterWidth / 2)
+  padding-right (gridGutterWidth / 2)
+  margin-left navPanelWidth
 
 .layout__navbar
   box-shadow 0 1px 3px rgba(0, 0, 0, 0.05)
+  display none
 
 // Show navbar dropdowns on hover, instead of click
 //
@@ -22,6 +50,18 @@ body
     overflow hidden
     opacity 0
     transition opacity 0.3s ease
+
+
+.debug
+  margin-top baseLineHeight
+  padding (baseLineHeight/2) 20px 0
+  background-color #fbfbf8  
+  border 1px solid #eee
+  border 1px solid rgba(0,0,0,.05)
+  box-shadow 0 -2px 2px rgba(0,0,0,.05)
+  font-family sansWideFontFamily
+  font-size 12px
+  color #888
 
 
 // "No JS" message styles

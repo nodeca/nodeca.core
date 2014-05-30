@@ -2,7 +2,16 @@
   "name": "nodeca",
   "css_prefix_text": "icon-",
   "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
   "glyphs": [
+    {
+      "uid": "559647a6f430b3aeadbecd67194451dd",
+      "css": "menu",
+      "code": 59405,
+      "src": "fontawesome"
+    },
     {
       "uid": "7222571caa5c15f83dcfd447c58d68d9",
       "css": "search",
@@ -22,9 +31,15 @@
       "src": "entypo"
     },
     {
+      "uid": "513ac180ff85bd275f2b736720cbbf5e",
+      "css": "home",
+      "code": 59404,
+      "src": "entypo"
+    },
+    {
       "uid": "815503841e980c848f55e0271deacead",
       "css": "link",
-      "code": 128279,
+      "code": 59399,
       "src": "entypo"
     },
     {
@@ -70,6 +85,18 @@
       "src": "entypo"
     },
     {
+      "uid": "a204f0fa972408eaae5a363c444991b2",
+      "css": "login",
+      "code": 59402,
+      "src": "entypo"
+    },
+    {
+      "uid": "2d76f2c8d13be40694ecadfea7fb83c3",
+      "css": "logout",
+      "code": 59403,
+      "src": "entypo"
+    },
+    {
       "uid": "8704cd847a47b64265b8bb110c8b4d62",
       "css": "expand",
       "code": 9662,
@@ -79,6 +106,18 @@
       "uid": "9c7ff134960bb5a82404e4aeaab366d9",
       "css": "collapse",
       "code": 9652,
+      "src": "entypo"
+    },
+    {
+      "uid": "289b5f92f23acf1059c93fbf401c1ad5",
+      "css": "scroll-down",
+      "code": 59401,
+      "src": "entypo"
+    },
+    {
+      "uid": "0805cca616b3c12714f35af4d0912c10",
+      "css": "scroll-up",
+      "code": 59400,
       "src": "entypo"
     },
     {
