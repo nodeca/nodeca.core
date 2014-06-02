@@ -1,23 +1,27 @@
 @import "nodeca.core/client/common/_variables"
 
 
-.nav-panel
+.nav-vert__panel
   width navPanelWidth
   position fixed
   z-index 1100
   top 0
   bottom 0
   background-color lighten(grayLightest, 60%)
+  display none
 
-.nav-panel__inner
+.nav-vert-on .nav-vert__panel
+  display block
+
+.nav-vert__panel-inner
   display table
   height 100%
   width 100%
 
-.nav-panel__row
+.nav-vert__panel-row
   display table-row
 
-.nav-panel__btn
+.nav-vert__btn
   width navPanelWidth
   height navPanelWidth
   display table-cell
@@ -26,25 +30,29 @@
   font-size 24px
   color grayLight
   border-bottom 1px solid grayLightest
+  // cleanup for labels
+  font-weight normal
+  margin 0
+  cursor pointer
   &:focus
     outline 0 none
     color grayLight
   &:hover
     color grayLight
 
-.nav-panel__btn-last
+.nav-vert__btn-last
   border-bottom 0 none
 
-.nav-panel__btn-flex
+.nav-vert__btn-flex
   height 100%
 
-.nav-panel__btn-icon
+.nav-vert__btn-icon
   &:before
     margin-right 0
     text-shadow none
 
 
-.nav-panel-overlay
+.nav-vert__overlay
   position fixed
   z-index 1090
   top 0
@@ -54,18 +62,19 @@
   left -200%
   overflow-x hidden
 
-.nav-panel-overlay__link
+.nav-vert__overlay-bg
   cursor default
   display block
   position absolute
   height 100%
   width 100%
+  border 0
   background-color black
   opacity 0
   transition: opacity .25s ease-out
 
 
-.nav-panel__menu
+.nav-vert__menu
   position absolute
   height 100%
   min-width 150px
@@ -78,28 +87,26 @@
   .navbar-default
     background-color inherit
 
-.nav-panel__menu-item
+.nav-vert__menu-item
   line-height 30px
   font-size 16px
 
-a.nav-panel__menu-link
+a.nav-vert__menu-link
   color gray
 
-.nav-panel__menu-active
-  .nav-panel-overlay
-    //display block
-    //visibility visible
+.nav-vert__menu-active
+  .nav-vert__overlay
     left auto
-  .nav-panel-overlay__link
+  .nav-vert__overlay-bg
     opacity 0.5
-  .nav-panel__menu
+  .nav-vert__menu
     left 0
 
 
 .icon-scroll-down
   display none
 
-.nav-panel__scrollback-active
+.nav-vert__scrollback-active
   .icon-scroll-down
     display inline
   .icon-scroll-up

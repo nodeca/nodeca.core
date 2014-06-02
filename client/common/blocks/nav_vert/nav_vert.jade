@@ -1,0 +1,90 @@
+//- Vertical site navigation
+
+//- need cut base of ns menu path ('common.menus.navbar')
+- var MENU_BASE_NS_LEVEL = 3
+//- need cut base of api path ('admin')
+- var API_PATH_BASE_NS_LEVEL = 1
+- var api_path_tail = self.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
+
+
+//- Partial to generate submenus
+mixin _create_submenus(submenus)
+  - var item_link
+  ul.dropdown-menu
+    each item in submenus
+      if (item.childs)
+        // If item without link, then take link from first child
+        if (!item.link)
+          item_link = item.childs[0].link
+        else
+          item_link = item.link
+        li.dropdown-submenu
+          a(href=item_link, tabindex='-1')= self.t(item.title)
+          mixin _create_submenus(item.childs)
+      else
+        li
+          a(href=item.link)= self.t(item.title)
+
+
+//- Creates nested menu html
+mixin nav_menu(menus)
+  - var active_state
+  - var item_path_tail
+
+  ul.nav.navbar-default
+    each item in menus
+      - var item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
+
+      //- highlight current app
+      if (api_path_tail.indexOf(item_path_tail) > -1)
+        - active_state = 'active'
+      else
+        - active_state = ''
+
+      if (item.childs)
+        li.nav-vert__menu-item.dropdown(class=active_state, data-api-path=item.to)
+          a.nav-vert__menu-link(href=item.link)= self.t(item.title)
+          mixin _create_submenus(item.childs)
+      else
+        li.nav-vert__menu-item(class=active_state, data-api-path=item.to)
+          a.nav-vert__menu-link(href=item.link)= self.t(item.title)
+
+//-/////////////////////////////////////////////////////////////////////////////
+
+.nav-vert__panel
+  .nav-vert__panel-inner
+    .nav-vert__panel-row
+      a.nav-vert__btn(href='/' title=self.t('home'))
+        span.nav-vert__btn-icon.icon-home
+    .nav-vert__panel-row
+      //- use labels instead of buttons,
+      //- because buttons are not ok with table-cell
+      label.nav-vert__btn(
+        data-on-click='common.blocks.nav_vert.toggle_menu'
+        title=self.t('menu')
+      )
+        span.nav-vert__btn-icon.icon-menu
+    .nav-vert__panel-row
+      label.nav-vert__btn.nav-vert__btn-flex(
+        data-on-click='common.blocks.nav_vert.scroll'
+      )
+        span.nav-vert__btn-icon.icon-scroll-up(title=self.t('scroll_top'))
+        span.nav-vert__btn-icon.icon-scroll-down(title=self.t('scroll_back'))
+    .nav-vert__panel-row
+      label.nav-vert__btn(
+        data-on-click='common.layout.nav_toggle'
+        title=self.t('horiz_nav')
+      )
+        span.nav-vert__btn-icon -
+    != self.partial('@common.blocks.nav_vert_auth')
+
+.nav-vert__overlay
+  button.nav-vert__overlay-bg(data-on-click='common.blocks.nav_vert.toggle_menu')
+  .nav-vert__menu
+    mixin nav_menu(self.navbar)
+    ul.nav.navbar-default
+      li.nav-vert__menu-item
+        a.nav-vert__menu-link(
+          href='https://github.com/nodeca/nodeca'
+          target='_blank'
+        ) Github

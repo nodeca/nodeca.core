@@ -1,3 +1,5 @@
+//- Vertical site navigation logic
+//- needs external '.layout__container' wrapper
 'use strict';
 
 
@@ -9,12 +11,12 @@ var MIN_TRACKED_OFFS  = 50;
 
 
 function hideMenu() {
-  $('.layout__container').removeClass('nav-panel__menu-active');
+  $('.layout__container').removeClass('nav-vert__menu-active');
 }
 
 function hideScrollback() {
   memoisedScrollPos = 0;
-  $('.layout__container').removeClass('nav-panel__scrollback-active');
+  $('.layout__container').removeClass('nav-vert__scrollback-active');
 }
 
 
@@ -25,8 +27,8 @@ N.wire.on('navigate.to', function () {
 });
 
 
-N.wire.on('common.blocks.nav_panel.toggle_menu', function () {
-  $('.layout__container').toggleClass('nav-panel__menu-active');
+N.wire.on('common.blocks.nav_vert.toggle_menu', function () {
+  $('.layout__container').toggleClass('nav-vert__menu-active');
 });
 
 
@@ -39,7 +41,7 @@ var trackScrollPos = _.throttle(function() {
 }, 100);
 
 
-N.wire.on('common.blocks.nav_panel.scroll', function () {
+N.wire.on('common.blocks.nav_vert.scroll', function () {
   hideMenu();
 
   if (memoisedScrollPos) {
@@ -60,7 +62,7 @@ N.wire.on('common.blocks.nav_panel.scroll', function () {
   }, 300, function () {
     // Install scroll position tracker
     if (memoisedScrollPos) {
-      $('.layout__container').addClass('nav-panel__scrollback-active');
+      $('.layout__container').addClass('nav-vert__scrollback-active');
       $(window).scroll(trackScrollPos);
     }
   });

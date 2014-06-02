@@ -1,0 +1,85 @@
+//- need cut base of ns menu path ('common.menus.navbar')
+- var MENU_BASE_NS_LEVEL = 3
+//- need cut base of api path ('admin')
+- var API_PATH_BASE_NS_LEVEL = 1
+- var api_path_tail = self.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
+
+
+//- Create next menu level
+//-
+//-   submenus (Array)         - submenus 
+mixin _create_submenus(submenus)
+  - var item_link
+  ul.dropdown-menu
+    each item in submenus
+      if (item.childs)
+        // If ACP item without link, then take link from first chaild
+        if (!item.link)
+          item_link = item.childs[0].link
+        else
+          item_link = item.link
+        li.dropdown-submenu
+          a(href=item_link, tabindex='-1')= self.t(item.title)
+          mixin _create_submenus(item.childs)
+      else
+        li
+          a(href=item.link)= self.t(item.title)
+
+
+//- Create admin top menu
+//-
+//-   menus (Object)  - menu container nodeca.config.menus.<menu_name>
+mixin topnav_menu(menus)
+  - var active_state
+  - var item_path_tail
+
+  ul.nav.navbar-nav.nav-horiz__hoverable
+    each item in menus
+      - var item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
+
+      //- highlight current app
+      if (api_path_tail.indexOf(item_path_tail) > -1)
+        - active_state = 'active'
+      else
+        - active_state = ''
+
+      //- data-api-path used to highlight curent navigation
+      if (item.childs)
+        li.dropdown(class=active_state, data-api-path=item.to)
+          a(href=item.link)= self.t(item.title)
+          mixin _create_submenus(item.childs)
+      else
+        li(class=active_state, data-api-path=item.to)
+          a(href=item.link)= self.t(item.title)
+
+nav.navbar.navbar-default.navbar-static-top.nav-horiz
+  .layout__container.container-fluid
+    .navbar-header
+      button.navbar-toggle(
+        data-toggle='collapse',
+        data-target='.navbar-collapse',
+        type='button'
+      )
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+
+      a.navbar-brand(href="/") Nodeca
+
+    .navbar-collapse.collapse
+      if self.runtime.menus.common && self.runtime.menus.common.navbar
+        mixin topnav_menu(self.runtime.menus.common.navbar)
+
+      //-
+      form.navbar-form.navbar-left.hidden-sm
+        input.form-control(type='text', placeholder='Search')
+
+      ul.nav.navbar-nav.navbar-right
+        //- NOTE: This block is located in `nodeca.users`
+        != self.partial('@common.blocks.nav_horiz_auth', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
+
+        li: a(
+              href='#'
+              data-on-click='common.layout.nav_toggle'
+              title=self.t('vert_nav')
+            ) |

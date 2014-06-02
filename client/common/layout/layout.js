@@ -1,47 +1,31 @@
 'use strict';
 
 
-var _ = require('lodash');
+function getCookie(name) {
+  var matches = document.cookie.match(new RegExp(
+    '(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+}
 
 
-//
-// Observe quicksearch focus to tweak icon style
-//
+N.wire.on('common.layout.nav_toggle', function () {
+  $('body').toggleClass('nav-vert-on').toggleClass('nav-horiz-on');
+
+  if ($('body').hasClass('nav-vert-on')) {
+    document.cookie = 'vnav=1; ' + new Date(0x7fffffff * 1e3);
+  } else {
+    document.cookie = 'vnav=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  }
+});
+
+
+// Sync navigation style with cookie value,
+// id server responded with different layout
 N.wire.once('navigate.done', function () {
-  $('.navbar-search .search-query')
-    .focus(function () { $(this).next('div').addClass('focused'); })
-    .blur(function () { $(this).next('div').removeClass('focused'); });
-});
-
-
-//
-// Update "active" tab of the navbar_menu when moving to another page.
-//
-N.wire.on('navigate.done', function navbar_menu_change_active(target) {
-  var targetPath = target.apiPath.split('.'), tabs, active;
-
-  tabs = $('.layout__navbar').find('[data-api-path]');
-  tabs.removeClass('active');
-
-  // Select the most specific tab - with the longest API path match.
-  active = _.max(tabs, function (tab) {
-    var tabPath = $(tab).data('apiPath').split('.')
-      , index   = -1
-      , length  = Math.min(tabPath.length, targetPath.length);
-
-    do { index += 1; }
-    while (index < length && tabPath[index] === targetPath[index]);
-
-    return index;
-  });
-
-  $(active).addClass('active');
-});
-
-
-//
-// Minimize navbar on navigation. Needed for mobile devices.
-//
-N.wire.on('navigate.exit', function navbar_menu_minimize() {
-  $('.nav-collapse').collapse('hide');
+  if (getCookie('vnav') === '1') {
+    $('body').addClass('nav-vert-on').removeClass('nav-horiz-on');
+  } else {
+    $('body').removeClass('nav-vert-on').addClass('nav-horiz-on');
+  }
 });
