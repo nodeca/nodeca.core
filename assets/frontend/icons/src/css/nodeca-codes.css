@@ -22,3 +22,6 @@
 .icon-logout:before { content: '\e80b'; } /* '' */
 .icon-home:before { content: '\e80c'; } /* '' */
 .icon-menu:before { content: '\e80d'; } /* '' */
+.icon-tools:before { content: '\e80e'; } /* '' */
+.icon-nav-horiz:before { content: '\e80f'; } /* '' */
+.icon-nav-vert:before { content: '\e810'; } /* '' */

@@ -78,8 +78,8 @@ nav.navbar.navbar-default.navbar-static-top.nav-horiz
         //- NOTE: This block is located in `nodeca.users`
         != self.partial('@common.blocks.nav_horiz_auth', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
 
-        li: a(
+        li: a.icon-nav-vert.icon-only(
               href='#'
               data-on-click='common.layout.nav_toggle'
               title=self.t('vert_nav')
-            ) |
+            )
