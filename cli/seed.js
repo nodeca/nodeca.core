@@ -134,75 +134,74 @@ module.exports.run = function (N, args, callback) {
         });
         return;
       }
-      else {
-        // No seed name - show existing list or execute by number,
-        // depending on `-n` argument
-        //
-        var apps;
-        if (app_name) {
-          apps = [{name: app_name, root: get_app_path(app_name)}];
-        }
-        else {
-          apps = N.runtime.apps;
-        }
 
-        // Collect seeds
-        //
-        var seed_list = [];
-        _.forEach(apps, function (app) {
-
-          var seed_dir = path.join(app.root, SEEDS_DIR);
-          fstools.walkSync(seed_dir, /\.js$/, function (file) {
-            // skip files when
-            // - filename starts with _, e.g.: /foo/bar/_baz.js
-            // - dirname in path starts _, e.g. /foo/_bar/baz.js
-            if (file.match(/(^|\/|\\)_/)) { return; }
-
-            seed_list.push({ name: app.name, seed_path: file });
-          });
-        });
-
-        // Execute seed by number
-        //
-        if (!_.isEmpty(args.seed_numbers)) {
-          // protect production env from accident run
-          if (['development', 'testing'].indexOf(env) === -1 && !args.force) {
-            return callback(format('Error: Can\'t run seed from %s enviroment. Please, use -f to force.', env));
-          }
-
-          // check that specified seed exists
-          _.forEach(args.seed_numbers, function(number) {
-            if (!seed_list[number-1]) {
-              console.log(format('Seed number %d not exists', number));
-              process.exit(1);
-            }
-          });
-
-          // Execute seeds
-          async.forEachSeries(args.seed_numbers, function(seed_number, next) {
-            seed_run(N, seed_list[seed_number-1].name, seed_list[seed_number-1].seed_path, next);
-          }, function (err) {
-            if (err) { return callback(err); }
-
-            process.exit(0);
-          });
-
-          return;
-        }
-
-        //
-        // No params - just display seeds list
-        //
-        console.log('Available seeds:\n');
-
-        _.forEach(seed_list, function(seed, idx) {
-          console.log(format('  %d. %s: %s', idx + 1, seed.name, path.basename(seed.seed_path)));
-        });
-
-        console.log('\nSeeds are shown in `<APP>: <SEED_NAME>` form.');
-        console.log('See `seed --help` for details');
-        process.exit(0);
+      // No seed name - show existing list or execute by number,
+      // depending on `-n` argument
+      //
+      var apps;
+      if (app_name) {
+        apps = [{name: app_name, root: get_app_path(app_name)}];
       }
+      else {
+        apps = N.runtime.apps;
+      }
+
+      // Collect seeds
+      //
+      var seed_list = [];
+      _.forEach(apps, function (app) {
+
+        var seed_dir = path.join(app.root, SEEDS_DIR);
+        fstools.walkSync(seed_dir, /\.js$/, function (file) {
+          // skip files when
+          // - filename starts with _, e.g.: /foo/bar/_baz.js
+          // - dirname in path starts _, e.g. /foo/_bar/baz.js
+          if (file.match(/(^|\/|\\)_/)) { return; }
+
+          seed_list.push({ name: app.name, seed_path: file });
+        });
+      });
+
+      // Execute seed by number
+      //
+      if (!_.isEmpty(args.seed_numbers)) {
+        // protect production env from accident run
+        if (['development', 'testing'].indexOf(env) === -1 && !args.force) {
+          return callback(format('Error: Can\'t run seed from %s enviroment. Please, use -f to force.', env));
+        }
+
+        // check that specified seed exists
+        _.forEach(args.seed_numbers, function(number) {
+          if (!seed_list[number-1]) {
+            console.log(format('Seed number %d not exists', number));
+            process.exit(1);
+          }
+        });
+
+        // Execute seeds
+        async.forEachSeries(args.seed_numbers, function(seed_number, next) {
+          seed_run(N, seed_list[seed_number-1].name, seed_list[seed_number-1].seed_path, next);
+        }, function (err) {
+          if (err) { return callback(err); }
+
+          process.exit(0);
+        });
+
+        return;
+      }
+
+      //
+      // No params - just display seeds list
+      //
+      console.log('Available seeds:\n');
+
+      _.forEach(seed_list, function(seed, idx) {
+        console.log(format('  %d. %s: %s', idx + 1, seed.name, path.basename(seed.seed_path)));
+      });
+
+      console.log('\nSeeds are shown in `<APP>: <SEED_NAME>` form.');
+      console.log('See `seed --help` for details');
+      process.exit(0);
     }
   );
 };
