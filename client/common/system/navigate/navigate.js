@@ -78,11 +78,11 @@ function renderNewContent(data, callback) {
     apiPath: data.apiPath
   })).hide();
 
-  $('#content').fadeOut('fast', function () {
+  $('#content').fadeOut(100, function () {
     var offset = data.anchor ? $(data.anchor).offset() : null;
 
     $(this).replaceWith(content);
-    content.fadeIn('fast');
+    content.fadeIn(100);
 
     // To scroll window:
     // - WebKit-based browsers and the quirks mode use `body` element.
@@ -90,7 +90,7 @@ function renderNewContent(data, callback) {
     $('html:not(:animated), body:not(:animated)').animate({
       scrollTop:  offset ? offset.top  : 0
     , scrollLeft: offset ? offset.left : 0
-    }, 300);
+    }, 200);
 
     callback();
   });
@@ -104,9 +104,9 @@ function renderFromHistory(data, callback) {
     apiPath: data.apiPath
   })).hide();
 
-  $('#content').fadeOut('fast', function () {
+  $('#content').fadeOut(100, function () {
     $(this).replaceWith(content);
-    content.fadeIn('fast');
+    content.fadeIn(100);
     callback();
   });
 }
