@@ -10,11 +10,7 @@ module.exports = function (N) {
 
 
   function fetchGlobalSettings(callback) {
-    GlobalSettings
-        .findOne()
-        .setOptions({ lean: true })
-        .exec(function (err, settings) {
-
+    GlobalSettings.findOne().lean(true).exec(function (err, settings) {
       if (err) {
         callback(err);
         return;
