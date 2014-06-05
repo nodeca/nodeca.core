@@ -4,7 +4,8 @@
 .nav-vert__panel
   width navPanelWidth
   position fixed
-  z-index 1100
+  // should be over bootstrap elements, but below modal dialogs
+  z-index 1036
   top 0
   bottom 0
   background-color lighten(grayLightest, 60%)
@@ -54,7 +55,8 @@
 
 .nav-vert__overlay
   position fixed
-  z-index 1090
+  // should be over bootstrap elements, but below modal dialogs
+  z-index 1035
   top 0
   bottom 0
   width 100%
