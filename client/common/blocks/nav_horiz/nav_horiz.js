@@ -35,7 +35,10 @@ N.wire.on('navigate.done', function navbar_menu_change_active(target) {
     return index;
   });
 
-  $(active).addClass('active');
+  // if autoselection not disabled - add highlighting class
+  if ($(active).data('autoselect') !== 0) {
+    $(active).addClass('active');
+  }
 });
 
 
