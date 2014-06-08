@@ -1,7 +1,7 @@
 nodeca.core
 ===========
 
-[![Build Status](https://secure.travis-ci.org/nodeca/nodeca.core.png)](http://travis-ci.org/nodeca/nodeca.core)
+[![Build Status](https://travis-ci.org/nodeca/nodeca.core.svg?branch=master)](https://travis-ci.org/nodeca/nodeca.core)
 
 Nodeca Core app:
 
