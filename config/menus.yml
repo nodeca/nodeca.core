@@ -1,11 +1,4 @@
 menus:
-  common:
-    admin:
-      dashboard:
-        to: admin.core.dashboard
-        priority: 500
-        check_permissions: true
-
   admin:
     navbar:
       core:
