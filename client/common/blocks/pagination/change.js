@@ -4,13 +4,9 @@
 'use strict';
 
 
-var getFormData = require('nodeca.core/lib/client/get_form_data');
-
-
-N.wire.on(module.apiPath, function pagination_change(event) {
-  var $form = $(event.currentTarget)
-    , data = $form.data('pagination')
-    , page = +(getFormData($form).page);
+N.wire.on(module.apiPath, function pagination_change(form) {
+  var data = form.data.pagination;
+  var page = +form.fields.page;
 
   if (!page) {
     return;
