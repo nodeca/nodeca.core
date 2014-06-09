@@ -1,55 +1,17 @@
 //- Vertical site navigation
 
-//- need cut base of ns menu path ('common.menus.navbar')
-- var MENU_BASE_NS_LEVEL = 3
-//- need cut base of api path ('admin')
-- var API_PATH_BASE_NS_LEVEL = 1
-- var api_path_tail = self.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
+- var localizationPrefix = '@common.menus.navbar.';
 
+- function compare(a, b) { return (a.info.priority || 100) - (b.info.priority || 100); }
 
-//- Partial to generate submenus
-mixin _create_submenus(submenus)
-  - var item_link
-  ul.dropdown-menu
-    each item in submenus
-      if (item.childs)
-        // If item without link, then take link from first child
-        if (!item.link)
-          item_link = item.childs[0].link
-        else
-          item_link = item.link
-        li.dropdown-submenu
-          a(href=item_link, tabindex='-1')= self.t(item.title)
-          mixin _create_submenus(item.childs)
-      else
-        li
-          a(href=item.link)= self.t(item.title)
-
-
-//- Creates nested menu html
-mixin nav_menu(menus)
-  - var active_state
-  - var item_path_tail
-
-  ul.nav.navbar-default
-    each item in menus
-      - var item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
-
-      //- highlight current app
-      if (api_path_tail.indexOf(item_path_tail) > -1)
-        - active_state = 'active'
-      else
-        - active_state = ''
-
-      if (item.childs)
-        li.nav-vert__menu-item.dropdown(class=active_state, data-api-path=item.to)
-          a.nav-vert__menu-link(href=item.link)= self.t(item.title)
-          mixin _create_submenus(item.childs)
-      else
-        li.nav-vert__menu-item(class=active_state, data-api-path=item.to)
-          a.nav-vert__menu-link(href=item.link)= self.t(item.title)
-
-//-/////////////////////////////////////////////////////////////////////////////
+- function sortedItems(items) {
+-   var result = [];
+-   Object.keys(items).forEach(function (name) {
+-     if (!items[name]) { return; }
+-     result.push({ name: name, info: items[name] });
+-   });
+-   return result.sort(compare);
+- }
 
 .nav-vert__panel
   .nav-vert__panel-inner
@@ -81,10 +43,11 @@ mixin nav_menu(menus)
 .nav-vert__overlay
   button.nav-vert__overlay-bg(data-on-click='common.blocks.nav_vert.toggle_menu')
   .nav-vert__menu
-    mixin nav_menu(self.navbar)
     ul.nav.navbar-default
+      each item in sortedItems(self.runtime.navbar)
+        - var info = item.info;
+        li.nav-vert__menu-item(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
+          a.nav-vert__menu-link(href=self.url_to(info.to))= self.t(localizationPrefix + item.name)
+      
       li.nav-vert__menu-item
-        a.nav-vert__menu-link(
-          href='https://github.com/nodeca/nodeca'
-          target='_blank'
-        ) Github
+        a.nav-vert__menu-link(href='https://github.com/nodeca/nodeca', target='_blank') Github

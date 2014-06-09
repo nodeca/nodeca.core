@@ -33,9 +33,9 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
 
   //- class nav-horiz-on/nav-vert-on defines navigation type
   body.nav-horiz-on
-    != self.partial('@common.blocks.nav_horiz', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings, navbar: self.runtime.menus.common.navbar })
+    != self.partial('@common.blocks.nav_horiz', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
     .layout__container.container-fluid
-      != self.partial('@common.blocks.nav_vert', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings, navbar: self.runtime.menus.common.navbar })
+      != self.partial('@common.blocks.nav_vert', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
       .layout__content
         != self.content
 
