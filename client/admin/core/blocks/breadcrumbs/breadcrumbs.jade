@@ -1,57 +1,28 @@
-//- need cut base of ns menu path ('admin.menus.navbar')
-- var MENU_BASE_NS_LEVEL = 3
-//- need cut base of api path ('admin')
-- var API_PATH_BASE_NS_LEVEL = 1
-- var api_path_tail = self.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
-- var last_element
 
-- var menu = self.runtime.menus.admin
+- var localizationPrefix = '@admin.menus.navbar.';
 
+- function fetchBreadcrumbs(menu, fullName, result) {
+-   if (!result) { result = []; }
+-   if (!fullName) { fullName = ''; }
+-   for (var key in menu) {
+-     if (!menu[key]) { continue; }
+-     if (self.apiPath.indexOf(fullName + key) > -1) {
+-       result.push({ name: key, info: menu[key], fullName: fullName + key });
+-       if (menu[key].submenu) {
+-         result = fetchBreadcrumbs(menu[key].submenu, fullName + key + '.', result);
+-       }
+-       return result;
+-     }
+-   }
+- }
 
-//- fetch next breadcrumb level
-//-
-//-   menu (Array)   - menu
-//-   result (Array) - breadcrumbs container
-mixin _fetch_breadcrumbs(menu, result)
-  - var item_path_tail, item_link
-  - each item in menu
-    - item_path_tail= item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
+- var breadcrumbs = fetchBreadcrumbs(self.runtime.navbar);
 
-    - if (api_path_tail.indexOf(item_path_tail) > -1)
-      //- If ACP item without link, then take link from first child
-      - if (!item.to)
-      -   item_link = item.childs[0].to
-      - else
-      -   item_link = item.to
-
-      - result.push({
-      -   text: self.t(item.title),
-      -   route: item_link,
-      -   tail: item_path_tail
-      - })
-
-      - if (item.childs)
-        mixin _fetch_breadcrumbs(item.childs, result)
-
-
-- if (menu && menu.navbar && !self.path)
-  - self.path = []
-  mixin _fetch_breadcrumbs(menu.navbar, self.path)
-  - if (self.path.length)
-    //- if current api path != last breadcrumb element
-    //- then add page title
-    - if (self.path.slice(-1)[0].tail !== api_path_tail)
-      - self.path.push({ text: self.title });
-
-- if (self.path && self.path.length)
-  //- last_element = self.path.pop()
-  ul.breadcrumbs
-    - each item in self.path
+ul.breadcrumbs
+  if breadcrumbs
+    each item in breadcrumbs
       li.breadcrumbs__item
-        - if (item.route)
-          a.breadcrumbs__link(href=self.link_to(item.route))= item.text
-        - else
-          | #{item.text}
-        //span.divider: /
-    //li.active
-    //  | #{last_element.text}
+        if item.info.to !== self.apiPath
+          a.breadcrumbs__link(href=self.link_to(item.info.to))= self.t(localizationPrefix + item.fullName)
+        else
+          = self.t(localizationPrefix + item.fullName)

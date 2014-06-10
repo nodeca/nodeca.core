@@ -26,12 +26,7 @@ html.no-js
       NodecaLoader.loadAssets.init(!{JSON.stringify(self.head.assets)}, 'admin');
 
   body
-    include ./_topnav_menu
-
-    if self.runtime.menus.admin && self.runtime.menus.admin.navbar
-      nav.navbar.navbar-default.navbar-fixed-top
-        .container
-          mixin topnav_menu(self.runtime.menus.admin.navbar)
+    != self.partial('@admin.core.blocks.nav_horiz')
 
     .container
       != self.content

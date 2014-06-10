@@ -1,8 +1,8 @@
 #content
-  != self.partial('@admin.core.blocks.sidebar_menu', { menu: self.runtime.menus.admin })
+  != self.partial('@admin.core.blocks.sidebar_menu')
 
   .main
-    != self.partial('@admin.core.blocks.breadcrumbs', { menu: self.runtime.menus.admin })
+    != self.partial('@admin.core.blocks.breadcrumbs')
 
     h1 Hello World
     p= self.now

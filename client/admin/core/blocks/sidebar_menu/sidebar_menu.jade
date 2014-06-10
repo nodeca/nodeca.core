@@ -1,32 +1,22 @@
-//- need cut base of ns menu path ('admin.menus.navbar')
-- var MENU_BASE_NS_LEVEL = 3
-//- need cut base of api path ('admin')
-- var API_PATH_BASE_NS_LEVEL = 1
-- var api_path_tail = self.apiPath.split('.').slice(API_PATH_BASE_NS_LEVEL).join('.')
+-// Show hidden sidebars for all top-level menus - needed sidebar shows via client script
 
-- var menu = self.runtime.menus.admin
+- var localizationPrefix = '@admin.menus.navbar.';
 
+- function compare(a, b) { return (a.info.priority || 100) - (b.info.priority || 100); }
 
-- if (menu && menu.navbar)
-  - var item_path_tail
-  - var menu_active_class
+- function sortedItems(items) {
+-   var result = [];
+-   Object.keys(items).forEach(function (name) {
+-     if (!items[name]) { return; }
+-     result.push({ name: name, info: items[name] });
+-   });
+-   return result.sort(compare);
+- }
 
-  - each app_level_item in menu.navbar
-
-    //- display items only for current app
-    - item_path_tail = app_level_item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
-    - if (api_path_tail.indexOf(item_path_tail) > -1)
-      - if (app_level_item.childs)
-
-        ul.sidebar-menu.nav
-          - each first_level_item in app_level_item.childs
-            - item_path_tail= first_level_item.title.split('.').slice(MENU_BASE_NS_LEVEL).join('.')
-
-            //- highlight sub-items (check by api path)
-            - if (api_path_tail.indexOf(item_path_tail) > -1 || self.apiPath === first_level_item.to)
-            -   menu_active_class = '_active'
-            - else
-            -   menu_active_class = ''
-
-            li.sidebar-menu__item(class=menu_active_class)
-              a.sidebar-menu__link(href=first_level_item.link) #{self.t(first_level_item.title)}
+each rootItem in sortedItems(self.runtime.navbar)
+  if rootItem.info.submenu
+    ul.sidebar-menu.nav.hidden
+      each item in sortedItems(rootItem.info.submenu)
+        - var info = item.info;
+        li.sidebar-menu__item(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
+          a.sidebar-menu__link(href=self.link_to(info.to))= self.t(localizationPrefix + rootItem.name + '.' + item.name)
