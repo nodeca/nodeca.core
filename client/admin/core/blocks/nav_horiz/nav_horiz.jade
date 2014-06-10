@@ -29,7 +29,7 @@ mixin _create_submenus(submenu, localizationPrefix)
 
 
 nav.navbar.navbar-default.navbar-fixed-top
-  .container
+  .container-fluid
     ul.navbar__hovered.nav.navbar-nav
       each item in sortedItems(self.runtime.navbar)
         - var info = item.info;
