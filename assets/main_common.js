@@ -1,6 +1,13 @@
 //= require vendor/history.js/scripts/uncompressed/history.adapter.jquery
 //= require vendor/history.js/scripts/uncompressed/history
 //= require vendor/powertip/jquery.powertip
+//= require vendor/jquery-ui/ui/jquery.ui.widget.js
+//= require vendor/blueimp-load-image/js/load-image.min.js
+//= require vendor/blueimp-canvas-to-blob/js/canvas-to-blob.min.js
+//= require vendor/jquery-file-upload/js/jquery.iframe-transport.js
+//= require vendor/jquery-file-upload/js/jquery.fileupload.js
+//= require vendor/jquery-file-upload/js/jquery.fileupload-process.js
+//= require vendor/jquery-file-upload/js/jquery.fileupload-image.js
 //= require frontend/bootstrap_custom
 //= require frontend/js/bootstrap_collapse_ext
 //= require client
