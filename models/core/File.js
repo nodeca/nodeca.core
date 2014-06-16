@@ -136,6 +136,8 @@ module.exports = function (N, collectionName) {
           _.forEach(files, function(file) {
             gfs.remove({ _id: file._id }, function () {}); // don't wait
           });
+
+          callback();
         });
       });
       return;
