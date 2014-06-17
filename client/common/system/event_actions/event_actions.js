@@ -25,6 +25,22 @@ function handleAction(apiPath, data) {
 
 
 N.wire.once('navigate.done', function () {
+
+  // add the dataTransfer property for use with the native `drop` event
+  // to capture information about files dropped into the browser window
+  // http://api.jquery.com/category/events/event-object/
+  jQuery.event.props.push('dataTransfer');
+
+  $(document)
+    .on(
+    'dragenter.nodeca.data-api dragleave.nodeca.data-api dragover.nodeca.data-api drop.nodeca.data-api',
+    '[data-on-dragdrop]',
+    function (event) {
+      var apiPath = $(this).data('onDragdrop');
+      handleAction(apiPath, event);
+      event.preventDefault();
+    });
+
   $(document).on('click.nodeca.data-api', '[data-on-click]', function (event) {
     var apiPath = $(this).data('onClick');
     handleAction(apiPath, event);
