@@ -108,9 +108,8 @@ N.wire.on('navigate.done:' + module.apiPath, function () {
     settings.sort(function (a, b) {
       if (a.priority === b.priority) {
         return a.name.localeCompare(b.name);
-      } else {
-        return a.priority - b.priority;
       }
+      return a.priority - b.priority;
     });
   });
 

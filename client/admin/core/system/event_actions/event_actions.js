@@ -29,7 +29,7 @@ N.wire.once('navigate.done', function () {
   // add the dataTransfer property for use with the native `drop` event
   // to capture information about files dropped into the browser window
   // http://api.jquery.com/category/events/event-object/
-  jQuery.event.props.push('dataTransfer');
+  $.event.props.push('dataTransfer');
 
   $(document)
     .on(

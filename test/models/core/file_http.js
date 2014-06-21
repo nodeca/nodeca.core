@@ -61,7 +61,7 @@ describe('File (GridFS) http requests test', function () {
   it('GET with If-Modified-Since', function (done) {
     request
       .get(router.linkTo('core.gridfs', { bucket: info._id }))
-      .set('If-Modified-Since', (new Date(Date.now() + 1000*60)).toString())
+      .set('If-Modified-Since', (new Date(Date.now() + 1000 * 60)).toString())
       .expect(304)
       .expect('')
       .end(done);

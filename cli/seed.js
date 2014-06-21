@@ -175,7 +175,7 @@ module.exports.run = function (N, args, callback) {
 
         // check that specified seed exists
         _.forEach(args.seed_numbers, function(number) {
-          if (!seed_list[number-1]) {
+          if (!seed_list[number - 1]) {
             console.log(format('Seed number %d not exists', number));
             process.exit(1);
           }
@@ -183,7 +183,7 @@ module.exports.run = function (N, args, callback) {
 
         // Execute seeds
         async.eachSeries(args.seed_numbers, function(seed_number, next) {
-          seed_run(N, seed_list[seed_number-1].name, seed_list[seed_number-1].seed_path, next);
+          seed_run(N, seed_list[seed_number - 1].name, seed_list[seed_number - 1].seed_path, next);
         }, function (err) {
           if (err) { return callback(err); }
 

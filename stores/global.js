@@ -7,6 +7,7 @@ var memoizee = require('memoizee');
 
 module.exports = function (N) {
   var GlobalSettings = N.models.core.GlobalSettings;
+  var GlobalStore;
 
 
   function fetchGlobalSettings(callback) {
@@ -41,7 +42,7 @@ module.exports = function (N) {
   });
 
 
-  var GlobalStore = N.settings.createStore({
+  GlobalStore = N.settings.createStore({
     get: function (keys, params, options, callback) {
       var fetch = options.skipCache ? fetchGlobalSettings : fetchGlobalSettingsCached;
 

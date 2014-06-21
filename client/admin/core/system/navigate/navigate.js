@@ -353,7 +353,7 @@ if (History.enabled) {
 
       // Retrieve data.
       //N.io.rpc(match.meta.methods.get, castParamTypes(match.params || {}), function (err, res) {
-      N.io.rpc(match.meta.methods.get, match.params || {}, function (err, res) {
+      N.io.rpc(match.meta.methods.get, match.params || {}, function (_err, res) {
         var a, data, url;
 
         // Simple way to parse URL in browser.

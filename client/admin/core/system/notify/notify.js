@@ -118,7 +118,7 @@ Notification.prototype = {
   },
 
   hide: function () {
-    var that = this, timeout;
+    var self = this, timeout;
 
     if (!this.isShown) {
       return;
@@ -132,13 +132,13 @@ Notification.prototype = {
     this.$element.removeClass('in');
 
     timeout = setTimeout(function () {
-      that.$element.off($.support.transition.end);
-      that.$element.detach();
+      self.$element.off($.support.transition.end);
+      self.$element.detach();
     }, 500);
 
     this.$element.one($.support.transition.end, function () {
       clearTimeout(timeout);
-      that.$element.detach();
+      self.$element.detach();
     });
   }
 };
