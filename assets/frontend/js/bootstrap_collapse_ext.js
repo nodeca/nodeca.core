@@ -5,10 +5,9 @@
 //
 
 
-'use strict';
-
-
 $(function () {
+  'use strict';
+
   $('body').on('shown.bs.collapse.data-api hidden.bs.collapse.data-api', '[data-notify]', function (event) {
     $($(this).data('notify')).toggleClass('collapsed', 'hidden' === event.type);
   });

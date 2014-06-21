@@ -12,4 +12,3 @@
 
 // Popover must go AFTER tooltip
 //= //require ../../vendor/bootstrap/js/popover
-

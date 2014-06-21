@@ -26,6 +26,7 @@ var SEEDS_DIR = 'db/seeds';
 
 
 function seed_run(N, app_name, seed_path, callback) {
+  /*eslint no-console:0*/
   console.log('Applying seed...\n');
 
   require(seed_path)(N, function (err) {
@@ -109,6 +110,8 @@ module.exports.run = function (N, args, callback) {
     ], N,
 
     function (err) {
+      /*eslint no-console:0*/
+
       if (err) {
         callback(err);
         return;
@@ -179,7 +182,7 @@ module.exports.run = function (N, args, callback) {
         });
 
         // Execute seeds
-        async.forEachSeries(args.seed_numbers, function(seed_number, next) {
+        async.eachSeries(args.seed_numbers, function(seed_number, next) {
           seed_run(N, seed_list[seed_number-1].name, seed_list[seed_number-1].seed_path, next);
         }, function (err) {
           if (err) { return callback(err); }

@@ -181,12 +181,12 @@ module.exports = function(grunt) {
         component = grunt.file.readJSON('component.json'),
         jqueryPlugin = grunt.file.readJSON('typeahead.js.jquery.json');
 
-    component = JSON.stringify(_.extend(component, {
+    component = JSON.stringify(_.assign(component, {
       name: pkg.name,
       version: version
     }), null, 2);
 
-    jqueryPlugin = JSON.stringify(_.extend(jqueryPlugin, {
+    jqueryPlugin = JSON.stringify(_.assign(jqueryPlugin, {
       name: pkg.name,
       title: pkg.name,
       version: version,
@@ -198,7 +198,7 @@ module.exports = function(grunt) {
       maintainers: pkg.contributors
     }), null, 2);
 
-    pkg = JSON.stringify(_.extend(pkg, {
+    pkg = JSON.stringify(_.assign(pkg, {
       version: version
     }), null, 2);
 

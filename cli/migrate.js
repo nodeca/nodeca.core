@@ -46,6 +46,9 @@ module.exports.run = function (N, args, callback) {
 
       // fetch used migrations from db
       Migration.getLastState(function (err, currentMigrations) {
+
+        /*eslint no-console:0*/
+
         var outstandingMigrations;
 
         if (err) {
@@ -80,7 +83,7 @@ module.exports.run = function (N, args, callback) {
         console.log('Applying ' + outstandingMigrations.length +
                     ' outstanding migration(s):\n');
 
-        async.forEachSeries(outstandingMigrations, function (migration, next) {
+        async.eachSeries(outstandingMigrations, function (migration, next) {
           var up;
 
           process.stdout.write('  ' + formatMigrationTitle(migration) + ' ... ');

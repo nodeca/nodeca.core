@@ -57,9 +57,11 @@ module.exports.run = function (N, args, callback) {
         return;
       }
 
+      /*eslint no-console:0*/
+
       console.log('\n');
 
-      _.each(N.wire.stat(), function (hook) {
+      _.forEach(N.wire.stat(), function (hook) {
         // try to filter by pattern, if set
         if (args.mask && (-1 === hook.name.indexOf(args.mask))) {
           return;
@@ -71,7 +73,7 @@ module.exports.run = function (N, args, callback) {
         } else {
           // long format
           console.log('\n' + hook.name + ' -->\n');
-          _.each(hook.listeners, function (handler) {
+          _.forEach(hook.listeners, function (handler) {
             console.log(
               '  - ' +
               '[' + handler.priority + '] ' + handler.name +

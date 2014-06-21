@@ -115,7 +115,7 @@ N.wire.on('navigate.done:' + module.apiPath, function () {
   });
 
   isDirty = ko.computed(function () {
-    return _.any(settingModels, function (setting) {
+    return _.some(settingModels, function (setting) {
       return setting.value.isDirty();
     });
   });

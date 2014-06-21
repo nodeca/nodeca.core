@@ -166,7 +166,7 @@ module.exports = function (N, collectionName) {
   File.put = File.prototype.put = function (src, opt, callback) {
     var input = getStream(src);
 
-    var options = _.extend({}, opt); // protect opt from modifications
+    var options = _.assign({}, opt); // protect opt from modifications
 
     if (!input) { return callback(new Error('File.put: unknown source data')); }
 

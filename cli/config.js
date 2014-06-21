@@ -26,6 +26,8 @@ module.exports.run = function (N/*, args, callback*/) {
   // Reduce log level
   N.logger.setLevel('info');
 
+  /*eslint no-console:0*/
+
   // Don't emit any events
   console.log(inspect(N.config, { depth: null, colors: true }));
 
