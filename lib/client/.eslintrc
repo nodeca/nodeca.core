@@ -1,6 +1,7 @@
 env:
-  node: false
   browser: true
+  # temporary hack intil configs merged right
+  #node: false
 
 globals:
   $: false
