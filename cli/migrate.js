@@ -103,11 +103,13 @@ module.exports.run = function (N, args, callback) {
               return;
             }
 
-            // All ok. Write step to db
-            Migration.markPassed(migration.appName, migration.step, function (err) {
+            function finish(err) {
               console.log(err ? 'FAILED' : 'OK');
               next(err);
-            });
+            }
+
+            // All ok. Write step to db
+            Migration.markPassed(migration.appName, migration.step, finish);
           });
         }, function (err) {
           if (err) {
