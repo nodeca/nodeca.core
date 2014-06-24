@@ -7,7 +7,6 @@
 //= require vendor/jquery-file-upload/js/jquery.iframe-transport.js
 //= require vendor/jquery-file-upload/js/jquery.fileupload.js
 //= require vendor/jquery-file-upload/js/jquery.fileupload-process.js
-//= require vendor/jquery-file-upload/js/jquery.fileupload-image.js
 //= require frontend/bootstrap_custom
 //= require frontend/js/bootstrap_collapse_ext
 //= require client
