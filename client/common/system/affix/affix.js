@@ -12,9 +12,10 @@
 N.wire.on('navigate.done', function () {
   $('._affix').each(function (idx, el) {
     var $el = $(el);
+    var affix_top = $el.data('affix-top') || 0;
     $el.affix({
       offset : {
-        top: function () { return $el.offset().top; }
+        top: function () { return $el.offset().top + affix_top; }
       }
     });
   });
