@@ -4,7 +4,7 @@
 
 // Container to preserve space, when controlbar become float
 .controlbar
-  height: 56px
+  height: 44px
 
 // Hack bootstrap to avoid double padding
 // on nested .container block for controlbar
@@ -27,6 +27,8 @@
   // Don't change global container position,
   // it should stay intact to reserver space
   position static
+  // Reset style from bootstrap, to fix `position fixed` for children
+  transform: none
 
   .controlbar__floater
     position fixed
