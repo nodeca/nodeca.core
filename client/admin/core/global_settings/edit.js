@@ -64,7 +64,7 @@ function SettingModel(name, schema, value) {
 }
 
 
-N.wire.on('navigate.done:' + module.apiPath, function () {
+N.wire.on('navigate.done:' + module.apiPath, function global_settings_edit_init() {
   var inputSchemas = N.runtime.page_data.setting_schemas
     , inputValues  = N.runtime.page_data.setting_values;
 
@@ -131,7 +131,7 @@ N.wire.on('navigate.done:' + module.apiPath, function () {
 });
 
 
-N.wire.on('navigate.exit:' + module.apiPath, function () {
+N.wire.on('navigate.exit:' + module.apiPath, function global_settings_edit_free() {
   // Reset module variables to allow the garbage collector do it's job.
   categoryKeys     = null;
   categoryNames    = null;

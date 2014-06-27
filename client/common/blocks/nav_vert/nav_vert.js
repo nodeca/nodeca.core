@@ -21,13 +21,13 @@ function hideScrollback() {
 
 
 // reset states on page leave
-N.wire.on('navigate.to', function () {
+N.wire.on('navigate.to', function nav_vert_init() {
   hideMenu();
   hideScrollback();
 });
 
 
-N.wire.on('common.blocks.nav_vert.toggle_menu', function () {
+N.wire.on('common.blocks.nav_vert.toggle_menu', function nav_vert_toggle_menu() {
   $('.layout__container').toggleClass('nav-vert__menu-active');
 });
 
@@ -41,7 +41,9 @@ var trackScrollPos = _.throttle(function() {
 }, 100);
 
 
-N.wire.on('common.blocks.nav_vert.scroll', function () {
+// Scroll to top or back on button press
+//
+N.wire.on('common.blocks.nav_vert.scroll', function nav_vert_scroll() {
   hideMenu();
 
   if (memoisedScrollPos) {

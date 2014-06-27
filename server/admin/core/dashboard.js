@@ -4,7 +4,7 @@
 module.exports = function (N, apiPath) {
   N.validate(apiPath, {});
 
-  N.wire.on(apiPath, function (env, next) {
+  N.wire.on(apiPath, function dashboard(env, next) {
     env.res.now = (new Date()).toString();
     next();
   });

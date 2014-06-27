@@ -36,7 +36,7 @@ function show(message) {
 
 N.wire.on('io.complete', hide);
 
-N.wire.on('io.request', function () {
+N.wire.on('io.request', function progress_notice_timer_start() {
   clearTimeout(timeout);
 
   // schedule showing new message in next 500 ms
@@ -45,7 +45,7 @@ N.wire.on('io.request', function () {
   }, 500);
 });
 
-N.wire.on('io.error', function (err) {
+N.wire.on('io.error', function progress_notice_show_err(err) {
   if (N.io.EWRONGVER === err.code) {
     show(t('version_mismatch'));
   }

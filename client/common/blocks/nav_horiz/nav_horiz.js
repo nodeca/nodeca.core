@@ -4,17 +4,6 @@
 var _ = require('lodash');
 
 
-//
-// Observe quicksearch focus to tweak icon style
-//
-N.wire.once('navigate.done', function () {
-  $('.navbar-search .search-query')
-    .focus(function () { $(this).next('div').addClass('focused'); })
-    .blur(function () { $(this).next('div').removeClass('focused'); });
-});
-
-
-//
 // Update "active" tab of the navbar_menu when moving to another page.
 //
 N.wire.on('navigate.done', function navbar_menu_change_active(target) {

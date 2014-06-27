@@ -5,7 +5,7 @@
 'use strict';
 
 
-N.wire.on('io.error', function (err) {
+N.wire.on('io.error', function io_err_init(err) {
   switch (err.code) {
   case N.io.INVALID_CSRF_TOKEN:
     N.runtime.csrf = err.data.token;

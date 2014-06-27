@@ -9,7 +9,7 @@
 'use strict';
 
 
-N.wire.on('navigate.done', function () {
+N.wire.on('navigate.done', function affix_init() {
   $('._affix').each(function (idx, el) {
     var $el = $(el);
     var affix_top = $el.data('affix-top') || 0;
@@ -21,6 +21,6 @@ N.wire.on('navigate.done', function () {
   });
 });
 
-N.wire.on('navigate.exit', function () {
+N.wire.on('navigate.exit', function affix_free() {
   $(document).off('.affix');
 });

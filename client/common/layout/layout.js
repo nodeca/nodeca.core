@@ -9,7 +9,7 @@ function getCookie(name) {
 }
 
 
-N.wire.on('common.layout.nav_toggle', function () {
+N.wire.on('common.layout.nav_toggle', function layout_toggle_navbar() {
   $('body').toggleClass('nav-vert-on').toggleClass('nav-horiz-on');
 
   if ($('body').hasClass('nav-vert-on')) {
@@ -22,7 +22,7 @@ N.wire.on('common.layout.nav_toggle', function () {
 
 // Sync navigation style with cookie value,
 // id server responded with different layout
-N.wire.once('navigate.done', function () {
+N.wire.once('navigate.done', function layout_init() {
   if (getCookie('vnav') === '1') {
     $('body').addClass('nav-vert-on').removeClass('nav-horiz-on');
   } else {
