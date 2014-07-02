@@ -297,8 +297,10 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 
 // Replace current History state without data fetching and rendering.
 //
-//   options.href  - full url of new history state. (required)
-//   options.title - new page title. (required)
+//   options.href  - full url of new history state.
+//                   If not set - use current href. (optional)
+//   options.title - new page title.
+//                   If not set - use current title. (optional)
 //   options.data  - data for history renderer; it will be used when user will
 //                   return to this page using history navigation. (optional)
 //
@@ -306,7 +308,8 @@ N.wire.on('navigate.replace', function navigate_replace(options, callback) {
   __dryHistoryChange__ = true;
   __completeCallback__ = callback;
 
-  History.replaceState(options.data || {}, options.title, options.href);
+  var state = History.getState();
+  History.replaceState(options.data || {}, options.title || state.title, options.href || state.url);
 });
 
 
