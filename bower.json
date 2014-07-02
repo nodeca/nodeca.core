@@ -2,14 +2,14 @@
   "name"        : "nodeca",
   "private"     : false,
   "dependencies": {
-    "jquery"            : "~2.1.1",
-    "jquery-ui"         : "~1.10.3",
-    "jquery-file-upload": "~9.5.7",
-    "es5-shim"          : "~3.4.0",
-    "history.js"        : "~1.8.0",
-    "json2"             : "*",
-    "typeahead.js"      : "~0.9.3",
-    "bootstrap"         : "~3.2.0",
-    "bag.js"            : "~0.1.2"
+    "jquery"                : "~2.1.1",
+    "jquery-ui"             : "~1.10.3",
+    "blueimp-canvas-to-blob": "~2.1.0",
+    "es5-shim"              : "~3.4.0",
+    "history.js"            : "~1.8.0",
+    "json2"                 : "*",
+    "typeahead.js"          : "~0.9.3",
+    "bootstrap"             : "~3.2.0",
+    "bag.js"                : "~0.1.2"
   }
 }
