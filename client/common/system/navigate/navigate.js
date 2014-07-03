@@ -1,3 +1,5 @@
+/*eslint-disable no-alert*/
+
 'use strict';
 
 

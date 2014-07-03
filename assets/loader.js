@@ -4,6 +4,7 @@
 
 
 /*global basket*/
+/*eslint-disable no-alert*/
 
 
 window.NodecaLoader = (function () {

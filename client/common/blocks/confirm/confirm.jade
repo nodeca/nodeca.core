@@ -1,0 +1,7 @@
+.modal.fade(tabindex='-1', role='dialog')
+  .modal-dialog
+    .modal-content
+      .modal-body= self.message
+      .modal-footer
+        button(type='button' data-dismiss='modal').btn.btn-default= self.t('cancel')
+        button(type='button' data-on-click='common.blocks.confirm:ok').btn.btn-danger= self.t('ok')
