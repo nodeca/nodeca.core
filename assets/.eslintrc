@@ -9,3 +9,4 @@ globals:
   exports: true
   require: false
   t: false
+  NodecaLoader: false

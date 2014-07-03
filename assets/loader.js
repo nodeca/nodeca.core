@@ -11,10 +11,11 @@ window.NodecaLoader = (function () {
 
 
   var NodecaLoader = {};
+  var alert = window.alert;
 
 
-  var URL_JSON2_SHIM = <%- JSON.stringify(asset_path('vendor/json2/json2.js')) %>
-    , URL_ES5_SHIM   = <%- JSON.stringify(asset_path('vendor/es5-shim/es5-shim.js')) %>;
+  var URL_JSON2_SHIM = '$$ JSON.stringify(asset_path("vendor/json2/json2.js")) $$';
+  var URL_ES5_SHIM   = '$$ JSON.stringify(asset_path("vendor/es5-shim/es5-shim.js")) $$';
 
 
   // Simple cross-browser `forEach` iterator for arrays.
@@ -156,9 +157,8 @@ window.NodecaLoader = (function () {
     function resolveI18nPath(path) {
       if ('@' === path.charAt(0)) {
         return path.slice(1);
-      } else {
-        return module.internal.apiPath + '.' + path;
       }
+      return module.internal.apiPath + '.' + path;
     }
 
     // Local `t` (translate) function for use only within this module.
@@ -265,7 +265,7 @@ window.NodecaLoader = (function () {
         });
       });
 
-      bag.require(res_list, function(err, data) {
+      bag.require(res_list, function(err/*, data*/) {
         if (err) {
           alert(err ? err : 'Failed to load assets: timeout');
           return;
@@ -274,7 +274,7 @@ window.NodecaLoader = (function () {
         forEach(resources, function(url) {
           loaded[url] = true;
         });
-        
+
         initClientModules();
         callback();
       });

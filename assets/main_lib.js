@@ -1,2 +1,6 @@
 //= require vendor/jquery/dist/jquery
-//= require kernel_init
+
+NodecaLoader.execute(function (N, require) {
+  'use strict';
+  require('kernel')(N);
+});

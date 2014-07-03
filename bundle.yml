@@ -77,7 +77,9 @@ packages:
     vendor:
       - lodash
       - knockout
+      # force embedding, init called from main_lib.js
       - kernel: nodeca.core/lib/system/client/kernel.js
+      # stub for jade runtime
       - fs: nodeca.core/lib/system/dummy.js
 
     client:
@@ -88,7 +90,7 @@ packages:
     bin:
       root: assets
       include:
-        - loader.js.ejs
+        - loader.js
         - vendor/es5-shim/es5-shim.js
         - vendor/json2/json2.js
         - frontend/icons/src/font/*
