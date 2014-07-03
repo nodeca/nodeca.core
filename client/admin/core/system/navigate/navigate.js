@@ -233,7 +233,12 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 
       // Note, that we try to keep anchor, if exists.
       // That's important for moved threads and last pages redirects.
-      redirectUrl.hash = anchor || window.location.hash;
+      var hash = anchor || window.location.hash;
+
+      // Skip on empty hash to avoid dummy '#' in link
+      if (hash) {
+        redirectUrl.hash = hash;
+      }
 
       // If protocol is changed, we must completely reload the page to keep
       // Same-origin policy for RPC.
