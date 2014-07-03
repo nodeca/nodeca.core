@@ -49,7 +49,7 @@ N.wire.once('navigate.done', function () {
 
   $(document).on('submit.nodeca.data-api', '[data-on-submit]', function (event) {
     var apiPath = $(this).data('onSubmit');
-    var $form = $(event.currentTarget);
+    var $form = $(event.target);
 
     var data = {
       'fields': {},
