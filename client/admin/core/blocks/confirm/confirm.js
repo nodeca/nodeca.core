@@ -13,7 +13,7 @@ var okCallback;
 var $dialog;
 
 
-N.wire.on('confirm', function confirm(data, callback) {
+N.wire.on('admin.core.blocks.confirm', function confirm(data, callback) {
   if (typeof data === 'string') {
     data = { message: data };
   }
