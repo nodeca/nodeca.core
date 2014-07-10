@@ -401,7 +401,7 @@ if (History.enabled) {
       , doneEventData = { apiPath: state.data.apiPath, params: state.data.params, url: state.url };
 
     // Invoke exit handlers.
-    N.wire.emit(['navigate.exit:' + __currentApiPath__, 'navigate.exit'], exitEventData, function (err) {
+    N.wire.emit([ 'navigate.exit:' + __currentApiPath__, 'navigate.exit' ], exitEventData, function (err) {
       if (err) {
         N.logger.error('%s', err); // Log error, but not stop.
       }
@@ -411,7 +411,7 @@ if (History.enabled) {
 
       render(state.data, function () {
         // Invoke done-handlers.
-        N.wire.emit(['navigate.done', 'navigate.done:' + state.data.apiPath], doneEventData, function (err) {
+        N.wire.emit([ 'navigate.done', 'navigate.done:' + state.data.apiPath ], doneEventData, function (err) {
           if (err) {
             N.logger.error('%s', err); // Log error, but not stop.
           }

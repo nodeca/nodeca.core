@@ -27,7 +27,7 @@ module.exports.parserParameters = {
 
 module.exports.commandLineArguments = [
   {
-    args: ['app'],
+    args: [ 'app' ],
     options: {
       metavar: 'APP_NAME',
       help: 'Run tests of specific application only',

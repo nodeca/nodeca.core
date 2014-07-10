@@ -59,21 +59,21 @@ module.exports.parserParameters = {
 
 module.exports.commandLineArguments = [
   {
-    args: ['-f'],
+    args: [ '-f' ],
     options: {
       help: 'force run without env checking',
       action: 'storeTrue'
     }
   },
   {
-    args: ['-a', '--app'],
+    args: [ '-a', '--app' ],
     options: {
       help: 'application name',
       type: 'string'
     }
   },
   {
-    args: ['-n'],
+    args: [ '-n' ],
     options: {
       metavar: 'SEED_NUMBER',
       dest: 'seed_numbers',
@@ -83,7 +83,7 @@ module.exports.commandLineArguments = [
     }
   },
   {
-    args: ['seed'],
+    args: [ 'seed' ],
     options: {
       metavar: 'SEED_NAME',
       help: 'seed name',
@@ -121,7 +121,7 @@ module.exports.run = function (N, args, callback) {
       //
       if (!!app_name && !!seed_name) {
         // protect production env from accident run
-        if (['development', 'testing'].indexOf(env) === -1 && !args.force) {
+        if ([ 'development', 'testing' ].indexOf(env) === -1 && !args.force) {
           return callback(format('Error: Can\'t run seed from %s enviroment. Please, use -f to force.', env));
         }
 
@@ -143,7 +143,7 @@ module.exports.run = function (N, args, callback) {
       //
       var apps;
       if (app_name) {
-        apps = [{name: app_name, root: get_app_path(app_name)}];
+        apps = [ { name: app_name, root: get_app_path(app_name) } ];
       }
       else {
         apps = N.runtime.apps;
@@ -169,7 +169,7 @@ module.exports.run = function (N, args, callback) {
       //
       if (!_.isEmpty(args.seed_numbers)) {
         // protect production env from accident run
-        if (['development', 'testing'].indexOf(env) === -1 && !args.force) {
+        if ([ 'development', 'testing' ].indexOf(env) === -1 && !args.force) {
           return callback(format('Error: Can\'t run seed from %s enviroment. Please, use -f to force.', env));
         }
 

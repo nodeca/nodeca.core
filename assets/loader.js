@@ -216,7 +216,7 @@ window.NodecaLoader = (function () {
   //
   var bag = new window.Bag({
     timeout: 20000,
-    stores: ['indexeddb', 'websql']
+    stores: [ 'indexeddb', 'websql' ]
   });
 
   // Load a package with all of associated assets ans dependences.
@@ -340,7 +340,7 @@ window.NodecaLoader = (function () {
 
       // Execute after DOM is loaded:
       $(function () {
-        N.wire.emit(['navigate.done', 'navigate.done:' + route.meta.methods.get], {
+        N.wire.emit([ 'navigate.done', 'navigate.done:' + route.meta.methods.get ], {
           url:     location.href
         , apiPath: route.meta.methods.get
         , params:  route.params

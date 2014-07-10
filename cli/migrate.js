@@ -20,7 +20,7 @@ exports.parserParameters  = {
 
 module.exports.commandLineArguments = [
   {
-    args: ['--all'],
+    args: [ '--all' ],
     options: {
       help:   'run all migrations',
       action: 'storeTrue'
