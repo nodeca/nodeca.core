@@ -317,6 +317,17 @@ N.wire.on('navigate.replace', function navigate_replace(options, callback) {
 
   var state = History.getState();
   History.replaceState(options.data || {}, options.title || state.title, options.href || state.url);
+
+  // If we update rendering info for the same page, then
+  // 'onstatechange' will not be emitted. Need to properly set
+  // internal variables for this case.
+  if (History.isLastSavedState(state)) {
+    __dryHistoryChange__ = false;
+    __completeCallback__ = null;
+    if (callback) {
+      callback();
+    }
+  }
 });
 
 
