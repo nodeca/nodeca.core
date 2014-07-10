@@ -1,0 +1,78 @@
+medialinks:
+
+  content: true
+
+  providers:
+
+    youtube:
+      match:
+        - /https?://(www\.)?youtube\.com/watch.*/i
+        - /https?://(www\.)?youtube\.com/playlist.*/i
+        - /https?://youtu\.be/.*/i
+      parse: |
+        var request = require('request');
+        var _       = require('lodash');
+
+        request('http://www.youtube.com/oembed?url=' + url, function (err, response, body) {
+          if (err) {
+            callback(err);
+            return;
+          }
+
+          var oembed;
+          try {
+            oembed = JSON.parse(body);
+          } catch (err) {
+            callback(err);
+            return;
+          }
+
+          var iframeUrl = oembed.html.match(/src="([^"]+)/i)[1];
+          iframeUrl = iframeUrl.replace(/https?:/, '');
+
+          var tpl = '<div class="medialink-video medialink-youtube" data-nd-type="medialink" ' +
+                    ' data-nd-rule="youtube" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= iframeUrl %>" }\'>' +
+                    '<iframe src="<%= iframeUrl %>" allowfullscreen></iframe></div>';
+
+          var result = _.template(tpl, {
+            src: url,
+            iframeUrl: iframeUrl
+          });
+
+          callback(null, result);
+        });
+
+    vimeo:
+      match: /https?://(.+\.)?vimeo\.com/.*/i
+      parse: |
+        var request = require('request');
+        var _       = require('lodash');
+
+        request('http://vimeo.com/api/oembed.json?url=' + url, function (err, response, body) {
+          if (err) {
+            callback(err);
+            return;
+          }
+
+          var oembed;
+          try {
+            oembed = JSON.parse(body);
+          } catch (err) {
+            callback(err);
+            return;
+          }
+
+          var iframeUrl = oembed.html.match(/src="([^"]+)/i)[1];
+          iframeUrl = iframeUrl.replace(/https?:/, '');
+
+          var tpl = '<div class="medialink-video medialink-vimeo" data-nd-type="medialink" ' +
+                    ' data-nd-rule="vimeo" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= iframeUrl %>" }\'>' +
+                    '<iframe src="<%= iframeUrl %>"></iframe></div>';
+
+          var result = _.template(tpl, {
+            src: url,
+            iframeUrl: iframeUrl
+          });
+
+          callback(null, result);
+        });
