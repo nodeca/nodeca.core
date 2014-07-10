@@ -3,7 +3,6 @@
 //= require_self
 
 
-/*global basket*/
 /*eslint-disable no-alert*/
 
 
