@@ -1,8 +1,0 @@
-.git/
-doc/
-node_modules/
-tmp/
-assets/vendor/
-lib/system/client/_n/jade_runtime.js
-assets/backend/js/jquery.mjs.nestedSortable.js
-assets/mobify_custom.js
