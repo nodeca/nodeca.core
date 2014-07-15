@@ -17,7 +17,14 @@
 
 'use strict';
 
+
+var Steady = require('steady');
+
+
 var trackers = [];
+
+// Load requestAnimationFrame shim for old browsers
+require('raf');
 
 
 // Initialize trackers for elements with class '_affix'
@@ -34,7 +41,7 @@ N.wire.on('navigate.done', function affix_init() {
     var throttle = params.throttle || 50;
     var className = params.class || 'affix';
 
-    var steadyMin = new window.Steady({
+    var steadyMin = new Steady({
       throttle: throttle,
       handler: function (values, done) {
         $el.addClass(className);
@@ -52,7 +59,7 @@ N.wire.on('navigate.done', function affix_init() {
 
     trackers.push(steadyMin);
 
-    var steadyMax = new window.Steady({
+    var steadyMax = new Steady({
       throttle: throttle,
       handler: function (values, done) {
         $el.removeClass(className);
