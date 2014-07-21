@@ -96,7 +96,7 @@ module.exports.commandLineArguments = [
 module.exports.run = function (N, args, callback) {
   var app_name = args.app;
   var seed_name = args.seed;
-  var env = N.runtime.env;
+  var env = N.enviroment;
 
   function get_app_path(app_name) {
     var app = _.find(N.apps, function(app) {
