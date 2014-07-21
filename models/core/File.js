@@ -11,9 +11,9 @@ var path      = require('path');
 var sbuffers  = require('stream-buffers');
 var mimoza    = require('mimoza');
 
-var Mongoose  = require('mongoose');
+var mongoose  = require('mongoose');
 var grid      = require('gridfs-stream');
-var ObjectId  = Mongoose.Types.ObjectId;
+var ObjectId  = mongoose.Types.ObjectId;
 
 function escapeRegexp(source) {
   return String(source).replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
@@ -227,8 +227,6 @@ module.exports = function (N, collectionName) {
 
 
   N.wire.on('init:models', function emit_init_File(__, callback) {
-    // reuse mongoose connection
-    var mongoose = N.runtime.mongoose;
 
     // connect to database
     var options = {
@@ -239,14 +237,13 @@ module.exports = function (N, collectionName) {
         socketOptions: { keepAlive: 1 }
       }
     };
+
     var conn = mongoose.createConnection(N.config.database.mongo, options);
+
     conn.once('open', function () {
       gfs = grid(conn.db, mongoose.mongo);
       N.wire.emit('init:models.' + collectionName, File, callback);
     });
-    /*gfs = grid(mongoose.connection, mongoose.mongo);
-
-    N.wire.emit('init:models.' + collectionName, File, callback);*/
   });
 
 

@@ -60,7 +60,7 @@ module.exports.run = function (N, args, callback) {
       }
 
       var mocha = new Mocha();
-      var applications = N.runtime.apps;
+      var applications = N.apps;
 
       mocha.reporter('spec');
       //mocha.ui('bdd');

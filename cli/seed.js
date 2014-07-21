@@ -99,7 +99,7 @@ module.exports.run = function (N, args, callback) {
   var env = N.runtime.env;
 
   function get_app_path(app_name) {
-    var app = _.find(N.runtime.apps, function(app) {
+    var app = _.find(N.apps, function(app) {
       return app_name === app.name;
     });
     return app ? app.root : null;
@@ -146,7 +146,7 @@ module.exports.run = function (N, args, callback) {
         apps = [ { name: app_name, root: get_app_path(app_name) } ];
       }
       else {
-        apps = N.runtime.apps;
+        apps = N.apps;
       }
 
       // Collect seeds
