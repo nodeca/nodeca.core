@@ -11,6 +11,10 @@ bundles:
   editor:
     - editor
 
+  parser:
+    - parser
+
+
 packages:
   admin:
     depends:
@@ -97,3 +101,7 @@ packages:
         - vendor/json2/json2.js
         - frontend/icons/src/font/*
         - backend/icons/src/font/*
+
+  parser:
+    vendor:
+      - ndparser: ./lib/parser/index.js
