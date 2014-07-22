@@ -151,7 +151,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
     href   = normalizeURL(options.href).split('#')[0];
     anchor = normalizeURL(options.href).slice(href.length) || '';
 
-    match = _.find(N.runtime.router.matchAll(href), function (match) {
+    match = _.find(N.router.matchAll(href), function (match) {
       return _.has(match.meta.methods, 'get');
     });
 
@@ -170,7 +170,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
   } else if (options.apiPath) {
     apiPath = options.apiPath;
     params  = options.params || {};
-    href    = normalizeURL(N.runtime.router.linkTo(apiPath, params));
+    href    = normalizeURL(N.router.linkTo(apiPath, params));
     anchor  = options.anchor || '';
 
     if (!href) {
@@ -352,7 +352,7 @@ if (History.enabled) {
     // We have no state data for the initial page (received via HTTP responder).
     // So request that data via RPC and place into History.
     if (_.isEmpty(state.data)) {
-      var match = _.find(N.runtime.router.matchAll(state.url), function (match) {
+      var match = _.find(N.router.matchAll(state.url), function (match) {
         return _.has(match.meta.methods, 'get');
       });
 

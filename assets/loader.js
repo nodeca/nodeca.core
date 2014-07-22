@@ -61,7 +61,7 @@ window.NodecaLoader = (function () {
   // Returns route match data for the given method (e.g. GET) on the given URL
   // or null if none is found. Requires N to be initialized.
   function findRoute(url, method) {
-    var matchArray = N.runtime.router.matchAll(url)
+    var matchArray = N.router.matchAll(url)
       , match
       , index
       , length;

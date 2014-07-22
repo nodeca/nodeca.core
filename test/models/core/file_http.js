@@ -16,7 +16,7 @@ var fileBase    = path.basename(fileName);
 var fileContent = fs.readFileSync(fileName);
 
 var file    = global.TEST_N.models.core.File;
-var router  = global.TEST_N.runtime.router;
+var router  = global.TEST_N.router;
 
 describe('File (GridFS) http requests test', function () {
   var info;
