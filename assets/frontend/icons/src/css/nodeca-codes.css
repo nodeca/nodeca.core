@@ -25,3 +25,9 @@
 .icon-tools:before { content: '\e80e'; } /* '' */
 .icon-nav-horiz:before { content: '\e80f'; } /* '' */
 .icon-nav-vert:before { content: '\e810'; } /* '' */
+.icon-vkontakte:before { content: '\e811'; } /* '' */
+.icon-gplus:before { content: '\e812'; } /* '' */
+.icon-video:before { content: '\e813'; } /* '' */
+.icon-twitter:before { content: '\e814'; } /* '' */
+.icon-yandex:before { content: '\e815'; } /* '' */
+.icon-binary:before { content: '\e816'; } /* '' */
