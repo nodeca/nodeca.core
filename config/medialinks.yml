@@ -9,9 +9,9 @@ medialinks:
         - /https?://(www\.)?youtube\.com/watch.*/i
         - /https?://(www\.)?youtube\.com/playlist.*/i
         - /https?://youtu\.be/.*/i
-      parse: |
+
+      fetch: |
         var request = require('request');
-        var _       = require('lodash');
 
         request('http://www.youtube.com/oembed?url=' + url, function (err, response, body) {
           if (err) {
@@ -27,26 +27,31 @@ medialinks:
             return;
           }
 
-          var iframeUrl = oembed.html.match(/src="([^"]+)/i)[1];
-          iframeUrl = iframeUrl.replace(/https?:/, '');
+          var video_url = oembed.html.match(/src="([^"]+)/i)[1];
+          video_url = video_url.replace(/https?:/, '');
 
-          var tpl = '<div class="medialink-video medialink-youtube" data-nd-type="medialink" ' +
-                    ' data-nd-rule="youtube" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= iframeUrl %>" }\'>' +
-                    '<iframe src="<%= iframeUrl %>" allowfullscreen></iframe></div>';
-
-          var result = _.template(tpl, {
+          var result = {
+            provider: 'youtube',
             src: url,
-            iframeUrl: iframeUrl
-          });
+            video_url: video_url,
+            thumb: oembed.thumbnail_url.replace(/https?:/, ''),
+            thumb_height: oembed.thumbnail_height,
+            thumb_width: oembed.thumbnail_width
+          };
 
           callback(null, result);
         });
 
+      template: |
+        <div class="medialink-video medialink-<%= provider %>" data-nd-type="medialink" data-nd-rule="<%= provider %>" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= video_url %>" }\'>
+          <iframe src="<%= video_url %>" allowfullscreen></iframe>
+        </div>
+
     vimeo:
       match: /https?://(.+\.)?vimeo\.com/.*/i
-      parse: |
+
+      fetch: |
         var request = require('request');
-        var _       = require('lodash');
 
         request('http://vimeo.com/api/oembed.json?url=' + url, function (err, response, body) {
           if (err) {
@@ -62,17 +67,22 @@ medialinks:
             return;
           }
 
-          var iframeUrl = oembed.html.match(/src="([^"]+)/i)[1];
-          iframeUrl = iframeUrl.replace(/https?:/, '');
+          var video_url = oembed.html.match(/src="([^"]+)/i)[1];
+          video_url = video_url.replace(/https?:/, '');
 
-          var tpl = '<div class="medialink-video medialink-vimeo" data-nd-type="medialink" ' +
-                    ' data-nd-rule="vimeo" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= iframeUrl %>" }\'>' +
-                    '<iframe src="<%= iframeUrl %>"></iframe></div>';
-
-          var result = _.template(tpl, {
+          var result = {
+            provider: 'vimeo',
             src: url,
-            iframeUrl: iframeUrl
-          });
+            video_url: video_url,
+            thumb: oembed.thumbnail_url.replace(/https?:/, ''),
+            thumb_height: oembed.thumbnail_height,
+            thumb_width: oembed.thumbnail_width
+          };
 
           callback(null, result);
         });
+
+      template: |
+        <div class="medialink-video medialink-<%= provider %>" data-nd-type="medialink" data-nd-rule="<%= provider %>" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= video_url %>" }\'>
+          <iframe src="<%= video_url %>" allowfullscreen></iframe>
+        </div>
