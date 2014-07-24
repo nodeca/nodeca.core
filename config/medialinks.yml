@@ -86,3 +86,43 @@ medialinks:
         <div class="medialink-video medialink-<%= provider %>" data-nd-type="medialink" data-nd-rule="<%= provider %>" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= video_url %>" }\'>
           <iframe src="<%= video_url %>" allowfullscreen></iframe>
         </div>
+
+    rutube:
+      match: /https?://(.+\.)?rutube\.ru/.*/i
+
+      fetch: |
+        var request = require('request');
+
+        request('http://rutube.ru/api/oembed/?format=json&url=' + url, function (err, response, body) {
+          if (err) {
+            callback(err);
+            return;
+          }
+
+          var oembed;
+          try {
+            oembed = JSON.parse(body);
+          } catch (err) {
+            callback(err);
+            return;
+          }
+
+          var video_url = oembed.html.match(/src="([^"]+)/i)[1];
+          video_url = video_url.replace(/https?:/, '');
+
+          var result = {
+            provider: 'rutube',
+            src: url,
+            video_url: video_url,
+            thumb: oembed.thumbnail_url.replace(/https?:/, '').replace('?size=l', '?size=s'),
+            thumb_height: 108,
+            thumb_width: 193
+          };
+
+          callback(null, result);
+        });
+
+      template: |
+        <div class="medialink-video medialink-<%= provider %>" data-nd-type="medialink" data-nd-rule="<%= provider %>" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= video_url %>" }\'>
+          <iframe src="<%= video_url %>" allowfullscreen></iframe>
+        </div>
