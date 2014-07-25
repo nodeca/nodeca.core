@@ -28,15 +28,15 @@ medialinks:
           }
 
           var video_url = oembed.html.match(/src="([^"]+)/i)[1];
-          video_url = video_url.replace(/https?:/, '');
+          video_url = video_url.replace(/^https?:/, '');
 
           var result = {
             provider: 'youtube',
             src: url,
             video_url: video_url,
-            thumb: oembed.thumbnail_url.replace(/https?:/, ''),
-            thumb_height: oembed.thumbnail_height,
-            thumb_width: oembed.thumbnail_width
+            thumb: oembed.thumbnail_url.replace(/^https?:/, '').replace('hqdefault.jpg', 'mqdefault.jpg'),
+            video_height: oembed.height,
+            video_width: oembed.width
           };
 
           callback(null, result);
@@ -68,15 +68,15 @@ medialinks:
           }
 
           var video_url = oembed.html.match(/src="([^"]+)/i)[1];
-          video_url = video_url.replace(/https?:/, '');
+          video_url = video_url.replace(/^https?:/, '');
 
           var result = {
             provider: 'vimeo',
             src: url,
             video_url: video_url,
-            thumb: oembed.thumbnail_url.replace(/https?:/, ''),
-            thumb_height: oembed.thumbnail_height,
-            thumb_width: oembed.thumbnail_width
+            thumb: oembed.thumbnail_url.replace(/^https?:/, '').replace(/_[0-9]+\.jpg$/, '_200.jpg'),
+            video_height: oembed.height,
+            video_width: oembed.width
           };
 
           callback(null, result);
@@ -108,15 +108,15 @@ medialinks:
           }
 
           var video_url = oembed.html.match(/src="([^"]+)/i)[1];
-          video_url = video_url.replace(/https?:/, '');
+          video_url = video_url.replace(/^https?:/, '');
 
           var result = {
             provider: 'rutube',
             src: url,
             video_url: video_url,
-            thumb: oembed.thumbnail_url.replace(/https?:/, '').replace('?size=l', '?size=s'),
-            thumb_height: 108,
-            thumb_width: 193
+            thumb: oembed.thumbnail_url.replace(/^https?:/, '').replace('?size=l', '?size=s'),
+            video_height: oembed.height,
+            video_width: oembed.width
           };
 
           callback(null, result);
