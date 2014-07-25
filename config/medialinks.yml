@@ -34,7 +34,7 @@ medialinks:
             provider: 'youtube',
             src: url,
             video_url: video_url,
-            thumb: oembed.thumbnail_url.replace(/^https?:/, '').replace('hqdefault.jpg', 'mqdefault.jpg'),
+            thumb: oembed.thumbnail_url.replace(/^https?:/, '').replace(/[a-z0-9]+\.jpg$/, 'mqdefault.jpg'),
             video_height: oembed.height,
             video_width: oembed.width
           };
@@ -114,7 +114,7 @@ medialinks:
             provider: 'rutube',
             src: url,
             video_url: video_url,
-            thumb: oembed.thumbnail_url.replace(/^https?:/, '').replace('?size=l', '?size=s'),
+            thumb: oembed.thumbnail_url.replace(/^https?:/, '').replace(/\?.+$/, '?size=s'),
             video_height: oembed.height,
             video_width: oembed.width
           };
