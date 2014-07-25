@@ -1,0 +1,26 @@
+// Popup with link for cnotent restore-notice
+
+
+.restore-notice
+  position fixed
+  left 50%
+  bottom 150px
+  animation-name fadeInUp
+
+.restore-notice__inner
+a.restore-notice__inner
+  position relative
+  left -50%
+
+  background-color #666
+  border-radius 20px
+  color #fff
+  padding 10px 20px
+  font-weight bold
+  text-decoration none
+
+.restore-notice.off
+  display none
+
+.deleted .restore-notice.off
+  display block
