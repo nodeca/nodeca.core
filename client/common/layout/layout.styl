@@ -7,11 +7,15 @@ body
 
 
 body
-  overflow-y scroll
   min-width 200px
+  // Always show vertical scroll, to avoid small horizontal
+  // jitter on change between short and long pages.
+  overflow-y scroll
 
 .layout__container
   max-width pageMaxWidth
+  // protect from horizontal scroll
+  overflow hidden
 
 // Tweak offsets & background for vertical vavigation
 //
