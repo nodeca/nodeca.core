@@ -1,7 +1,19 @@
 medialinks:
 
+  #
+  # Array of enabled providers, or `true` for all.
+  #
   content: true
 
+  #
+  # Providers definition
+  #
+  # name:
+  #   match     - regexp or array of regexps to check link
+  #   fetch     - function(require, N, url, callback) to get provider data
+  #               for template. Should be string (function body)
+  #   template  - lodash template to render fetched data
+  #
   providers:
 
     youtube:
@@ -44,7 +56,9 @@ medialinks:
 
       template: |
         <div class="medialink-video medialink-<%= provider %>" data-nd-type="medialink" data-nd-rule="<%= provider %>" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= video_url %>" }\'>
-          <iframe src="<%= video_url %>" allowfullscreen></iframe>
+          <div class="embed-responsive embed-responsive-<% if (video_width/video_height > 1.5) { %>16by9<% } else { %>4by3<% } %>">
+            <iframe src="<%= video_url %>" allowfullscreen></iframe>
+          </div>
         </div>
 
     vimeo:
@@ -84,7 +98,9 @@ medialinks:
 
       template: |
         <div class="medialink-video medialink-<%= provider %>" data-nd-type="medialink" data-nd-rule="<%= provider %>" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= video_url %>" }\'>
-          <iframe src="<%= video_url %>" allowfullscreen></iframe>
+          <div class="embed-responsive embed-responsive-<% if (video_width/video_height > 1.5) { %>16by9<% } else { %>4by3<% } %>">
+            <iframe src="<%= video_url %>" allowfullscreen></iframe>
+          </div>
         </div>
 
     rutube:
@@ -124,5 +140,7 @@ medialinks:
 
       template: |
         <div class="medialink-video medialink-<%= provider %>" data-nd-type="medialink" data-nd-rule="<%= provider %>" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= video_url %>" }\'>
-          <iframe src="<%= video_url %>" allowfullscreen></iframe>
+          <div class="embed-responsive embed-responsive-<% if (video_width/video_height > 1.5) { %>16by9<% } else { %>4by3<% } %>">
+            <iframe src="<%= video_url %>" allowfullscreen></iframe>
+          </div>
         </div>
