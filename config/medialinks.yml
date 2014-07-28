@@ -56,7 +56,7 @@ medialinks:
 
       template: |
         <div class="medialink-video medialink-<%= provider %>" data-nd-type="medialink" data-nd-rule="<%= provider %>" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= video_url %>" }\'>
-          <div class="embed-responsive embed-responsive-<% if (video_width/video_height > 1.5) { %>16by9<% } else { %>4by3<% } %>">
+          <div class="embed-responsive embed-responsive-<%= video_width/video_height > 1.5 ? '16by9' : '4by3' %>">
             <iframe src="<%= video_url %>" allowfullscreen></iframe>
           </div>
         </div>
@@ -98,7 +98,7 @@ medialinks:
 
       template: |
         <div class="medialink-video medialink-<%= provider %>" data-nd-type="medialink" data-nd-rule="<%= provider %>" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= video_url %>" }\'>
-          <div class="embed-responsive embed-responsive-<% if (video_width/video_height > 1.5) { %>16by9<% } else { %>4by3<% } %>">
+          <div class="embed-responsive embed-responsive-<%= video_width/video_height > 1.5 ? '16by9' : '4by3' %>">
             <iframe src="<%= video_url %>" allowfullscreen></iframe>
           </div>
         </div>
@@ -140,7 +140,7 @@ medialinks:
 
       template: |
         <div class="medialink-video medialink-<%= provider %>" data-nd-type="medialink" data-nd-rule="<%= provider %>" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= video_url %>" }\'>
-          <div class="embed-responsive embed-responsive-<% if (video_width/video_height > 1.5) { %>16by9<% } else { %>4by3<% } %>">
+          <div class="embed-responsive embed-responsive-<%= video_width/video_height > 1.5 ? '16by9' : '4by3' %>">
             <iframe src="<%= video_url %>" allowfullscreen></iframe>
           </div>
         </div>
