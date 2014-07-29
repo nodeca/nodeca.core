@@ -13,9 +13,9 @@ N.wire.on('common.layout.nav_toggle', function layout_toggle_navbar() {
   $('body').toggleClass('nav-vert-on').toggleClass('nav-horiz-on');
 
   if ($('body').hasClass('nav-vert-on')) {
-    document.cookie = 'vnav=1; ' + new Date(0x7fffffff * 1e3);
+    document.cookie = 'vnav=1; path=/; ' + new Date(0x7fffffff * 1e3);
   } else {
-    document.cookie = 'vnav=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie = 'vnav=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   }
 });
 
