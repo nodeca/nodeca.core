@@ -55,9 +55,9 @@ medialinks:
         });
 
       template: |
-        <div class="medialink-video medialink-<%= provider %>" data-nd-type="medialink" data-nd-rule="<%= provider %>" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= video_url %>" }\'>
-          <div class="embed-responsive embed-responsive-<%= video_width/video_height > 1.5 ? '16by9' : '4by3' %>">
-            <iframe src="<%= video_url %>" allowfullscreen></iframe>
+        <div class="medialink-video medialink-<%= self.provider %>" data-nd-type="medialink" data-nd-rule="<%= self.provider %>" data-nd-src="<%= self.src %>" data-nd-cache=\'{ url: "<%= self.video_url %>" }\'>
+          <div class="embed-responsive embed-responsive-<%= self.video_width/self.video_height > 1.5 ? '16by9' : '4by3' %>">
+            <iframe src="<%= self.video_url %>" allowfullscreen></iframe>
           </div>
         </div>
 
@@ -97,9 +97,9 @@ medialinks:
         });
 
       template: |
-        <div class="medialink-video medialink-<%= provider %>" data-nd-type="medialink" data-nd-rule="<%= provider %>" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= video_url %>" }\'>
-          <div class="embed-responsive embed-responsive-<%= video_width/video_height > 1.5 ? '16by9' : '4by3' %>">
-            <iframe src="<%= video_url %>" allowfullscreen></iframe>
+        <div class="medialink-video medialink-<%= self.provider %>" data-nd-type="medialink" data-nd-rule="<%= self.provider %>" data-nd-src="<%= self.src %>" data-nd-cache=\'{ url: "<%= self.video_url %>" }\'>
+          <div class="embed-responsive embed-responsive-<%= self.video_width/self.video_height > 1.5 ? '16by9' : '4by3' %>">
+            <iframe src="<%= self.video_url %>" allowfullscreen></iframe>
           </div>
         </div>
 
@@ -139,8 +139,8 @@ medialinks:
         });
 
       template: |
-        <div class="medialink-video medialink-<%= provider %>" data-nd-type="medialink" data-nd-rule="<%= provider %>" data-nd-src="<%= src %>" data-nd-cache=\'{ url: "<%= video_url %>" }\'>
-          <div class="embed-responsive embed-responsive-<%= video_width/video_height > 1.5 ? '16by9' : '4by3' %>">
-            <iframe src="<%= video_url %>" allowfullscreen></iframe>
+        <div class="medialink-video medialink-<%= self.provider %>" data-nd-type="medialink" data-nd-rule="<%= self.provider %>" data-nd-src="<%= self.src %>" data-nd-cache=\'{ url: "<%= self.video_url %>" }\'>
+          <div class="embed-responsive embed-responsive-<%= self.video_width/self.video_height > 1.5 ? '16by9' : '4by3' %>">
+            <iframe src="<%= self.video_url %>" allowfullscreen></iframe>
           </div>
         </div>
