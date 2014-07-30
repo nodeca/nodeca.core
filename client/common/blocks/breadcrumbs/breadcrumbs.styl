@@ -14,11 +14,32 @@
 
 .breadcrumbs__item
   display inline-block
-  padding-right .3em
-  &:after
-    content ' /'
+  &:before
+    content '/'
     color grayLighter
-    margin 0 5px
+    margin 0 .6em 0 .5em
+
+  &:first-child:before
+    content ''
+    margin 0
+
+  &:last-child:after
+    content '/'
+    color grayLighter
+    margin 0 .6em 0 .5em
 
 .breadcrumbs__link
   color grayLight
+
+
+@media (max-width: screenXs - 1)
+  .breadcrumbs__item
+    display none
+    &:first-child
+    &:last-child
+      display inline-block
+
+  .breadcrumbs__item + .breadcrumbs__item + .breadcrumbs__item:last-child
+    display inline-block
+    &:before
+      content '/ ... /'
