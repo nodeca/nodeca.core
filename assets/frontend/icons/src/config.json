@@ -7,21 +7,9 @@
   "ascent": 850,
   "glyphs": [
     {
-      "uid": "0f99ab40ab0b4d64a74f2d0deeb03e42",
-      "css": "video",
-      "code": 59411,
-      "src": "fontawesome"
-    },
-    {
-      "uid": "381da2c2f7fd51f8de877c044d7f439d",
-      "css": "picture",
+      "uid": "44e04715aecbca7f266a17d5a7863c68",
+      "css": "plus",
       "code": 59416,
-      "src": "fontawesome"
-    },
-    {
-      "uid": "dc3f1d5b1d006f7f7b3b6295eccab9da",
-      "css": "camera",
-      "code": 59415,
       "src": "fontawesome"
     },
     {
@@ -76,6 +64,18 @@
       "uid": "bbd66ef66bb8fa9edde54d9a90b89150",
       "css": "user",
       "code": 59393,
+      "src": "entypo"
+    },
+    {
+      "uid": "6341ebcbe1ed1f6777c1b9527ead368e",
+      "css": "video",
+      "code": 59411,
+      "src": "entypo"
+    },
+    {
+      "uid": "85017ab6ca074831a8de771b40e9640c",
+      "css": "camera",
+      "code": 59415,
       "src": "entypo"
     },
     {
