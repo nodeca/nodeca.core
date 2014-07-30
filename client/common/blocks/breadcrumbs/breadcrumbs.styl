@@ -31,7 +31,8 @@
 .breadcrumbs__link
   color grayLight
 
-
+// Collapse list midle elements on narrow screens
+//
 @media (max-width: screenXs - 1)
   .breadcrumbs__item
     display none
@@ -43,3 +44,8 @@
     display inline-block
     &:before
       content '/ ... /'
+
+// Add space between breadcrumbs buttons
+//
+.breadcrumbs .btn
+    margin-right 4px
