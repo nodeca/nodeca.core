@@ -1,18 +1,16 @@
 /**
-
  *= require ./src/css/nodeca-codes
- *= require_self
-
  **/
 
 @font-face {
   font-family: 'nodeca';
-  src: url('$$ asset_path('frontend/icons/src/font/nodeca.eot') $$');
-  src: url('$$ asset_path('frontend/icons/src/font/nodeca.eot') $$'?#iefix) format('embedded-opentype'),
-       url('$$ asset_path('frontend/icons/src/font/nodeca.woff') $$') format('woff'),
-       url('$$ asset_path('frontend/icons/src/font/nodeca.ttf') $$') format('truetype'),
-       url('$$ asset_path('frontend/icons/src/font/nodeca.svg') $$'#nodeca) format('svg');
-  font-weight: normal; font-style: normal;
+  src: url('$$ asset_path("frontend/icons/src/font/nodeca.eot") $$');
+  src: url('$$ asset_path("frontend/icons/src/font/nodeca.eot") $$'?#iefix) format('embedded-opentype'),
+       url('$$ asset_path("frontend/icons/src/font/nodeca.woff") $$') format('woff'),
+       url('$$ asset_path("frontend/icons/src/font/nodeca.ttf") $$') format('truetype'),
+       url('$$ asset_path("frontend/icons/src/font/nodeca.svg") $$'#nodeca) format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
 [class^="icon-"]:before, [class*=" icon-"]:before {
