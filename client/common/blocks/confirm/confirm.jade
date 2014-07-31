@@ -1,7 +1,7 @@
-.modal.fade(tabindex='-1', role='dialog')
-  .modal-dialog.confirm-dialog
+.modal.fade(tabindex='-1' role='dialog' aria-hidden='true')
+  .modal-dialog.modal-sm.confirm-dialog
     .modal-content
       .modal-body= self.message
       .modal-footer
-        button(type='button' data-dismiss='modal').btn.btn-default= self.t('cancel')
-        button(type='button' data-on-click='common.blocks.confirm:ok').btn.btn-danger= self.t('ok')
+        button.btn.btn-default(type='button' tabindex='1' data-dismiss='modal')= self.t('cancel')
+        button.btn.btn-danger(type='button' tabindex='2' data-on-click='common.blocks.confirm:ok')= self.t('ok')
