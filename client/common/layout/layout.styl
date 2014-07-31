@@ -38,6 +38,40 @@ body.nav-vert-on
   background-color lighten(grayLightest, 30%)
 
 
+// Floating buttun to scroll page to top
+//
+a.layout-scroll-top
+  display none
+  position fixed
+  right 10px
+  bottom 10px
+  width 40px
+  height 40px
+  border-radius 20px
+  background-color #f4f4f4
+  color grayLighter
+  font-size 16px
+  z-index 10
+  &:focus
+    outline none
+  &:hover
+    color grayLight
+  &:before
+    margin-right 0
+    line-height 36px
+    width 100%
+
+.layout-scroll-top__active .layout-scroll-top
+  display block
+
+// hide scrolltop when vertical navbar used,
+// because it already has such feature.
+.nav-vert-on .layout-scroll-top
+  display none
+
+
+// Debug output block at page bottom
+//
 .debug
   margin-top baseLineHeight
   padding (baseLineHeight/2) 20px 0

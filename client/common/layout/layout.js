@@ -9,6 +9,8 @@ function getCookie(name) {
 }
 
 
+// Toggle body class and save state in cookies on navbar style change
+//
 N.wire.on('common.layout.nav_toggle', function layout_toggle_navbar() {
   $('body').toggleClass('nav-vert-on').toggleClass('nav-horiz-on');
 
@@ -17,6 +19,15 @@ N.wire.on('common.layout.nav_toggle', function layout_toggle_navbar() {
   } else {
     document.cookie = 'vnav=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   }
+});
+
+
+// Scroll page to top
+//
+N.wire.on('common.layout:scroll_top', function layout_scroll_top() {
+  $('html, body').animate({
+    scrollTop:  0
+  }, 'fast');
 });
 
 
