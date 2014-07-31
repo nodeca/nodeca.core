@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'nodeca';
-  src: url('../font/nodeca.eot?82408285');
-  src: url('../font/nodeca.eot?82408285#iefix') format('embedded-opentype'),
-       url('../font/nodeca.woff?82408285') format('woff'),
-       url('../font/nodeca.ttf?82408285') format('truetype'),
-       url('../font/nodeca.svg?82408285#nodeca') format('svg');
+  src: url('../font/nodeca.eot?28125711');
+  src: url('../font/nodeca.eot?28125711#iefix') format('embedded-opentype'),
+       url('../font/nodeca.woff?28125711') format('woff'),
+       url('../font/nodeca.ttf?28125711') format('truetype'),
+       url('../font/nodeca.svg?28125711#nodeca') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'nodeca';
-    src: url('../font/nodeca.svg?82408285#nodeca') format('svg');
+    src: url('../font/nodeca.svg?28125711#nodeca') format('svg');
   }
 }
 */
@@ -84,3 +84,4 @@
 .icon-binary:before { content: '\e816'; } /* '' */
 .icon-camera:before { content: '\e817'; } /* '' */
 .icon-plus:before { content: '\e818'; } /* '' */
+.icon-right-open:before { content: '\e819'; } /* '' */
