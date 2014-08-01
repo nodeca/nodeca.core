@@ -80,16 +80,13 @@ function renderNewContent(data, callback) {
     apiPath: data.apiPath
   }));
 
-  var offset = data.anchor ? $(data.anchor).offset() : null;
-
   $('#content').replaceWith(content);
 
-  // To scroll window:
-  // - WebKit-based browsers and the quirks mode use `body` element.
-  // - Other browsers use `html` element.
-  $('html, body').scrollTop(offset ? offset.top : 0);
-
-  callback();
+  // Without this delay firefox at android fail to scroll on long pages
+  setTimeout(function () {
+    $(window).scrollTop(data.anchor ? $(data.anchor).offset().top : 0);
+    callback();
+  }, 50);
 }
 
 
