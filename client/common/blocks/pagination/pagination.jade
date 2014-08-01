@@ -11,22 +11,7 @@
 - var PAGES_INTERVAL = 1
 
 
-//- create 'go to page' dropdown menu
-mixin _pagination_dropdown_menu(route, params)
-  form.dropdown-menu.pgn__menu(
-    data-pagination=JSON.stringify({ route: route, params: params }),
-    data-on-submit='common.blocks.pagination.change')
-    - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
-    label.pgn__label.input(for=pgmpid) #{self.t('dropdown_label')}
-    .input-group
-      input.form-control(
-        id=pgmpid, name="page", size='8', type='number', min='1',
-        placeholder=self.t('dropdown_placeholder'))
-      span.input-group-btn
-        button.btn.btn-inverse(
-          type='submit') #{self.t('dropdown_button')}
-
-
+//- internal variables
 - route    = self.route
 - params   = self.params
 //- cast Numbers, because router/dom can return strings
@@ -37,49 +22,77 @@ mixin _pagination_dropdown_menu(route, params)
 - _page = params.page
 
 
+//- create 'go to page' dropdown menu
+mixin _pagination_dropdown_menu(route, params)
+  form.dropdown-menu.pgn__menu(
+    data-pagination=JSON.stringify({ route: route, params: params })
+    data-on-submit='common.blocks.pagination.change'
+  )
+    - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
+
+    label.pgn__label.input(for=pgmpid)= self.t('dropdown_label')
+
+    .input-group
+      input.form-control(
+        id=pgmpid
+        name="page"
+        size='8'
+        type='number'
+        min='1',
+        max=max
+        value = current
+        placeholder=self.t('dropdown_placeholder')
+      )
+      span.input-group-btn
+        button.btn.btn-default(type='submit')= self.t('dropdown_button')
+
+
 ul.pgn
   //- first page always displayed, except when current == 1.
   //- (then we skip first half of paginator)
-  - if (current > 1)
+  if current > 1
     li.pgn__item: a.pgn__link(href=self.link_to(route, params)) 1
 
   //- left ellipsis displayed, if > 1 pages exists between first one
   //- and left head of "surrounding" pages
-  - if (current > PAGES_INTERVAL + 2)
+  if current > PAGES_INTERVAL + 2
     li.pgn__item.interval.dropdown
       - delete(params.page)
       a.pgn__link.dropdown-toggle(
-        href=self.link_to(route, params),
-        data-target="#", data-toggle='dropdown') ...
+        href=self.link_to(route, params)
+        data-target="#", data-toggle='dropdown'
+      ) ...
       mixin _pagination_dropdown_menu(route, params)
 
   //- left surrounding pages displayed if current page > 2
   - for (var i=PAGES_INTERVAL; i > 0; i--) {
-  -   if (current > i + 1) 
+      if current > i + 1
         - params.page = current - i
         li.pgn__item
-          a.pgn__link(href=self.link_to(route, params)) #{current - i}
+          a.pgn__link(href=self.link_to(route, params))= params.page
   - }
 
   // current page always dispayed
   li.pgn__item.current.dropdown
     - params.page = current
     a.pgn__link.dropdown-toggle(
-      href=self.link_to(route, params),
-      data-target="#", data-toggle='dropdown') #{current}
+      href=self.link_to(route, params)
+      data-target="#", data-toggle='dropdown'
+    )= params.page
+
     mixin _pagination_dropdown_menu(route, params)
 
   //- right surrounding pages displayed if current page < (bottom-1)
   - for (var i=1 ; i <= PAGES_INTERVAL; i++) {
-  -   if ((max - current) > i )
+      if max - current > i
         - params.page = current + i
         li.pgn__item
-          a.pgn__link(href=self.link_to(route, params)) #{current + i}
+          a.pgn__link(href=self.link_to(route, params))= params.page
   - }
 
   //- right ellipsis displayed, if > 1 pages exists between right
   //- tail of "surrounding" pages and the last one.
-  - if (max - current > PAGES_INTERVAL + 1)
+  if (max - current) > (PAGES_INTERVAL + 1)
     li.pgn__item.interval.dropdown
       - delete(params.page)
       a.pgn__link.dropdown-toggle(
@@ -89,10 +102,10 @@ ul.pgn
 
   //- last page always displayed, except it's current one
   //- (then we skip last half of paginator)
-  - if (max - current !== 0)
+  if max - current !== 0
     - params.page = max
     li.pgn__item
-      a.pgn__link(href=self.link_to(route, params)) #{max}
+      a.pgn__link(href=self.link_to(route, params))= params.page
 
 //- restore page
 - params.page = _page
