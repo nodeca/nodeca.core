@@ -120,7 +120,7 @@ window.NodecaLoader = (function () {
     if (!module.initialized) {
       module.func.call(
         window // this object
-      , N
+      //, N
       , requireNodeModule
       , module.internal.exports
       , module.internal
