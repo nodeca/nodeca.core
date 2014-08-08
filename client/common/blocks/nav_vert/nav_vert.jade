@@ -17,7 +17,7 @@
   .nav-vert__panel-inner
     .nav-vert__panel-row
       a.nav-vert__btn(href='/' title=self.t('home'))
-        span.nav-vert__btn-icon.icon-home
+        span.icon.icon-home
     .nav-vert__panel-row
       //- use labels instead of buttons,
       //- because buttons are not ok with table-cell
@@ -25,19 +25,19 @@
         data-on-click='common.blocks.nav_vert.toggle_menu'
         title=self.t('menu')
       )
-        span.nav-vert__btn-icon.icon-menu
+        span.icon.icon-menu
     .nav-vert__panel-row
       label.nav-vert__btn.nav-vert__btn-flex(
         data-on-click='common.blocks.nav_vert.scroll'
       )
-        span.nav-vert__btn-icon.icon-scroll-up(title=self.t('scroll_top'))
-        span.nav-vert__btn-icon.icon-scroll-down(title=self.t('scroll_back'))
+        span.icon.icon-scroll-up(title=self.t('scroll_top'))
+        span.icon.icon-scroll-down(title=self.t('scroll_back'))
     .nav-vert__panel-row
       label.nav-vert__btn(
         data-on-click='common.layout.nav_toggle'
         title=self.t('horiz_nav')
       )
-        span.nav-vert__btn-icon.icon-nav-horiz
+        span.icon.icon-nav-horiz
     != self.partial('@common.blocks.nav_vert_auth')
 
 .nav-vert__overlay

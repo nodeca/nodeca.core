@@ -13,19 +13,30 @@
   font-style: normal;
 }
 
-[class^="icon-"]:before, [class*=" icon-"]:before {
+.icon:before {
   font-family: "nodeca";
   speak: none;
-  text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3);
+  /*text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3);*/
 
   display: inline-block;
   width: 1em;
-  margin-right: .2em;
   text-align: center;
   line-height: 1em;
   position: relative;
-  top: 1px;
 
   font-style: normal !important;
   font-weight: normal !important;
+}
+
+.icon-space-after:before {
+  margin-right: .2em;
+}
+
+.icon-dimmed:before {
+  opacity: 0.7;
+}
+
+.icon-lg:before {
+  font-size: 120%;
+  top: 1px;
 }
