@@ -80,10 +80,6 @@ module.exports = function (N, collectionName) {
    *   aliases      ???
    *   metadata:
    *     origName   (optional)
-   *     owner      (optional)
-   *     width      (optional)
-   *     height     (optional)
-   *     exif       (optional)
    */
 
   // TODO: (?) add collections root to constructor params
