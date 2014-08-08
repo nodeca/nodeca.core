@@ -87,6 +87,7 @@ packages:
       - kernel: nodeca.core/lib/system/client/kernel.js
       # stub for jade runtime
       - fs: nodeca.core/lib/system/dummy.js
+      - async
 
     client:
       main: assets/main_lib.js

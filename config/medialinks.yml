@@ -10,7 +10,7 @@ medialinks:
   #
   # name:
   #   match     - regexp or array of regexps to check link
-  #   fetch     - function(require, N, url, callback) to get provider data
+  #   fetch     - function(require, url, callback) to get provider data
   #               for template. Should be string (function body)
   #   template  - lodash template to render fetched data
   #
@@ -61,6 +61,13 @@ medialinks:
           </div>
         </div>
 
+      stub: |
+        <div class="medialink-video medialink-youtube" data-nd-type="medialink" data-nd-rule="youtube">
+          <div class="embed-responsive embed-responsive-16by9">
+            <div class="embed-responsive-item embed-responsive-stub"></div>
+          </div>
+        </div>
+
     vimeo:
       match: /https?://(.+\.)?vimeo\.com/.*/i
 
@@ -103,6 +110,13 @@ medialinks:
           </div>
         </div>
 
+      stub: |
+        <div class="medialink-video medialink-vimeo" data-nd-type="medialink" data-nd-rule="vimeo">
+          <div class="embed-responsive embed-responsive-16by9">
+            <div class="embed-responsive-item embed-responsive-stub"></div>
+          </div>
+        </div>
+
     rutube:
       match: /https?://(.+\.)?rutube\.ru/.*/i
 
@@ -142,5 +156,12 @@ medialinks:
         <div class="medialink-video medialink-<%= self.provider %>" data-nd-type="medialink" data-nd-rule="<%= self.provider %>" data-nd-src="<%= self.src %>" data-nd-cache=\'{ url: "<%= self.video_url %>" }\'>
           <div class="embed-responsive embed-responsive-<%= self.video_width/self.video_height > 1.5 ? '16by9' : '4by3' %>">
             <iframe src="<%= self.video_url %>" allowfullscreen></iframe>
+          </div>
+        </div>
+
+      stub: |
+        <div class="medialink-video medialink-rutube" data-nd-type="medialink" data-nd-rule="rutube">
+          <div class="embed-responsive embed-responsive-16by9">
+            <div class="embed-responsive-item embed-responsive-stub"></div>
           </div>
         </div>

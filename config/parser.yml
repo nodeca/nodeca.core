@@ -1,0 +1,78 @@
+parser:
+  cleanup:
+    root:
+      children: [ p, a, img, group-header, group-top-level-block, cut, spoiler, quote ]
+
+    h2:
+      group: header
+      children: text
+    h3:
+      group: header
+      children: text
+    h4:
+      group: header
+      children: text
+    h5:
+      group: header
+      children: text
+
+    b:
+      group: simple
+      children: [ text, group-simple ]
+    i:
+      group: simple
+      children: [ text, group-simple ]
+    u:
+      group: simple
+      children: [ text, group-simple ]
+    s:
+      group: simple
+      children: [ text, group-simple ]
+
+    p:
+      children: [ text, group-simple, a, img ]
+    a:
+      children: [ text, group-simple, img ]
+      attributes: href
+    img:
+      attributes:
+        - src
+        - alt
+        - size: [ orig, md, sm ]
+        - align: [ left, center, right ]
+
+    table:
+      group: top-level-block
+      children: tr
+    tr:
+      children: [ th, td ]
+    th:
+      children: [ text, group-simple, p, a, ul, ol ]
+      attributes:
+        colspan: \d+
+        rowspan: \d+
+    td:
+      children: [ text, group-simple, p, a, ul, ol ]
+      attributes:
+        colspan: \d+
+        rowspan: \d+
+
+    ul:
+      group: top-level-block
+      children: li
+    ol:
+      group: top-level-block
+      children: li
+    li:
+      children: [ text, group-simple, p, a, img ]
+
+    cut:
+      children: text
+
+    spoiler:
+      children: [ text, group-simple, p, a, img, group-top-level-block ]
+      attributes: title
+
+    quote:
+      children: [ text, group-simple, p, a, img, group-top-level-block ]
+      attributes: [ author, time ]
