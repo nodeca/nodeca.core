@@ -1,5 +1,7 @@
 // Popup with link for cnotent restore-notice
+//
 
+@import "nodeca.core/client/common/_variables"
 
 .restore-notice
   position fixed
@@ -12,10 +14,8 @@ a.restore-notice__inner
   position relative
   left -50%
   margin 0 20px
-  white-space: nowrap
-  overflow hidden
   display block
-  text-overflow ellipsis
+  shortable()
 
   background-color #666
   border-radius 100px
