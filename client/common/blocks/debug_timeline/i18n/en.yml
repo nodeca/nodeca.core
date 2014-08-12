@@ -1,0 +1,3 @@
+en-US:
+  total: '#{value}ms'
+  missed: ' [missed #{value}ms]'
