@@ -3,11 +3,11 @@
 mixin timeline_scope(scope)
   li.debug-timeline__item
     span.debug-timeline__period= self.t('total', scope.elapsed.total.toFixed(2))
-    |= ' - ' + scope.message
+    = ' - ' + scope.message
     if scope.elapsed.missed > 0
-      |= self.t('total', scope.elapsed.missed.toFixed(2)
+      = self.t('total', scope.elapsed.missed.toFixed(2))
     if Object.keys(scope.meta).length
-      |= ' ' + JSON.stringify(scope.meta);
+      = ' ' + JSON.stringify(scope.meta)
 
     if scope.childs.length
       mixin timeline_items(scope.childs)
