@@ -122,16 +122,21 @@ module.exports.run = function (N, args, callback) {
       if (!!app_name && !!seed_name) {
         // protect production env from accident run
         if ([ 'development', 'testing' ].indexOf(env) === -1 && !args.force) {
-          return callback(format('Error: Can\'t run seed from %s enviroment. Please, use -f to force.', env));
+          callback(format('Error: Can\'t run seed from %s enviroment. Please, use -f to force.', env));
+          return;
         }
 
         var seed_path = path.join(get_app_path(app_name), SEEDS_DIR, seed_name);
         if (!fs.existsSync(seed_path)) {
-          return callback(format('Error: Application "%s" - does not have %s', app_name, seed_name));
+          callback(format('Error: Application "%s" - does not have %s', app_name, seed_name));
+          return;
         }
 
         seed_run(N, app_name, seed_path, function (err) {
-          if (err) { return callback(err); }
+          if (err) {
+            callback(err);
+            return;
+          }
 
           process.exit(0);
         });
@@ -170,7 +175,8 @@ module.exports.run = function (N, args, callback) {
       if (!_.isEmpty(args.seed_numbers)) {
         // protect production env from accident run
         if ([ 'development', 'testing' ].indexOf(env) === -1 && !args.force) {
-          return callback(format('Error: Can\'t run seed from %s enviroment. Please, use -f to force.', env));
+          callback(format('Error: Can\'t run seed from %s enviroment. Please, use -f to force.', env));
+          return;
         }
 
         // check that specified seed exists

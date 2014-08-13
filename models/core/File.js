@@ -164,12 +164,18 @@ module.exports = function (N, collectionName) {
 
     var options = _.assign({}, opt); // protect opt from modifications
 
-    if (!input) { return callback(new Error('File.put: unknown source data')); }
+    if (!input) {
+      callback(new Error('File.put: unknown source data'));
+      return;
+    }
 
     var _id = options._id || new ObjectId(null);
     _id = _id.toHexString ? _id : tryParseObjectId(_id);
 
-    if (!_id) { return callback(new Error('File.put: invalid _id passed')); }
+    if (!_id) {
+      callback(new Error('File.put: invalid _id passed'));
+      return;
+    }
 
     options._id = _id;
 
