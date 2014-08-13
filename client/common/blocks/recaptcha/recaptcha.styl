@@ -1,6 +1,29 @@
-.recaptcha-reload
-  text-align right
-  font-size 80%
+// Form partial with recaptcha elements
 
-.recaptcha-image
-  margin-bottom 5px !important
+@import "nodeca.core/client/common/_variables"
+
+.recaptcha-control .help-block
+  margin-bottom 5px
+
+.recaptcha-container
+  position relative
+  margin-top 10px
+  // don't allow icon to go over button
+  min-height 20px
+
+.recaptcha-container__reload-icon
+  position absolute
+  top 2px
+  left 5px
+  font-size 20px
+  color grayLighter
+  text-shadow 0 0 3px black
+
+#recaptcha_image
+  width auto !important
+  height auto !important
+
+#recaptcha_challenge_image
+  max-width 100%
+  width auto !important
+  height auto !important

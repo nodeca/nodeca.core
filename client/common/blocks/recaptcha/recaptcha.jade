@@ -1,19 +1,23 @@
 //- NOTE: ReCaptcha markup is hidden by default.
 //- You must control it's visibility manually via Knockout bindings.
 
-.form-group.recaptcha-image(data-bind="visible: visible, css: css", style="display: none")
-  .col-md-9.col-md-offset-3
-    span#recaptcha_image
-    div.recaptcha-reload
-      a(tabindex=-1, data-on-click="common.blocks.recaptcha.update") #{self.t('change_image')}
-
-.form-group(data-bind="visible: visible, css: css", style="display: none")
-  label.control-label.col-md-3(for="recaptcha_response_field") #{self.t('captcha')}
-  .col-md-9
-    input.form-control(id="recaptcha_response_field", name="recaptcha_response_field", type='text')
-    // ko ifnot: message
-    span.help-block #{self.t('captcha_help')}
-    // /ko
-    // ko if: message
-    span.help-block(data-bind="text: message")
-    // /ko
+.form-group.recaptcha-control(data-bind="visible: visible, css: css" style="display: none")
+  label(for="recaptcha_response_field")= self.t('captcha')
+  input.form-control(
+    id="recaptcha_response_field"
+    name="recaptcha_response_field"
+    type='text'
+    placeholder=self.t('captcha_desc')
+  )
+  // ko if: message
+  p.help-block(data-bind="text: message")
+  // /ko
+  .recaptcha-container
+    a(
+      tabindex=-1
+      href='#'
+      data-on-click="common.blocks.recaptcha.update"
+      title=self.t('change_image')
+    )
+      #recaptcha_image
+      span.recaptcha-container__reload-icon.icon.icon-refresh
