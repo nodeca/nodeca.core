@@ -17,6 +17,7 @@ medialinks:
   providers:
 
     youtube:
+      name: YouTube
       home: http://www.youtube.com/
 
       match:
@@ -71,6 +72,7 @@ medialinks:
         </div>
 
     vimeo:
+      name: Vimeo
       home: https://vimeo.com/
 
       match: /https?://(.+\.)?vimeo\.com/.*/i
@@ -122,6 +124,7 @@ medialinks:
         </div>
 
     rutube:
+      name: Rutube
       home: http://rutube.ru/
 
       match: /https?://(.+\.)?rutube\.ru/.*/i
