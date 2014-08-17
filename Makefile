@@ -33,6 +33,7 @@ test-ci:
 	git clone git://github.com/nodeca/nodeca.git ${TMP_PATH}
 	mkdir -p ${TMP_PATH}/node_modules
 	cp -r . ${TMP_PATH}/node_modules/${NPM_PACKAGE}
+	cd ${TMP_PATH} && $(MAKE) deps-ci
 	cd ${TMP_PATH} && npm install
 	cd ${TMP_PATH} && NODECA_APP_PATH=./node_modules/${NPM_PACKAGE} $(MAKE) eslint
 	cd ${TMP_PATH} && NODECA_APP=${NPM_PACKAGE} $(MAKE) test
