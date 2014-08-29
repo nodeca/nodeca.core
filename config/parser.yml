@@ -1,7 +1,7 @@
 parser:
   cleanup:
     root:
-      children: [ p, a, img, group-header, group-top-level-block, cut, spoiler, quote ]
+      children: [ p, a, img, group-header, group-top-level-block, cut, spoiler, blockquote ]
 
     h2:
       group: header
@@ -19,7 +19,13 @@ parser:
     b:
       group: simple
       children: [ text, group-simple ]
+    strong:
+      group: simple
+      children: [ text, group-simple ]
     i:
+      group: simple
+      children: [ text, group-simple ]
+    em:
       group: simple
       children: [ text, group-simple ]
     u:
@@ -37,6 +43,7 @@ parser:
     img:
       attributes:
         - src
+        - title
         - alt
         - size: [ orig, md, sm ]
         - align: [ left, center, right ]
@@ -64,7 +71,7 @@ parser:
       group: top-level-block
       children: li
     li:
-      children: [ text, group-simple, p, a, img ]
+      children: [ ul, ol, text, group-simple, p, a, img ]
 
     cut:
       children: text
@@ -73,6 +80,6 @@ parser:
       children: [ text, group-simple, p, a, img, group-top-level-block ]
       attributes: title
 
-    quote:
+    blockquote:
       children: [ text, group-simple, p, a, img, group-top-level-block ]
       attributes: [ author, time ]
