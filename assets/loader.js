@@ -267,7 +267,7 @@ window.NodecaLoader = (function () {
 
       bag.require(res_list, function(err/*, data*/) {
         if (err) {
-          alert(err ? err : 'Failed to load assets: timeout');
+          alert('Asset load error (bag.js): ' + err);
           return;
         }
 
@@ -276,7 +276,20 @@ window.NodecaLoader = (function () {
         });
 
         initClientModules();
-        callback();
+
+        if (!N.wire) {
+          alert('Asset load error: "N.Wire" unavailable after asset load.');
+          return;
+        }
+
+        N.wire.emit('init:assets', {}, function (err) {
+          if (err) {
+            alert('Asset load error: "init:assets" failed. ' + err);
+            return;
+          }
+
+          callback();
+        });
       });
     } else {
       callback();

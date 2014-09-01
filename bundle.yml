@@ -104,5 +104,7 @@ packages:
         - backend/icons/src/font/*
 
   parser:
+    client:
+        include: client/parser/**.js
     vendor:
       - ndparser: ./lib/parser/index.js
