@@ -6,40 +6,42 @@ parser:
     h2:
       group: header
       children: text
+      remove_empty: true
     h3:
       group: header
       children: text
+      remove_empty: true
     h4:
       group: header
       children: text
+      remove_empty: true
     h5:
       group: header
       children: text
+      remove_empty: true
 
-    b:
-      group: simple
-      children: [ text, group-simple ]
     strong:
       group: simple
       children: [ text, group-simple ]
-    i:
-      group: simple
-      children: [ text, group-simple ]
+      remove_empty: true
+      merge_same: true
     em:
       group: simple
       children: [ text, group-simple ]
-    u:
+      remove_empty: true
+      merge_same: true
+    del:
       group: simple
       children: [ text, group-simple ]
-    s:
-      group: simple
-      children: [ text, group-simple ]
+      remove_empty: true
+      merge_same: true
 
     p:
       children: [ text, group-simple, a, img ]
     a:
       children: [ text, group-simple, img ]
       attributes: href
+      remove_empty: true
     img:
       attributes:
         - src
@@ -51,8 +53,10 @@ parser:
     table:
       group: top-level-block
       children: tr
+      remove_empty: true
     tr:
       children: [ th, td ]
+      remove_empty: true
     th:
       children: [ text, group-simple, p, a, ul, ol ]
       attributes:
@@ -67,11 +71,14 @@ parser:
     ul:
       group: top-level-block
       children: li
+      remove_empty: true
     ol:
       group: top-level-block
       children: li
+      remove_empty: true
     li:
       children: [ ul, ol, text, group-simple, p, a, img ]
+      remove_empty: true
 
     cut:
       children: text
@@ -79,7 +86,9 @@ parser:
     spoiler:
       children: [ text, group-simple, p, a, img, group-top-level-block ]
       attributes: title
+      remove_empty: true
 
     blockquote:
       children: [ text, group-simple, p, a, img, group-top-level-block ]
       attributes: [ author, time ]
+      remove_empty: true
