@@ -31,23 +31,19 @@ N.wire.once('navigate.done', function () {
   // http://api.jquery.com/category/events/event-object/
   $.event.props.push('dataTransfer');
 
-  $(document)
-    .on(
-    'dragenter.nodeca.data-api dragleave.nodeca.data-api dragover.nodeca.data-api drop.nodeca.data-api',
-    '[data-on-dragdrop]',
-    function (event) {
-      var apiPath = $(this).data('onDragdrop');
-      handleAction(apiPath, event);
-      event.preventDefault();
-    });
+  $(document).on('dragenter dragleave dragover drop', '[data-on-dragdrop]', function (event) {
+    var apiPath = $(this).data('onDragdrop');
+    handleAction(apiPath, event);
+    event.preventDefault();
+  });
 
-  $(document).on('click.nodeca.data-api', '[data-on-click]', function (event) {
+  $(document).on('click', '[data-on-click]', function (event) {
     var apiPath = $(this).data('onClick');
     handleAction(apiPath, event);
     event.preventDefault();
   });
 
-  $(document).on('submit.nodeca.data-api', '[data-on-submit]', function (event) {
+  $(document).on('submit', '[data-on-submit]', function (event) {
     var apiPath = $(this).data('onSubmit');
     var $form = $(event.target);
 
@@ -65,13 +61,13 @@ N.wire.once('navigate.done', function () {
     event.preventDefault();
   });
 
-  $(document).on('input.nodeca.data-api', '[data-on-input]', function (event) {
+  $(document).on('input', '[data-on-input]', function (event) {
     var apiPath = $(this).data('onInput');
     handleAction(apiPath, event);
     event.preventDefault();
   });
 
-  $(document).on('change.nodeca.data-api', '[data-on-change]', function (event) {
+  $(document).on('change', '[data-on-change]', function (event) {
     var apiPath = $(this).data('onChange');
     handleAction(apiPath, event);
     event.preventDefault();
