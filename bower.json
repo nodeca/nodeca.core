@@ -2,6 +2,7 @@
   "name"        : "nodeca",
   "private"     : false,
   "dependencies": {
+    "ace-builds"            : "~1.1.7",
     "jquery"                : "~2.1.1",
     "jquery-ui"             : "~1.10.3",
     "blueimp-canvas-to-blob": "~2.1.0",
