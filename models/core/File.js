@@ -37,7 +37,7 @@ function getStream(src) {
     return fs.createReadStream(src);
   } else if (src instanceof Buffer) {
     // buffer passed
-    sb = new sbuffers.ReadableStreamBuffer({ frequency: 0, chunkSize: 32768 });
+    sb = new sbuffers.ReadableStreamBuffer({ frequency: 1, chunkSize: 32768 });
     sb.put(src);
     return sb;
   } else if (src.readable) {
