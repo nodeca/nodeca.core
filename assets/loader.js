@@ -87,12 +87,13 @@ window.NodecaLoader = (function () {
   // Keys are short name, values are real paths.
   var nodeModulesAliases = {};
 
-  function registerNodeModule(path, func) {
+  function registerNodeModule(path, func, deps) {
     // Don't overwrite
     nodeModules[path] = nodeModules[path] || {
       initialized: false
     , func: func
     , internal: { exports: {} }
+    , dependencies: deps
     };
   }
 
@@ -122,8 +123,10 @@ window.NodecaLoader = (function () {
         window // this object
       //, N
       , requireNodeModule
-      , module.internal.exports
       , module.internal
+      , module.internal.exports
+      , module.dependencies
+      , nodeModules
       );
       module.initialized = true;
     }

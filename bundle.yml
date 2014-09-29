@@ -88,6 +88,8 @@ packages:
       # stub for jade runtime
       - fs: nodeca.core/lib/system/dummy.js
       - async
+      # webworkify replacement, needed because we have different bundling format
+      - webworkify: nodeca.core/lib/webworkify.js
 
     client:
       main: assets/main_lib.js
