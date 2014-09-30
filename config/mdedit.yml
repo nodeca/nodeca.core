@@ -1,0 +1,100 @@
+mdedit:
+  toolbar:
+
+    -
+      css_class: mdedit-toolbar__bold
+      tooltip: "@mdedit.toolbar.bold"
+      bind_key:
+        win: 'Ctrl-B'
+        mac: 'Command-B'
+      event: cmd_bold
+
+    -
+      css_class: mdedit-toolbar__italic
+      tooltip: "@mdedit.toolbar.italic"
+      bind_key:
+        win: 'Ctrl-I'
+        mac: 'Command-I'
+      event: cmd_italic
+
+    -
+      css_class: mdedit-toolbar__sep
+
+    -
+      css_class: mdedit-toolbar__huperlink icon icon-link
+      tooltip: "@mdedit.toolbar.huperlink"
+      bind_key:
+        win: 'Ctrl-L'
+        mac: 'Command-L'
+      event: cmd_huperlink
+
+    -
+      css_class: mdedit-toolbar__quote
+      tooltip: "@mdedit.toolbar.quote"
+      bind_key:
+        win: 'Ctrl-Q'
+        mac: 'Command-Q'
+      event: cmd_quote
+
+    -
+      css_class: mdedit-toolbar__spoiler
+      tooltip: "@mdedit.toolbar.spoiler"
+
+    -
+      css_class: mdedit-toolbar__image icon icon-camera
+      tooltip: "@mdedit.toolbar.image"
+      bind_key:
+        win: 'Ctrl-G'
+        mac: 'Command-G'
+      event: cmd_image
+
+    -
+      css_class: mdedit-toolbar__attach icon icon-attach
+      tooltip: "@mdedit.toolbar.attach"
+      bind_key:
+        win: 'Ctrl-A'
+        mac: 'Command-A'
+      event: cmd_attach
+
+    -
+      css_class: mdedit-toolbar__sep
+
+    -
+      css_class: mdedit-toolbar__ol
+      tooltip: "@mdedit.toolbar.ol"
+      bind_key:
+        win: 'Ctrl-O'
+        mac: 'Command-O'
+      event: cmd_ol
+
+    -
+      css_class: mdedit-toolbar__ul
+      tooltip: "@mdedit.toolbar.ul"
+      bind_key:
+        win: 'Ctrl-U'
+        mac: 'Command-U'
+      event: cmd_ul
+
+    -
+      css_class: mdedit-toolbar__header
+      tooltip: "@mdedit.toolbar.header"
+      bind_key:
+        win: 'Ctrl-H'
+        mac: 'Command-H'
+      event: cmd_h
+
+    -
+      css_class: mdedit-toolbar__sep
+
+    -
+      css_class: mdedit-toolbar__cut
+      tooltip: "@mdedit.toolbar.cut"
+      event: cmd_cut
+
+    -
+      css_class: mdedit-toolbar__help
+      tooltip: "@mdedit.toolbar.help"
+      bind_key:
+        win: 'F1'
+        mac: 'F1'
+      event: cmd_help

@@ -8,11 +8,8 @@ bundles:
   backend:
     - admin
 
-  editor:
-    - editor
-
-  parser:
-    - parser
+  mdedit:
+    - mdedit
 
 
 packages:
@@ -73,10 +70,6 @@ packages:
     i18n_server:
       include: server/common/**i18n/*.yml
 
-  editor:
-    vendor:
-      - editor: ./lib/client/editor
-
   lib:
     vendor:
       - lodash
@@ -105,8 +98,21 @@ packages:
         - frontend/icons/src/font/*
         - backend/icons/src/font/*
 
-  parser:
+  mdedit:
+
     client:
-        include: client/parser/**.js
+      main: assets/main_mdedit.js
+      include: client/mdedit/**.js
+      exclude: /(^|\/|\\)_.*/
+
+    styles:
+      include: client/mdedit/**.styl
+
+    views:
+      include: client/mdedit/**.jade
+
+    i18n_client:
+      include: client/mdedit/**i18n/*.yml
+
     vendor:
       - ndparser: ./lib/parser/index.js

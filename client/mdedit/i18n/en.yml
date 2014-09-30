@@ -1,0 +1,19 @@
+en-US:
+  toolbar:
+    bold: Bold
+    italic: Italic
+    huperlink: Huperlink
+    quote: Quote
+    spoiler: Spoiler
+    image: Insert image
+    attach: Add attachment
+    ol: Numbered list
+    ul: Bulleted list
+    header: Header
+    cut: Cut
+    help: Help
+
+  help_title: Help
+
+  help: |
+    md:### Help text
