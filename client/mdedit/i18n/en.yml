@@ -13,7 +13,7 @@ en-US:
     cut: Cut
     help: Help
 
-  help_title: Help
+    spoiler_title: enter spioler title here
+    spoiler_text: enter spioler text here
 
-  help: |
-    md:### Help text
+    cut_text: enter cut text here

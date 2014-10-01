@@ -39,6 +39,7 @@ mdedit:
     -
       css_class: mdedit-toolbar__spoiler
       tooltip: "@mdedit.toolbar.spoiler"
+      event: cmd_spoiler
 
     -
       css_class: mdedit-toolbar__image icon icon-camera

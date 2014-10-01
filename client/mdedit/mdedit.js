@@ -64,8 +64,153 @@ function MDEdit(options) {
 MDEdit.prototype.events = {};
 
 
+MDEdit.prototype.events.cmd_cut = function (editor) {
+  var range = editor.getSelectionRange();
+  var document = editor.getSession().getDocument();
+  var selectedText = editor.getSession().getTextRange(range);
+  var tpl = '\n{% cut <%= text %> %}\n';
+
+  if (range.end.column === range.start.column && range.end.row === range.start.row) {
+    document.insert(range.start, _.template(tpl, { text: t('@mdedit.toolbar.cut_text') }));
+  } else {
+    document.replace(range, _.template(tpl, { text: selectedText }));
+  }
+};
+
+
+MDEdit.prototype.events.cmd_h = function (editor) {
+  var range = editor.getSelectionRange();
+  var document = editor.getSession().getDocument();
+  var selectedText = document.getLine(range.start.row);
+  var regExp = /^(#*) ?/;
+  var headerStart = selectedText.match(regExp);
+
+  var level = headerStart ? headerStart[0].length : 0;
+
+  if (level === 0 || level > 3) {
+    level = 1;
+  }
+
+  var replace = '';
+
+  for (var i = 0; i < level; i++) {
+    replace += '#';
+  }
+  replace += ' ';
+
+  document.replace({
+    start: {
+      column: 0,
+      row: range.start.row
+    },
+    end: {
+      column: selectedText.length,
+      row: range.start.row
+    }
+  }, selectedText.replace(regExp, replace));
+};
+
+
+MDEdit.prototype.events.cmd_ol = function (editor) {
+  var range = editor.getSelectionRange();
+  var document = editor.getSession().getDocument();
+  var selectedText = editor.getSession().getTextRange(range);
+  var lineStartRegexp = /^ *[0-9]+\. /;
+
+  if (range.end.column === range.start.column && range.end.row === range.start.row) {
+    if (!lineStartRegexp.test(document.getLine(range.start.row))) {
+      document.insert({ column: 0, row: range.start.row }, '1. ');
+    }
+  } else {
+    var i = 1;
+
+    document.replace(range, selectedText.split('\n').map(function (line) {
+      if (lineStartRegexp.test(line)) {
+        return line;
+      }
+
+      return i++ + '. ' + line;
+    }).join('\n'));
+  }
+};
+
+
+MDEdit.prototype.events.cmd_ul = function (editor) {
+  var range = editor.getSelectionRange();
+  var document = editor.getSession().getDocument();
+  var selectedText = editor.getSession().getTextRange(range);
+  var lineStartRegexp = /^ *- /;
+
+  if (range.end.column === range.start.column && range.end.row === range.start.row) {
+    if (!lineStartRegexp.test(document.getLine(range.start.row))) {
+      document.insert({ column: 0, row: range.start.row }, '- ');
+    }
+  } else {
+    document.replace(range, selectedText.split('\n').map(function (line) {
+      if (lineStartRegexp.test(line)) {
+        return line;
+      }
+
+      return '- ' + line;
+    }).join('\n'));
+  }
+};
+
+
+MDEdit.prototype.events.cmd_spoiler = function (editor) {
+  var range = editor.getSelectionRange();
+  var document = editor.getSession().getDocument();
+  var tpl = '\n``` spoiler <%= title %>\n<%= text %>\n```\n';
+
+  if (range.end.column === range.start.column && range.end.row === range.start.row) {
+    document.insert(range.end, _.template(tpl, {
+      title: t('@mdedit.toolbar.spoiler_title'),
+      text: t('@mdedit.toolbar.spoiler_text')
+    }));
+  } else {
+    document.replace(range, _.template(tpl, {
+      title: t('@mdedit.toolbar.spoiler_title'),
+      text: editor.getSession().getTextRange(range)
+    }));
+  }
+};
+
+
+MDEdit.prototype.events.cmd_huperlink = function (editor) {
+  var range = editor.getSelectionRange();
+  var document = editor.getSession().getDocument();
+  var $linkDialog = $(N.runtime.render('mdedit.toolbar.huperlink'));
+  var tpl = '[<%= desc %>](<%= url %>)';
+
+  $('body').append($linkDialog);
+  $linkDialog.modal('show');
+
+  $linkDialog.on('hidden.bs.modal', function () {
+    $linkDialog.remove();
+  });
+
+  $linkDialog.find('.huperlink-dialog__apply').click(function () {
+    var url = $linkDialog.find('.huperlink-dialog__input').val();
+
+    $linkDialog.modal('hide');
+
+    if (range.end.column === range.start.column && range.end.row === range.start.row) {
+      document.insert(range.end, _.template(tpl, {
+        desc: t('@mdedit.toolbar.huperlink.description'),
+        url: url
+      }));
+    } else {
+      document.replace(range, _.template(tpl, {
+        desc: editor.getSession().getTextRange(range),
+        url: url
+      }));
+    }
+  });
+};
+
+
 MDEdit.prototype.events.cmd_help = function () {
-  var $helpDialog = $(N.runtime.render('mdedit.help'));
+  var $helpDialog = $(N.runtime.render('mdedit.toolbar.help'));
 
   $('body').append($helpDialog);
   $helpDialog.modal('show');
