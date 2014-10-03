@@ -11,15 +11,45 @@ function MDEdit(options) {
   var self = this;
   var $editorArea = $(options.editor_area);
   var $button;
+  var $editor;
 
   $editorArea.append(N.runtime.render('mdedit.layout'));
+  $editor = $editorArea.find('.mdedit__editor');
 
   this.preview = $(options.preview_area);
-  this.editor = ace.edit($editorArea.find('.mdedit__editor').get(0));
+  this.editor = ace.edit($editor.get(0));
   this.toolbar = $editorArea.find('.mdedit__toolbar');
   this.parseRules = options.parse_rules;
 
+  var $resizeArea = $editorArea.find('.mdedit__resize');
+  var $body = $('body');
+  var clickStart;
+  var currentHeight;
+
+  $resizeArea.on('mousedown touchstart', function (event) {
+    clickStart = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
+    currentHeight = parseInt($editor.height(), 10);
+
+    $body
+      .on('mouseup.nd.mdedit touchend.nd.mdedit', function () {
+        $body.off('.nd.mdedit');
+      })
+      .on('mousemove.nd.mdedit touchmove.nd.mdedit', _.throttle(function (event) {
+        var point = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
+        var newSize = currentHeight + (point.pageY - clickStart.pageY);
+
+        $editor.height(newSize > 150 ? newSize : 150);
+
+      }, 100));
+  });
+
   this.editor.getSession().setMode('ace/mode/markdown');
+
+  this.editor.setOptions({
+    showLineNumbers: false,
+    fontSize: '13px'
+  });
+
   this.editor.getSession().on('change', _.debounce(function () {
     self.updatePreview();
   }, 500));
