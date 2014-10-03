@@ -39,6 +39,7 @@ function MDEdit(options) {
         var newSize = currentHeight + (point.pageY - clickStart.pageY);
 
         $editor.height(newSize > 150 ? newSize : 150);
+        self.editor.resize();
 
       }, 100));
   });
@@ -47,8 +48,12 @@ function MDEdit(options) {
 
   this.editor.setOptions({
     showLineNumbers: false,
-    fontSize: '13px'
+    fontSize: '14px',
+    showGutter: false,
+    highlightActiveLine: false
   });
+
+  this.editor.getSession().setUseWrapMode(true);
 
   this.editor.getSession().on('change', _.debounce(function () {
     self.updatePreview();
