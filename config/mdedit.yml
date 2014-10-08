@@ -52,9 +52,6 @@ mdedit:
     -
       css_class: mdedit-toolbar__attach icon icon-attach
       tooltip: "@mdedit.toolbar.attach"
-      bind_key:
-        win: 'Ctrl-A'
-        mac: 'Command-A'
       event: cmd_attach
 
     -

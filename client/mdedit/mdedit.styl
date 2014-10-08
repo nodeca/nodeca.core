@@ -1,5 +1,18 @@
+@import "nodeca.core/client/common/_variables"
+
+.mdedit
+  background white
+
+.mdedit__editor
+  min-height 150px
+  width 100%
+
 .mdedit__editor .ace_print-margin-layer
   display none
+
+.mdedit__editor.ace_editor
+  font-size 14px
+  font-family monoFontFamily
 
 .mdedit__resize
   height 9px
@@ -7,3 +20,51 @@
   background-color #eee
   cursor s-resize
   margin-top 2px
+
+.mdedit__attach
+  width 100%
+  overflow-y hidden
+  overflow-x auto
+  margin-top 10px
+  white-space nowrap
+  padding-bottom 10px
+
+.mdedit__attach-item
+  width 80px
+  height 70px
+  border 1px solid #eee
+  position relative
+  cursor pointer
+  margin-right 10px
+  display inline-block
+  vertical-align top
+  overflow hidden
+
+.mdedit__attach-remove
+  position absolute
+  top 2px
+  right 2px
+  color white
+  &:before
+    content '×'
+
+.mdedit__attach-text
+  text-align center
+  text-overflow ellipsis
+  white-space nowrap
+  margin 2px 3px 0 3px
+  overflow hidden
+
+.mdedit__attach-preview
+  & > img
+    width 100%
+  overflow hidden
+  text-align center
+
+.mdedit__attach-dropzone
+  margin-top 5px
+  text-align center
+  border 1px solid
+  padding 5px 15px
+  border-color #dddddd
+  border-radius 4px

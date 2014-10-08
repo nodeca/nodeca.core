@@ -17,3 +17,7 @@ en-US:
     spoiler_text: enter spioler text here
 
     cut_text: enter cut text here
+
+  layout:
+    attach_add: Add
+    attach_dropzone: Drag photos here to upload or click to select from albums

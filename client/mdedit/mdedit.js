@@ -1,34 +1,118 @@
 // Add editor class to 'N' & emit event for plugins
 //
+// options:
+// - editor_area - CSS selector of editor container div
+// - preview_area - CSS selector of preview container div
+// - parse_rules - config for parser
+//   - cleanupRules
+//   - smiles
+//   - medialinkProviders
+// - toolbar_buttons - list of buttons for toolbar
+//
 
-/*global ace, $*/
+/*global ace*/
 
 'use strict';
 
 var _ = require('lodash');
 
 function MDEdit(options) {
-  var self = this;
   var $editorArea = $(options.editor_area);
-  var $button;
-  var $editor;
 
   $editorArea.append(N.runtime.render('mdedit.layout'));
-  $editor = $editorArea.find('.mdedit__editor');
 
   this.preview = $(options.preview_area);
-  this.editor = ace.edit($editor.get(0));
+  this.editor = $editorArea.find('.mdedit__editor');
+  this.ace = ace.edit(this.editor.get(0));
   this.toolbar = $editorArea.find('.mdedit__toolbar');
-  this.parseRules = options.parse_rules;
+  this.attachments = $editorArea.find('.mdedit__attachments');
+  this.resize = $editorArea.find('.mdedit__resize');
+  this.attach = $editorArea.find('.mdedit__attach');
+  this.attachDropzone = $editorArea.find('.mdedit__attach-dropzone');
 
-  var $resizeArea = $editorArea.find('.mdedit__resize');
+  this.options = options;
+
+  this._initAce();
+  this._initToolbar();
+  this._initResize();
+  this._initAttach();
+}
+
+
+// Set initial Ace options
+//
+MDEdit.prototype._initAce = function () {
+  var self = this;
+
+  this.ace.getSession().setMode('ace/mode/markdown');
+
+  this.ace.setOptions({
+    showLineNumbers: false,
+    showGutter: false,
+    highlightActiveLine: false
+  });
+
+  this.ace.getSession().setUseWrapMode(true);
+
+  this.ace.getSession().on('change', _.debounce(function () {
+    self.updatePreview();
+  }, 500));
+};
+
+
+// Init attachments
+//
+MDEdit.prototype._initAttach = function () {
+  var attachEvent = this.events.cmd_attach.bind(this);
+  var self = this;
+
+  this.attachDropzone.click(function () {
+    attachEvent(self);
+  });
+
+  this.attach.on('click', '.mdedit__attach-remove', function () {
+    var $this = $(this).parent();
+    var id = $this.data('file-id');
+
+    $this.remove();
+
+    self.ace.find(
+      new RegExp('\\!\\[.*?\\]\\(.*?' + id + '.*?\\)', 'gm'),
+      { regExp: true }
+    );
+
+    self.ace.replaceAll('');
+
+
+    return false;
+  });
+
+
+  this.attach.on('click', '.mdedit__attach-item', function () {
+    var $this = $(this);
+    var id = $this.data('file-id');
+
+    if (!id) {
+      return;
+    }
+
+    var imageUrl = N.router.linkTo('core.gridfs', { 'bucket': id + '_sm' });
+
+    self.ace.insert('![](' + imageUrl + ')');
+
+  });
+};
+
+
+// Add editor resize handler
+//
+MDEdit.prototype._initResize = function () {
+  var self = this;
   var $body = $('body');
-  var clickStart;
-  var currentHeight;
 
-  $resizeArea.on('mousedown touchstart', function (event) {
-    clickStart = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
-    currentHeight = parseInt($editor.height(), 10);
+  this.resize.on('mousedown touchstart', function (event) {
+    var clickStart = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
+    var currentHeight = parseInt(self.editor.height(), 10);
 
     $body
       .on('mouseup.nd.mdedit touchend.nd.mdedit', function () {
@@ -38,36 +122,29 @@ function MDEdit(options) {
         var point = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
         var newSize = currentHeight + (point.pageY - clickStart.pageY);
 
-        $editor.height(newSize > 150 ? newSize : 150);
-        self.editor.resize();
+        self.editor.height(newSize > 150 ? newSize : 150);
+        self.ace.resize();
 
       }, 100));
   });
+};
 
-  this.editor.getSession().setMode('ace/mode/markdown');
 
-  this.editor.setOptions({
-    showLineNumbers: false,
-    fontSize: '14px',
-    showGutter: false,
-    highlightActiveLine: false
-  });
-
-  this.editor.getSession().setUseWrapMode(true);
-
-  this.editor.getSession().on('change', _.debounce(function () {
-    self.updatePreview();
-  }, 500));
+// Create toolbar with buttons and bind events
+//
+MDEdit.prototype._initToolbar = function () {
+  var self = this;
+  var $button;
 
   var clickHandler = function () {
-    var event = self.events[$(this).data('event')];
+    var event = self.events[$(this).data('event')].bind(self);
 
     if (event) {
-      event(self.editor);
+      event(self.ace);
     }
   };
 
-  options.toolbar_buttuns.forEach(function (button) {
+  this.options.toolbar_buttons.forEach(function (button) {
     $button = $('<div>');
 
     if (button.css_class) {
@@ -83,18 +160,96 @@ function MDEdit(options) {
       $button.click(clickHandler);
 
       if (button.bind_key && self.events[button.event]) {
-        self.editor.commands.addCommand({
+        self.ace.commands.addCommand({
           name: button.event,
           bindKey: button.bind_key,
-          exec: self.events[button.event]
+          exec: self.events[button.event].bind(self)
         });
       }
     }
 
     self.toolbar.append($button);
   });
-}
+};
 
+
+// Set options
+//
+MDEdit.prototype.setOptions = function (options) {
+  this.options = _.assign(this.options, options);
+};
+
+
+// Update editor preview
+//
+MDEdit.prototype.updatePreview = function () {
+  var self = this;
+
+  this.getSrc(function (src) {
+    var parserData = {
+      input: src,
+      output: null,
+      options: self.options.parse_rules
+    };
+
+    N.parser.src2ast(parserData, function () {
+      self.preview.html(parserData.output.html());
+    });
+  });
+};
+
+
+// Get attached files
+//
+// return [ String ]
+//
+MDEdit.prototype.getAttachments = function () {
+  var result = [];
+
+  this.attach.find('.mdedit__attach-item').each(function () {
+    var $this = $(this);
+
+    result.push($this.data('file-id'));
+  });
+
+  return result;
+};
+
+
+// Set attachments
+//
+// - attachments - [ String ]
+//
+MDEdit.prototype.setAttachments = function (/*attachments*/) {
+  // TODO: implementation
+};
+
+
+// Get editor text in SRC HTML
+//
+MDEdit.prototype.getSrc = function (callback) {
+  var mdData = { input: this.ace.getValue(), output: null };
+
+  N.parser.md2src(mdData, function () {
+    callback(mdData.output);
+  });
+};
+
+
+// Set editor text in SRC HTML
+//
+MDEdit.prototype.setSrc = function (src) {
+  var self = this;
+  var srcData = { input: src, output: null };
+
+  N.parser.src2md(srcData, function () {
+    self.ace.setValue(srcData.output);
+  });
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Toolbar events handlers
 
 MDEdit.prototype.events = {};
 
@@ -295,38 +450,26 @@ MDEdit.prototype.events.cmd_italic = function (editor) {
 };
 
 
-MDEdit.prototype.updatePreview = function () {
+MDEdit.prototype.events.cmd_attach = function () {
+  // TODO: show real dialog
+  // TODO: move this method to nodeca.users
+
   var self = this;
 
-  this.getSrc(function (src) {
-    var parserData = {
-      input: src,
-      output: null,
-      options: self.parseRules
-    };
+  var data = { user_hid: 1, album_id: '53f1cbe70f78750000af85c8', cover_id: null };
+  N.wire.emit('users.album.edit.select_cover', data, function () {
 
-    N.parser.src2ast(parserData, function () {
-      self.preview.html(parserData.output.html());
-    });
-  });
-};
+    if (self.attach.find('[data-file-id="' + data.cover_id + '"]').length > 0) {
+      // attachment already exists
+      return;
+    }
 
+    var imageUrl = N.router.linkTo('core.gridfs', { 'bucket': data.cover_id + '_sm' });
 
-MDEdit.prototype.getSrc = function (callback) {
-  var mdData = { input: this.editor.getValue(), output: null };
-
-  N.parser.md2src(mdData, function () {
-    callback(mdData.output);
-  });
-};
-
-
-MDEdit.prototype.setSrc = function (src) {
-  var self = this;
-  var srcData = { input: src, output: null };
-
-  N.parser.src2md(srcData, function () {
-    self.editor.setValue(srcData.output);
+    self.attach.prepend(N.runtime.render('mdedit.attach_item', {
+      preview: '<img src="' + imageUrl + '"/>',
+      id: data.cover_id
+    }));
   });
 };
 
