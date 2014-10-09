@@ -2,7 +2,7 @@ en-US:
   toolbar:
     bold: Bold
     italic: Italic
-    huperlink: Huperlink
+    link: Link
     quote: Quote
     spoiler: Spoiler
     image: Insert image
@@ -18,6 +18,4 @@ en-US:
 
     cut_text: enter cut text here
 
-  layout:
-    attach_add: Add
-    attach_dropzone: Drag photos here to upload or click to select from albums
+  drop_help: Drag photos to editor to upload or click here to select from albums

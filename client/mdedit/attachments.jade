@@ -1,0 +1,6 @@
+each id in self.attachments
+  - var imageUrl = N.router.linkTo('core.gridfs', { 'bucket': id + '_sm' });
+  .mdedit__attach-item(data-attach-id=id id='mdedit__attach-item-' + id)
+    .mdedit__attach-remove(data-attach-id=id)
+    .mdedit__attach-preview
+      img(src=imageUrl)

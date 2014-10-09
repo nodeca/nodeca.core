@@ -1,13 +1,13 @@
 // Add editor class to 'N' & emit event for plugins
 //
 // options:
-// - editor_area - CSS selector of editor container div
-// - preview_area - CSS selector of preview container div
-// - parse_rules - config for parser
+// - editArea - CSS selector of editor container div
+// - previewArea - CSS selector of preview container div
+// - parseRules - config for parser
 //   - cleanupRules
 //   - smiles
 //   - medialinkProviders
-// - toolbar_buttons - list of buttons for toolbar
+// - toolbarButtons - list of buttons for toolbar
 //
 
 /*global ace*/
@@ -16,26 +16,38 @@
 
 var _ = require('lodash');
 
+
+// Unique editor id to bind wire events (incremented)
+var id = 0;
+
+
 function MDEdit(options) {
-  var $editorArea = $(options.editor_area);
+  var $editorArea = $(options.editArea);
 
-  $editorArea.append(N.runtime.render('mdedit.layout'));
+  this.editorId = id++;
 
-  this.preview = $(options.preview_area);
-  this.editor = $editorArea.find('.mdedit__editor');
-  this.ace = ace.edit(this.editor.get(0));
+  $editorArea.append(N.runtime.render('mdedit', {
+    buttons: options.toolbarButtons,
+    editorId: this.editorId
+  }));
+
+  this.preview = $(options.previewArea);
+  this.editArea = $editorArea.find('.mdedit__edit-area');
+  this.ace = ace.edit(this.editArea.get(0));
   this.toolbar = $editorArea.find('.mdedit__toolbar');
-  this.attachments = $editorArea.find('.mdedit__attachments');
+  this.attachmentsArea = $editorArea.find('.mdedit__attachments');
   this.resize = $editorArea.find('.mdedit__resize');
-  this.attach = $editorArea.find('.mdedit__attach');
-  this.attachDropzone = $editorArea.find('.mdedit__attach-dropzone');
+  this.dropHelp = $editorArea.find('.mdedit__drop-help');
+  this.editorContainer = $editorArea.find('.mdedit');
+
+  this.attachments = [];
 
   this.options = options;
 
   this._initAce();
   this._initToolbar();
   this._initResize();
-  this._initAttach();
+  this._initAttachmentsArea();
 }
 
 
@@ -60,37 +72,73 @@ MDEdit.prototype._initAce = function () {
 };
 
 
-// Init attachments
+// Added attachments bar event handlers
 //
-MDEdit.prototype._initAttach = function () {
-  var attachEvent = this.events.cmd_attach.bind(this);
+MDEdit.prototype._initAttachmentsArea = function () {
+  var attachEvent = this.commands.cmdAttach.bind(this);
   var self = this;
 
-  this.attachDropzone.click(function () {
+  N.wire.on('core.mdedit:dd_' + this.editorId, function mdedit_dd(event) {
+    var x0, y0, x1, y1, ex, ey;
+
+    switch (event.type) {
+      case 'dragenter':
+        self.editorContainer.addClass('active');
+        break;
+      case 'dragleave':
+        // 'dragleave' occurs when user move cursor over child HTML element
+        // track this situation and don't remove 'active' class
+        // http://stackoverflow.com/questions/10867506/
+        x0 = self.editorContainer.offset().left;
+        y0 = self.editorContainer.offset().top;
+        x1 = x0 + self.editorContainer.outerWidth();
+        y1 = y0 + self.editorContainer.outerHeight();
+        ex = event.originalEvent.pageX;
+        ey = event.originalEvent.pageY;
+
+        if (ex > x1 || ex < x0 || ey > y1 || ey < y0) {
+          self.editorContainer.removeClass('active');
+        }
+        break;
+      case 'drop':
+        self.editorContainer.removeClass('active');
+
+        // TODO: call uploader dialog with event.dataTransfer.files
+        //if (event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length) {
+        //
+        //}
+        break;
+      default:
+    }
+  });
+
+  // Click to drop help to select file from gallery
+  this.dropHelp.click(function () {
     attachEvent(self);
   });
 
-  this.attach.on('click', '.mdedit__attach-remove', function () {
-    var $this = $(this).parent();
-    var id = $this.data('file-id');
+  // Remove button on attachment
+  this.attachmentsArea.on('click', '.mdedit__attach-remove', function () {
+    var id = $(this).data('attach-id');
+    var $attach = self.attachmentsArea.find('#mdedit__attach-item-' + id);
 
-    $this.remove();
+    self.attachments = _.remove(self.attachments, function (val) { return val !== id; });
+
+    $attach.remove();
 
     self.ace.find(
-      new RegExp('\\!\\[.*?\\]\\(.*?' + id + '.*?\\)', 'gm'),
+      new RegExp('\\!\\[[^\\]]*\\]\\([^)]*?' + id + '[^)]*\\)', 'gm'),
       { regExp: true }
     );
-
     self.ace.replaceAll('');
-
 
     return false;
   });
 
-
-  this.attach.on('click', '.mdedit__attach-item', function () {
-    var $this = $(this);
-    var id = $this.data('file-id');
+  // Click on attachment to insert into text
+  this.attachmentsArea.on('click', '.mdedit__attach-item', function () {
+    var $attach = $(this);
+    var id = $attach.data('attach-id');
 
     if (!id) {
       return;
@@ -99,7 +147,6 @@ MDEdit.prototype._initAttach = function () {
     var imageUrl = N.router.linkTo('core.gridfs', { 'bucket': id + '_sm' });
 
     self.ace.insert('![](' + imageUrl + ')');
-
   });
 };
 
@@ -107,25 +154,26 @@ MDEdit.prototype._initAttach = function () {
 // Add editor resize handler
 //
 MDEdit.prototype._initResize = function () {
+  var minHeight = parseInt(this.editArea.height(), 10);
   var self = this;
   var $body = $('body');
 
   this.resize.on('mousedown touchstart', function (event) {
     var clickStart = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
-    var currentHeight = parseInt(self.editor.height(), 10);
+    var currentHeight = parseInt(self.editArea.height(), 10);
 
     $body
       .on('mouseup.nd.mdedit touchend.nd.mdedit', function () {
         $body.off('.nd.mdedit');
       })
-      .on('mousemove.nd.mdedit touchmove.nd.mdedit', _.throttle(function (event) {
+      .on('mousemove.nd.mdedit touchmove.nd.mdedit', _.debounce(function (event) {
         var point = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
-        var newSize = currentHeight + (point.pageY - clickStart.pageY);
+        var newHeight = currentHeight + (point.pageY - clickStart.pageY);
 
-        self.editor.height(newSize > 150 ? newSize : 150);
+        self.editArea.height(newHeight > minHeight ? newHeight : minHeight);
         self.ace.resize();
 
-      }, 100));
+      }, 20, { maxWait: 20 }));
   });
 };
 
@@ -134,41 +182,26 @@ MDEdit.prototype._initResize = function () {
 //
 MDEdit.prototype._initToolbar = function () {
   var self = this;
-  var $button;
 
-  var clickHandler = function () {
-    var event = self.events[$(this).data('event')].bind(self);
+  this.toolbar.on('click', '.mdedit-toolbar__item', function () {
+    var command = self.commands[$(this).data('command')].bind(self);
 
-    if (event) {
-      event(self.ace);
+    if (command) {
+      command(self.ace);
     }
-  };
+  });
 
-  this.options.toolbar_buttons.forEach(function (button) {
-    $button = $('<div>');
 
-    if (button.css_class) {
-      $button.attr('class', button.css_class + ' mdedit-toolbar__item');
+  this.options.toolbarButtons.forEach(function (button) {
+    if (!button.command || !button.bind_key || !self.commands[button.command]) {
+      return;
     }
 
-    if (button.tooltip) {
-      $button.attr('title', t(button.tooltip));
-    }
-
-    if (button.event) {
-      $button.data('event', button.event);
-      $button.click(clickHandler);
-
-      if (button.bind_key && self.events[button.event]) {
-        self.ace.commands.addCommand({
-          name: button.event,
-          bindKey: button.bind_key,
-          exec: self.events[button.event].bind(self)
-        });
-      }
-    }
-
-    self.toolbar.append($button);
+    self.ace.commands.addCommand({
+      name: button.command,
+      bindKey: button.bind_key,
+      exec: self.commands[button.command].bind(self)
+    });
   });
 };
 
@@ -189,39 +222,13 @@ MDEdit.prototype.updatePreview = function () {
     var parserData = {
       input: src,
       output: null,
-      options: self.options.parse_rules
+      options: self.options.parseRules
     };
 
     N.parser.src2ast(parserData, function () {
       self.preview.html(parserData.output.html());
     });
   });
-};
-
-
-// Get attached files
-//
-// return [ String ]
-//
-MDEdit.prototype.getAttachments = function () {
-  var result = [];
-
-  this.attach.find('.mdedit__attach-item').each(function () {
-    var $this = $(this);
-
-    result.push($this.data('file-id'));
-  });
-
-  return result;
-};
-
-
-// Set attachments
-//
-// - attachments - [ String ]
-//
-MDEdit.prototype.setAttachments = function (/*attachments*/) {
-  // TODO: implementation
 };
 
 
@@ -248,230 +255,7 @@ MDEdit.prototype.setSrc = function (src) {
 };
 
 
-///////////////////////////////////////////////////////////////////////////////
-// Toolbar events handlers
-
-MDEdit.prototype.events = {};
-
-
-MDEdit.prototype.events.cmd_cut = function (editor) {
-  var range = editor.getSelectionRange();
-  var document = editor.getSession().getDocument();
-  var selectedText = editor.getSession().getTextRange(range);
-  var tpl = '\n{% cut <%= text %> %}\n';
-
-  if (range.end.column === range.start.column && range.end.row === range.start.row) {
-    document.insert(range.start, _.template(tpl, { text: t('@mdedit.toolbar.cut_text') }));
-  } else {
-    document.replace(range, _.template(tpl, { text: selectedText }));
-  }
-};
-
-
-MDEdit.prototype.events.cmd_h = function (editor) {
-  var range = editor.getSelectionRange();
-  var document = editor.getSession().getDocument();
-  var selectedText = document.getLine(range.start.row);
-  var regExp = /^(#*) ?/;
-  var headerStart = selectedText.match(regExp);
-
-  var level = headerStart ? headerStart[0].length : 0;
-
-  if (level === 0 || level > 3) {
-    level = 1;
-  }
-
-  var replace = '';
-
-  for (var i = 0; i < level; i++) {
-    replace += '#';
-  }
-  replace += ' ';
-
-  document.replace({
-    start: {
-      column: 0,
-      row: range.start.row
-    },
-    end: {
-      column: selectedText.length,
-      row: range.start.row
-    }
-  }, selectedText.replace(regExp, replace));
-};
-
-
-MDEdit.prototype.events.cmd_ol = function (editor) {
-  var range = editor.getSelectionRange();
-  var document = editor.getSession().getDocument();
-  var selectedText = editor.getSession().getTextRange(range);
-  var lineStartRegexp = /^ *[0-9]+\. /;
-
-  if (range.end.column === range.start.column && range.end.row === range.start.row) {
-    if (!lineStartRegexp.test(document.getLine(range.start.row))) {
-      document.insert({ column: 0, row: range.start.row }, '1. ');
-    }
-  } else {
-    var i = 1;
-
-    document.replace(range, selectedText.split('\n').map(function (line) {
-      if (lineStartRegexp.test(line)) {
-        return line;
-      }
-
-      return i++ + '. ' + line;
-    }).join('\n'));
-  }
-};
-
-
-MDEdit.prototype.events.cmd_ul = function (editor) {
-  var range = editor.getSelectionRange();
-  var document = editor.getSession().getDocument();
-  var selectedText = editor.getSession().getTextRange(range);
-  var lineStartRegexp = /^ *- /;
-
-  if (range.end.column === range.start.column && range.end.row === range.start.row) {
-    if (!lineStartRegexp.test(document.getLine(range.start.row))) {
-      document.insert({ column: 0, row: range.start.row }, '- ');
-    }
-  } else {
-    document.replace(range, selectedText.split('\n').map(function (line) {
-      if (lineStartRegexp.test(line)) {
-        return line;
-      }
-
-      return '- ' + line;
-    }).join('\n'));
-  }
-};
-
-
-MDEdit.prototype.events.cmd_spoiler = function (editor) {
-  var range = editor.getSelectionRange();
-  var document = editor.getSession().getDocument();
-  var tpl = '\n``` spoiler <%= title %>\n<%= text %>\n```\n';
-
-  if (range.end.column === range.start.column && range.end.row === range.start.row) {
-    document.insert(range.end, _.template(tpl, {
-      title: t('@mdedit.toolbar.spoiler_title'),
-      text: t('@mdedit.toolbar.spoiler_text')
-    }));
-  } else {
-    document.replace(range, _.template(tpl, {
-      title: t('@mdedit.toolbar.spoiler_title'),
-      text: editor.getSession().getTextRange(range)
-    }));
-  }
-};
-
-
-MDEdit.prototype.events.cmd_huperlink = function (editor) {
-  var range = editor.getSelectionRange();
-  var document = editor.getSession().getDocument();
-  var $linkDialog = $(N.runtime.render('mdedit.toolbar.huperlink'));
-  var tpl = '[<%= desc %>](<%= url %>)';
-
-  $('body').append($linkDialog);
-  $linkDialog.modal('show');
-
-  $linkDialog.on('hidden.bs.modal', function () {
-    $linkDialog.remove();
-  });
-
-  $linkDialog.find('.huperlink-dialog__apply').click(function () {
-    var url = $linkDialog.find('.huperlink-dialog__input').val();
-
-    $linkDialog.modal('hide');
-
-    if (range.end.column === range.start.column && range.end.row === range.start.row) {
-      document.insert(range.end, _.template(tpl, {
-        desc: t('@mdedit.toolbar.huperlink.description'),
-        url: url
-      }));
-    } else {
-      document.replace(range, _.template(tpl, {
-        desc: editor.getSession().getTextRange(range),
-        url: url
-      }));
-    }
-  });
-};
-
-
-MDEdit.prototype.events.cmd_help = function () {
-  var $helpDialog = $(N.runtime.render('mdedit.toolbar.help'));
-
-  $('body').append($helpDialog);
-  $helpDialog.modal('show');
-
-  $helpDialog.on('hidden.bs.modal', function () {
-    $helpDialog.remove();
-  });
-};
-
-
-MDEdit.prototype.events.cmd_bold = function (editor) {
-  var range = editor.getSelectionRange();
-  var document = editor.getSession().getDocument();
-  var selection = editor.getSelection();
-  var add = '__';
-
-  if (range.end.column === range.start.column && range.end.row === range.start.row) {
-    return;
-  }
-
-  document.insert(range.end, add);
-  document.insert(range.start, add);
-
-  selection.clearSelection();
-  selection.moveCursorTo(range.start.row, range.start.column + add.length);
-  selection.selectTo(range.end.row, range.end.column + add.length);
-};
-
-
-MDEdit.prototype.events.cmd_italic = function (editor) {
-  // TODO: copypaste from cmd_bold
-  var range = editor.getSelectionRange();
-  var document = editor.getSession().getDocument();
-  var selection = editor.getSelection();
-  var add = '_';
-
-  if (range.end.column === range.start.column && range.end.row === range.start.row) {
-    return;
-  }
-
-  document.insert(range.end, add);
-  document.insert(range.start, add);
-
-  selection.clearSelection();
-  selection.moveCursorTo(range.start.row, range.start.column + add.length);
-  selection.selectTo(range.end.row, range.end.column + add.length);
-};
-
-
-MDEdit.prototype.events.cmd_attach = function () {
-  // TODO: show real dialog
-  // TODO: move this method to nodeca.users
-
-  var self = this;
-
-  var data = { user_hid: 1, album_id: '53f1cbe70f78750000af85c8', cover_id: null };
-  N.wire.emit('users.album.edit.select_cover', data, function () {
-
-    if (self.attach.find('[data-file-id="' + data.cover_id + '"]').length > 0) {
-      // attachment already exists
-      return;
-    }
-
-    var imageUrl = N.router.linkTo('core.gridfs', { 'bucket': data.cover_id + '_sm' });
-
-    self.attach.prepend(N.runtime.render('mdedit.attach_item', {
-      preview: '<img src="' + imageUrl + '"/>',
-      id: data.cover_id
-    }));
-  });
-};
+MDEdit.prototype.commands = {};
 
 
 N.wire.once('init:assets', function (__, callback) {

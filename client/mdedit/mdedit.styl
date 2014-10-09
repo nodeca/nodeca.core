@@ -1,16 +1,19 @@
 @import "nodeca.core/client/common/_variables"
 
+.mdedit.active
+  border 1px dotted #000000
+
 .mdedit
   background white
 
-.mdedit__editor
+.mdedit__edit-area
   min-height 150px
   width 100%
 
-.mdedit__editor .ace_print-margin-layer
+.mdedit__edit-area .ace_print-margin-layer
   display none
 
-.mdedit__editor.ace_editor
+.mdedit__edit-area.ace_editor
   font-size 14px
   font-family monoFontFamily
 
@@ -21,7 +24,7 @@
   cursor s-resize
   margin-top 2px
 
-.mdedit__attach
+.mdedit__attachments
   width 100%
   overflow-y hidden
   overflow-x auto
@@ -61,7 +64,7 @@
   overflow hidden
   text-align center
 
-.mdedit__attach-dropzone
+.mdedit__drop-help
   margin-top 5px
   text-align center
   border 1px solid

@@ -1,0 +1,15 @@
+.modal.fade(tabindex='-1' role='dialog' aria-hidden='true')
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type='button' tabindex='-1' data-dismiss='modal') &times;
+        h4.modal-title= self.t('title')
+      .modal-body
+        input.add-image-dialog__input.form-control(
+          type='text'
+          tabindex='1'
+          placeholder=self.t('input_desc')
+        )
+      .modal-footer
+        button.btn.btn-default(type='button' tabindex='2' data-dismiss='modal')= self.t('cancel')
+        button.add-image-dialog__apply.btn.btn-primary(type='submit' tabindex='3')= self.t('apply')

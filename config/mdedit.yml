@@ -7,7 +7,7 @@ mdedit:
       bind_key:
         win: 'Ctrl-B'
         mac: 'Command-B'
-      event: cmd_bold
+      command: cmdBold
 
     -
       css_class: mdedit-toolbar__italic
@@ -15,18 +15,18 @@ mdedit:
       bind_key:
         win: 'Ctrl-I'
         mac: 'Command-I'
-      event: cmd_italic
+      command: cmdItalic
 
     -
       css_class: mdedit-toolbar__sep
 
     -
-      css_class: mdedit-toolbar__huperlink icon icon-link
-      tooltip: "@mdedit.toolbar.huperlink"
+      css_class: mdedit-toolbar__link icon icon-link
+      tooltip: "@mdedit.toolbar.link"
       bind_key:
         win: 'Ctrl-L'
         mac: 'Command-L'
-      event: cmd_huperlink
+      command: cmdLink
 
     -
       css_class: mdedit-toolbar__quote
@@ -34,12 +34,7 @@ mdedit:
       bind_key:
         win: 'Ctrl-Q'
         mac: 'Command-Q'
-      event: cmd_quote
-
-    -
-      css_class: mdedit-toolbar__spoiler
-      tooltip: "@mdedit.toolbar.spoiler"
-      event: cmd_spoiler
+      command: cmdQuote
 
     -
       css_class: mdedit-toolbar__image icon icon-camera
@@ -47,12 +42,12 @@ mdedit:
       bind_key:
         win: 'Ctrl-G'
         mac: 'Command-G'
-      event: cmd_image
+      command: cmdImage
 
     -
       css_class: mdedit-toolbar__attach icon icon-attach
       tooltip: "@mdedit.toolbar.attach"
-      event: cmd_attach
+      command: cmdAttach
 
     -
       css_class: mdedit-toolbar__sep
@@ -63,7 +58,7 @@ mdedit:
       bind_key:
         win: 'Ctrl-O'
         mac: 'Command-O'
-      event: cmd_ol
+      command: cmdOl
 
     -
       css_class: mdedit-toolbar__ul
@@ -71,7 +66,7 @@ mdedit:
       bind_key:
         win: 'Ctrl-U'
         mac: 'Command-U'
-      event: cmd_ul
+      command: cmdUl
 
     -
       css_class: mdedit-toolbar__header
@@ -79,7 +74,7 @@ mdedit:
       bind_key:
         win: 'Ctrl-H'
         mac: 'Command-H'
-      event: cmd_h
+      command: cmdHeading
 
     -
       css_class: mdedit-toolbar__sep
@@ -87,7 +82,7 @@ mdedit:
     -
       css_class: mdedit-toolbar__cut
       tooltip: "@mdedit.toolbar.cut"
-      event: cmd_cut
+      command: cmdCut
 
     -
       css_class: mdedit-toolbar__help
@@ -95,4 +90,4 @@ mdedit:
       bind_key:
         win: 'F1'
         mac: 'F1'
-      event: cmd_help
+      command: cmdHelp

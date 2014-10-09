@@ -5,11 +5,11 @@
         button.close(type='button' tabindex='-1' data-dismiss='modal') &times;
         h4.modal-title= self.t('title')
       .modal-body
-        input.huperlink-dialog__input.form-control(
+        input.add-link-dialog__input.form-control(
           type='text'
           tabindex='1'
           placeholder=self.t('input_desc')
         )
       .modal-footer
         button.btn.btn-default(type='button' tabindex='2' data-dismiss='modal')= self.t('cancel')
-        button.huperlink-dialog__apply.btn.btn-primary(type='submit' tabindex='3')= self.t('apply')
+        button.add-link-dialog__apply.btn.btn-primary(type='submit' tabindex='3')= self.t('apply')
