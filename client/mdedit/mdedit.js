@@ -232,6 +232,15 @@ MDEdit.prototype.updatePreview = function () {
 };
 
 
+// Update attachments panel
+//
+MDEdit.prototype.updateAttachments = function () {
+  this.attachmentsArea.html(
+    N.runtime.render('mdedit.attachments', { attachments: this.attachments })
+  );
+};
+
+
 // Get editor text in SRC HTML
 //
 MDEdit.prototype.getSrc = function (callback) {
