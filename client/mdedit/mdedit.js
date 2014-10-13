@@ -3,11 +3,17 @@
 // options:
 // - editArea - CSS selector of editor container div
 // - previewArea - CSS selector of preview container div
+// - attachments - array of attachments
+// - markdown - source markdown text
 // - parseRules - config for parser
 //   - cleanupRules
 //   - smiles
 //   - medialinkProviders
 // - toolbarButtons - list of buttons for toolbar
+//
+// readonly properties:
+// - attachments - array of attachments
+// - markdown - user input markdown text
 //
 
 /*global ace*/
@@ -40,14 +46,20 @@ function MDEdit(options) {
   this.dropHelp = $editorArea.find('.mdedit__drop-help');
   this.editorContainer = $editorArea.find('.mdedit');
 
-  this.attachments = [];
-
   this.options = options;
 
   this._initAce();
   this._initToolbar();
   this._initResize();
   this._initAttachmentsArea();
+
+
+  // Set initial value
+  this.ace.setValue(options.markdown || '');
+  this.attachments = options.attachments || [];
+
+  this._updatePreview();
+  this._updateAttachments();
 }
 
 
@@ -67,7 +79,8 @@ MDEdit.prototype._initAce = function () {
   this.ace.getSession().setUseWrapMode(true);
 
   this.ace.getSession().on('change', _.debounce(function () {
-    self.updatePreview();
+    self.markdown = self.ace.getValue();
+    self._updatePreview();
   }, 500));
 };
 
@@ -79,7 +92,7 @@ MDEdit.prototype._initAttachmentsArea = function () {
   var self = this;
 
   N.wire.on('core.mdedit:dd_' + this.editorId, function mdedit_dd(event) {
-    var x0, y0, x1, y1, ex, ey;
+    var x0, y0, x1, y1, ex, ey, uploaderData;
 
     switch (event.type) {
       case 'dragenter':
@@ -103,10 +116,23 @@ MDEdit.prototype._initAttachmentsArea = function () {
       case 'drop':
         self.editorContainer.removeClass('active');
 
-        // TODO: call uploader dialog with event.dataTransfer.files
-        //if (event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length) {
-        //
-        //}
+        if (event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length) {
+
+          uploaderData = {
+            files: event.dataTransfer.files,
+            url: N.router.linkTo('users.media.upload'),
+            config: 'users.uploader_config',
+            uploaded: null
+          };
+
+          N.wire.emit('users.uploader:add', uploaderData, function () {
+            uploaderData.uploaded.forEach(function (media) {
+              self.attachments.unshift(media.file_id);
+            });
+
+            self._updateAttachments();
+          });
+        }
         break;
       default:
     }
@@ -210,23 +236,25 @@ MDEdit.prototype._initToolbar = function () {
 //
 MDEdit.prototype.setOptions = function (options) {
   this.options = _.assign(this.options, options);
+  this._updatePreview();
 };
 
 
 // Update editor preview
 //
-MDEdit.prototype.updatePreview = function () {
+MDEdit.prototype._updatePreview = function () {
   var self = this;
+  var mdData = { input: this.ace.getValue(), output: null };
 
-  this.getSrc(function (src) {
-    var parserData = {
-      input: src,
+  N.parser.md2src(mdData, function () {
+    var srcData = {
+      input: mdData.output,
       output: null,
       options: self.options.parseRules
     };
 
-    N.parser.src2ast(parserData, function () {
-      self.preview.html(parserData.output.html());
+    N.parser.src2ast(srcData, function () {
+      self.preview.html(srcData.output.html());
     });
   });
 };
@@ -234,33 +262,10 @@ MDEdit.prototype.updatePreview = function () {
 
 // Update attachments panel
 //
-MDEdit.prototype.updateAttachments = function () {
+MDEdit.prototype._updateAttachments = function () {
   this.attachmentsArea.html(
     N.runtime.render('mdedit.attachments', { attachments: this.attachments })
   );
-};
-
-
-// Get editor text in SRC HTML
-//
-MDEdit.prototype.getSrc = function (callback) {
-  var mdData = { input: this.ace.getValue(), output: null };
-
-  N.parser.md2src(mdData, function () {
-    callback(mdData.output);
-  });
-};
-
-
-// Set editor text in SRC HTML
-//
-MDEdit.prototype.setSrc = function (src) {
-  var self = this;
-  var srcData = { input: src, output: null };
-
-  N.parser.src2md(srcData, function () {
-    self.ace.setValue(srcData.output);
-  });
 };
 
 

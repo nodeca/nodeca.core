@@ -17,7 +17,7 @@ N.wire.once('init:mdedit', function () {
 
       self.attachments.unshift(data.cover_id);
 
-      self.updateAttachments();
+      self._updateAttachments();
     });
   };
 });
