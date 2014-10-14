@@ -148,12 +148,12 @@ MDEdit.prototype._initAttachmentsArea = function () {
     var id = $(this).data('attach-id');
     var $attach = self.attachmentsArea.find('#mdedit__attach-item-' + id);
 
-    self.attachments = _.remove(self.attachments, function (val) { return val !== id; });
+    self.attachments = _.remove(self.attachments, function (val) { return val.id !== id; });
 
     $attach.remove();
 
     self.ace.find(
-      new RegExp('\\!\\[[^\\]]*\\]\\([^)]*?' + id + '[^)]*\\)', 'gm'),
+      new RegExp('\\!?\\[[^\\]]*\\]\\([^)]*?' + id + '[^)]*\\)', 'gm'),
       { regExp: true }
     );
     self.ace.replaceAll('');
@@ -165,14 +165,17 @@ MDEdit.prototype._initAttachmentsArea = function () {
   this.attachmentsArea.on('click', '.mdedit__attach-item', function () {
     var $attach = $(this);
     var id = $attach.data('attach-id');
+    var name = $attach.data('attach-name');
 
     if (!id) {
       return;
     }
 
-    var imageUrl = N.router.linkTo('core.gridfs', { 'bucket': id + '_sm' });
-
-    self.ace.insert('![](' + imageUrl + ')');
+    if (name === '') {
+      self.ace.insert('![](' + N.router.linkTo('core.gridfs', { bucket: id + '_sm' }) + ')');
+    } else {
+      self.ace.insert('[' + name + '](' + N.router.linkTo('core.gridfs', { bucket: id }) + ')');
+    }
   });
 };
 

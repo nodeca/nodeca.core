@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+
 N.wire.once('init:mdedit', function () {
   N.MDEdit.prototype.commands.cmdAttach = function () {
     // TODO: show real dialog
@@ -7,15 +9,15 @@ N.wire.once('init:mdedit', function () {
 
     var self = this;
 
-    var data = { user_hid: 1, album_id: '53f1cbe70f78750000af85c8', cover_id: null };
+    var data = { user_hid: 1, album_id: '543ce3af61c87a71b3ae196e', cover_id: null };
     N.wire.emit('users.album.edit.select_cover', data, function () {
 
-      if (self.attachments.indexOf(data.cover_id) !== -1) {
+      if (_.findIndex(self.attachments, function (attach) { return attach.id === data.cover_id; }) !== -1) {
         // attachment already exists
         return;
       }
 
-      self.attachments.unshift(data.cover_id);
+      self.attachments.unshift({ id: data.cover_id, name: '' });
 
       self._updateAttachments();
     });

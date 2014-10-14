@@ -29,7 +29,6 @@
   overflow-y hidden
   overflow-x auto
   margin-top 10px
-  white-space nowrap
   padding-bottom 10px
 
 .mdedit__attach-item
@@ -51,18 +50,14 @@
   &:before
     content '×'
 
-.mdedit__attach-text
-  text-align center
-  text-overflow ellipsis
-  white-space nowrap
-  margin 2px 3px 0 3px
-  overflow hidden
-
 .mdedit__attach-preview
   & > img
     width 100%
+  & > p
+    margin 3px
+    word-wrap break-word
+    text-align left
   overflow hidden
-  text-align center
 
 .mdedit__drop-help
   margin-top 5px

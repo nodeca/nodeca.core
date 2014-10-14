@@ -1,6 +1,14 @@
-each id in self.attachments
-  - var imageUrl = N.router.linkTo('core.gridfs', { 'bucket': id + '_sm' });
-  .mdedit__attach-item(data-attach-id=id id='mdedit__attach-item-' + id)
-    .mdedit__attach-remove(data-attach-id=id)
+each attachment in self.attachments
+  .mdedit__attach-item(
+    data-attach-id=attachment.id
+    id='mdedit__attach-item-' + attachment.id
+    data-attach-name= attachment.name
+  )
+    .mdedit__attach-remove(data-attach-id=attachment.id)
     .mdedit__attach-preview
-      img(src=imageUrl)
+      if (attachment.name && attachment.name !== '')
+        - var href = N.router.linkTo('core.gridfs', { 'bucket': attachment.id });
+        p(href=href)= attachment.name
+      else
+        - var imageUrl = N.router.linkTo('core.gridfs', { 'bucket': attachment.id + '_sm' });
+        img(src=imageUrl)
