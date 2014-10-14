@@ -127,7 +127,7 @@ MDEdit.prototype._initAttachmentsArea = function () {
 
           N.wire.emit('users.uploader:add', uploaderData, function () {
             uploaderData.uploaded.forEach(function (media) {
-              self.attachments.unshift(media.file_id);
+              self.attachments.unshift({ id: media.file_id, name: media.file_name });
             });
 
             self._updateAttachments();
