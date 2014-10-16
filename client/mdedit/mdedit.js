@@ -127,7 +127,7 @@ MDEdit.prototype._initAttachmentsArea = function () {
 
           N.wire.emit('users.uploader:add', uploaderData, function () {
             uploaderData.uploaded.forEach(function (media) {
-              self.attachments.unshift({ id: media.file_id, name: media.file_name });
+              self.attachments.unshift(_.pick(media, [ 'file_id', 'file_name', 'type' ]));
             });
 
             self._updateAttachments();
@@ -145,10 +145,10 @@ MDEdit.prototype._initAttachmentsArea = function () {
 
   // Remove button on attachment
   this.attachmentsArea.on('click', '.mdedit__attach-remove', function () {
-    var id = $(this).data('attach-id');
+    var id = $(this).data('file-id');
     var $attach = self.attachmentsArea.find('#mdedit__attach-item-' + id);
 
-    self.attachments = _.remove(self.attachments, function (val) { return val.id !== id; });
+    self.attachments = _.remove(self.attachments, function (val) { return val.file_id !== id; });
 
     $attach.remove();
 
@@ -164,14 +164,15 @@ MDEdit.prototype._initAttachmentsArea = function () {
   // Click on attachment to insert into text
   this.attachmentsArea.on('click', '.mdedit__attach-item', function () {
     var $attach = $(this);
-    var id = $attach.data('attach-id');
-    var name = $attach.data('attach-name');
+    var id = $attach.data('file-id');
+    var type = $attach.data('file-type');
+    var name = $attach.data('file-name');
 
     if (!id) {
       return;
     }
 
-    if (name === '') {
+    if (type === 'image') {
       self.ace.insert('![](' + N.router.linkTo('core.gridfs', { bucket: id + '_sm' }) + ')');
     } else {
       self.ace.insert('[' + name + '](' + N.router.linkTo('core.gridfs', { bucket: id }) + ')');

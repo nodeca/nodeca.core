@@ -1,14 +1,15 @@
 each attachment in self.attachments
   .mdedit__attach-item(
-    data-attach-id=attachment.id
-    id='mdedit__attach-item-' + attachment.id
-    data-attach-name= attachment.name
+    data-file-id= attachment.file_id
+    data-file-type= attachment.type
+    data-file-name= attachment.name
+    id='mdedit__attach-item-' + attachment.file_id
   )
-    .mdedit__attach-remove(data-attach-id=attachment.id)
+    .mdedit__attach-remove(data-file-id= attachment.file_id)
     .mdedit__attach-preview
-      if (attachment.name && attachment.name !== '')
-        - var href = N.router.linkTo('core.gridfs', { 'bucket': attachment.id });
-        p(href=href)= attachment.name
-      else
-        - var imageUrl = N.router.linkTo('core.gridfs', { 'bucket': attachment.id + '_sm' });
+      if (attachment.type === 'image')
+        - var imageUrl = N.router.linkTo('core.gridfs', { 'bucket': attachment.file_id + '_sm' });
         img(src=imageUrl)
+      else
+        - var href = N.router.linkTo('core.gridfs', { 'bucket': attachment.file_id });
+        p(href=href)= attachment.file_name
