@@ -2,7 +2,7 @@ each attachment in self.attachments
   .mdedit__attach-item(
     data-file-id= attachment.file_id
     data-file-type= attachment.type
-    data-file-name= attachment.name
+    data-file-name= attachment.file_name
     id='mdedit__attach-item-' + attachment.file_id
   )
     .mdedit__attach-remove(data-file-id= attachment.file_id)

@@ -175,7 +175,9 @@ MDEdit.prototype._initAttachmentsArea = function () {
     if (type === 'image') {
       self.ace.insert('![](' + N.router.linkTo('core.gridfs', { bucket: id + '_sm' }) + ')');
     } else {
-      self.ace.insert('[' + name + '](' + N.router.linkTo('core.gridfs', { bucket: id }) + ')');
+      var url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, file_id: id });
+
+      self.ace.insert('[' + name + '](' + url + ')');
     }
   });
 };
