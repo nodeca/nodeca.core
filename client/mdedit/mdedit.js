@@ -220,6 +220,9 @@ MDEdit.prototype._initToolbar = function () {
 
     if (command) {
       command(self.ace);
+
+      // Restore focus on editor after command execution
+      self.ace.focus();
     }
   });
 
