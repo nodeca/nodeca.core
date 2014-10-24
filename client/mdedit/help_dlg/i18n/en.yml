@@ -1,4 +1,52 @@
 en-US:
   title: Help
   text: |
-    md:### Help text
+    md:
+    ### Available markup elements
+    <table>
+      <tr>
+        <th>Description</th>
+        <th>Example</th>
+        <th>Result</th>
+      </tr>
+      <tr>
+        <td>title text</td>
+        <td>## big<br />### medium<br />#### small</td>
+        <td><h2>big</h2><h3>medium</h3><h4>small</h5></td>
+      </tr>
+      <tr>
+        <td>bold text</td>
+        <td>__bold text__</td>
+        <td><b>bold text</b></td>
+      </tr>
+      <tr>
+        <td>italic text</td>
+        <td>_italic text_</td>
+        <td><i>italic text</i></td>
+      </tr>
+      <tr>
+        <td>link</td>
+        <td>[link text](http://www.google.com/)</td>
+        <td><a href="http://www.google.com/">link text</a></td>
+      </tr>
+      <tr>
+        <td>quote</td>
+        <td>> qoute<br />> text</td>
+        <td><blockquote>qoute<br />text</blockquote></td>
+      </tr>
+      <tr>
+        <td>image</td>
+        <td>![alt text](http://www.w3.org/Icons/w3c_home)</td>
+        <td><img src="http://www.w3.org/Icons/w3c_home" alt="alt text" /></td>
+      </tr>
+      <tr>
+        <td>numbered list</td>
+        <td>1. apple<br />2. banana<br />3. pineapple</td>
+        <td><ol><li>apple</li><li>banana</li><li>pineapple</li></ol></td>
+      </tr>
+      <tr>
+        <td>bulleted list</td>
+        <td>- apple<br />- banana<br />- pineapple</td>
+        <td><ul><li>apple</li><li>banana</li><li>pineapple</li></ul></td>
+      </tr>
+    </table>
