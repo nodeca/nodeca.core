@@ -55,7 +55,8 @@ function MDEdit(options) {
 
 
   // Set initial value
-  this.ace.setValue(options.markdown || '');
+  this.ace.setValue(options.markdown || '', -1);
+  this.ace.focus();
   this.attachments = options.attachments || [];
 
   this._updatePreview();
@@ -158,6 +159,9 @@ MDEdit.prototype._initAttachmentsArea = function () {
     );
     self.ace.replaceAll('');
 
+    // Reset selection
+    self.ace.setValue(self.ace.getValue(), 1);
+    self.ace.focus();
     return false;
   });
 
@@ -179,6 +183,8 @@ MDEdit.prototype._initAttachmentsArea = function () {
 
       self.ace.insert('[' + name + '](' + url + ')');
     }
+
+    self.ace.focus();
   });
 };
 
