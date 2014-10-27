@@ -24,13 +24,13 @@ var _ = require('lodash');
 
 
 // Unique editor id to bind wire events (incremented)
-var id = 0;
+var editorId = 0;
 
 
 function MDEdit(options) {
   var $editorArea = $(options.editArea);
 
-  this.editorId = id++;
+  this.editorId = editorId++;
 
   $editorArea.append(N.runtime.render('mdedit', {
     buttons: options.toolbarButtons,
