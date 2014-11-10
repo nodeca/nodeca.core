@@ -36,11 +36,10 @@ mixin _pagination_dropdown_menu(route, params)
       input.form-control(
         id=pgmpid
         name="page"
-        size='8'
         type='number'
         min='1',
         max=max
-        value = current
+        value=current
         placeholder=self.t('dropdown_placeholder')
       )
       span.input-group-btn
@@ -60,7 +59,8 @@ ul.pgn
       - delete(params.page)
       a.pgn__link.dropdown-toggle(
         href=self.link_to(route, params)
-        data-target="#", data-toggle='dropdown'
+        data-target="#"
+        data-toggle='dropdown'
       ) ...
       mixin _pagination_dropdown_menu(route, params)
 
@@ -77,7 +77,8 @@ ul.pgn
     - params.page = current
     a.pgn__link.dropdown-toggle(
       href=self.link_to(route, params)
-      data-target="#", data-toggle='dropdown'
+      data-target="#"
+      data-toggle='dropdown'
     )= params.page
 
     mixin _pagination_dropdown_menu(route, params)
@@ -96,8 +97,9 @@ ul.pgn
     li.pgn__item.interval.dropdown
       - delete(params.page)
       a.pgn__link.dropdown-toggle(
-        href=self.link_to(route, params),
-        data-target="#", data-toggle='dropdown') ...
+        href=self.link_to(route, params)
+        data-target="#"
+        data-toggle='dropdown') ...
       mixin _pagination_dropdown_menu(route, params)
 
   //- last page always displayed, except it's current one
