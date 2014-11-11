@@ -2,7 +2,7 @@ mdedit:
   toolbar:
 
     -
-      css_class: mdedit-toolbar__bold
+      css_class: icon icon-bold
       tooltip: "@mdedit.toolbar.bold"
       bind_key:
         win: 'Ctrl-B'
@@ -10,7 +10,7 @@ mdedit:
       command: cmdBold
 
     -
-      css_class: mdedit-toolbar__italic
+      css_class: icon icon-italic
       tooltip: "@mdedit.toolbar.italic"
       bind_key:
         win: 'Ctrl-I'
@@ -21,23 +21,23 @@ mdedit:
       css_class: mdedit-toolbar__sep
 
     -
-      css_class: mdedit-toolbar__link icon icon-link
+      css_class: icon icon-link
       tooltip: "@mdedit.toolbar.link"
       bind_key:
         win: 'Ctrl-L'
         mac: 'Command-L'
       command: cmdLink
 
-    -
-      css_class: mdedit-toolbar__quote
-      tooltip: "@mdedit.toolbar.quote"
-      bind_key:
-        win: 'Ctrl-Q'
-        mac: 'Command-Q'
-      command: cmdQuote
+    #-
+    #  css_class: mdedit-toolbar__quote
+    #  tooltip: "@mdedit.toolbar.quote"
+    #  bind_key:
+    #    win: 'Ctrl-Q'
+    #    mac: 'Command-Q'
+    #  command: cmdQuote
 
     -
-      css_class: mdedit-toolbar__image icon icon-camera
+      css_class: icon icon-picture
       tooltip: "@mdedit.toolbar.image"
       bind_key:
         win: 'Ctrl-G'
@@ -45,7 +45,7 @@ mdedit:
       command: cmdImage
 
     -
-      css_class: mdedit-toolbar__attach icon icon-attach
+      css_class: icon icon-attach
       tooltip: "@mdedit.toolbar.attach"
       command: cmdAttach
 
@@ -53,7 +53,7 @@ mdedit:
       css_class: mdedit-toolbar__sep
 
     -
-      css_class: mdedit-toolbar__ol
+      css_class: icon icon-list-numbered
       tooltip: "@mdedit.toolbar.ol"
       bind_key:
         win: 'Ctrl-O'
@@ -61,31 +61,31 @@ mdedit:
       command: cmdOl
 
     -
-      css_class: mdedit-toolbar__ul
+      css_class: icon icon-list-bullet
       tooltip: "@mdedit.toolbar.ul"
       bind_key:
         win: 'Ctrl-U'
         mac: 'Command-U'
       command: cmdUl
 
-    -
-      css_class: mdedit-toolbar__header
-      tooltip: "@mdedit.toolbar.header"
-      bind_key:
-        win: 'Ctrl-H'
-        mac: 'Command-H'
-      command: cmdHeading
+    #-
+    #  css_class: mdedit-toolbar__header
+    #  tooltip: "@mdedit.toolbar.header"
+    #  bind_key:
+    #    win: 'Ctrl-H'
+    #    mac: 'Command-H'
+    #  command: cmdHeading
 
     -
       css_class: mdedit-toolbar__sep
 
-    -
-      css_class: mdedit-toolbar__cut
-      tooltip: "@mdedit.toolbar.cut"
-      command: cmdCut
+    #-
+    #  css_class: mdedit-toolbar__cut
+    #  tooltip: "@mdedit.toolbar.cut"
+    #  command: cmdCut
 
     -
-      css_class: mdedit-toolbar__help
+      css_class: icon icon-help
       tooltip: "@mdedit.toolbar.help"
       bind_key:
         win: 'F1'
