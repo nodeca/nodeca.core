@@ -40,10 +40,10 @@ function MDEdit(options) {
   this.preview = $(options.previewArea);
   this.editArea = $editorArea.find('.mdedit__edit-area');
   this.ace = ace.edit(this.editArea.get(0));
-  this.toolbar = $editorArea.find('.mdedit__toolbar');
+  this.toolbar = $editorArea.find('.mdedit-toolbar');
   this.attachmentsArea = $editorArea.find('.mdedit__attachments');
-  this.resize = $editorArea.find('.mdedit__resize');
-  this.dropHelp = $editorArea.find('.mdedit__drop-help');
+  this.resize = $editorArea.find('.mdedit__resizer');
+  this.dropHelp = $editorArea.find('.mdedit__help');
   this.editorContainer = $editorArea.find('.mdedit');
 
   this.options = options;
