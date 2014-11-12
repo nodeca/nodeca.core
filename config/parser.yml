@@ -3,6 +3,10 @@ parser:
     root:
       children: [ p, a, img, group-header, group-top-level-block, cut, spoiler, blockquote ]
 
+    h1:
+      group: header
+      children: text
+      remove_empty: true
     h2:
       group: header
       children: text
@@ -22,19 +26,34 @@ parser:
 
     strong:
       group: simple
-      children: [ text, group-simple ]
+      children: [ text, group-simple, a, img ]
       remove_empty: true
       merge_same: true
     em:
       group: simple
-      children: [ text, group-simple ]
+      children: [ text, group-simple, a, img ]
       remove_empty: true
       merge_same: true
     del:
       group: simple
-      children: [ text, group-simple ]
+      children: [ text, group-simple, a, img ]
       remove_empty: true
       merge_same: true
+    sub:
+      group: simple
+      children: [ text, group-simple, a, img ]
+      remove_empty: true
+      merge_same: true
+    sup:
+      group: simple
+      children: [ text, group-simple, a, img ]
+      remove_empty: true
+      merge_same: true
+
+    code:
+      group: simple
+      children: [ text ]
+      remove_empty: true
 
     p:
       children: [ text, group-simple, a, img ]
@@ -79,6 +98,10 @@ parser:
     li:
       children: [ ul, ol, text, group-simple, p, a, img ]
       remove_empty: true
+
+    pre:
+      group: top-level-block
+      children: [ code ]
 
     cut:
       children: text
