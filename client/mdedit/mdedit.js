@@ -82,7 +82,7 @@ MDEdit.prototype._initAce = function () {
   this.ace.getSession().on('change', _.debounce(function () {
     self.markdown = self.ace.getValue();
     self._updatePreview();
-  }, 500));
+  }, 500, { maxWait: 500 }));
 };
 
 
