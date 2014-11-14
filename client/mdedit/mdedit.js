@@ -23,6 +23,8 @@
 var _ = require('lodash');
 
 
+var TEXT_MARGIN = 5;
+
 // Unique editor id to bind wire events (incremented)
 var editorId = 0;
 
@@ -44,6 +46,9 @@ function MDEdit(options) {
   this.attachmentsArea = $editorArea.find('.mdedit__attachments');
   this.resize = $editorArea.find('.mdedit__resizer');
   this.editorContainer = $editorArea.find('.mdedit');
+
+  this.ace.renderer.scrollMargin.top = TEXT_MARGIN;
+  this.ace.renderer.scrollMargin.bottom = TEXT_MARGIN;
 
   this.options = options;
 
