@@ -1,4 +1,4 @@
-.mdedit(data-on-dragdrop='core.mdedit:dd_' + self.editorId)
+.mdedit(data-on-dragdrop='core.mdedit:dd_' + self.editorId).no-attachments
   .mdedit__inner
     .mdedit-toolbar
       each button in self.buttons
@@ -10,5 +10,5 @@
     .mdedit__edit-area
   .mdedit__resizer
 
-  .mdedit__help= self.t('drop_help')
+  .mdedit__help!= self.t('drop_help')
   .mdedit__attachments

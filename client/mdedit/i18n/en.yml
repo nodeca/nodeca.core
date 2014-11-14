@@ -15,4 +15,4 @@ en-US:
 
     cut_text: enter cut text here
 
-  drop_help: Drag photos to editor to upload or click here to select from albums
+  drop_help: Drag photos to editor to upload or click <span class="icon icon-attach"></span> to select from albums

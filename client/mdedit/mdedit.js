@@ -43,7 +43,6 @@ function MDEdit(options) {
   this.toolbar = $editorArea.find('.mdedit-toolbar');
   this.attachmentsArea = $editorArea.find('.mdedit__attachments');
   this.resize = $editorArea.find('.mdedit__resizer');
-  this.dropHelp = $editorArea.find('.mdedit__help');
   this.editorContainer = $editorArea.find('.mdedit');
 
   this.options = options;
@@ -89,7 +88,6 @@ MDEdit.prototype._initAce = function () {
 // Added attachments bar event handlers
 //
 MDEdit.prototype._initAttachmentsArea = function () {
-  var attachEvent = this.commands.cmdAttach.bind(this);
   var self = this;
 
   N.wire.on('core.mdedit:dd_' + this.editorId, function mdedit_dd(event) {
@@ -137,11 +135,6 @@ MDEdit.prototype._initAttachmentsArea = function () {
         break;
       default:
     }
-  });
-
-  // Click to drop help to select file from gallery
-  this.dropHelp.click(function () {
-    attachEvent(self);
   });
 
   // Remove button on attachment
@@ -278,6 +271,12 @@ MDEdit.prototype._updatePreview = function () {
 // Update attachments panel
 //
 MDEdit.prototype._updateAttachments = function () {
+  if (this.attachments.length > 0) {
+    this.editorContainer.removeClass('no-attachments');
+  } else {
+    this.editorContainer.addClass('no-attachments');
+  }
+
   this.attachmentsArea.html(
     N.runtime.render('mdedit.attachments', { attachments: this.attachments })
   );
