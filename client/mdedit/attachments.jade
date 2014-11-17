@@ -1,15 +1,23 @@
-each attachment in self.attachments
-  .mdedit__attach-item(
-    data-media-id= attachment.media_id
-    data-type= attachment.type
-    data-file-name= attachment.file_name
-    id='mdedit__attach-item-' + attachment.media_id
-  )
-    .mdedit__attach-remove(data-media-id= attachment.media_id)
-    .mdedit__attach-preview
-      if (attachment.type === 'image')
-        - var imageUrl = N.router.linkTo('core.gridfs', { 'bucket': attachment.media_id + '_sm' });
-        img(src=imageUrl)
-      else
-        - var href = N.router.linkTo('core.gridfs', { 'bucket': attachment.media_id });
-        p(href=href)= attachment.file_name
+ul.mdedit-attach-list
+  each attachment in self.attachments
+    li.mdedit-attach-list__item
+
+      a.thumb.thumb__m-sm(
+        href='#'
+        data-media-id=attachment.media_id
+        data-type=attachment.type
+        data-file-name=attachment.file_name
+        data-editor-id=self.editor_id
+        data-on-click='mdedit.attachments:insert'
+      )
+        if attachment.type === 'image'
+          - var imageUrl = N.router.linkTo('core.gridfs', { 'bucket': attachment.media_id + '_sm' });
+          img.thumb__image(src=imageUrl)
+        else if attachment.type === 'binary'
+          .thumb__content=attachment.file_name
+
+        button.btn.btn-link.thumb__icon.icon.icon-cancel(
+          data-editor-id=self.editor_id
+          data-media-id=attachment.media_id
+          data-on-click='mdedit.attachments:remove'
+        )

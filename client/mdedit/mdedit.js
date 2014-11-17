@@ -142,14 +142,20 @@ MDEdit.prototype._initAttachmentsArea = function () {
     }
   });
 
-  // Remove button on attachment
-  this.attachmentsArea.on('click', '.mdedit__attach-remove', function () {
-    var id = $(this).data('media-id');
-    var $attach = self.attachmentsArea.find('#mdedit__attach-item-' + id);
+  // Remove attachment handler
+  N.wire.on('mdedit.attachments:remove', function remove_attachment(event) {
+    var $target = $(event.currentTarget);
+
+    if ($target.data('editor-id') !== self.editorId) {
+      event.stopPropagation();
+      return;
+    }
+
+    var id = $target.data('media-id');
 
     self.attachments = _.remove(self.attachments, function (val) { return val.media_id !== id; });
 
-    $attach.remove();
+    self._updateAttachments();
 
     self.ace.find(
       new RegExp('\\!?\\[[^\\]]*\\]\\([^)]*?' + id + '[^)]*\\)', 'gm'),
@@ -160,19 +166,22 @@ MDEdit.prototype._initAttachmentsArea = function () {
     // Reset selection
     self.ace.setValue(self.ace.getValue(), 1);
     self.ace.focus();
-    return false;
+
+    event.stopPropagation();
   });
 
   // Click on attachment to insert into text
-  this.attachmentsArea.on('click', '.mdedit__attach-item', function () {
-    var $attach = $(this);
-    var id = $attach.data('media-id');
-    var type = $attach.data('type');
-    var name = $attach.data('file-name');
+  N.wire.on('mdedit.attachments:insert', function insert_attachment(event) {
+    var $target = $(event.currentTarget);
 
-    if (!id) {
+    if ($target.data('editor-id') !== self.editorId) {
+      event.stopPropagation();
       return;
     }
+
+    var id = $target.data('media-id');
+    var type = $target.data('type');
+    var name = $target.data('file-name');
 
     if (type === 'image') {
       self.ace.insert('![](' + N.router.linkTo('core.gridfs', { bucket: id + '_sm' }) + ')');
@@ -183,6 +192,8 @@ MDEdit.prototype._initAttachmentsArea = function () {
     }
 
     self.ace.focus();
+
+    event.stopPropagation();
   });
 };
 
@@ -283,7 +294,7 @@ MDEdit.prototype._updateAttachments = function () {
   }
 
   this.attachmentsArea.html(
-    N.runtime.render('mdedit.attachments', { attachments: this.attachments })
+    N.runtime.render('mdedit.attachments', { attachments: this.attachments, editor_id: this.editorId })
   );
 };
 
