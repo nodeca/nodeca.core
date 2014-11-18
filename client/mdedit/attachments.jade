@@ -2,7 +2,7 @@ ul.mdedit-attach-list
   each attachment in self.attachments
     li.mdedit-attach-list__item
 
-      a.thumb.thumb__m-sm(
+      a.thumb.thumb__m-sm.thumb__m-responsive(
         href='#'
         data-media-id=attachment.media_id
         data-type=attachment.type
@@ -16,7 +16,7 @@ ul.mdedit-attach-list
         else if attachment.type === 'binary'
           .thumb__content=attachment.file_name
 
-        button.btn.btn-link.thumb__icon.icon.icon-cancel(
+        button.thumb__control.btn.btn-default.btn-xs.icon.icon-cancel(
           data-editor-id=self.editor_id
           data-media-id=attachment.media_id
           data-on-click='mdedit.attachments:remove'
