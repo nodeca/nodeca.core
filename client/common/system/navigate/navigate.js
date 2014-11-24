@@ -3,68 +3,62 @@
 'use strict';
 
 
-// ## NOTE ################################################################ //
-//                                                                          //
-// History.js works poorly with URLs containing hashes:                     //
-//                                                                          //
-//    https://github.com/browserstate/history.js/issues/111                 //
-//    https://github.com/browserstate/history.js/issues/173                 //
-//                                                                          //
-// So upon clicks on `/foo#bar` we treat URL and push it to the state as    //
-// `/foo` and saving `bar` in the state data, so we could scroll to desired //
-// element upon statechange                                                 //
-//                                                                          //
-// ######################################################################## //
-
-
 var _ = require('lodash');
-
-
+var StateMachine = require('javascript-state-machine');
 var History = window.History; // History.js
 
+var lastPageData;
+var navigateCallback;
+// Incremented request ID
+var requestID = 0;
 
-// Takes a params hash (can be nested) and tries to parse each string-value as
-// number or boolean. Returns a new hash with parsed values.
-//
-/*function castParamTypes(inputValue) {
-  var parsedValue;
+var fsm = StateMachine.create({
+  initial: 'IDLE',
 
-  if (_.isArray(inputValue)) {
-    return _.map(inputValue, castParamTypes);
+  error: function (eventName, from, to, args, errorCode, errorMessage) {
+    var errorReport = 'Navigator error: ' + errorMessage;
 
-  } else if (_.isObject(inputValue)) {
-    parsedValue = {};
+    window.alert(errorReport);
+    return errorReport;
+  },
 
-    _.forEach(inputValue, function (value, key) {
-      parsedValue[key] = castParamTypes(value);
-    });
+  events: [
+    // back/forward buttons
+    { name: 'stateChange',   from: 'IDLE',                  to: 'BACK_FORWARD' },
+    // link click
+    { name: 'link',          from: 'IDLE',                  to: 'LOAD' },
+    // replace state
+    { name: 'replace',       from: 'IDLE',                  to: 'REPLACE' },
+    // fake event to remove status check
+    { name: 'terminate',     from: 'IDLE',                  to: 'IDLE' },
 
-    return parsedValue;
+    // page data is in cache
+    { name: 'complete',      from: 'BACK_FORWARD',          to: 'IDLE' },
+    // load page data
+    { name: 'loadingDone',   from: 'BACK_FORWARD',          to: 'BACK_FORWARD_COMPLETE' },
 
-  } else if ('true' === inputValue) {
-    return true;
+    // page loading complete, push history state
+    { name: 'loadingDone',   from: 'LOAD',                  to: 'LOAD_COMPLETE' },
+    // terminate page loading by back/forward buttons
+    { name: 'stateChange',   from: 'LOAD',                  to: 'BACK_FORWARD' },
+    // terminate page loading on error or if page is same
+    { name: 'terminate',     from: 'LOAD',                  to: 'IDLE' },
 
-  } else if ('false' === inputValue) {
-    return false;
+    // handle push history state
+    { name: 'stateChange',   from: 'LOAD_COMPLETE',         to: 'IDLE' },
 
-  } else if (/^[0-9\.\-]+$/.test(inputValue)) {
-    parsedValue = Number(inputValue);
-    return String(parsedValue) === inputValue ? parsedValue : inputValue;
+    // loading complete, replace history state
+    { name: 'stateChange',   from: 'BACK_FORWARD_COMPLETE', to: 'IDLE' },
 
-  } else {
-    return inputValue;
-  }
-}*/
+    // handle replace history state
+    { name: 'stateChange',   from: 'REPLACE',               to: 'IDLE' }
+  ]
+});
 
 
-// Returns a normalized URL:
-//
-//  http://example.com/foo.html  => http://example.com/foo.html
-//  /foo.html                    => http://example.com/foo.html
-//  //example.com/foo.html       => http://example.com/foo.html
-//
-// NOTE: History.JS does not plays well with full URLs but without protocols.
-//
+///////////////////////////////////////////////////////////////////////////////
+// Local functions
+
 function normalizeURL(url) {
   var a = document.createElement('a');
   a.href = url;
@@ -72,72 +66,15 @@ function normalizeURL(url) {
 }
 
 
-// Default renderer for `navigate.to` event.
-// Used to render content when user clicks a link.
+// Parse navigation options
 //
-function renderNewContent(data, callback) {
-  var content = $(N.runtime.render(data.view, data.locals, {
-    apiPath: data.apiPath
-  }));
-
-  $('#content').replaceWith(content);
-
-  // Without this delay firefox at android fail to scroll on long pages
-  setTimeout(function () {
-    $(window).scrollTop(data.anchor ? $(data.anchor).offset().top : 0);
-    callback();
-  }, 50);
-}
-
-
-// Used to render content when user presses Back/Forward buttons.
+// - options
+//   - href (required if `apiPath` is not set)
+//   - apiPath (required if `href` is not set)
+//   - params
+//   - anchor
 //
-function renderFromHistory(data, callback) {
-  var content = $(N.runtime.render(data.view, data.locals, {
-    apiPath: data.apiPath
-  }));
-
-  $('#content').replaceWith(content);
-  callback();
-}
-
-
-// Ignore next History 'statechange' event if true.
-//
-// NOTE: The event handler *always* resets this variable to false after each call.
-var __dryHistoryChange__ = false;
-
-
-// Reference to a function to be used on next fire of history 'statechange' event
-// to perform content injection/replacement.
-//
-// NOTE: The event handler *always* resets this variable to `renderFromHistory`
-// after each call.
-var __renderCallback__ = renderFromHistory;
-
-
-// Reference to a function to be used by history 'statechange' handler after
-// content rendering is done.
-//
-// NOTE: The event handler *always* resets this variable to null after each call.
-var __completeCallback__ = null;
-
-
-// API path of current page. Updated via `navigate.done` event.
-var __currentApiPath__ = null;
-var __currentParams__  = {};
-
-
-// Performs RPC navigation to the specified page. Allowed options:
-//
-//    options.href
-//    options.apiPath
-//    options.params
-//
-// `href` and `apiPath` parameters are calculated from each other.
-// So they are mutually exclusive.
-//
-N.wire.on('navigate.to', function navigate_to(options, callback) {
+function parseOptions(options) {
   var match, href, anchor, apiPath, params, errorReport;
 
   if ('string' === typeof options) {
@@ -145,38 +82,30 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
   }
 
   if (options.href) {
-    href   = normalizeURL(options.href).split('#')[0];
+    href = normalizeURL(options.href).split('#')[0];
     anchor = normalizeURL(options.href).slice(href.length) || '';
 
     match = _.find(N.router.matchAll(href), function (match) {
       return _.has(match.meta.methods, 'get');
     });
 
-    // It's an external link or 404 error if route is not matched. So perform
-    // regular page requesting via HTTP.
-    if (!match) {
-      window.location = href + anchor;
-      callback();
-      return;
+    if (match) {
+      apiPath = match.meta.methods.get;
+      params = match.params || {};
     }
-
-    apiPath = match.meta.methods.get;
-    //params = castParamTypes(match.params || {});
-    params = match.params || {};
 
   } else if (options.apiPath) {
     apiPath = options.apiPath;
-    params  = options.params || {};
-    href    = normalizeURL(N.router.linkTo(apiPath, params));
-    anchor  = options.anchor || '';
+    params = options.params || {};
+    href = normalizeURL(N.router.linkTo(apiPath, params));
+    anchor = options.anchor || '';
 
     if (!href) {
       errorReport = 'Invalid parameters passed to `navigate.to` event: ' +
                     JSON.stringify(options);
 
       window.alert(errorReport);
-      callback(new Error(errorReport));
-      return;
+      return null;
     }
 
   } else {
@@ -185,8 +114,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
                   JSON.stringify(options);
 
     window.alert(errorReport);
-    callback(new Error(errorReport));
-    return;
+    return null;
   }
 
   // Add anchor hash-prefix if not exists.
@@ -194,27 +122,27 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
     anchor = '#' + anchor;
   }
 
-  // Stop here if base URL (all except anchor) haven't changed.
-  if (href === (location.protocol + '//' + location.host + location.pathname)) {
+  return {
+    apiPath: apiPath,
+    params: params,
+    href: href,
+    anchor: anchor
+  };
+}
 
-    // Update anchor if it's changed.
-    if (location.hash !== anchor) {
-      location.hash = anchor;
-    }
 
-    callback();
-    return;
-  }
-
-  // Fallback for old browsers.
-  if (!History.enabled) {
-    window.location = href + anchor;
-    callback();
-    return;
-  }
+function loadData(options, callback) {
+  var id = ++requestID;
 
   // History is enabled - try RPC navigation.
-  N.io.rpc(apiPath, params, function (err, res) {
+  N.io.rpc(options.apiPath, options.params, function (err, res) {
+
+    // Page loading is terminated
+    if (id !== requestID) {
+      callback(null);
+      return;
+    }
+
     if (err && N.io.REDIRECT === err.code) {
       var redirectUrl = document.createElement('a');
 
@@ -223,7 +151,7 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 
       // Note, that we try to keep anchor, if exists.
       // That's important for moved threads and last pages redirects.
-      var hash = anchor || window.location.hash;
+      var hash = options.anchor || window.location.hash;
 
       // Skip on empty hash to avoid dummy '#' in link
       if (hash) {
@@ -237,9 +165,8 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       //   (it uses relative path)
       if (redirectUrl.protocol !== location.protocol) {
         window.location = redirectUrl.href;
-        callback();
       } else {
-        N.wire.emit('navigate.to', { href: redirectUrl.href }, callback);
+        callback(redirectUrl.href);
       }
       return;
     }
@@ -251,42 +178,200 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
       //   so we redirect user to show him an error page.
       //
       // - Version mismatch, so we call action by HTTP to update client.
-      window.location = href + anchor;
-      callback();
+      window.location = options.href + options.anchor;
       return;
     }
 
-    /*
-    if (res.layout !== N.runtime.layout) {
-      // Layout was changed - perform normal page loading.
-      //
-      // TODO: Prevent double page requesting. The server should not perform
-      // database queries on RPC when the client is not intending to use the
-      // response data. Like in this situation.
-      window.location = href + anchor;
-      callback();
-      return;
-    }
-    */
+    N.loader.loadAssets(options.apiPath.split('.')[0], function () {
 
-    N.loader.loadAssets(apiPath.split('.')[0], function () {
+      // Page loading is terminated
+      if (id !== requestID) {
+        callback(null);
+        return;
+      }
+
       var state = {
-        apiPath: apiPath
-      , params:  params
-      , anchor:  anchor
-      , view:    apiPath
-    //, layout:  res.layout || null
-      , locals:  res   || {}
+        apiPath: options.apiPath,
+        params: options.params,
+        anchor: options.anchor,
+        view: options.apiPath,
+        locals: res || {}
       };
 
-      // Set one-use callbacks for history 'statechange' handler.
-      // The handler will reset these to defaults (`renderFromHistory` and null).
-      __renderCallback__   = renderNewContent;
-      __completeCallback__ = callback;
-
-      History.pushState(state, res.head.title, href);
+      callback(state);
     });
   });
+}
+
+
+function render(data, scroll, callback) {
+  N.wire.emit([ 'navigate.exit:' + lastPageData.apiPath, 'navigate.exit' ], lastPageData, function (err) {
+    if (err) {
+      N.logger.error('%s', err); // Log error, but not stop.
+    }
+
+    N.runtime.page_data = {};
+
+    var content = $(N.runtime.render(data.view, data.locals, {
+      apiPath: data.apiPath
+    }));
+
+    $('#content').replaceWith(content);
+
+    if (scroll) {
+      // Without this delay firefox at android fail to scroll on long pages
+      setTimeout(function () {
+        $(window).scrollTop(data.anchor ? $(data.anchor).offset().top : 0);
+      }, 50);
+    }
+
+    N.wire.emit([ 'navigate.done', 'navigate.done:' + data.apiPath ], data, function (err) {
+      if (err) {
+        N.logger.error('%s', err); // Log error, but not stop.
+      }
+
+      if (callback) {
+        callback();
+      }
+    });
+  });
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// FSM handlers
+
+fsm.onIDLE = function () {
+  if (navigateCallback) {
+    navigateCallback();
+    navigateCallback = null;
+  }
+};
+
+fsm.onLOAD = function (event, from, to, params) {
+  var options = parseOptions(params);
+
+  // If errors while parsing
+  if (!options) {
+    fsm.terminate();
+    return;
+  }
+
+  // It's an external link or 404 error if route is not matched. So perform
+  // regular page requesting via HTTP.
+  if (!options.apiPath) {
+    window.location = options.href + options.anchor;
+    return;
+  }
+
+  // Fallback for old browsers.
+  if (!History.enabled) {
+    window.location = options.href + options.anchor;
+    return;
+  }
+
+  // Stop here if base URL (all except anchor) haven't changed.
+  if (options.href === (location.protocol + '//' + location.host + location.pathname)) {
+
+    // Update anchor if it's changed.
+    if (location.hash !== options.anchor) {
+      location.hash = options.anchor;
+    }
+
+    fsm.terminate();
+    return;
+  }
+
+  loadData(options, function (result) {
+    // Loading terminated
+    if (result === null || !fsm.is('LOAD')) {
+      return;
+    }
+
+    // Redirect url
+    if ('string' === typeof result) {
+
+      // Go back to `IDLE` and to `LOAD` again, otherwise `onLOAD` will not emitted
+      fsm.terminate();
+      fsm.link(result);
+      return;
+    }
+
+    fsm.loadingDone(result, options);
+  });
+};
+
+fsm.onLOAD_COMPLETE = function (event, from, to, result, options) {
+  render(result, true, function () {
+    History.pushState(result, result.locals.head.title, options.href);
+  });
+};
+
+fsm.onBACK_FORWARD_COMPLETE = function (event, from, to, result, options) {
+  render(result, false, function () {
+    History.replaceState(result, result.locals.head.title, options.href);
+  });
+};
+
+fsm.onBACK_FORWARD = function () {
+  // stateChange terminate `LOAD` state, also remove old callback
+  navigateCallback = null;
+
+  var state = History.getState();
+
+  if (!_.isEmpty(state.data)) {
+    render(state.data, false, function () {
+      fsm.complete();
+    });
+    return;
+  }
+
+  var options = parseOptions(state.url);
+
+  // It's an external link or 404 error if route is not matched. So perform
+  // regular page requesting via HTTP.
+  if (!options.apiPath) {
+    window.location = options.href + options.anchor;
+    return;
+  }
+
+  loadData(options, function (result) {
+    fsm.loadingDone(result, options);
+  });
+};
+
+fsm.onREPLACE = function (event, from, to, data, title, url) {
+  History.replaceState(data, title, url);
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
+// statechange handler
+
+if (History.enabled) {
+  History.Adapter.bind(window, 'statechange', function () {
+    fsm.stateChange();
+  });
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Wire handlers
+
+// Performs RPC navigation to the specified page. Allowed options:
+//
+//    options.href
+//    options.apiPath
+//    options.params
+//
+// `href` and `apiPath` parameters are calculated from each other.
+// So they are mutually exclusive.
+//
+N.wire.on('navigate.to', function navigate_to(options, callback) {
+  fsm.terminate();
+
+  navigateCallback = callback;
+  fsm.link(options);
 });
 
 
@@ -300,150 +385,26 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 //                   return to this page using history navigation. (optional)
 //
 N.wire.on('navigate.replace', function navigate_replace(options, callback) {
-  __dryHistoryChange__ = true;
-  __completeCallback__ = callback;
-
   var state = History.getState();
-  History.replaceState(options.data || {}, options.title || state.title, options.href || state.url);
+  var url = options.href ? normalizeURL(options.href) : state.url;
+  var title = options.title || state.title;
+  var data = options.data || {};
 
-  // If we update rendering info for the same page, then
-  // 'onstatechange' will not be emitted. Need to properly set
-  // internal variables for this case.
-  if (History.isLastSavedState(state)) {
-    __dryHistoryChange__ = false;
-    __completeCallback__ = null;
-    if (callback) {
-      callback();
-    }
+  if (url !== state.url || title !== state.title || !_.isEqual(data, state.data)) {
+    navigateCallback = callback;
+
+    fsm.replace(data, title, url);
+    return;
   }
+
+  callback();
 });
 
-
-//
-// Bind History's statechange handler. It fires when:
-//
-// - User presses `Back` or `Forward` button in his browser.
-// - User clicks a link.
-// - User clicks "More threads/posts/etc" button.
-//
-
-if (History.enabled) {
-  History.Adapter.bind(window, 'statechange', function () {
-    var state    = History.getState()
-      , render   = __renderCallback__
-      , complete = __completeCallback__;
-
-    // Dry history change - just reset the flag and callback parameters for next
-    // history state change, and invoke complete callback.
-    if (__dryHistoryChange__) {
-      __dryHistoryChange__ = false;
-      __renderCallback__   = renderFromHistory;
-      __completeCallback__ = null;
-
-      if (complete) {
-        complete();
-      }
-      return;
-    }
-
-    // We have no state data for the initial page (received via HTTP responder).
-    // So request that data via RPC and place into History.
-    if (_.isEmpty(state.data)) {
-      var match = _.find(N.router.matchAll(state.url), function (match) {
-        return _.has(match.meta.methods, 'get');
-      });
-
-      // Can't match initial URL by some reason - just reload the page.
-      // This is internal error. Must not happen on normal Nodeca workflow.
-      if (!match) {
-        window.location = state.url;
-        return;
-      }
-
-      // Retrieve data.
-      //N.io.rpc(match.meta.methods.get, castParamTypes(match.params || {}), function (err, res) {
-      N.io.rpc(match.meta.methods.get, match.params || {}, function (_err, res) {
-        var a, data, url;
-
-        // Simple way to parse URL in browser.
-        a = document.createElement('a');
-        a.href = state.url;
-
-        // Result state data.
-        data = {
-          apiPath: match.meta.methods.get
-        //, params:  castParamTypes(match.params || {})
-        , params:  match.params || {}
-        , anchor:  a.hash
-        , view:    match.meta.methods.get
-      //, layout:  res.layout || null
-        , locals:  res   || {}
-        };
-
-        // State URL without anchor. (due to a problem in History.js; see above)
-        url = a.protocol + '//' + a.host + a.pathname;
-
-        // We terminate here, but History.replaceState will trigger 'statechange'
-        // again, and we will continue with next part of code.
-        History.replaceState(data, state.title, url);
-      });
-      return;
-    }
-
-    // Restore callbacks to defaults. It's needed to ensure using right renderer
-    // on regular history state changes - when user clicks back/forward buttons
-    // in his browser.
-    __renderCallback__   = renderFromHistory;
-    __completeCallback__ = null;
-
-    var exitEventData = { apiPath: __currentApiPath__, params: __currentParams__, url: state.url }
-      , doneEventData = { apiPath: state.data.apiPath, params: state.data.params, url: state.url };
-
-    // Invoke exit handlers.
-    N.wire.emit([ 'navigate.exit:' + __currentApiPath__, 'navigate.exit' ], exitEventData, function (err) {
-      if (err) {
-        N.logger.error('%s', err); // Log error, but not stop.
-      }
-
-      // Clear old raw response data. It's collected by view templates.
-      N.runtime.page_data = {};
-
-      render(state.data, function () {
-        // Invoke done-handlers.
-        N.wire.emit([ 'navigate.done', 'navigate.done:' + state.data.apiPath ], doneEventData, function (err) {
-          if (err) {
-            N.logger.error('%s', err); // Log error, but not stop.
-          }
-
-          if (complete) {
-            complete();
-          }
-        });
-      });
-    });
-  });
-}
-
-//
-// __currentApiPath__ updater.
-//
 
 N.wire.on('navigate.done', { priority: -999 }, function apipath_set(data) {
-  __currentApiPath__ = data.apiPath;
-  __currentParams__  = data.params;
+  lastPageData = data;
 });
 
-//
-// Bind global a.click handler.
-//
-// NOTE: This handler must have *the lowest* priority. So:
-//
-// - It must be binded to `document`, since root DOM node has the lowest
-//   priotity on event bubbling.
-//
-// - External libraries like Bootstrap must be placed *before* Nodeca client
-//   code to ensure right order of handlers.
-//
 
 N.wire.once('navigate.done', { priority: 999 }, function navigate_click_handler() {
   $(document).on('click', 'a', function (event) {
