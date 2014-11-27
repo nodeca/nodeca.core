@@ -1,4 +1,4 @@
-/*eslint-disable no-alert*/
+/* eslint no-alert: 0 */
 
 'use strict';
 
