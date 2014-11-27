@@ -165,7 +165,6 @@ MDEdit.prototype._initAttachmentsArea = function () {
 
     // Reset selection
     self.ace.setValue(self.ace.getValue(), 1);
-    self.ace.focus();
 
     event.stopPropagation();
   });
