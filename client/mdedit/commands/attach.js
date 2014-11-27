@@ -1,5 +1,7 @@
 'use strict';
 
+var mTypes = '$$ JSON.stringify(N.models.users.MediaInfo.types) $$';
+
 N.wire.once('init:mdedit', function () {
   N.MDEdit.prototype.commands.cmdAttach = function () {
     // TODO: move this method to nodeca.users
@@ -7,7 +9,7 @@ N.wire.once('init:mdedit', function () {
     var self = this;
 
     var data = {
-      types: [ 'binary', 'image' ],
+      types: [ mTypes.IMAGE, mTypes.BINARY ],
       selected: this.attachments.slice()
     };
 

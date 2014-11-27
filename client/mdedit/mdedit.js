@@ -172,6 +172,7 @@ MDEdit.prototype._initAttachmentsArea = function () {
 
   // Click on attachment to insert into text
   N.wire.on('mdedit.attachments:insert', function insert_attachment(event) {
+    var mTypes = '$$ JSON.stringify(N.models.users.MediaInfo.types) $$';
     var $target = $(event.currentTarget);
 
     if ($target.data('editor-id') !== self.editorId) {
@@ -183,7 +184,7 @@ MDEdit.prototype._initAttachmentsArea = function () {
     var type = $target.data('type');
     var name = $target.data('file-name');
 
-    if (type === 'image') {
+    if (type === mTypes.IMAGE) {
       self.ace.insert('![](' + N.router.linkTo('core.gridfs', { bucket: id + '_sm' }) + ')');
     } else {
       var url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: id });

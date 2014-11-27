@@ -1,3 +1,4 @@
+- var mTypes = '$$ JSON.stringify(N.models.users.MediaInfo.types) $$'
 ul.thumb-grid.thumb-grid__m-sm.thumb-grid__m-tight.thumb-grid__m-responsive
   each attachment in self.attachments
     li.thumb-grid__item
@@ -10,10 +11,12 @@ ul.thumb-grid.thumb-grid__m-sm.thumb-grid__m-tight.thumb-grid__m-responsive
         data-editor-id=self.editor_id
         data-on-click='mdedit.attachments:insert'
       )
-        if attachment.type === 'image'
+        - var mType = attachment.type & ~mTypes.MASK_DELETED
+
+        if mType === mTypes.IMAGE
           - var imageUrl = N.router.linkTo('core.gridfs', { 'bucket': attachment.media_id + '_sm' });
           img.thumb__image(src=imageUrl)
-        else if attachment.type === 'binary'
+        else if mType === mTypes.BINARY
           .thumb__content=attachment.file_name
 
         button.thumb__control.btn.btn-default.btn-xs.icon.icon-cancel(
