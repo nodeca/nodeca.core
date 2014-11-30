@@ -8,9 +8,9 @@
 var _         = require('lodash');
 var fs        = require('fs');
 var path      = require('path');
-var sbuffers  = require('stream-buffers');
 var mimoza    = require('mimoza');
 
+var stream    = require('readable-stream');
 var mongoose  = require('mongoose');
 var grid      = require('gridfs-stream');
 var ObjectId  = mongoose.Types.ObjectId;
@@ -30,16 +30,19 @@ function tryParseObjectId(string) {
 // Convert `src` (filename|buffer|stream) into readable stream
 //
 function getStream(src) {
-  var sb;
+  var streamBuffer;
 
   if (_.isString(src)) {
     // file name passed
     return fs.createReadStream(src);
-  } else if (src instanceof Buffer) {
+
+  } else if (Buffer.isBuffer(src)) {
     // buffer passed
-    sb = new sbuffers.ReadableStreamBuffer({ frequency: 1, chunkSize: 32768 });
-    sb.put(src);
-    return sb;
+    streamBuffer = new stream.Transform();
+    streamBuffer.push(src);
+    streamBuffer.end();
+    return streamBuffer;
+
   } else if (src.readable) {
     return src;
   }

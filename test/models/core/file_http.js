@@ -6,10 +6,8 @@
 
 var fs      = require('fs');
 var path    = require('path');
-var assert  = require('assert');
 
 var request   = require('supertest')('http://localhost:3000');
-var sbuffers  = require('stream-buffers');
 
 var fileName    = path.join(__dirname, 'fixtures', 'lorem.jpg');
 var fileBase    = path.basename(fileName);
@@ -29,24 +27,16 @@ describe('File (GridFS) http requests test', function () {
   });
 
   it('GET', function (done) {
-    var sb = new sbuffers.WritableStreamBuffer();
-
     request
       .get(router.linkTo('core.gridfs', { bucket: info._id }))
-      .on('end', function () {
-        assert.equal(sb.getContents().toString('hex'), fileContent.toString('hex'));
-        done();
-      })
-      .pipe(sb);
+      .expect(fileContent)
+      .end(done);
   });
 
   it('HEAD', function (done) {
     request
       .head(router.linkTo('core.gridfs', { bucket: info._id }))
-      .expect(200)
-      .expect(function (res) {
-        if (res.text) { return 'Body should be empty'; }
-      })
+      .expect(200, new Buffer(0))
       .expect('Content-Type', 'image/jpeg')
       .end(done);
   });
@@ -55,10 +45,7 @@ describe('File (GridFS) http requests test', function () {
     request
       .get(router.linkTo('core.gridfs', { bucket: info._id }))
       .set('If-None-Match', info.md5)
-      .expect(304)
-      .expect(function (res) {
-        if (res.text) { return 'Body should be empty'; }
-      })
+      .expect(304, {})
       .end(done);
   });
 
@@ -66,10 +53,7 @@ describe('File (GridFS) http requests test', function () {
     request
       .get(router.linkTo('core.gridfs', { bucket: info._id }))
       .set('If-Modified-Since', info.uploadDate.toString())
-      .expect(304)
-      .expect(function (res) {
-        if (res.text) { return 'Body should be empty'; }
-      })
+      .expect(304, {})
       .end(done);
   });
 
