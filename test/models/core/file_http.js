@@ -44,7 +44,9 @@ describe('File (GridFS) http requests test', function () {
     request
       .head(router.linkTo('core.gridfs', { bucket: info._id }))
       .expect(200)
-      .expect('')
+      .expect(function (res) {
+        if (res.text) { return 'Body should be empty'; }
+      })
       .expect('Content-Type', 'image/jpeg')
       .end(done);
   });
@@ -54,7 +56,9 @@ describe('File (GridFS) http requests test', function () {
       .get(router.linkTo('core.gridfs', { bucket: info._id }))
       .set('If-None-Match', info.md5)
       .expect(304)
-      .expect('')
+      .expect(function (res) {
+        if (res.text) { return 'Body should be empty'; }
+      })
       .end(done);
   });
 
@@ -63,7 +67,9 @@ describe('File (GridFS) http requests test', function () {
       .get(router.linkTo('core.gridfs', { bucket: info._id }))
       .set('If-Modified-Since', (new Date(Date.now() + 1000 * 60)).toString())
       .expect(304)
-      .expect('')
+      .expect(function (res) {
+        if (res.text) { return 'Body should be empty'; }
+      })
       .end(done);
   });
 
