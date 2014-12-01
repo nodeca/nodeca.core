@@ -10,6 +10,7 @@
 //   - smiles
 //   - medialinkProviders
 // - toolbarButtons - list of buttons for toolbar
+// - onChange - event fires when `markdown` or `attachments` changed
 //
 // readonly properties:
 // - attachments - array of attachments
@@ -87,6 +88,10 @@ MDEdit.prototype._initAce = function () {
     self.markdown = self.ace.getValue();
     self._updatePreview();
   }, 500, { maxWait: 500 }));
+
+  if (this.options.onChange) {
+    this.ace.getSession().on('change', this.options.onChange);
+  }
 };
 
 
@@ -296,6 +301,10 @@ MDEdit.prototype._updateAttachments = function () {
   this.attachmentsArea.html(
     N.runtime.render('mdedit.attachments', { attachments: this.attachments, editor_id: this.editorId })
   );
+
+  if (this.options.onChange) {
+    this.options.onChange();
+  }
 };
 
 
