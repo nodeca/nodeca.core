@@ -83,6 +83,7 @@ packages:
       - async
       # webworkify replacement, needed because we have different bundling format
       - webworkify: nodeca.core/lib/webworkify.js
+      - bag.js: nodeca.core/lib/bag.js
 
     client:
       main: assets/main_lib.js
