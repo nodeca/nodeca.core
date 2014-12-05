@@ -7,14 +7,12 @@ N.wire.once('init:mdedit', function () {
     var self = this;
 
     var data = {
-      selected: this.attachments.slice()
+      selected: this.attachments().slice()
     };
 
     N.wire.emit('users.blocks.media_select_dlg', data, function () {
 
-      self.attachments = data.selected;
-
-      self._updateAttachments();
+      self.attachments(data.selected);
     });
   };
 });

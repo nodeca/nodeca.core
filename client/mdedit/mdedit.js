@@ -4,7 +4,7 @@
 // - editArea - CSS selector of editor container div
 // - previewArea - CSS selector of preview container div
 // - attachments - array of attachments
-// - markdown - source markdown text
+// - text - source markdown text
 // - parseRules - config for parser
 //   - cleanupRules
 //   - smiles
@@ -12,9 +12,9 @@
 // - toolbarButtons - list of buttons for toolbar
 // - onChange - event fires when `markdown` or `attachments` changed
 //
-// readonly properties:
-// - attachments - array of attachments
-// - markdown - user input markdown text
+// getters/setters:
+// - attachments() - array of attachments
+// - text() - user input markdown text
 //
 
 /*global ace*/
@@ -60,12 +60,8 @@ function MDEdit(options) {
 
 
   // Set initial value
-  this.ace.setValue(options.markdown || '', -1);
-  this.ace.focus();
-  this.attachments = options.attachments || [];
-
-  this._updatePreview();
-  this._updateAttachments();
+  this.text(options.text || '');
+  this.attachments(options.attachments || []);
 }
 
 
@@ -85,13 +81,14 @@ MDEdit.prototype._initAce = function () {
   this.ace.getSession().setUseWrapMode(true);
 
   this.ace.getSession().on('change', _.debounce(function () {
-    self.markdown = self.ace.getValue();
     self._updatePreview();
   }, 500, { maxWait: 500 }));
 
   if (this.options.onChange) {
     this.ace.getSession().on('change', this.options.onChange);
   }
+
+  this.ace.focus();
 };
 
 
@@ -135,11 +132,13 @@ MDEdit.prototype._initAttachmentsArea = function () {
           };
 
           N.wire.emit('users.uploader:add', uploaderData, function () {
+            var attachments = self.attachments();
+
             uploaderData.uploaded.forEach(function (media) {
-              self.attachments.unshift(_.pick(media, [ 'media_id', 'file_name', 'type' ]));
+              attachments.unshift(_.pick(media, [ 'media_id', 'file_name', 'type' ]));
             });
 
-            self._updateAttachments();
+            self.attachments(attachments);
           });
         }
         break;
@@ -157,10 +156,10 @@ MDEdit.prototype._initAttachmentsArea = function () {
     }
 
     var id = $target.data('media-id');
+    var attachments = self.attachments();
 
-    self.attachments = _.remove(self.attachments, function (val) { return val.media_id !== id; });
-
-    self._updateAttachments();
+    attachments = _.remove(attachments, function (val) { return val.media_id !== id; });
+    self.attachments(attachments);
 
     self.ace.find(
       new RegExp('\\!?\\[[^\\]]*\\]\\([^)]*?' + id + '[^)]*\\)', 'gm'),
@@ -273,7 +272,7 @@ MDEdit.prototype.setOptions = function (options) {
 //
 MDEdit.prototype._updatePreview = function () {
   var self = this;
-  var mdData = { input: this.ace.getValue(), output: null };
+  var mdData = { input: this.text(), output: null };
 
   N.parser.md2src(mdData, function () {
     var srcData = {
@@ -289,22 +288,42 @@ MDEdit.prototype._updatePreview = function () {
 };
 
 
+MDEdit.prototype.text = function (text) {
+  if (!text) {
+    return this.ace.getValue();
+  }
+
+  this.ace.setValue(text, -1);
+  this._updatePreview();
+};
+
+
+MDEdit.prototype.attachments = function (attachments) {
+  if (!attachments) {
+    return this._attachments;
+  }
+
+  this._attachments = attachments;
+  this._updateAttachments();
+
+  if (this.options.onChange) {
+    this.options.onChange();
+  }
+};
+
+
 // Update attachments panel
 //
 MDEdit.prototype._updateAttachments = function () {
-  if (this.attachments.length > 0) {
+  if (this.attachments().length > 0) {
     this.editorContainer.removeClass('no-attachments');
   } else {
     this.editorContainer.addClass('no-attachments');
   }
 
   this.attachmentsArea.html(
-    N.runtime.render('mdedit.attachments', { attachments: this.attachments, editor_id: this.editorId })
+    N.runtime.render('mdedit.attachments', { attachments: this.attachments(), editor_id: this.editorId })
   );
-
-  if (this.options.onChange) {
-    this.options.onChange();
-  }
 };
 
 
