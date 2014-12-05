@@ -1,5 +1,9 @@
 // Show confirm dialog
 //
+// - data - String message or Object
+//   - message - String message
+//   - errorOnCancel - Boolean. callback with error if confirmation canceled. Default false
+//
 // Example:
 //
 // N.wire.emit('confirm', 'Are you sure?', function () {
@@ -9,7 +13,7 @@
 
 'use strict';
 
-var okCallback;
+var doneCallback;
 var $dialog;
 
 
@@ -18,7 +22,7 @@ N.wire.on('common.blocks.confirm', function confirm(data, callback) {
     data = { message: data };
   }
 
-  okCallback = callback;
+  doneCallback = callback;
 
   $dialog = $(N.runtime.render('common.blocks.confirm', data));
   $('body').append($dialog);
@@ -28,8 +32,12 @@ N.wire.on('common.blocks.confirm', function confirm(data, callback) {
       $dialog.find('.btn-default').focus();
     })
     .on('hidden.bs.modal', function () {
-      okCallback = null;
+      if (doneCallback && data.errorOnCancel) {
+        doneCallback(new Error(t('err_canceled')));
+      }
+
       $dialog.remove();
+      doneCallback = null;
       $dialog = null;
     })
     .modal('show');
@@ -39,8 +47,9 @@ N.wire.on('common.blocks.confirm', function confirm(data, callback) {
 // Pressed 'OK'
 //
 N.wire.on('common.blocks.confirm:ok', function confirm_ok() {
-  if (okCallback) {
-    okCallback();
+  if (doneCallback) {
+    doneCallback();
+    doneCallback = null;
   }
 
   $dialog.modal('hide');
