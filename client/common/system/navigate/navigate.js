@@ -221,7 +221,7 @@ function render(data, scroll, callback) {
     if (scroll) {
       // Without this delay firefox at android fail to scroll on long pages
       setTimeout(function () {
-        $(window).scrollTop(data.anchor ? $(data.anchor).offset().top : 0);
+        $(window).scrollTop((data.anchor && $(data.anchor).length) ? $(data.anchor).offset().top : 0);
       }, 50);
     }
 
