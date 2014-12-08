@@ -33,7 +33,7 @@ N.wire.on('common.blocks.confirm', function confirm(data, callback) {
     })
     .on('hidden.bs.modal', function () {
       if (doneCallback && data.errorOnCancel) {
-        doneCallback(new Error(t('err_canceled')));
+        doneCallback(true);
       }
 
       $dialog.remove();

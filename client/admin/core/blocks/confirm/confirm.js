@@ -1,5 +1,9 @@
 // Show confirm dialog
 //
+// - data - String message or Object
+//   - message - String message
+//   - errorOnCancel - Boolean. callback with error if confirmation canceled. Default false
+//
 // Example:
 //
 // N.wire.emit('confirm', 'Are you sure?', function () {
@@ -9,35 +13,45 @@
 
 'use strict';
 
-var okCallback;
+var doneCallback;
 var $dialog;
 
 
-N.wire.on('admin.core.blocks.confirm', function confirm(data, callback) {
+N.wire.on('common.blocks.confirm', function confirm(data, callback) {
   if (typeof data === 'string') {
     data = { message: data };
   }
 
-  okCallback = callback;
-  $dialog = $(N.runtime.render('admin.core.blocks.confirm', data));
+  doneCallback = callback;
+
+  $dialog = $(N.runtime.render('common.blocks.confirm', data));
   $('body').append($dialog);
 
-  $dialog.on('shown.bs.modal', function () {
-    $dialog.find('.btn-default').focus();
-  }).on('hidden.bs.modal', function () {
-    okCallback = null;
-    $dialog.remove();
-    $dialog = null;
-  }).modal('show');
+  $dialog
+    .on('shown.bs.modal', function () {
+      $dialog.find('.btn-default').focus();
+    })
+    .on('hidden.bs.modal', function () {
+      if (doneCallback && data.errorOnCancel) {
+        doneCallback(true);
+      }
+
+      $dialog.remove();
+      doneCallback = null;
+      $dialog = null;
+    })
+    .modal('show');
 });
 
 
 // Pressed 'OK'
 //
-N.wire.on('admin.core.blocks.confirm:ok', function confirm_ok() {
-  if (okCallback) {
-    okCallback();
+N.wire.on('common.blocks.confirm:ok', function confirm_ok() {
+  if (doneCallback) {
+    doneCallback();
+    doneCallback = null;
   }
+
   $dialog.modal('hide');
 });
 
