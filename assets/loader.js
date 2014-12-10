@@ -14,7 +14,6 @@ window.NodecaLoader = (function () {
   var alert = window.alert;
 
 
-  var URL_JSON2_SHIM = '$$ JSON.stringify(asset_path("vendor/json2/json2.js")) $$';
   var URL_ES5_SHIM   = '$$ JSON.stringify(asset_path("vendor/es5-shim/es5-shim.js")) $$';
 
 
@@ -319,11 +318,6 @@ window.NodecaLoader = (function () {
     });
 
     // Choose necessary polyfills.
-    if (!window.JSON) {
-      // JSON is required for Opera < 11 + IE < 8
-      // See: http://caniuse.com/json
-      shims.push(URL_JSON2_SHIM);
-    }
     if (!Object.keys) {
       // http://kangax.github.com/es5-compat-table/
       shims.push(URL_ES5_SHIM);

@@ -95,7 +95,6 @@ packages:
       include:
         - loader.js
         - vendor/es5-shim/es5-shim.js
-        - vendor/json2/json2.js
         - frontend/icons/src/font/*
         - backend/icons/src/font/*
 
