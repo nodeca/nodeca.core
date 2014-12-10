@@ -6,11 +6,11 @@
 /*eslint-disable no-alert*/
 
 
-window.NodecaLoader = (function () {
+(function (window) {
   'use strict';
 
 
-  var NodecaLoader = {};
+  var NodecaLoader = window.NodecaLoader = {};
   var alert = window.alert;
 
 
@@ -357,6 +357,4 @@ window.NodecaLoader = (function () {
   // Really needed export.
   NodecaLoader.execute = execute;
 
-
-  return NodecaLoader;
-})();
+})(this);
