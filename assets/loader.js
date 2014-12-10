@@ -14,9 +14,6 @@ window.NodecaLoader = (function () {
   var alert = window.alert;
 
 
-  var URL_ES5_SHIM   = '$$ JSON.stringify(asset_path("vendor/es5-shim/es5-shim.js")) $$';
-
-
   // Simple cross-browser `forEach` iterator for arrays.
   function forEach(array, iterator) {
     var index, length;
@@ -317,19 +314,7 @@ window.NodecaLoader = (function () {
       }
     });
 
-    // Choose necessary polyfills.
-    if (!Object.keys) {
-      // http://kangax.github.com/es5-compat-table/
-      shims.push(URL_ES5_SHIM);
-    }
-
     loadAssets(pkgName, shims, function () {
-      if (!window.JSON || !Object.keys) {
-        alert('Init error: failed to load browser shims. Refresh page & try again. ' +
-              'If problem still exists - contact administrator.');
-        return;
-      }
-
       if (!N.wire) {
         alert('Assets init error. Refresh page & try again. ' +
               'If problem still exists - contact administrator.');
