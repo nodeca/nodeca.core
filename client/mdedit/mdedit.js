@@ -68,9 +68,9 @@ function MDEdit(options) {
 // Set initial Ace options
 //
 MDEdit.prototype._initAce = function () {
-  var self = this;
+  var aceSession = this.ace.getSession();
 
-  this.ace.getSession().setMode('ace/mode/markdown');
+  aceSession.setMode('ace/mode/markdown');
 
   this.ace.setOptions({
     showLineNumbers: false,
@@ -78,14 +78,12 @@ MDEdit.prototype._initAce = function () {
     highlightActiveLine: false
   });
 
-  this.ace.getSession().setUseWrapMode(true);
+  aceSession.setUseWrapMode(true);
 
-  this.ace.getSession().on('change', _.debounce(function () {
-    self._updatePreview();
-  }, 500, { maxWait: 500 }));
+  aceSession.on('change', this._updatePreview.bind(this));
 
   if (this.options.onChange) {
-    this.ace.getSession().on('change', this.options.onChange);
+    aceSession.on('change', this.options.onChange);
   }
 
   this.ace.focus();
@@ -186,12 +184,11 @@ MDEdit.prototype._initAttachmentsArea = function () {
     var id = $target.data('media-id');
     var type = $target.data('type');
     var name = $target.data('file-name');
+    var url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: id });
 
     if (type === mTypes.IMAGE) {
-      self.ace.insert('![](' + N.router.linkTo('core.gridfs', { bucket: id + '_sm' }) + ')');
+      self.ace.insert('![](' + url + ')');
     } else {
-      var url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: id });
-
       self.ace.insert('[' + name + '](' + url + ')');
     }
 
@@ -270,7 +267,7 @@ MDEdit.prototype.setOptions = function (options) {
 
 // Update editor preview
 //
-MDEdit.prototype._updatePreview = function () {
+MDEdit.prototype._updatePreview = _.debounce(function () {
   var self = this;
   var mdData = { input: this.text(), output: null };
 
@@ -282,10 +279,26 @@ MDEdit.prototype._updatePreview = function () {
     };
 
     N.parser.src2ast(srcData, function () {
-      self.preview.html(srcData.output.html());
+      var insertedAttachments = [];
+
+      // Find all attachments inserted to text
+      srcData.output.find('img[data-nd-media-id], a[data-nd-media-id]').each(function () {
+        insertedAttachments.push($(this).data('nd-media-id'));
+      });
+
+      // Get all attachments except inserted to text
+      var attachTail = self.attachments().filter(function (attach) {
+        return insertedAttachments.indexOf(attach.media_id) === -1;
+      });
+
+      self.preview.html(N.runtime.render('mdedit.preview', {
+        user_hid: N.runtime.user_hid,
+        html: srcData.output.html(),
+        attachments: attachTail
+      }));
     });
   });
-};
+}, 500, { maxWait: 500 });
 
 
 MDEdit.prototype.text = function (text) {
@@ -324,6 +337,8 @@ MDEdit.prototype._updateAttachments = function () {
   this.attachmentsArea.html(
     N.runtime.render('mdedit.attachments', { attachments: this.attachments(), editor_id: this.editorId })
   );
+
+  this._updatePreview();
 };
 
 
