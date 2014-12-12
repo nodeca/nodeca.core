@@ -9,6 +9,6 @@
     "history.js"            : "~1.8.0",
     "typeahead.js"          : "~0.10.2",
     "bootstrap"             : "~3.2.0",
-    "bag.js"                : "~0.1.2"
+    "bag.js"                : "~0.1.3"
   }
 }
