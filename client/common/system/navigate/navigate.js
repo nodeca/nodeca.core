@@ -135,7 +135,7 @@ function loadData(options, callback) {
   var id = ++requestID;
 
   // History is enabled - try RPC navigation.
-  N.io.rpc(options.apiPath, options.params, function (err, res) {
+  N.io.rpc(options.apiPath, options.params, { handleAllErrors: true }, function (err, res) {
 
     // Page loading is terminated
     if (id !== requestID) {
@@ -172,13 +172,20 @@ function loadData(options, callback) {
     }
 
     if (err) {
-      // Can't deal via RPC - try HTTP. This might be:
+      // Can't load via RPC - show error page.
       //
-      // - Either a generic error, e.g. authorization / bad params / fuckup
-      //   so we redirect user to show him an error page.
-      //
-      // - Version mismatch, so we call action by HTTP to update client.
-      window.location = options.href + options.anchor;
+      // This is a generic error, e.g. forbidden / not found / client error.
+
+      callback({
+        apiPath: 'common.error',
+        params: {},
+        anchor: '',
+        view: 'common.error',
+        locals: {
+          err: err,
+          head: { title: err.code + ' ' + err.message }
+        }
+      });
       return;
     }
 
