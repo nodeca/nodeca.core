@@ -51,7 +51,8 @@ medialinks:
             video_url: video_url,
             thumb: oembed.thumbnail_url.replace(/^https?:/, '').replace(/[a-z0-9]+\.jpg$/, 'mqdefault.jpg'),
             video_height: oembed.height,
-            video_width: oembed.width
+            video_width: oembed.width,
+            title: oembed.title
           };
 
           callback(null, result);
@@ -103,7 +104,8 @@ medialinks:
             video_url: video_url,
             thumb: oembed.thumbnail_url.replace(/^https?:/, '').replace(/_[0-9]+\.jpg$/, '_200.jpg'),
             video_height: oembed.height,
-            video_width: oembed.width
+            video_width: oembed.width,
+            title: oembed.title
           };
 
           callback(null, result);
@@ -155,7 +157,8 @@ medialinks:
             video_url: video_url,
             thumb: oembed.thumbnail_url.replace(/^https?:/, '').replace(/\?.+$/, '?size=s'),
             video_height: oembed.height,
-            video_width: oembed.width
+            video_width: oembed.width,
+            title: oembed.title
           };
 
           callback(null, result);

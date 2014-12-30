@@ -115,3 +115,4 @@ packages:
 
     vendor:
       - ndparser: ./lib/parser/index.js
+      - medialinker: ./lib/parser/medialinker.js

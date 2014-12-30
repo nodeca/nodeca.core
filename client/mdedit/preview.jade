@@ -19,7 +19,7 @@ if self.attachments && self.attachments.length
           .thumb
             a.thumb__inner(href=href)
               .thumb__icon.icon.icon-video
-              img.thumb__image(src=media.medialink_data.thumb)
+              img.thumb__image(src=media.medialink_meta.thumb)
 
         else if mTypes.BINARY
           a.thumb(href=href)
