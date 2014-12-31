@@ -47,7 +47,7 @@ module.exports.run = function (N, args, callback) {
       // fetch used migrations from db
       Migration.getLastState(function (err, currentMigrations) {
 
-        /*eslint no-console:0*/
+        /*eslint-disable no-console*/
 
         var outstandingMigrations;
 

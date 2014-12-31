@@ -26,7 +26,7 @@ var SEEDS_DIR = 'db/seeds';
 
 
 function seed_run(N, app_name, seed_path, callback) {
-  /*eslint no-console:0*/
+  /*eslint-disable no-console*/
   console.log('Applying seed...\n');
 
   require(seed_path)(N, function (err) {
@@ -110,7 +110,7 @@ module.exports.run = function (N, args, callback) {
     ], N,
 
     function (err) {
-      /*eslint no-console:0*/
+      /*eslint-disable no-console*/
 
       if (err) {
         callback(err);

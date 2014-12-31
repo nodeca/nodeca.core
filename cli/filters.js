@@ -57,7 +57,7 @@ module.exports.run = function (N, args, callback) {
         return;
       }
 
-      /*eslint no-console:0*/
+      /*eslint-disable no-console*/
 
       console.log('\n');
 

@@ -68,7 +68,7 @@ module.exports.run = function (N, args, callback) {
       // if app set, chack that it's valid
       if (args.app) {
         if (!_.find(applications, function (app) { return app.name === args.app; })) {
-          /*eslint no-console:0*/
+          /*eslint-disable no-console*/
           console.log('Invalid application name: ' + args.app);
           console.log(
             'Valid apps are:  ',
