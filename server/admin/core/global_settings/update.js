@@ -20,7 +20,7 @@ module.exports = function (N, apiPath) {
       settings[name] = { value: value };
     });
 
-    N.settings.set('global', settings, {}, function (err) {
+    N.settings.getStore('global').set(settings, {}, function (err) {
       if (err) {
         callback({ code: N.io.BAD_REQUEST, message: String(err) });
         return;
