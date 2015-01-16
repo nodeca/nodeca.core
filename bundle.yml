@@ -112,7 +112,3 @@ packages:
 
     i18n_client:
       include: client/mdedit/**i18n/*.yml
-
-    vendor:
-      - ndparser: ./lib/parser/index.js
-      - medialinker: ./lib/parser/medialinker.js

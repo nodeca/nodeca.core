@@ -3,11 +3,10 @@
 
 'use strict';
 
-var Parser = require('ndparser');
-
+var ParserBuilder = require('nodeca.core/lib/parser/index');
 
 N.wire.once('init:assets', function (__, callback) {
-  N.parser = new Parser(N);
+  N.parse = ParserBuilder;
 
   N.wire.emit('init:parser', {}, callback);
 });

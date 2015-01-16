@@ -4,7 +4,7 @@
 'use strict';
 
 var _           = require('lodash');
-var Medialinker = require('medialinker');
+var Medialinker = require('nodeca.core/lib/parser/medialinker');
 
 
 var config = '$$ JSON.stringify(N.config.medialinks) $$';

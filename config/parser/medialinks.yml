@@ -1,0 +1,10 @@
+parser:
+  medialinks: content
+
+setting_schemas:
+  markup:
+    markup_medialinks:
+      priority: 10
+      type: boolean
+      as: medialinks
+      default: true

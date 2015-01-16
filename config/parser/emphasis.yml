@@ -1,0 +1,7 @@
+setting_schemas:
+  markup:
+    markup_emphasis:
+      priority: 10
+      type: boolean
+      as: emphasis
+      default: true

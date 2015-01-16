@@ -1,0 +1,7 @@
+setting_schemas:
+  markup:
+    markup_links:
+      priority: 10
+      type: boolean
+      as: links
+      default: true

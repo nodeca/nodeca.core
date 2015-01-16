@@ -5,10 +5,7 @@
 // - previewArea - CSS selector of preview container div
 // - attachments - array of attachments
 // - text - source markdown text
-// - parseRules - config for parser
-//   - cleanupRules
-//   - smiles
-//   - medialinkProviders
+// - parseOptions - object with plugins config like `{ images: true, links: true, attachments: false }`
 // - toolbarButtons - list of buttons for toolbar
 // - onChange - event fires when `markdown` or `attachments` changed
 //
@@ -173,7 +170,6 @@ MDEdit.prototype._initAttachmentsArea = function () {
 
   // Click on attachment to insert into text
   N.wire.on('mdedit.attachments:insert', function insert_attachment(event) {
-    var mTypes = '$$ JSON.stringify(N.models.users.MediaInfo.types) $$';
     var $target = $(event.currentTarget);
 
     if ($target.data('editor-id') !== self.editorId) {
@@ -181,17 +177,9 @@ MDEdit.prototype._initAttachmentsArea = function () {
       return;
     }
 
-    var id = $target.data('media-id');
-    var type = $target.data('type');
-    var name = $target.data('file-name');
-    var url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: id });
+    var url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: $target.data('media-id') });
 
-    if (type === mTypes.IMAGE) {
-      self.ace.insert('![](' + url + ')');
-    } else {
-      self.ace.insert('[' + name + '](' + url + ')');
-    }
-
+    self.ace.insert('![' + ($target.data('file-name') || '') + '](' + url + ')');
     self.ace.focus();
 
     event.stopPropagation();
@@ -269,35 +257,27 @@ MDEdit.prototype.setOptions = function (options) {
 //
 MDEdit.prototype._updatePreview = _.debounce(function () {
   var self = this;
-  var mdData = { input: this.text(), output: null };
 
-  N.parser.md2src(mdData, function () {
-    var srcData = {
-      input: mdData.output,
-      output: null,
-      options: self.options.parseRules
-    };
-
-    N.parser.src2ast(srcData, function () {
-      var insertedAttachments = [];
-
-      // Find all attachments inserted to text
-      srcData.output.find('img[data-nd-media-id], a[data-nd-media-id]').each(function () {
-        insertedAttachments.push($(this).data('nd-media-id'));
-      });
-
-      // Get all attachments except inserted to text
-      var attachTail = self.attachments().filter(function (attach) {
-        return insertedAttachments.indexOf(attach.media_id) === -1;
-      });
+  N.parse(
+    {
+      text: this.text(),
+      attachments: self.attachments(),
+      options: self.options.parseOptions
+    },
+    function (err, result) {
+      if (err) {
+        // TODO: notify about err
+        return;
+      }
 
       self.preview.html(N.runtime.render('mdedit.preview', {
         user_hid: N.runtime.user_hid,
-        html: srcData.output.html(),
-        attachments: attachTail
+        html: result.html,
+        attachments: result.attachments.tail
       }));
-    });
-  });
+    }
+  );
+
 }, 500, { maxWait: 500 });
 
 

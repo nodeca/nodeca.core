@@ -1,0 +1,7 @@
+setting_schemas:
+  markup:
+    markup_smiles:
+      priority: 10
+      type: boolean
+      as: smiles
+      default: true
