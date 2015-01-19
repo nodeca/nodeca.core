@@ -1,0 +1,6 @@
+i18n:
+  en-US:
+    admin:
+      core:
+        setting_names:
+          markup_sup: Enable sup

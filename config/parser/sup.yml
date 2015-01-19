@@ -1,0 +1,7 @@
+setting_schemas:
+  markup:
+    markup_sup:
+      priority: 10
+      type: boolean
+      as: sup
+      default: false

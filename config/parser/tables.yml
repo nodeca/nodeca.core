@@ -1,0 +1,7 @@
+setting_schemas:
+  markup:
+    markup_tables:
+      priority: 10
+      type: boolean
+      as: tables
+      default: false

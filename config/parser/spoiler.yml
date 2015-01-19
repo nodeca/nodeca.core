@@ -1,0 +1,7 @@
+setting_schemas:
+  markup:
+    markup_spoiler:
+      priority: 10
+      type: boolean
+      as: spoiler
+      default: false
