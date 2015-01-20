@@ -179,7 +179,7 @@ MDEdit.prototype._initAttachmentsArea = function () {
 
     var url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: $target.data('media-id') });
 
-    self.ace.insert('![' + ($target.data('file-name') || '') + '](' + url + ')');
+    self.ace.insert('![](' + url + ')');
     self.ace.focus();
 
     event.stopPropagation();
@@ -273,7 +273,7 @@ MDEdit.prototype._updatePreview = _.debounce(function () {
       self.preview.html(N.runtime.render('mdedit.preview', {
         user_hid: N.runtime.user_hid,
         html: result.html,
-        attachments: result.attachments.tail
+        attachments: result.tail
       }));
     }
   );
