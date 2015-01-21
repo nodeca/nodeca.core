@@ -9,6 +9,9 @@
 // - toolbarButtons - list of buttons for toolbar
 // - onChange - event fires when `markdown` or `attachments` changed
 //
+// methods:
+// - setOptions - update options
+//
 // getters/setters:
 // - attachments() - array of attachments
 // - text() - user input markdown text
@@ -30,30 +33,29 @@ var editorId = 0;
 function MDEdit(options) {
   var $editorArea = $(options.editArea);
 
-  this.editorId = editorId++;
+  this.__editorId__ = editorId++;
 
   $editorArea.append(N.runtime.render('mdedit', {
     buttons: options.toolbarButtons,
-    editorId: this.editorId
+    editorId: this.__editorId__
   }));
 
-  this.preview = $(options.previewArea);
-  this.editArea = $editorArea.find('.mdedit__edit-area');
-  this.ace = ace.edit(this.editArea.get(0));
-  this.toolbar = $editorArea.find('.mdedit-toolbar');
-  this.attachmentsArea = $editorArea.find('.mdedit__attachments');
-  this.resize = $editorArea.find('.mdedit__resizer');
-  this.editorContainer = $editorArea.find('.mdedit');
-
-  this.ace.renderer.scrollMargin.top = TEXT_MARGIN;
-  this.ace.renderer.scrollMargin.bottom = TEXT_MARGIN;
-
+  this.__preview__ = $(options.previewArea);
+  this.__editArea__ = $editorArea.find('.mdedit__edit-area');
+  this.__ace__ = ace.edit(this.__editArea__.get(0));
+  this.__toolbar__ = $editorArea.find('.mdedit-toolbar');
+  this.__attachmentsArea__ = $editorArea.find('.mdedit__attachments');
+  this.__resize__ = $editorArea.find('.mdedit__resizer');
+  this.__editorContainer__ = $editorArea.find('.mdedit');
   this.options = options;
 
-  this._initAce();
-  this._initToolbar();
-  this._initResize();
-  this._initAttachmentsArea();
+  this.__ace__.renderer.scrollMargin.top = TEXT_MARGIN;
+  this.__ace__.renderer.scrollMargin.bottom = TEXT_MARGIN;
+
+  this.__initAce__();
+  this.__initToolbar__();
+  this.__initResize__();
+  this.__initAttachmentsArea__();
 
 
   // Set initial value
@@ -64,12 +66,12 @@ function MDEdit(options) {
 
 // Set initial Ace options
 //
-MDEdit.prototype._initAce = function () {
-  var aceSession = this.ace.getSession();
+MDEdit.prototype.__initAce__ = function () {
+  var aceSession = this.__ace__.getSession();
 
   aceSession.setMode('ace/mode/markdown');
 
-  this.ace.setOptions({
+  this.__ace__.setOptions({
     showLineNumbers: false,
     showGutter: false,
     highlightActiveLine: false
@@ -77,45 +79,45 @@ MDEdit.prototype._initAce = function () {
 
   aceSession.setUseWrapMode(true);
 
-  aceSession.on('change', this._updatePreview.bind(this));
+  aceSession.on('change', this.__updatePreview__.bind(this));
 
   if (this.options.onChange) {
     aceSession.on('change', this.options.onChange);
   }
 
-  this.ace.focus();
+  this.__ace__.focus();
 };
 
 
 // Added attachments bar event handlers
 //
-MDEdit.prototype._initAttachmentsArea = function () {
+MDEdit.prototype.__initAttachmentsArea__ = function () {
   var self = this;
 
-  N.wire.on('core.mdedit:dd_' + this.editorId, function mdedit_dd(event) {
+  N.wire.on('core.mdedit:dd_' + this.__editorId__, function mdedit_dd(event) {
     var x0, y0, x1, y1, ex, ey, uploaderData;
 
     switch (event.type) {
       case 'dragenter':
-        self.editorContainer.addClass('active');
+        self.__editorContainer__.addClass('active');
         break;
       case 'dragleave':
         // 'dragleave' occurs when user move cursor over child HTML element
         // track this situation and don't remove 'active' class
         // http://stackoverflow.com/questions/10867506/
-        x0 = self.editorContainer.offset().left;
-        y0 = self.editorContainer.offset().top;
-        x1 = x0 + self.editorContainer.outerWidth();
-        y1 = y0 + self.editorContainer.outerHeight();
+        x0 = self.__editorContainer__.offset().left;
+        y0 = self.__editorContainer__.offset().top;
+        x1 = x0 + self.__editorContainer__.outerWidth();
+        y1 = y0 + self.__editorContainer__.outerHeight();
         ex = event.originalEvent.pageX;
         ey = event.originalEvent.pageY;
 
         if (ex > x1 || ex < x0 || ey > y1 || ey < y0) {
-          self.editorContainer.removeClass('active');
+          self.__editorContainer__.removeClass('active');
         }
         break;
       case 'drop':
-        self.editorContainer.removeClass('active');
+        self.__editorContainer__.removeClass('active');
 
         if (event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length) {
 
@@ -145,7 +147,7 @@ MDEdit.prototype._initAttachmentsArea = function () {
   N.wire.on('mdedit.attachments:remove', function remove_attachment(event) {
     var $target = $(event.currentTarget);
 
-    if ($target.data('editor-id') !== self.editorId) {
+    if ($target.data('editor-id') !== self.__editorId__) {
       event.stopPropagation();
       return;
     }
@@ -156,14 +158,14 @@ MDEdit.prototype._initAttachmentsArea = function () {
     attachments = _.remove(attachments, function (val) { return val.media_id !== id; });
     self.attachments(attachments);
 
-    self.ace.find(
+    self.__ace__.find(
       new RegExp('\\!?\\[[^\\]]*\\]\\([^)]*?' + id + '[^)]*\\)', 'gm'),
       { regExp: true }
     );
-    self.ace.replaceAll('');
+    self.__ace__.replaceAll('');
 
     // Reset selection
-    self.ace.setValue(self.ace.getValue(), 1);
+    self.__ace__.setValue(self.__ace__.getValue(), 1);
 
     event.stopPropagation();
   });
@@ -172,15 +174,15 @@ MDEdit.prototype._initAttachmentsArea = function () {
   N.wire.on('mdedit.attachments:insert', function insert_attachment(event) {
     var $target = $(event.currentTarget);
 
-    if ($target.data('editor-id') !== self.editorId) {
+    if ($target.data('editor-id') !== self.__editorId__) {
       event.stopPropagation();
       return;
     }
 
     var url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: $target.data('media-id') });
 
-    self.ace.insert('![](' + url + ')');
-    self.ace.focus();
+    self.__ace__.insert('![](' + url + ')');
+    self.__ace__.focus();
 
     event.stopPropagation();
   });
@@ -189,14 +191,14 @@ MDEdit.prototype._initAttachmentsArea = function () {
 
 // Add editor resize handler
 //
-MDEdit.prototype._initResize = function () {
-  var minHeight = parseInt(this.editArea.height(), 10);
+MDEdit.prototype.__initResize__ = function () {
+  var minHeight = parseInt(this.__editArea__.height(), 10);
   var self = this;
   var $body = $('body');
 
-  this.resize.on('mousedown touchstart', function (event) {
+  this.__resize__.on('mousedown touchstart', function (event) {
     var clickStart = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
-    var currentHeight = parseInt(self.editArea.height(), 10);
+    var currentHeight = parseInt(self.__editArea__.height(), 10);
 
     $body
       .on('mouseup.nd.mdedit touchend.nd.mdedit', function () {
@@ -206,8 +208,8 @@ MDEdit.prototype._initResize = function () {
         var point = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
         var newHeight = currentHeight + (point.pageY - clickStart.pageY);
 
-        self.editArea.height(newHeight > minHeight ? newHeight : minHeight);
-        self.ace.resize();
+        self.__editArea__.height(newHeight > minHeight ? newHeight : minHeight);
+        self.__ace__.resize();
 
       }, 20, { maxWait: 20 }));
   });
@@ -216,17 +218,17 @@ MDEdit.prototype._initResize = function () {
 
 // Create toolbar with buttons and bind events
 //
-MDEdit.prototype._initToolbar = function () {
+MDEdit.prototype.__initToolbar__ = function () {
   var self = this;
 
-  this.toolbar.on('click', '.mdedit-toolbar__item', function () {
+  this.__toolbar__.on('click', '.mdedit-toolbar__item', function () {
     var command = self.commands[$(this).data('command')].bind(self);
 
     if (command) {
-      command(self.ace);
+      command(self.__ace__);
 
       // Restore focus on editor after command execution
-      self.ace.focus();
+      self.__ace__.focus();
     }
   });
 
@@ -236,7 +238,7 @@ MDEdit.prototype._initToolbar = function () {
       return;
     }
 
-    self.ace.commands.addCommand({
+    self.__ace__.commands.addCommand({
       name: button.command,
       bindKey: button.bind_key,
       exec: self.commands[button.command].bind(self)
@@ -249,13 +251,13 @@ MDEdit.prototype._initToolbar = function () {
 //
 MDEdit.prototype.setOptions = function (options) {
   this.options = _.assign(this.options, options);
-  this._updatePreview();
+  this.__updatePreview__();
 };
 
 
 // Update editor preview
 //
-MDEdit.prototype._updatePreview = _.debounce(function () {
+MDEdit.prototype.__updatePreview__ = _.debounce(function () {
   var self = this;
 
   N.parse(
@@ -270,7 +272,7 @@ MDEdit.prototype._updatePreview = _.debounce(function () {
         return;
       }
 
-      self.preview.html(N.runtime.render('mdedit.preview', {
+      self.__preview__.html(N.runtime.render('mdedit.preview', {
         user_hid: N.runtime.user_hid,
         html: result.html,
         attachments: result.tail
@@ -283,11 +285,11 @@ MDEdit.prototype._updatePreview = _.debounce(function () {
 
 MDEdit.prototype.text = function (text) {
   if (!text) {
-    return this.ace.getValue();
+    return this.__ace__.getValue();
   }
 
-  this.ace.setValue(text, -1);
-  this._updatePreview();
+  this.__ace__.setValue(text, -1);
+  this.__updatePreview__();
 };
 
 
@@ -297,7 +299,7 @@ MDEdit.prototype.attachments = function (attachments) {
   }
 
   this._attachments = attachments;
-  this._updateAttachments();
+  this.__updateAttachments__();
 
   if (this.options.onChange) {
     this.options.onChange();
@@ -307,18 +309,18 @@ MDEdit.prototype.attachments = function (attachments) {
 
 // Update attachments panel
 //
-MDEdit.prototype._updateAttachments = function () {
+MDEdit.prototype.__updateAttachments__ = function () {
   if (this.attachments().length > 0) {
-    this.editorContainer.removeClass('no-attachments');
+    this.__editorContainer__.removeClass('no-attachments');
   } else {
-    this.editorContainer.addClass('no-attachments');
+    this.__editorContainer__.addClass('no-attachments');
   }
 
-  this.attachmentsArea.html(
-    N.runtime.render('mdedit.attachments', { attachments: this.attachments(), editor_id: this.editorId })
+  this.__attachmentsArea__.html(
+    N.runtime.render('mdedit.attachments', { attachments: this.attachments(), editor_id: this.__editorId__ })
   );
 
-  this._updatePreview();
+  this.__updatePreview__();
 };
 
 
