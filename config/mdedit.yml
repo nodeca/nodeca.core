@@ -1,93 +1,99 @@
 mdedit:
-  toolbar:
 
-    -
+  default:
+    bold: true
+    italic: true
+    separator1:
+      priority: 30
+    link: true
+    image: true
+    attach: true
+    separator2:
+      priority: 70
+    ol: true
+    ul: true
+    separator3:
+      priority: 100
+    help: true
+
+  buttons:
+
+    separator:
+      css_class: mdedit-toolbar__sep
+      separator: true
+
+    bold:
       css_class: icon icon-bold
       tooltip: "@mdedit.toolbar.bold"
       bind_key:
         win: 'Ctrl-B'
         mac: 'Command-B'
       command: cmdBold
+      priority: 10
+      depend: emphasis
 
-    -
+    italic:
       css_class: icon icon-italic
       tooltip: "@mdedit.toolbar.italic"
       bind_key:
         win: 'Ctrl-I'
         mac: 'Command-I'
       command: cmdItalic
+      priority: 20
+      depend: emphasis
 
-    -
-      css_class: mdedit-toolbar__sep
-
-    -
+    link:
       css_class: icon icon-link
       tooltip: "@mdedit.toolbar.link"
       bind_key:
         win: 'Ctrl-L'
         mac: 'Command-L'
       command: cmdLink
+      priority: 40
+      depend: links
 
-    #-
-    #  css_class: mdedit-toolbar__quote
-    #  tooltip: "@mdedit.toolbar.quote"
-    #  bind_key:
-    #    win: 'Ctrl-Q'
-    #    mac: 'Command-Q'
-    #  command: cmdQuote
-
-    -
+    image:
       css_class: icon icon-picture
       tooltip: "@mdedit.toolbar.image"
       bind_key:
         win: 'Ctrl-G'
         mac: 'Command-G'
       command: cmdImage
+      priority: 50
+      depend: images
 
-    -
+    attach:
       css_class: icon icon-attach
       tooltip: "@mdedit.toolbar.attach"
       command: cmdAttach
+      priority: 60
+      depend: attachments
 
-    -
-      css_class: mdedit-toolbar__sep
-
-    -
+    ol:
       css_class: icon icon-list-numbered
       tooltip: "@mdedit.toolbar.ol"
       bind_key:
         win: 'Ctrl-O'
         mac: 'Command-O'
       command: cmdOl
+      priority: 80
+      depend: lists
 
-    -
+    ul:
       css_class: icon icon-list-bullet
       tooltip: "@mdedit.toolbar.ul"
       bind_key:
         win: 'Ctrl-U'
         mac: 'Command-U'
       command: cmdUl
+      priority: 90
+      depend: lists
 
-    #-
-    #  css_class: mdedit-toolbar__header
-    #  tooltip: "@mdedit.toolbar.header"
-    #  bind_key:
-    #    win: 'Ctrl-H'
-    #    mac: 'Command-H'
-    #  command: cmdHeading
-
-    -
-      css_class: mdedit-toolbar__sep
-
-    #-
-    #  css_class: mdedit-toolbar__cut
-    #  tooltip: "@mdedit.toolbar.cut"
-    #  command: cmdCut
-
-    -
+    help:
       css_class: icon icon-help
       tooltip: "@mdedit.toolbar.help"
       bind_key:
         win: 'F1'
         mac: 'F1'
       command: cmdHelp
+      priority: 110

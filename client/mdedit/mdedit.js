@@ -6,8 +6,8 @@
 // - attachments - array of attachments
 // - text - source markdown text
 // - parseOptions - object with plugins config like `{ images: true, links: true, attachments: false }`
-// - toolbarButtons - list of buttons for toolbar
 // - onChange - event fires when `markdown` or `attachments` changed
+// - toolbar - name of toolbar config - `default` by default
 //
 // methods:
 // - setOptions - update options
@@ -25,9 +25,34 @@ var _ = require('lodash');
 
 
 var TEXT_MARGIN = 5;
+var TOOLBAR = '$$ JSON.stringify(N.config.mdedit) $$';
+
 
 // Unique editor id to bind wire events (incremented)
 var editorId = 0;
+
+
+var compileToolbarConfig = _.memoize(function (name) {
+  var buttonName;
+
+  return _.reduce(TOOLBAR[name], function (result, buttonParams, key) {
+    if (!buttonParams) {
+      return result;
+    }
+
+    buttonName = key.indexOf('separator') === 0 ? 'separator' : key;
+
+    if (buttonParams === true) {
+      result.push(TOOLBAR.buttons[buttonName]);
+    } else {
+      result.push(_.defaults({}, buttonParams, TOOLBAR.buttons[buttonName]));
+    }
+
+    return result;
+  }, []).sort(function (a, b) {
+    return a.priority - b.priority;
+  });
+});
 
 
 function MDEdit(options) {
@@ -36,7 +61,6 @@ function MDEdit(options) {
   this.__editorId__ = editorId++;
 
   $editorArea.append(N.runtime.render('mdedit', {
-    buttons: options.toolbarButtons,
     editorId: this.__editorId__
   }));
 
@@ -47,16 +71,18 @@ function MDEdit(options) {
   this.__attachmentsArea__ = $editorArea.find('.mdedit__attachments');
   this.__resize__ = $editorArea.find('.mdedit__resizer');
   this.__editorContainer__ = $editorArea.find('.mdedit');
+  this.__toolbarConfig__ = compileToolbarConfig(options.toolbar || 'default');
   this.options = options;
 
   this.__ace__.renderer.scrollMargin.top = TEXT_MARGIN;
   this.__ace__.renderer.scrollMargin.bottom = TEXT_MARGIN;
 
   this.__initAce__();
-  this.__initToolbar__();
   this.__initResize__();
   this.__initAttachmentsArea__();
+  this.__initToolbar__();
 
+  this.__updateToolbar__();
 
   // Set initial value
   this.text(options.text || '');
@@ -216,7 +242,7 @@ MDEdit.prototype.__initResize__ = function () {
 };
 
 
-// Create toolbar with buttons and bind events
+// Add toolbar click handler
 //
 MDEdit.prototype.__initToolbar__ = function () {
   var self = this;
@@ -231,9 +257,52 @@ MDEdit.prototype.__initToolbar__ = function () {
       self.__ace__.focus();
     }
   });
+};
 
 
-  this.options.toolbarButtons.forEach(function (button) {
+// Update toolbar button list
+//
+MDEdit.prototype.__updateToolbar__ = function () {
+  var self = this;
+
+  // Get actual buttons
+  var buttons = _.reduce(this.__toolbarConfig__, function (result, btn) {
+
+    // If parser plugin inactive - remove button
+    if (self.options.parseOptions[btn.depend] === false) {
+      return result;
+    }
+
+    // If duplicate separator - remove it
+    if (btn.separator && result.length > 0 && result[result.length - 1].separator) {
+      return result;
+    }
+
+    result.push(btn);
+
+    return result;
+  }, []);
+
+  // If first item is separator - remove
+  if (buttons.length > 0 && buttons[0].separator) {
+    buttons.shift();
+  }
+
+  // If last item is separator - remove
+  if (buttons.length > 0 && buttons[buttons.length - 1].separator) {
+    buttons.pop();
+  }
+
+  // Render toolbar
+  this.__toolbar__.html(N.runtime.render('mdedit.toolbar', {
+    buttons: buttons
+  }));
+
+  // Disable all hotkeys
+  this.__ace__.commands.removeCommands(Object.keys(this.commands));
+
+  // Enable active button's hotkeys
+  buttons.forEach(function (button) {
     if (!button.command || !button.bind_key || !self.commands[button.command]) {
       return;
     }
@@ -251,6 +320,7 @@ MDEdit.prototype.__initToolbar__ = function () {
 //
 MDEdit.prototype.setOptions = function (options) {
   this.options = _.assign(this.options, options);
+  this.__updateToolbar__();
   this.__updatePreview__();
 };
 

@@ -1,0 +1,6 @@
+each button in self.buttons
+  span.mdedit-toolbar__item(
+    class=button.css_class
+    title=button.tooltip ? self.t(button.tooltip) : ''
+    data-command=button.command ? button.command : ''
+  )
