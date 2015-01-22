@@ -39,6 +39,16 @@
     z-index 1000
     background-color white
 
+    // Show/hide animation parameters
+    transition-duration .5s
+    transition-timing-function cubic-bezier( 0.215, 0.610, 0.355, 1.000 )
+    transition-property transform
+
+  // Hide controlbar on narrow screens
+  @media (max-width: screenXs - 1)
+    &.controlbar__m-hidden .controlbar__floater
+      transform translateY( -100% )
+
   .controlbar__body
     border 0
     border-radius 0
