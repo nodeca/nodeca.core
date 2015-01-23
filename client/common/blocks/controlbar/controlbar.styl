@@ -43,9 +43,9 @@
     transition transform cubic-bezier(0.215, 0.610, 0.355, 1.000) 0.5s
 
   // Hide controlbar on narrow screens
-  @media (max-width: screenXs - 1)
+  @media only screen and (max-height: screenSm - 1)
     &.controlbar__m-scroll-down .controlbar__floater
-      transform translateY( -100% )
+      transform translateY(-100%)
 
   .controlbar__body
     border 0
