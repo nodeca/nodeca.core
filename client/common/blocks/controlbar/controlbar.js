@@ -21,16 +21,24 @@ N.wire.on('navigate.done', function page_setup() {
   var scrollBefore = 0;
   var scrollCurrent, scrollDiff;
   var $window = $(window);
+  var scrollDownModifier = 'controlbar__m-scroll-down';
+  var hasModifier = false;
 
   $window.on('scroll.controlbar', _.throttle(function () {
     scrollCurrent = $window.scrollTop();
     scrollDiff = scrollBefore - scrollCurrent;
     scrollBefore = scrollCurrent;
 
-    if (scrollDiff < 0) { // scrolled down
-      $controlbar.addClass('controlbar__m-hidden');
-    } else if (scrollDiff > 0) { // scrolled up
-      $controlbar.removeClass('controlbar__m-hidden');
+    if (scrollDiff < 0 && !hasModifier) {
+      // Scrolled down - add modifier `m-scroll-down` if not added yet
+      $controlbar.addClass(scrollDownModifier);
+      hasModifier = true;
+    }
+
+    if (scrollDiff > 0 && hasModifier) {
+      // Scrolled up - remove modifier `m-scroll-down` if already added
+      $controlbar.removeClass(scrollDownModifier);
+      hasModifier = false;
     }
   }, 100));
 });
