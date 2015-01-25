@@ -32,6 +32,10 @@
   margin-right: .2em;
 }
 
+.icon-space-before {
+  margin-left: .2em;
+}
+
 .icon-dimmed:before {
   opacity: 0.7;
 }
@@ -39,4 +43,9 @@
 .icon-lg:before {
   font-size: 120%;
   top: 1px;
+}
+
+.icon-sm:before {
+  font-size: .8em;
+  top: -.05em;
 }
