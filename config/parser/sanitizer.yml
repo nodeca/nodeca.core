@@ -1,0 +1,106 @@
+parser:
+  sanitizer:
+
+    default:
+
+      root:
+        children:
+          group_block: true
+      p:
+        group: block
+        children:
+          group_inline: true
+        remove_empty: true
+      text:
+        group: inline
+        children: false # skip children tags check
+        attributes: false # skip attributes check
+
+    emphasis:
+
+      strong:
+        group: inline
+        children:
+          group_inline: true
+        remove_empty: true
+      em:
+        group: inline
+        children:
+          group_inline: true
+        remove_empty: true
+      del:
+        group: inline
+        children:
+          group_inline: true
+        remove_empty: true
+
+    links:
+
+      a:
+        group: inline
+        children:
+          group_inline: true
+          a: false
+        attributes:
+          title: true
+          href: true
+        remove_empty: true
+
+    images:
+
+      img:
+        group: inline
+        attributes:
+          src: true
+          alt: true
+          title: true
+
+    lists:
+
+      ul:
+        group: block
+        children:
+          li: true
+        remove_empty: true
+      ol:
+        group: block
+        children:
+          li: true
+        remove_empty: true
+      li:
+        children:
+          ul: true
+          ol: true
+          group_inline: true
+        remove_empty: true
+
+    sub:
+
+      sub:
+        group: inline
+
+    sup:
+
+      sup:
+        group: inline
+
+    headings:
+
+      h1:
+        group: block
+      h2:
+        group: block
+      h3:
+        group: block
+      h4:
+        group: block
+      h5:
+        group: block
+
+    attachments:
+
+      attach:
+        group: inline
+        attributes:
+          data-nd-media-id: /[0-9a-f]{24}/
+          data-nd-src: true
