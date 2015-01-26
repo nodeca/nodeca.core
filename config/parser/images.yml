@@ -1,7 +1,0 @@
-setting_schemas:
-  markup:
-    markup_images:
-      priority: 10
-      type: boolean
-      as: images
-      default: true

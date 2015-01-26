@@ -1,0 +1,94 @@
+# This settings are not used directly. Those are taken by apps to generate local sets.
+
+setting_schemas:
+  markup:
+
+    markup_cut:
+      priority: 10
+      type: boolean
+      as: cut # rename setting key after fetch
+      default: false
+
+    markup_emphasis:
+      priority: 10
+      type: boolean
+      as: emphasis
+      default: true
+
+    markup_footnotes:
+      priority: 10
+      type: boolean
+      as: footnotes
+      default: false
+
+    markup_headings:
+      priority: 10
+      type: boolean
+      as: headings
+      default: false
+
+    markup_images:
+      priority: 10
+      type: boolean
+      as: images
+      default: true
+
+    markup_attachments:
+      priority: 10
+      type: boolean
+      as: attachments
+      default: true
+
+    markup_links:
+      priority: 10
+      type: boolean
+      as: links
+      default: true
+
+    markup_lists:
+      priority: 10
+      type: boolean
+      as: lists
+      default: true
+
+    markup_medialinks:
+      priority: 10
+      type: boolean
+      as: medialinks
+      default: true
+
+    markup_quotes:
+      priority: 10
+      type: boolean
+      as: quotes
+      default: true
+
+    markup_smiles:
+      priority: 10
+      type: boolean
+      as: smiles
+      default: true
+
+    markup_spoiler:
+      priority: 10
+      type: boolean
+      as: spoiler
+      default: false
+
+    markup_sub:
+      priority: 10
+      type: boolean
+      as: sub
+      default: false
+
+    markup_sup:
+      priority: 10
+      type: boolean
+      as: sup
+      default: false
+
+    markup_tables:
+      priority: 10
+      type: boolean
+      as: tables
+      default: false

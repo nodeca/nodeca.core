@@ -1,0 +1,20 @@
+i18n:
+  en-US:
+    admin:
+      core:
+        setting_names:
+          markup_cut: Enable cut
+          markup_emphasis: Enable emphasis
+          markup_attachments: Enable attachments
+          markup_footnotes: Enable footnotes
+          markup_headings: Enable headings
+          markup_images: Enable images
+          markup_links: Enable links
+          markup_lists: Enable lists
+          markup_medialinks: Enable medialinks
+          markup_quotes: Enable quotes
+          markup_smiles: Enable smiles
+          markup_spoiler: Enable spoiler
+          markup_sub: Enable sub
+          markup_sup: Enable sup
+          markup_tables: Enable tables
