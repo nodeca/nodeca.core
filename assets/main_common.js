@@ -1,5 +1,3 @@
-//= require vendor/history.js/scripts/uncompressed/history.adapter.jquery
-//= require vendor/history.js/scripts/uncompressed/history
 //= require vendor/powertip/jquery.powertip
 //= require vendor/jquery-ui/ui/jquery.ui.widget.js
 //= require vendor/blueimp-canvas-to-blob/js/canvas-to-blob.min.js
