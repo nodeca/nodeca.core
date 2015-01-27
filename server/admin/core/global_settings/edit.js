@@ -58,8 +58,11 @@ module.exports = function (N, apiPath) {
 
 
   N.wire.on(apiPath, function global_settings_edit(env, callback) {
+    var parentGroup = N.config.setting_groups[env.params.group].parent;
+
     env.res.head.title =
       env.t('title', {
+        parent_group: env.t('@admin.core.group_names.' + parentGroup),
         group: env.t('@admin.core.group_names.' + env.params.group)
       });
 
