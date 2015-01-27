@@ -5,7 +5,7 @@
 
 var _ = require('lodash');
 var StateMachine = require('javascript-state-machine');
-var History = window.History; // History.js
+var History = window.history;
 
 var lastPageData;
 var navigateCallback;
@@ -27,31 +27,23 @@ var fsm = StateMachine.create({
     { name: 'stateChange',   from: 'IDLE',                  to: 'BACK_FORWARD' },
     // link click
     { name: 'link',          from: 'IDLE',                  to: 'LOAD' },
-    // replace state
-    { name: 'replace',       from: 'IDLE',                  to: 'REPLACE' },
-    // fake event to remove status check
+    /// fake event to remove status check
     { name: 'terminate',     from: 'IDLE',                  to: 'IDLE' },
 
     // page data is in cache
     { name: 'complete',      from: 'BACK_FORWARD',          to: 'IDLE' },
-    // load page data
-    { name: 'loadingDone',   from: 'BACK_FORWARD',          to: 'BACK_FORWARD_COMPLETE' },
+    // page loading complete
+    { name: 'complete',      from: 'LOAD',                  to: 'IDLE' },
 
-    // page loading complete, push history state
-    { name: 'loadingDone',   from: 'LOAD',                  to: 'LOAD_COMPLETE' },
     // terminate page loading by back/forward buttons
     { name: 'stateChange',   from: 'LOAD',                  to: 'BACK_FORWARD' },
     // terminate page loading on error or if page is same
     { name: 'terminate',     from: 'LOAD',                  to: 'IDLE' },
 
-    // handle push history state
-    { name: 'stateChange',   from: 'LOAD_COMPLETE',         to: 'IDLE' },
-
-    // loading complete, replace history state
-    { name: 'stateChange',   from: 'BACK_FORWARD_COMPLETE', to: 'IDLE' },
-
-    // handle replace history state
-    { name: 'stateChange',   from: 'REPLACE',               to: 'IDLE' }
+    // handle pop history state on anchor change
+    { name: 'changeHash',    from: 'LOAD',                  to: 'HASH_CHANGE' },
+    // anchor change complete
+    { name: 'stateChange',   from: 'HASH_CHANGE',           to: 'IDLE' }
   ]
 });
 
@@ -102,7 +94,7 @@ function parseOptions(options) {
 
     if (!href) {
       errorReport = 'Invalid parameters passed to `navigate.to` event: ' +
-                    JSON.stringify(options);
+      JSON.stringify(options);
 
       window.alert(errorReport);
       return null;
@@ -110,8 +102,8 @@ function parseOptions(options) {
 
   } else {
     errorReport = 'Not enough parameters for `navigate.to` event. ' +
-                  'Need `href` or `apiPath` at least: ' +
-                  JSON.stringify(options);
+    'Need `href` or `apiPath` at least: ' +
+    JSON.stringify(options);
 
     window.alert(errorReport);
     return null;
@@ -135,7 +127,7 @@ function loadData(options, callback) {
   var id = ++requestID;
 
   // History is enabled - try RPC navigation.
-  N.io.rpc(options.apiPath, options.params, function (err, res) {
+  N.io.rpc(options.apiPath, options.params, { handleAllErrors: true }, function (err, res) {
 
     // Page loading is terminated
     if (id !== requestID) {
@@ -172,13 +164,20 @@ function loadData(options, callback) {
     }
 
     if (err) {
-      // Can't deal via RPC - try HTTP. This might be:
+      // Can't load via RPC - show error page.
       //
-      // - Either a generic error, e.g. authorization / bad params / fuckup
-      //   so we redirect user to show him an error page.
-      //
-      // - Version mismatch, so we call action by HTTP to update client.
-      window.location = options.href + options.anchor;
+      // This is a generic error, e.g. forbidden / not found / client error.
+
+      callback({
+        apiPath: 'common.error',
+        params: {},
+        anchor: '',
+        view: 'common.error',
+        locals: {
+          err: err,
+          head: { title: err.code + ' ' + err.message }
+        }
+      });
       return;
     }
 
@@ -205,6 +204,7 @@ function loadData(options, callback) {
 
 
 function render(data, scroll, callback) {
+
   N.wire.emit([ 'navigate.exit:' + lastPageData.apiPath, 'navigate.exit' ], lastPageData, function (err) {
     if (err) {
       N.logger.error('%s', err); // Log error, but not stop.
@@ -215,6 +215,8 @@ function render(data, scroll, callback) {
     var content = $(N.runtime.render(data.view, data.locals, {
       apiPath: data.apiPath
     }));
+
+    document.title = data.locals.head.title;
 
     $('#content').replaceWith(content);
 
@@ -265,18 +267,23 @@ fsm.onLOAD = function (event, from, to, params) {
   }
 
   // Fallback for old browsers.
-  if (!History.enabled) {
+  if (!History || !History.pushState) {
     window.location = options.href + options.anchor;
     return;
   }
 
   // Stop here if base URL (all except anchor) haven't changed.
+
   if (options.href === (location.protocol + '//' + location.host + location.pathname)) {
 
     // Update anchor if it's changed.
     if (location.hash !== options.anchor) {
+
+      fsm.changeHash();
       location.hash = options.anchor;
+      return;
     }
+
 
     fsm.terminate();
     return;
@@ -297,19 +304,10 @@ fsm.onLOAD = function (event, from, to, params) {
       return;
     }
 
-    fsm.loadingDone(result, options);
-  });
-};
-
-fsm.onLOAD_COMPLETE = function (event, from, to, result, options) {
-  render(result, true, function () {
-    History.pushState(result, result.locals.head.title, options.href);
-  });
-};
-
-fsm.onBACK_FORWARD_COMPLETE = function (event, from, to, result, options) {
-  render(result, false, function () {
-    History.replaceState(result, result.locals.head.title, options.href);
+    render(result, true, function () {
+      History.pushState(result, result.locals.head.title, options.href + options.anchor);
+      fsm.complete();
+    });
   });
 };
 
@@ -317,16 +315,17 @@ fsm.onBACK_FORWARD = function () {
   // stateChange terminate `LOAD` state, also remove old callback
   navigateCallback = null;
 
-  var state = History.getState();
+  var state = History.state;
 
-  if (!_.isEmpty(state.data)) {
-    render(state.data, false, function () {
+
+  if (!_.isEmpty(state)) {
+    render(state, false, function () {
       fsm.complete();
     });
     return;
   }
 
-  var options = parseOptions(state.url);
+  var options = parseOptions(document.location);
 
   // It's an external link or 404 error if route is not matched. So perform
   // regular page requesting via HTTP.
@@ -336,20 +335,19 @@ fsm.onBACK_FORWARD = function () {
   }
 
   loadData(options, function (result) {
-    fsm.loadingDone(result, options);
+    render(result, false, function () {
+      History.replaceState(result, result.locals.head.title, options.href + options.anchor);
+      fsm.complete();
+    });
   });
-};
-
-fsm.onREPLACE = function (event, from, to, data, title, url) {
-  History.replaceState(data, title, url);
 };
 
 
 ///////////////////////////////////////////////////////////////////////////////
 // statechange handler
 
-if (History.enabled) {
-  History.Adapter.bind(window, 'statechange', function () {
+if (History && History.pushState) {
+  window.addEventListener('popstate', function () {
     fsm.stateChange();
   });
 }
@@ -385,16 +383,15 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 //                   return to this page using history navigation. (optional)
 //
 N.wire.on('navigate.replace', function navigate_replace(options, callback) {
-  var state = History.getState();
-  var url = options.href ? normalizeURL(options.href) : state.url;
-  var title = options.title || state.title;
+  var state = History.state;
+
+  var url = options.href ? normalizeURL(options.href) : location.href;
+  var title = options.title || document.title;
   var data = options.data || {};
 
-  if (url !== state.url || title !== state.title || !_.isEqual(data, state.data)) {
-    navigateCallback = callback;
-
-    fsm.replace(data, title, url);
-    return;
+  if (url !== state.url || title !== state.title || !_.isEqual(data, state)) {
+    History.replaceState(data, title, url);
+    document.title = title;
   }
 
   callback();
