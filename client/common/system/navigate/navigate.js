@@ -356,6 +356,32 @@ if (History && History.pushState) {
 ///////////////////////////////////////////////////////////////////////////////
 // Wire handlers
 
+
+// Get current page data from local cache or from server
+//
+// params:
+// - data - (output) current page data
+//
+N.wire.on('navigate.get_page_raw', function get_page_raw(params, callback) {
+
+  // All needed data already loaded
+  if (lastPageData.locals) {
+    params.data = lastPageData.locals;
+    callback();
+    return;
+  }
+
+  // We should load data from server
+  N.io.rpc(lastPageData.apiPath, lastPageData.params).done(function(data) {
+    // Save response in local cache
+    lastPageData.locals = data;
+
+    params.data = lastPageData.locals;
+    callback();
+  });
+});
+
+
 // Performs RPC navigation to the specified page. Allowed options:
 //
 //    options.href
