@@ -305,7 +305,7 @@ fsm.onLOAD = function (event, from, to, params) {
     }
 
     render(result, true, function () {
-      History.pushState(result, result.locals.head.title, options.href + options.anchor);
+      History.pushState(null, result.locals.head.title, options.href + options.anchor);
       fsm.complete();
     });
   });
@@ -314,16 +314,6 @@ fsm.onLOAD = function (event, from, to, params) {
 fsm.onBACK_FORWARD = function () {
   // stateChange terminate `LOAD` state, also remove old callback
   navigateCallback = null;
-
-  var state = History.state;
-
-
-  if (!_.isEmpty(state)) {
-    render(state, false, function () {
-      fsm.complete();
-    });
-    return;
-  }
 
   var options = parseOptions(document.location);
 
@@ -336,7 +326,7 @@ fsm.onBACK_FORWARD = function () {
 
   loadData(options, function (result) {
     render(result, false, function () {
-      History.replaceState(result, result.locals.head.title, options.href + options.anchor);
+      History.replaceState(null, result.locals.head.title, options.href + options.anchor);
       fsm.complete();
     });
   });
@@ -405,18 +395,13 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 //                   If not set - use current href. (optional)
 //   options.title - new page title.
 //                   If not set - use current title. (optional)
-//   options.data  - data for history renderer; it will be used when user will
-//                   return to this page using history navigation. (optional)
 //
 N.wire.on('navigate.replace', function navigate_replace(options, callback) {
-  var state = History.state;
-
-  var url = options.href ? normalizeURL(options.href) : location.href;
+  var url = options.href ? normalizeURL(options.href) : normalizeURL(location.href);
   var title = options.title || document.title;
-  var data = options.data || {};
 
-  if (url !== state.url || title !== state.title || !_.isEqual(data, state)) {
-    History.replaceState(data, title, url);
+  if (document.title !== title || normalizeURL(location.href) !== url) {
+    History.replaceState(null, title, url);
     document.title = title;
   }
 
