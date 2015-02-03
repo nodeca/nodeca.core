@@ -66,9 +66,8 @@ medialinks:
         </div>
 
       stub: |
-        <div class="medialink-video medialink-youtube" data-nd-type="medialink" data-nd-rule="youtube">
+        <div class="medialink-video medialink-video__m-stub medialink-youtube" data-nd-type="medialink" data-nd-rule="youtube">
           <div class="embed-responsive embed-responsive-16by9">
-            <div class="embed-responsive-item embed-responsive-stub"></div>
           </div>
         </div>
 
@@ -119,9 +118,8 @@ medialinks:
         </div>
 
       stub: |
-        <div class="medialink-video medialink-vimeo" data-nd-type="medialink" data-nd-rule="vimeo">
+        <div class="medialink-video medialink-video__m-stub medialink-vimeo" data-nd-type="medialink" data-nd-rule="vimeo">
           <div class="embed-responsive embed-responsive-16by9">
-            <div class="embed-responsive-item embed-responsive-stub"></div>
           </div>
         </div>
 
@@ -172,8 +170,7 @@ medialinks:
         </div>
 
       stub: |
-        <div class="medialink-video medialink-rutube" data-nd-type="medialink" data-nd-rule="rutube">
+        <div class="medialink-video medialink-video__m-stub medialink-rutube" data-nd-type="medialink" data-nd-rule="rutube">
           <div class="embed-responsive embed-responsive-16by9">
-            <div class="embed-responsive-item embed-responsive-stub"></div>
           </div>
         </div>
