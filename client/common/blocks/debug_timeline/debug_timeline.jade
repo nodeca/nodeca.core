@@ -5,7 +5,7 @@ mixin timeline_scope(scope)
     span.debug-timeline__period= self.t('total', scope.elapsed.total.toFixed(2))
     = ' - ' + scope.message
     if scope.elapsed.missed > 0
-      = self.t('total', scope.elapsed.missed.toFixed(2))
+      = ' ' + self.t('total', scope.elapsed.missed.toFixed(2))
     if Object.keys(scope.meta).length
       = ' ' + JSON.stringify(scope.meta)
 
