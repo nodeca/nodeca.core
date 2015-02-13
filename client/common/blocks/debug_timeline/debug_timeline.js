@@ -27,3 +27,9 @@ N.wire.on('io.complete', function debug_timeline(info) {
     })
   );
 });
+
+// Toggle timeline view. By defaul it hide elements with small value
+// to make output shorter
+N.wire.on('common.blocks.debug_timeline:toggle_hidden', function debug_timeline_toggle_hidden(data) {
+  data.$this.toggleClass('debug-timeline__m-show-hidden');
+});

@@ -1,7 +1,10 @@
 //- Generates nested list for timeline
 
+- var treshold = 0.05;
+
 mixin timeline_scope(scope)
-  li.debug-timeline__item
+  - var hide = scope.elapsed.total < treshold;
+  li.debug-timeline__item(class= hide ? 'debug-timeline__m-hidden' : '')
     span.debug-timeline__period= self.t('total', scope.elapsed.total.toFixed(2))
     = ' - ' + scope.message
     if scope.elapsed.missed > 0
@@ -17,5 +20,5 @@ mixin timeline_items(scopes)
     each scope in scopes
       mixin timeline_scope(scope)
 
-#debug_timeline.debug-timeline
+#debug_timeline.debug-timeline(href='#' data-on-click='common.blocks.debug_timeline:toggle_hidden')
   mixin timeline_items(self.stats)

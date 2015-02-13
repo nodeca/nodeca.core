@@ -2,15 +2,25 @@
 
 @import "nodeca.core/client/common/_variables"
 
-.debug-timeline > .debug-timeline__scope
-  margin-left 0
-  padding-left 0
+.debug-timeline
+  cursor pointer
+  & > .debug-timeline__scope
+    margin-left 0
+    padding-left 0
 
 .debug-timeline__scope
   list-style none
   padding-left 20px
-//  & > ul
-//    margin-left 0
 
 .debug-timeline__period
   color grayDark
+
+.debug-timeline__m-hidden
+  display none
+  background-color grayLightest
+  .debug-timeline__period
+    color grayLight
+
+.debug-timeline__m-show-hidden
+  .debug-timeline__m-hidden
+    display block
