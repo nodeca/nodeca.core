@@ -120,10 +120,10 @@ MDEdit.prototype.__initAce__ = function () {
 MDEdit.prototype.__initAttachmentsArea__ = function () {
   var self = this;
 
-  N.wire.on('core.mdedit:dd_' + this.__editorId__, function mdedit_dd(event) {
+  N.wire.on('core.mdedit:dd_' + this.__editorId__, function mdedit_dd(data) {
     var x0, y0, x1, y1, ex, ey, uploaderData;
 
-    switch (event.type) {
+    switch (data.event.type) {
       case 'dragenter':
         self.__editorContainer__.addClass('active');
         break;
@@ -135,8 +135,8 @@ MDEdit.prototype.__initAttachmentsArea__ = function () {
         y0 = self.__editorContainer__.offset().top;
         x1 = x0 + self.__editorContainer__.outerWidth();
         y1 = y0 + self.__editorContainer__.outerHeight();
-        ex = event.originalEvent.pageX;
-        ey = event.originalEvent.pageY;
+        ex = data.event.originalEvent.pageX;
+        ey = data.event.originalEvent.pageY;
 
         if (ex > x1 || ex < x0 || ey > y1 || ey < y0) {
           self.__editorContainer__.removeClass('active');
@@ -145,10 +145,10 @@ MDEdit.prototype.__initAttachmentsArea__ = function () {
       case 'drop':
         self.__editorContainer__.removeClass('active');
 
-        if (event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length) {
+        if (data.event.dataTransfer && data.event.dataTransfer.files && data.event.dataTransfer.files.length) {
 
           uploaderData = {
-            files: event.dataTransfer.files,
+            files: data.event.dataTransfer.files,
             url: N.router.linkTo('users.media.upload'),
             config: 'users.uploader_config',
             uploaded: null
@@ -170,15 +170,13 @@ MDEdit.prototype.__initAttachmentsArea__ = function () {
   });
 
   // Remove attachment handler
-  N.wire.on('mdedit.attachments:remove', function remove_attachment(event) {
-    var $target = $(event.currentTarget);
-
-    if ($target.data('editor-id') !== self.__editorId__) {
-      event.stopPropagation();
+  N.wire.on('mdedit.attachments:remove', function remove_attachment(data) {
+    if (data.$this.data('editor-id') !== self.__editorId__) {
+      data.event.stopPropagation();
       return;
     }
 
-    var id = $target.data('media-id');
+    var id = data.$this.data('media-id');
     var attachments = self.attachments();
 
     attachments = _.remove(attachments, function (val) { return val.media_id !== id; });
@@ -193,24 +191,22 @@ MDEdit.prototype.__initAttachmentsArea__ = function () {
     // Reset selection
     self.__ace__.setValue(self.__ace__.getValue(), 1);
 
-    event.stopPropagation();
+    data.event.stopPropagation();
   });
 
   // Click on attachment to insert into text
-  N.wire.on('mdedit.attachments:insert', function insert_attachment(event) {
-    var $target = $(event.currentTarget);
-
-    if ($target.data('editor-id') !== self.__editorId__) {
-      event.stopPropagation();
+  N.wire.on('mdedit.attachments:insert', function insert_attachment(data) {
+    if (data.$this.data('editor-id') !== self.__editorId__) {
+      data.event.stopPropagation();
       return;
     }
 
-    var url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: $target.data('media-id') });
+    var url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: data.$this.data('media-id') });
 
     self.__ace__.insert('![](' + url + ')');
     self.__ace__.focus();
 
-    event.stopPropagation();
+    data.event.stopPropagation();
   });
 };
 

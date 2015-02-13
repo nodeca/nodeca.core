@@ -17,14 +17,14 @@ var doneCallback;
 var $dialog;
 
 
-N.wire.on('common.blocks.confirm', function confirm(data, callback) {
+N.wire.on('admin.core.blocks.confirm', function confirm(data, callback) {
   if (typeof data === 'string') {
     data = { message: data };
   }
 
   doneCallback = callback;
 
-  $dialog = $(N.runtime.render('common.blocks.confirm', data));
+  $dialog = $(N.runtime.render('admin.core.blocks.confirm', data));
   $('body').append($dialog);
 
   $dialog
@@ -46,7 +46,7 @@ N.wire.on('common.blocks.confirm', function confirm(data, callback) {
 
 // Pressed 'OK'
 //
-N.wire.on('common.blocks.confirm:ok', function confirm_ok() {
+N.wire.on('admin.core.blocks.confirm:ok', function confirm_ok() {
   if (doneCallback) {
     doneCallback();
     doneCallback = null;

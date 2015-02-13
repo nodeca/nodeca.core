@@ -50,8 +50,8 @@ N.wire.once('common.blocks.microedit', function microedit_once() {
 
   // Submit handler
   //
-  N.wire.on('common.blocks.microedit:submit', function microedit_submit(form) {
-    params.update(form.fields.value, function (err) {
+  N.wire.on('common.blocks.microedit:submit', function microedit_submit(data) {
+    params.update(data.fields.value, function (err) {
       if (!err) {
         destroy(doneCallback);
         return;

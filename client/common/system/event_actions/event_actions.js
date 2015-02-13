@@ -32,28 +32,37 @@ N.wire.once('navigate.done', function () {
   $.event.props.push('dataTransfer');
 
   $(document).on('dragenter dragleave dragover drop', '[data-on-dragdrop]', function (event) {
-    var apiPath = $(this).data('onDragdrop');
-    handleAction(apiPath, event);
+    var data = {
+      event: event,
+      $this: $(this)
+    };
+    var apiPath = data.$this.data('onDragdrop');
+
+    handleAction(apiPath, data);
     event.preventDefault();
   });
 
   $(document).on('click', '[data-on-click]', function (event) {
-    var apiPath = $(this).data('onClick');
-    handleAction(apiPath, event);
+    var data = {
+      event: event,
+      $this: $(this)
+    };
+    var apiPath = data.$this.data('onClick');
+
+    handleAction(apiPath, data);
     event.preventDefault();
   });
 
   $(document).on('submit', '[data-on-submit]', function (event) {
-    var apiPath = $(this).data('onSubmit');
-    var $form = $(event.target);
-
     var data = {
-      'fields': {},
-      'data': $form.data() // all data attributes
+      event: event,
+      $this: $(this),
+      fields: {}
     };
+    var apiPath = data.$this.data('onSubmit');
 
     // Fill fields
-    $.each($form.serializeArray(), function () {
+    $.each(data.$this.serializeArray(), function () {
       data.fields[this.name] = this.value;
     });
 
@@ -62,14 +71,24 @@ N.wire.once('navigate.done', function () {
   });
 
   $(document).on('input', '[data-on-input]', function (event) {
-    var apiPath = $(this).data('onInput');
-    handleAction(apiPath, event);
+    var data = {
+      event: event,
+      $this: $(this)
+    };
+    var apiPath = data.$this.data('onInput');
+
+    handleAction(apiPath, data);
     event.preventDefault();
   });
 
   $(document).on('change', '[data-on-change]', function (event) {
-    var apiPath = $(this).data('onChange');
-    handleAction(apiPath, event);
+    var data = {
+      event: event,
+      $this: $(this)
+    };
+    var apiPath = data.$this.data('onChange');
+
+    handleAction(apiPath, data);
     event.preventDefault();
   });
 });
