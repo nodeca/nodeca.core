@@ -7,8 +7,8 @@
 //= require ../../vendor/bootstrap/js/modal
 //= //require ../../vendor/bootstrap/js/scrollspy
 //= //require ../../vendor/bootstrap/js/tab
-//= //require ../../vendor/bootstrap/js/tooltip
+//= require ../../vendor/bootstrap/js/tooltip
 //= require ../../vendor/bootstrap/js/transition
 
 // Popover must go AFTER tooltip
-//= //require ../../vendor/bootstrap/js/popover
+//= require ../../vendor/bootstrap/js/popover
