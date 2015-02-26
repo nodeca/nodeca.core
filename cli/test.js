@@ -34,6 +34,16 @@ module.exports.commandLineArguments = [
       nargs: '?',
       defaultValue: null
     }
+  },
+
+  {
+    args:     [ '-m', '--mask' ],
+    options: {
+      dest:   'mask',
+      help:   'Run only tests, containing MASK in name',
+      type:   'string',
+      defaultValue: []
+    }
   }
 ];
 
@@ -85,6 +95,11 @@ module.exports.run = function (N, args, callback) {
             // - filename starts with _, e.g.: /foo/bar/_baz.js
             // - dirname in path starts _, e.g. /foo/_bar/baz.js
             if (file.match(/(^|\/|\\)_/)) { return; }
+
+            // try to filter by pattern, if set
+            if (args.mask && path.basename(file).indexOf(args.mask) === -1) {
+              return;
+            }
 
             if ((/\.js$/).test(file) && '.' !== path.basename(file)[0]) {
               mocha.files.push(file);
