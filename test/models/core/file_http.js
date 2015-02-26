@@ -1,6 +1,3 @@
-/*global describe, it, before, after*/
-
-
 'use strict';
 
 
@@ -13,8 +10,8 @@ var fileName    = path.join(__dirname, 'fixtures', 'lorem.jpg');
 var fileBase    = path.basename(fileName);
 var fileContent = fs.readFileSync(fileName);
 
-var file    = global.TEST_N.models.core.File;
-var router  = global.TEST_N.router;
+var file    = TEST.N.models.core.File;
+var router  = TEST.N.router;
 
 describe('File (GridFS) http requests test', function () {
   var info;

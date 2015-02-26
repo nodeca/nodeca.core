@@ -1,6 +1,3 @@
-/*global describe, it*/
-
-
 'use strict';
 
 
@@ -12,7 +9,7 @@ var fileName    = path.join(__dirname, 'fixtures', 'lorem.jpg');
 var fileBase    = path.basename(fileName);
 var fileContent = fs.readFileSync(fileName);
 
-var file = global.TEST_N.models.core.File;
+var file = TEST.N.models.core.File;
 
 
 describe('File model test', function () {
