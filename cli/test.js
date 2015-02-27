@@ -11,6 +11,7 @@ var path      = require('path');
 // 3rd-party
 var _         = require('lodash');
 var Mocha     = require('mocha');
+var Browser  = require('nodeca.core/lib/test/browser');
 var fstools   = require('fs-tools');
 
 
@@ -110,7 +111,8 @@ module.exports.run = function (N, args, callback) {
 
       // Expose N to globals for tests
       global.TEST = {
-        N: N
+        N: N,
+        browser: new Browser()
       };
 
       mocha.run(function (err) {
