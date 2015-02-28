@@ -8,6 +8,20 @@
 .nav-horiz-on .nav-horiz
   display block
 
+.navbar-nav li a:after
+  position absolute
+  left 0
+  right 0
+  bottom 0
+  height 2px
+  content ''
+  background-color grayLighter
+  opacity 0
+  transition opacity .3s ease
+
+.navbar-nav li.active a:after
+.navbar-nav li:hover a:after
+  opacity 1
 
 // Show navbar dropdowns on hover, instead of click
 //
