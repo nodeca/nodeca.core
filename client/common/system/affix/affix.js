@@ -23,9 +23,6 @@ var Steady = require('steady');
 
 var trackers = [];
 
-// Load requestAnimationFrame shim for old browsers
-require('raf');
-
 
 // Initialize trackers for elements with class '_affix'
 //
