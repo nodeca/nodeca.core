@@ -11,7 +11,7 @@
   'use strict';
 
 
-  var NodecaLoader = window.NodecaLoader = {};
+  var NodecaLoader = window.NodecaLoader = { booted: false };
   var alert = window.alert;
 
 
@@ -135,11 +135,6 @@
   NodecaLoader.registerNodeModule      = registerNodeModule;
   NodecaLoader.registerNodeModuleAlias = registerNodeModuleAlias;
 
-  // For easy debugging only.
-  NodecaLoader.nodeModules       = nodeModules;
-  NodecaLoader.requireNodeModule = requireNodeModule;
-
-
   // Storage of registered client modules.
   // Keys are API paths like 'app.method.submethod'
   var clientModules = {};
@@ -204,12 +199,6 @@
 
   // Really needed export.
   NodecaLoader.registerClientModule = registerClientModule;
-
-  // For easy debugging only.
-  NodecaLoader.clientModules          = clientModules;
-  NodecaLoader.initSingleClientModule = initSingleClientModule;
-  NodecaLoader.initClientModules      = initClientModules;
-
 
   //
   // Configure `bag.js loader
@@ -336,11 +325,17 @@
 
       // Execute after DOM is loaded:
       $(function () {
-        N.wire.emit([ 'navigate.done', 'navigate.done:' + route.meta.methods.get ], {
-          url:     location.href
-        , apiPath: route.meta.methods.get
-        , params:  route.params
-        });
+        N.wire.emit(
+          [ 'navigate.done', 'navigate.done:' + route.meta.methods.get ],
+          {
+            url:     location.href,
+            apiPath: route.meta.methods.get,
+            params:  route.params
+          },
+          function () {
+            NodecaLoader.booted = true;
+          }
+        );
       });
     });
   };
