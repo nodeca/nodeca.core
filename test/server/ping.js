@@ -1,7 +1,7 @@
 'use strict';
 
 
-var request = require('supertest')('http://localhost:3000');
+var request = require('supertest')(TEST.N.config.bind.default.mount);
 
 
 describe('HTTP alive', function () {

@@ -4,7 +4,7 @@
 var fs      = require('fs');
 var path    = require('path');
 
-var request   = require('supertest')('http://localhost:3000');
+var request   = require('supertest')('');
 
 var fileName    = path.join(__dirname, 'fixtures', 'lorem.jpg');
 var fileBase    = path.basename(fileName);

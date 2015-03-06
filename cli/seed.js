@@ -121,7 +121,7 @@ module.exports.run = function (N, args, callback) {
       //
       if (!!app_name && !!seed_name) {
         // protect production env from accident run
-        if ([ 'development', 'testing' ].indexOf(env) === -1 && !args.force) {
+        if ([ 'development', 'test' ].indexOf(env) === -1 && !args.force) {
           callback(format('Error: Can\'t run seed from %s enviroment. Please, use -f to force.', env));
           return;
         }
@@ -174,7 +174,7 @@ module.exports.run = function (N, args, callback) {
       //
       if (!_.isEmpty(args.seed_numbers)) {
         // protect production env from accident run
-        if ([ 'development', 'testing' ].indexOf(env) === -1 && !args.force) {
+        if ([ 'development', 'test' ].indexOf(env) === -1 && !args.force) {
           callback(format('Error: Can\'t run seed from %s enviroment. Please, use -f to force.', env));
           return;
         }
