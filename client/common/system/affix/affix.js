@@ -74,7 +74,7 @@ N.wire.on('navigate.done', function affix_init() {
 
     trackers.push(steadyMax);
 
-    var setConditions = function () {
+    function setConditions() {
       var elementPosition;
 
       if (position === 'top') {
@@ -88,7 +88,7 @@ N.wire.on('navigate.done', function affix_init() {
 
       steadyMin._onScrollHandler();
       steadyMax._onScrollHandler();
-    };
+    }
 
     setConditions();
 

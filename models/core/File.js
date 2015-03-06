@@ -88,7 +88,7 @@ module.exports = function (N, collectionName) {
   // TODO: (?) add collections root to constructor params
   // (fs by default)
   //
-  var File = function () {};
+  function File() {}
 
   /*
    * Get file info from GridFS.
