@@ -163,6 +163,20 @@ function loadData(options, callback) {
       return;
     }
 
+    if (err && N.io.INVALID_CSRF_TOKEN === err.code) {
+      // We are here if CSRF token is incorrect AND rpc call failed to
+      // auto-refresh it. It could happen if cookies are disabled.
+      //
+      // In this case we fallback to navigation via page reload to make
+      // site work somehow.
+      //
+      // If cookies are disabled, user will see a warning about it on
+      // the next page anyway.
+      //
+      window.location = options.href + options.anchor;
+      return;
+    }
+
     if (err) {
       // Can't load via RPC - show error page.
       //
