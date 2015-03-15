@@ -16,26 +16,27 @@ var isDirty          = null;
 function submit() {
   var payload = {};
 
-  _.forEach(settingModels, function (setting) {
+  settingModels.forEach(function (setting) {
     if (setting.value.isDirty()) {
       if ('number' === setting.type) {
         payload[setting.name] = Number(setting.value());
       } else {
         payload[setting.name] = setting.value();
       }
-      setting.value.markClean();
     }
   });
 
   N.io.rpc('admin.core.global_settings.update', { settings: payload }).done(function () {
+    settingModels.forEach(function (setting) { setting.value.markClean(); });
+
     N.wire.emit('notify', { type: 'info', message: t('saved') });
   });
 }
 
 
 function SettingModel(name, schema, value) {
-  var tName = '@admin.core.setting_names.' + name
-    , tHelp = '@admin.core.setting_names.' + name + '_help';
+  var tName = '@admin.core.setting_names.' + name,
+      tHelp = '@admin.core.setting_names.' + name + '_help';
 
   this.id            = 'setting_' + name;
   this.name          = name;
@@ -46,9 +47,9 @@ function SettingModel(name, schema, value) {
 
   this.valueOptions = _.map(schema.values, function (option) {
     return {
-      name:  option.name
-    , value: option.value
-    , title: t.exists('@' + option.title) ? t('@' + option.title) : option.name
+      name:  option.name,
+      value: option.value,
+      title: t.exists('@' + option.title) ? t('@' + option.title) : option.name
     };
   });
 
@@ -61,8 +62,8 @@ function SettingModel(name, schema, value) {
 
 
 N.wire.on('navigate.done:' + module.apiPath, function global_settings_edit_init() {
-  var inputSchemas = N.runtime.page_data.setting_schemas
-    , inputValues  = N.runtime.page_data.setting_values;
+  var inputSchemas = N.runtime.page_data.setting_schemas,
+      inputValues  = N.runtime.page_data.setting_values;
 
   // Initialize module variables.
   categoryKeys     = [];
@@ -75,12 +76,12 @@ N.wire.on('navigate.done:' + module.apiPath, function global_settings_edit_init(
     var key   = schema.category_key
       , model = new SettingModel(name, schema, inputValues[name]);
 
-    if (!_.contains(categoryKeys, key)) {
+    if (categoryKeys.indexOf(key) < 0) {
       categoryKeys.push(key);
       categoryNames[key] = t('@admin.core.category_names.' + key);
     }
 
-    if (!categorySettings.hasOwnProperty(key)) {
+    if (!categorySettings[key]) {
       categorySettings[key] = [];
     }
 
@@ -89,7 +90,7 @@ N.wire.on('navigate.done:' + module.apiPath, function global_settings_edit_init(
   });
 
   // Sort categories using category setting priorities.
-  categoryKeys.sort(function (key) {
+  categoryKeys = categoryKeys.sort(function (key) {
     var priority = 0;
 
     _.forEach(categorySettings[key], function (setting) {
@@ -100,8 +101,8 @@ N.wire.on('navigate.done:' + module.apiPath, function global_settings_edit_init(
   });
 
   // Sort settings within categories.
-  _.forEach(categorySettings, function (settings) {
-    settings.sort(function (a, b) {
+  _.forEach(categorySettings, function (settings, key) {
+    categorySettings[key] = settings.sort(function (a, b) {
       if (a.priority === b.priority) {
         return a.name.localeCompare(b.name);
       }
@@ -116,11 +117,11 @@ N.wire.on('navigate.done:' + module.apiPath, function global_settings_edit_init(
   });
 
   ko.applyBindings({
-    categoryKeys:     categoryKeys
-  , categoryNames:    categoryNames
-  , categorySettings: categorySettings
-  , isDirty:          isDirty
-  , submit:           submit
+    categoryKeys:     categoryKeys,
+    categoryNames:    categoryNames,
+    categorySettings: categorySettings,
+    isDirty:          isDirty,
+    submit:           submit
   }, $('#content').get(0));
 
   $('#content form[data-bind]:first').show();
