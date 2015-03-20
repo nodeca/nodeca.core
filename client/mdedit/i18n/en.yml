@@ -5,8 +5,8 @@ en-US:
     link: Link
     quote: Quote
     spoiler: Spoiler
-    image: Insert image
-    attach: Add attachment
+    image: Insert external image by link
+    attach: Add image from albums
     ol: Numbered list
     ul: Bulleted list
     header: Header
