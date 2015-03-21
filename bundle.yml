@@ -1,6 +1,7 @@
 bundles:
   lib:
     - lib
+    - l10n
 
   frontend:
     - common
@@ -16,6 +17,7 @@ packages:
   admin:
     depends:
       - lib
+      - l10n
 
     client:
       main: assets/main_admin.js
@@ -45,6 +47,7 @@ packages:
   common:
     depends:
       - lib
+      - l10n
 
     client:
       main: assets/main_common.js
@@ -95,6 +98,8 @@ packages:
         - loader.js
         - frontend/icons/src/font/*
         - backend/icons/src/font/*
+
+  l10n: {}
 
   mdedit:
 

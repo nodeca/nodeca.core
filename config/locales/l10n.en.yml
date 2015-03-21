@@ -1,0 +1,76 @@
+i18n:
+  en-US:
+    l10n:
+      # Custom formats. If you do translation - make sure to override ALL root
+      # names (variations of the same format are not mandatory)
+      =date_formats:
+        date: '%d %b %Y'
+        time: '%H:%M'
+        datetime: '%d %B %Y, %H:%M'
+
+        compact:
+          default:  '%d %b %Y'
+          past_d:   '%H:%M'
+          future_d: '%H:%M'
+
+        relative:
+          default:  '%d %b %Y'
+          # (past|future)_(60s|60m|24h|d|1d|2d)
+          past_60s: 'Right now'
+          past_60m: '#{count} min. ago'
+          # past_24h: '#{count} hr. ago'
+          past_d:   '%H:%M'
+          past_1d:  'Yesterday'
+          future_d: '%H:%M'
+
+      # Rewrite to autoload later from `cldr-data` package
+      =cldr:
+        dates:
+          calendars:
+            gregorian:
+              months:
+                format:
+                  wide:
+                    1:  January
+                    2:  February
+                    3:  March
+                    4:  April
+                    5:  May
+                    6:  June
+                    7:  July
+                    8:  August
+                    9:  September
+                    10: October
+                    11: November
+                    12: December
+                  abbreviated:
+                    1:  Jan
+                    2:  Feb
+                    3:  Mar
+                    4:  Apr
+                    5:  May
+                    6:  Jun
+                    7:  Jul
+                    8:  Aug
+                    9:  Sep
+                    10: Oct
+                    11: Nov
+                    12: Dec
+              days:
+                format:
+                  wide:
+                    sun: Sunday
+                    mon: Monday
+                    tue: Tuesday
+                    wed: Wednesday
+                    thu: Thursday
+                    fri: Friday
+                    sat: Saturday
+                  abbreviated:
+                    sun: Sun
+                    mon: Mon
+                    tue: Tue
+                    wed: Wed
+                    thu: Thu
+                    fri: Fri
+                    sat: Sat
