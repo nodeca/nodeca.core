@@ -15,10 +15,11 @@ i18n:
 
         relative:
           default:  '%d %b %Y'
+          now:      'Right now'
           # (past|future)_(60s|60m|24h|d|1d|2d)
-          past_60s: 'Right now'
-          past_60m: '#{count} min. ago'
-          # past_24h: '#{count} hr. ago'
+          past_60s: '#{seconds} sec. ago'
+          past_60m: '#{minutes} min. ago'
+          past_24h: '#{hours} hr. ago'
           past_d:   '%H:%M'
           past_1d:  'Yesterday'
           future_d: '%H:%M'
