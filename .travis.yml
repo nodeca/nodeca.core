@@ -5,3 +5,7 @@ script: make test-ci
 services:
   - redis
   - mongodb
+addons:
+  apt_packages:
+    - graphicsmagick
+sudo: false
