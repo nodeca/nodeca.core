@@ -16,62 +16,10 @@ i18n:
         relative:
           default:  '%d %b %Y'
           now:      'Right now'
-          # (past|future)_(60s|60m|24h|d|1d|2d)
+          # (now|past|future)+ [ _(60s|60m|24h|d|1d|30d|365d) ]
           past_60s: '#{seconds} sec. ago'
           past_60m: '#{minutes} min. ago'
           past_24h: '#{hours} hr. ago'
           past_d:   '%H:%M'
           past_1d:  'Yesterday'
           future_d: '%H:%M'
-
-      # Rewrite to autoload later from `cldr-data` package
-      =cldr:
-        dates:
-          calendars:
-            gregorian:
-              months:
-                format:
-                  wide:
-                    1:  January
-                    2:  February
-                    3:  March
-                    4:  April
-                    5:  May
-                    6:  June
-                    7:  July
-                    8:  August
-                    9:  September
-                    10: October
-                    11: November
-                    12: December
-                  abbreviated:
-                    1:  Jan
-                    2:  Feb
-                    3:  Mar
-                    4:  Apr
-                    5:  May
-                    6:  Jun
-                    7:  Jul
-                    8:  Aug
-                    9:  Sep
-                    10: Oct
-                    11: Nov
-                    12: Dec
-              days:
-                format:
-                  wide:
-                    sun: Sunday
-                    mon: Monday
-                    tue: Tuesday
-                    wed: Wednesday
-                    thu: Thursday
-                    fri: Friday
-                    sat: Saturday
-                  abbreviated:
-                    sun: Sun
-                    mon: Mon
-                    tue: Tue
-                    wed: Wed
-                    thu: Thu
-                    fri: Fri
-                    sat: Sat

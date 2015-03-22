@@ -18,6 +18,7 @@ function date_helper(date, formatName) {
 
     dateFormatterCache = new DateFormatter(
       N.runtime.t('l10n.date_formats'),
+      // cldr data filled in `init:bunle.i18n.phrases` hook
       N.runtime.t('l10n.cldr').dates,
       formatLocale
     );
