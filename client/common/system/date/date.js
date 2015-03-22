@@ -13,9 +13,13 @@ var dateFormatterCache;
 //
 function date_helper(date, formatName) {
   if (!dateFormatterCache) {
+    // get real formats locale to have proper plural rules
+    var formatLocale = N.i18n.getLocale(N.runtime.locale, 'l10n.date_formats');
+
     dateFormatterCache = new DateFormatter(
       N.runtime.t('l10n.date_formats'),
-      N.runtime.t('l10n.cldr').dates
+      N.runtime.t('l10n.cldr').dates,
+      formatLocale
     );
   }
 

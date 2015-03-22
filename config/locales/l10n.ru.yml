@@ -1,0 +1,25 @@
+i18n:
+  ru-RU:
+    l10n:
+      # Custom formats. If you do translation - make sure to override ALL root
+      # names (variations of the same format are not mandatory)
+      =date_formats:
+        date: '%d %b %Y'
+        time: '%H:%M'
+        datetime: '%d %B %Y, %H:%M'
+
+        compact:
+          default:  '%d %b %Y'
+          past_d:   '%H:%M'
+          future_d: '%H:%M'
+
+        relative:
+          default:  '%d %b %Y'
+          now:      'Сейчас'
+          # (past|future)_(60s|60m|24h|d|1d|2d)
+          past_60s: '#{seconds} сек. назад'
+          past_60m: '#{minutes} мин. назад'
+          past_24h: '#{hours} ((час|часа|часов)):hours назад'
+          past_d:   '%H:%M'
+          past_1d:  'Вчера'
+          future_d: '%H:%M'
