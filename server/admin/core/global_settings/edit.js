@@ -40,19 +40,20 @@ module.exports = function (N, apiPath) {
         return;
       }
 
-      if (_.isFunction(schema.values)) {
-        // If schema `values` is a function, we need to compute it.
-        schema = _.clone(schema); // Keep original schema untouched.
-        schema.values(function (err, values) {
-          schema.values = values; // Replace the function with computed values.
-          env.res.setting_schemas[name] = schema;
-          next(err);
-        });
-      } else {
-        // Otherwise it's a static schema - just expose it as is.
+      // Expose static schemas as is
+      if (!_.isFunction(schema.values)) {
         env.res.setting_schemas[name] = schema;
         next();
+        return;
       }
+
+      // If schema `values` is a function, we need to compute it.
+      schema = _.clone(schema); // Keep original schema untouched.
+      schema.values(function (err, values) {
+        schema.values = values; // Replace the function with computed values.
+        env.res.setting_schemas[name] = schema;
+        next(err);
+      });
     }, callback);
   });
 
