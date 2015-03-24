@@ -9,17 +9,23 @@ i18n:
         datetime: '%d %B %Y, %H:%M'
 
         compact:
-          default:  '%d %b %Y'
+          default:  '=%b %Y'
           past_d:   '%H:%M'
+          past_Y:   '%d %b'
           future_d: '%H:%M'
+          future_Y: '%d %b'
 
         relative:
-          default:  '%d %b %Y'
+          default:  '%=b %Y'
           now:      'Right now'
           # (now|past|future)+ [ _(60s|60m|24h|d|1d|30d|365d) ]
-          past_60s: '#{seconds} sec. ago'
-          past_60m: '#{minutes} min. ago'
-          past_24h: '#{hours} hr. ago'
-          past_d:   '%H:%M'
-          past_1d:  'Yesterday'
+          past_60s: '#{seconds}s'
+          past_60m: '#{minutes}m'
+          past_24h: '#{hours}h'
+          # past_d:   '%H:%M'
+          # past_1d:  'Вчера'
+          past_7d:  '#{days}d'
+          #past_M:   '%d %b'
+          past_Y:   '%d %b'
           future_d: '%H:%M'
+          future_Y: '%d %b'
