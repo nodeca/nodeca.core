@@ -1,4 +1,4 @@
-// Register `date` helper
+// Register `date` & `timetag` helpers
 //
 'use strict';
 
@@ -28,6 +28,16 @@ function date_helper(date, formatName) {
 }
 
 
+// Generates <time> tag with given date and format
+//
+function timetag_helper(date, formatName) {
+  return '<time datetime="' + date_helper(date, 'iso') + '" ' +
+         ' title="' + date_helper(date, 'datetime') + '">' +
+         date_helper(date, formatName) + '</time>';
+}
+
+
 N.wire.once('init:assets', function avatar_helper_register() {
-  N.runtime.render.helpers.date = date_helper;
+  N.runtime.render.helpers.date    = date_helper;
+  N.runtime.render.helpers.timetag = timetag_helper;
 });
