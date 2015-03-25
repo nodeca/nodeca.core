@@ -24,10 +24,3 @@ setting_schemas:
       category_key: general_common
       type: number
       default: 168
-
-    general_login_expire_days:
-      priority: 40
-      group_key: general
-      category_key: general_common
-      type: number
-      default: 7

@@ -18,9 +18,6 @@ i18n:
           general_session_expire_hours: Session expire time (hours)
           general_session_expire_hours_help: Session store period since last visit.
 
-          general_login_expire_days: Login expire time (days)
-          general_login_expire_days_help: Force user to relogin after this period. 0 - never expire.
-
           general_cookies_domain: Cookies domain
           general_cookies_domain_help: Leave empty to auto-detect. (when site use single domain)
 
