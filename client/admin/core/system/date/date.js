@@ -1,4 +1,4 @@
-// Register `date` & `timetag` helpers
+// Register `date` & `timetag` helpers and live update
 //
 'use strict';
 
@@ -31,13 +31,34 @@ function date_helper(date, formatName) {
 // Generates <time> tag with given date and format
 //
 function timetag_helper(date, formatName) {
-  return '<time datetime="' + date_helper(date, 'iso') + '" ' +
+  return '<time datetime="' + date_helper(date, 'iso') + '"' +
+         ' data-format="' + formatName + '"' +
          ' title="' + date_helper(date, 'datetime') + '">' +
-         date_helper(date, formatName) + '</time>';
+         date_helper(date, formatName) +
+         '</time>';
 }
 
 
 N.wire.once('init:assets', function avatar_helper_register() {
   N.runtime.render.helpers.date    = date_helper;
   N.runtime.render.helpers.timetag = timetag_helper;
+});
+
+
+N.wire.once('navigate.done', function setup_time_live_update() {
+  setInterval(function time_live_update() {
+    $('time').each(function () {
+      var $el = $(this),
+          format = $el.data('format'),
+          date   = $el.attr('datetime');
+
+      if (!format || !date) { return; }
+
+      var text = date_helper(date, format);
+
+      if ($el.html() === text) { return; }
+
+      $el.html(text);
+    });
+  }, 1000);
 });
