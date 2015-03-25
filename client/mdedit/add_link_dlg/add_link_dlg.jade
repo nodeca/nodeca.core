@@ -1,5 +1,5 @@
 .modal.fade(tabindex='-1' role='dialog' aria-hidden='true')
-  .modal-dialog
+  form.modal-dialog(onsubmit="return false;")
     .modal-content
       .modal-header
         button.close(type='button' tabindex='-1' data-dismiss='modal') &times;
@@ -12,4 +12,4 @@
         )
       .modal-footer
         button.btn.btn-default(type='button' tabindex='2' data-dismiss='modal')= self.t('cancel')
-        button.add-link-dialog__apply.btn.btn-primary(type='submit' tabindex='3')= self.t('apply')
+        button.add-link-dialog__apply.btn.btn-primary(type='submit' tabindex='3')= self.t('ok')

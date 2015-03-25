@@ -2,5 +2,4 @@ en-US:
   title: Add link
   input_desc: http://example.com/
   cancel: Cancel
-  apply: OK
-  description: enter link description here
+  ok: OK

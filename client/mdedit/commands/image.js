@@ -21,14 +21,17 @@ N.wire.once('init:mdedit', function () {
 
       $linkDialog.modal('hide');
 
+      // Do nothing on empty input
+      if (!url) { return; }
+
       if (range.end.column === range.start.column && range.end.row === range.start.row) {
         document.insert(range.end, tpl({
-          alt: t('@mdedit.add_image_dlg.alt'),
+          alt: '',
           url: url
         }));
       } else {
         document.replace(range, tpl({
-          alt: editor.getSession().getTextRange(range),
+          alt: '',
           url: url
         }));
       }

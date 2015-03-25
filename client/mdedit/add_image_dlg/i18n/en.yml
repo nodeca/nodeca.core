@@ -2,5 +2,4 @@ en-US:
   title: Add image
   input_desc: http://example.com/example.jpg
   cancel: Cancel
-  apply: OK
-  alt: enter image alt text
+  ok: OK

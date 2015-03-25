@@ -21,9 +21,12 @@ N.wire.once('init:mdedit', function () {
 
       $linkDialog.modal('hide');
 
+      // Do nothing on empty input
+      if (!url) { return; }
+
       if (range.end.column === range.start.column && range.end.row === range.start.row) {
         document.insert(range.end, tpl({
-          desc: t('@mdedit.add_link_dlg.description'),
+          desc: '',
           url: url
         }));
       } else {
