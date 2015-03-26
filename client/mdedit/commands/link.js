@@ -5,11 +5,17 @@ var _ = require('lodash');
 N.wire.once('init:mdedit', function () {
   N.MDEdit.prototype.commands.cmdLink = function (editor) {
     var range = editor.getSelectionRange();
+    var textSelected = !(range.end.column === range.start.column && range.end.row === range.start.row);
     var document = editor.getSession().getDocument();
     var $linkDialog = $(N.runtime.render('mdedit.add_link_dlg'));
     var tpl = _.template('[<%= desc %>](<%= url %>)');
 
     $('body').append($linkDialog);
+
+    if (textSelected) {
+      $linkDialog.addClass('add-link-dialog__m-no-text');
+    }
+
     $linkDialog.modal('show');
 
     $linkDialog.on('hidden.bs.modal', function () {
@@ -17,21 +23,22 @@ N.wire.once('init:mdedit', function () {
     });
 
     $linkDialog.find('.add-link-dialog__apply').click(function () {
-      var url = $linkDialog.find('.add-link-dialog__input').val();
+      var url = $linkDialog.find('.add-link-dialog__link').val();
+      var text = $linkDialog.find('.add-link-dialog__text').val();
 
       $linkDialog.modal('hide');
 
       // Do nothing on empty input
-      if (!url) { return; }
+      if (!url || (!textSelected && !text)) { return; }
 
-      if (range.end.column === range.start.column && range.end.row === range.start.row) {
-        document.insert(range.end, tpl({
-          desc: '',
+      if (textSelected) {
+        document.replace(range, tpl({
+          desc: editor.getSession().getTextRange(range),
           url: url
         }));
       } else {
-        document.replace(range, tpl({
-          desc: editor.getSession().getTextRange(range),
+        document.insert(range.end, tpl({
+          desc: text,
           url: url
         }));
       }

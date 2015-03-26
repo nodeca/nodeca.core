@@ -1,15 +1,22 @@
-.modal.fade(tabindex='-1' role='dialog' aria-hidden='true')
+.add-link-dialog.modal.fade(tabindex='-1' role='dialog' aria-hidden='true')
   form.modal-dialog(onsubmit="return false;")
     .modal-content
       .modal-header
         button.close(type='button' tabindex='-1' data-dismiss='modal') &times;
         h4.modal-title= self.t('title')
       .modal-body
-        input.add-link-dialog__input.form-control(
-          type='text'
-          tabindex='1'
-          placeholder=self.t('input_desc')
-        )
+        .form-group
+          input.add-link-dialog__text.form-control(
+            type='text'
+            tabindex='1'
+            placeholder=self.t('text_desc')
+          )
+        .form-group
+          input.add-link-dialog__link.form-control(
+            type='text'
+            tabindex='1'
+            placeholder=self.t('link_desc')
+          )
       .modal-footer
         button.btn.btn-default(type='button' tabindex='2' data-dismiss='modal')= self.t('cancel')
         button.add-link-dialog__apply.btn.btn-primary(type='submit' tabindex='3')= self.t('ok')

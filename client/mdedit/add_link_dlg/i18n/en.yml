@@ -1,5 +1,6 @@
 en-US:
   title: Add link
-  input_desc: http://example.com/
+  text_desc: Link text
+  link_desc: http://example.com/
   cancel: Cancel
   ok: OK
