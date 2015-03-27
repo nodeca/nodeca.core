@@ -24,6 +24,17 @@
     }
   }
 
+  // Simple cross-browser replacement for `Array.reduce`
+  function reduce(array, iterator, value) {
+    var index, length;
+
+    for (index = 0, length = array.length; index < length; index += 1) {
+      value = iterator(value, array[index]);
+    }
+
+    return value;
+  }
+
   function isFunction(object) {
     return '[object Function]' === Object.prototype.toString.call(object);
   }
@@ -201,19 +212,19 @@
   NodecaLoader.registerClientModule = registerClientModule;
 
   //
-  // Configure `bag.js loader
+  // Configure `bag.js` loader
   //
   var bag = new window.Bag({
     timeout: 20000,
     stores: [ 'indexeddb', 'websql' ]
   });
 
-  // Load a package with all of associated assets ans dependences.
+  // Load a package with all of its associated assets and dependencies.
   // `preload` parameter is an optional array of URLs which are needed to load
   // before the given package.
   function loadAssets(pkgName, preload, callback) {
-    var resources;
-    var sheduled = {};
+    var resources = [];
+    var scheduled = {};
 
     if (isFunction(preload)) {
       callback = preload;
@@ -225,23 +236,36 @@
       return;
     }
 
-    // Copy the preload array to allow pushing without side-effects.
-    resources = preload ? preload.slice(0) : [];
+    forEach(assets[pkgName].packagesQueue.slice(0).reverse(), function (dependency) {
+      var alreadyLoaded, pkgDist = assets[dependency];
 
-    forEach(assets[pkgName].packagesQueue, function (dependency) {
-      var pkgDist = assets[dependency];
+      if (pkgDist.css.length) {
+        alreadyLoaded = reduce(pkgDist.css, function (acc, css) {
+          return acc || loaded[css] || scheduled[css];
+        }, false);
 
-      if (pkgDist.css && !loaded[pkgDist.css] && !sheduled[pkgDist.css]) {
-        resources.push(pkgDist.css);
-        sheduled[pkgDist.css] = true;
+        if (!alreadyLoaded) {
+          resources.unshift(pkgDist.css[0]);
+          scheduled[pkgDist.css[0]] = true;
+        }
       }
 
-      if (pkgDist.js && !loaded[pkgDist.js] && !sheduled[pkgDist.js]) {
-        resources.push(pkgDist.js);
-        sheduled[pkgDist.js] = true;
+      if (pkgDist.js.length) {
+        alreadyLoaded = reduce(pkgDist.js, function (acc, js) {
+          return acc || loaded[js] || scheduled[js];
+        }, false);
+
+        if (!alreadyLoaded) {
+          resources.unshift(pkgDist.js[0]);
+          scheduled[pkgDist.js[0]] = true;
+        }
       }
     });
 
+    // Copy the preload array to allow pushing without side-effects.
+    if (preload) {
+      resources = preload.concat(resources);
+    }
 
     if (resources.length > 0) {
 
@@ -299,9 +323,9 @@
     // Mark all stylesheets of the given package as loaded, since they are
     // included to head of the page.
     forEach(assets[pkgName].packagesQueue, function (dependency) {
-      if (assets[dependency].css) {
-        loaded[assets[dependency].css] = true;
-      }
+      forEach(assets[dependency].css, function (file) {
+        loaded[file] = true;
+      });
     });
 
     loadAssets(pkgName, shims, function () {
