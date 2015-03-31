@@ -60,7 +60,7 @@ function MDEdit(options) {
 
   this.__editorId__ = editorId++;
 
-  $editorArea.append(N.runtime.render('mdedit', {
+  $editorArea.empty().append(N.runtime.render('mdedit', {
     editorId: this.__editorId__
   }));
 
