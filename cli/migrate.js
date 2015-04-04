@@ -90,9 +90,9 @@ module.exports.run = function (N, args, callback) {
 
           try {
             up = require(migration.filename).up;
-          } catch (err) {
+          } catch (e) {
             console.log('FAILED');
-            next(err);
+            next(e);
             return;
           }
 

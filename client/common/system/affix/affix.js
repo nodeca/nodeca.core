@@ -32,7 +32,7 @@ N.wire.on('navigate.done', function affix_init() {
 
     var params = $el.data('affix') || {};
 
-    var position = (params.bottom !== undefined) ? 'bottom' : 'top';
+    var position = (typeof params.bottom !== 'undefined') ? 'bottom' : 'top';
     var offset = (position === 'top') ? params.top || 0 : params.bottom || 0;
     var wireChannel = params.wire;
     var throttle = params.throttle || 50;
