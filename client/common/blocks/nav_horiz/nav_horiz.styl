@@ -23,6 +23,18 @@
 .navbar-nav li:hover a:after
   opacity 1
 
+// Show secondary navbar if and only if m-secondary modifier is present
+.navbar
+  .navbar__secondary
+    display none
+
+.navbar__m-secondary
+  .navbar__primary
+    display none
+
+  .navbar__secondary
+    display block
+
 // Show navbar dropdowns on hover, instead of click
 //
 @media (min-width: gridFloatBreakpoint)
