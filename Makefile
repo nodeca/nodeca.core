@@ -21,7 +21,7 @@ help:
 
 
 lint:
-	cd ../.. && NODECA_APP_PATH=./node_modules/${NPM_PACKAGE} $(MAKE) eslint
+	cd ../.. && NODECA_APP_PATH=./node_modules/${NPM_PACKAGE} $(MAKE) lint
 
 
 test: lint
@@ -35,7 +35,7 @@ test-ci:
 	cp -r . ${TMP_PATH}/node_modules/${NPM_PACKAGE}
 	cd ${TMP_PATH} && $(MAKE) deps-ci
 	cd ${TMP_PATH} && npm install
-	cd ${TMP_PATH} && NODECA_APP_PATH=./node_modules/${NPM_PACKAGE} $(MAKE) eslint
+	cd ${TMP_PATH} && NODECA_APP_PATH=./node_modules/${NPM_PACKAGE} $(MAKE) lint
 	cd ${TMP_PATH} && NODECA_APP=${NPM_PACKAGE} $(MAKE) test
 	rm -rf ${TMP_PATH}
 
