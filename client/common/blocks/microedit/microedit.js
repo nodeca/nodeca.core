@@ -35,7 +35,7 @@ function destroy(callback) {
     $form = null;
     params = null;
 
-    if (typeof(callback) === 'function') {
+    if (typeof callback === 'function') {
       callback();
     }
 
@@ -61,7 +61,7 @@ N.wire.once('common.blocks.microedit', function microedit_once() {
         .find('.microedit__input-container')
         .addClass('has-error')
         .find('.microedit__error')
-        .text((typeof(err) === 'string') ? err : '');
+        .text((typeof err === 'string') ? err : '');
     });
   });
 });
@@ -77,7 +77,7 @@ N.wire.on('common.blocks.microedit', function microedit_init(data, callback) {
   var $input = $form.find('.microedit__input');
 
   $input
-    .blur(function(e) {
+    .blur(function (e) {
       if (e.relatedTarget === $form.find('.btn-primary').get(0)) {
         $input.focus();
         return;
@@ -96,7 +96,7 @@ N.wire.on('common.blocks.microedit', function microedit_init(data, callback) {
 
   $form.fadeOut(0);
   $elem.fadeOut('fast', function () {
-    $form.fadeIn('fast', function() {
+    $form.fadeIn('fast', function () {
       $input.focus();
     });
   });

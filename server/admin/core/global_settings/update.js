@@ -7,8 +7,8 @@ var _ = require('lodash');
 module.exports = function (N, apiPath) {
   N.validate(apiPath, {
     settings: {
-      type: 'object'
-    , required: true
+      type: 'object',
+      required: true
     }
   });
 

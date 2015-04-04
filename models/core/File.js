@@ -132,7 +132,7 @@ module.exports = function (N, collectionName) {
         gfs.files.find({ filename: pattern }).toArray(function (err, files) {
           if (err) { return callback(err); }
 
-          _.forEach(files, function(file) {
+          _.forEach(files, function (file) {
             gfs.remove({ _id: file._id }, function () {}); // don't wait
           });
 

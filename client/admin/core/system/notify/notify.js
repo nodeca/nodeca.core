@@ -22,19 +22,19 @@ var DEFAULT_TYPE = 'error';
 
 var DEFAULT_OPTIONS = {
   info: {
-    closable: false
-  , autohide: 5000
-  , css:      'info'
-  }
-, warning: {
-    closable: false
-  , autohide: 5000
-  , css:      'warning'
-  }
-, error: {
-    closable: false
-  , autohide: 10000
-  , css:      'danger'
+    closable: false,
+    autohide: 5000,
+    css:      'info'
+  },
+  warning: {
+    closable: false,
+    autohide: 5000,
+    css:      'warning'
+  },
+  error: {
+    closable: false,
+    autohide: 10000,
+    css:      'danger'
   }
 };
 

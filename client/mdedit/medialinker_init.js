@@ -10,7 +10,7 @@ var Medialinker = require('nodeca.core/lib/parser/medialinker');
 var config = '$$ JSON.stringify(N.config.medialinks) $$';
 
 N.wire.once('init:assets', function () {
-  N.medialinker = _.memoize(function(configKey) {
+  N.medialinker = _.memoize(function (configKey) {
     return new Medialinker(config.providers, config[configKey], true);
   });
 });

@@ -69,10 +69,10 @@
   // Returns route match data for the given method (e.g. GET) on the given URL
   // or null if none is found. Requires N to be initialized.
   function findRoute(url, method) {
-    var matchArray = N.router.matchAll(url)
-      , match
-      , index
-      , length;
+    var matchArray = N.router.matchAll(url),
+        match,
+        index,
+        length;
 
     for (index = 0, length = matchArray.length; index < length; index += 1) {
       match = matchArray[index];
@@ -98,10 +98,10 @@
   function registerNodeModule(path, func, deps) {
     // Don't overwrite
     nodeModules[path] = nodeModules[path] || {
-      initialized: false
-    , func: func
-    , internal: { exports: {} }
-    , dependencies: deps
+      initialized: false,
+      func: func,
+      internal: { exports: {} },
+      dependencies: deps
     };
   }
 
@@ -128,13 +128,12 @@
     // If it's a first require of the given module, initialize it first.
     if (!module.initialized) {
       module.func.call(
-        window // this object
-      //, N
-      , requireNodeModule
-      , module.internal
-      , module.internal.exports
-      , module.dependencies
-      , nodeModules
+        window, // this object
+        requireNodeModule,
+        module.internal,
+        module.internal.exports,
+        module.dependencies,
+        nodeModules
       );
       module.initialized = true;
     }
@@ -152,9 +151,9 @@
 
   function registerClientModule(apiPath, func) {
     clientModules[apiPath] = {
-      initialized: false
-    , func: func
-    , internal: { exports: {}, apiPath: apiPath }
+      initialized: false,
+      func: func,
+      internal: { exports: {}, apiPath: apiPath }
     };
   }
 
@@ -179,12 +178,12 @@
 
     // Execute the module's `func` function. It will populate the exports.
     module.func.call(
-      window // this object
-    , N
-    , requireNodeModule
-    , module.internal.exports
-    , module.internal
-    , translationHelper
+      window, // this object
+      N,
+      requireNodeModule,
+      module.internal.exports,
+      module.internal,
+      translationHelper
     );
   }
 
@@ -270,7 +269,7 @@
     if (resources.length > 0) {
 
       var res_list = [];
-      forEach(resources, function(url) {
+      forEach(resources, function (url) {
         res_list.push({
           url: url,
           // storage key = file path without hash
@@ -278,13 +277,13 @@
         });
       });
 
-      bag.require(res_list, function(err/*, data*/) {
+      bag.require(res_list, function (err/*, data*/) {
         if (err) {
           alert('Asset load error (bag.js): ' + err);
           return;
         }
 
-        forEach(resources, function(url) {
+        forEach(resources, function (url) {
           loaded[url] = true;
         });
 
@@ -336,8 +335,8 @@
       }
 
       // First try to match full URL, if not matched - try without anchor.
-      var baseUrl = location.protocol + '//' + location.host + location.pathname
-        , route   = findRoute(baseUrl + location.hash, 'get') ||
+      var baseUrl = location.protocol + '//' + location.host + location.pathname,
+          route   = findRoute(baseUrl + location.hash, 'get') ||
                     findRoute(baseUrl, 'get');
 
       if (!route) {

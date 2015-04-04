@@ -10,3 +10,7 @@ globals:
   require: false
   t: false
   NodecaLoader: false
+
+rules:
+  strict:               [ 2, function ]
+  spaced-line-comment:  0

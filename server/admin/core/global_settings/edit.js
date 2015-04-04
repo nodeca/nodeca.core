@@ -8,8 +8,8 @@ var async = require('async');
 module.exports = function (N, apiPath) {
   N.validate(apiPath, {
     group: {
-      type: 'string'
-    , required: false
+      type: 'string',
+      required: false
     }
   });
 

@@ -36,9 +36,9 @@ module.exports = function (N) {
 
   var fetchGlobalSettingsCached = memoizee(fetchGlobalSettings, {
     // Memoizee options. Revalidate cache after each 10 sec.
-    async:     true
-  , maxAge:    10000
-  , primitive: true
+    async:     true,
+    maxAge:    10000,
+    primitive: true
   });
 
 
@@ -54,8 +54,8 @@ module.exports = function (N) {
 
         callback(null, _.pick(settings, keys));
       });
-    }
-  , set: function (values, params, callback) {
+    },
+    set: function (values, params, callback) {
       GlobalSettings.findOne().exec(function (err, settings) {
         if (err) {
           callback(err);

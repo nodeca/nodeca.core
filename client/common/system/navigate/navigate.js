@@ -27,7 +27,7 @@ var fsm = StateMachine.create({
     { name: 'stateChange',   from: 'IDLE',                  to: 'BACK_FORWARD' },
     // link click
     { name: 'link',          from: 'IDLE',                  to: 'LOAD' },
-    /// fake event to remove status check
+    // fake event to remove status check
     { name: 'terminate',     from: 'IDLE',                  to: 'IDLE' },
 
     // page data is in cache
@@ -376,7 +376,7 @@ N.wire.on('navigate.get_page_raw', function get_page_raw(params, callback) {
   }
 
   // We should load data from server
-  N.io.rpc(lastPageData.apiPath, lastPageData.params).done(function(data) {
+  N.io.rpc(lastPageData.apiPath, lastPageData.params).done(function (data) {
     // Save response in local cache
     lastPageData.locals = data;
 

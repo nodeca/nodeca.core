@@ -73,8 +73,8 @@ N.wire.on('navigate.done:' + module.apiPath, function global_settings_edit_init(
 
   // Collect category keys and prepare setting models.
   _.forEach(inputSchemas, function (schema, name) {
-    var key   = schema.category_key
-      , model = new SettingModel(name, schema, inputValues[name]);
+    var key   = schema.category_key,
+        model = new SettingModel(name, schema, inputValues[name]);
 
     if (categoryKeys.indexOf(key) < 0) {
       categoryKeys.push(key);

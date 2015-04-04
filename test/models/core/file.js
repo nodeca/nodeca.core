@@ -18,7 +18,7 @@ describe('File model test', function () {
     file.put(fileName, { metadata: { origName: fileBase } }, function (err, info) {
       if (err) { done(err); return; }
 
-      file.getInfo(info._id, function(err, i) {
+      file.getInfo(info._id, function (err, i) {
         if (err) { done(err); return; }
 
         assert.equal(i.contentType, 'image/jpeg');
@@ -35,7 +35,7 @@ describe('File model test', function () {
     file.put(stream, { metadata: { origName: fileBase } }, function (err, info) {
       if (err) { done(err); return; }
 
-      file.getInfo(info._id, function(err, i) {
+      file.getInfo(info._id, function (err, i) {
         if (err) { done(err); return; }
 
         assert.equal(i.contentType, 'image/jpeg');
@@ -51,7 +51,7 @@ describe('File model test', function () {
     file.put(fileContent, { metadata: { origName: fileBase } }, function (err, info) {
       if (err) { done(err); return; }
 
-      file.getInfo(info._id, function(err, i) {
+      file.getInfo(info._id, function (err, i) {
         if (err) { done(err); return; }
 
         assert.equal(i.contentType, 'image/jpeg');

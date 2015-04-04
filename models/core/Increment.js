@@ -9,13 +9,13 @@ module.exports = function (N, collectionName) {
 
   var Increment = new Schema({
 
-    key          : String    // Counter name
-  , value        : Number    // Counter last value
+    key:    String,   // Counter name
+    value:  Number    // Counter last value
   });
 
   Increment.statics.next = function next(name, callback) {
     this.findOneAndUpdate({ key: name }, { $inc: { value: 1 } }, { 'new': true, upsert: true },
-      function(err, counter) {
+      function (err, counter) {
         if (err) {
           callback(err, null);
           return;

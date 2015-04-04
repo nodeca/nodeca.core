@@ -12,14 +12,14 @@ var ko = require('knockout');
 
 
 ko.extenders.dirty = function (target, isInitiallyDirty) {
-  var _initialState     = ko.observable(JSON.stringify(target()))
-    , _isInitiallyDirty = ko.observable(isInitiallyDirty);
+  var _initialState     = ko.observable(JSON.stringify(target())),
+      _isInitiallyDirty = ko.observable(isInitiallyDirty);
 
-  target.isDirty = ko.computed(function() {
+  target.isDirty = ko.computed(function () {
     return _isInitiallyDirty() || _initialState() !== JSON.stringify(target());
   });
 
-  target.markClean = function() {
+  target.markClean = function () {
     _initialState(JSON.stringify(target()));
     _isInitiallyDirty(false);
   };

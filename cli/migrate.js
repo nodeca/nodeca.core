@@ -10,7 +10,6 @@ var async = require('async');
 ////////////////////////////////////////////////////////////////////////////////
 
 
-//exports.commandName       = 'migrate';
 exports.parserParameters  = {
   addHelp:      true,
   help:         'run migrations',

@@ -99,7 +99,7 @@ module.exports.run = function (N, args, callback) {
   var env = N.enviroment;
 
   function get_app_path(app_name) {
-    var app = _.find(N.apps, function(app) {
+    var app = _.find(N.apps, function (app) {
       return app_name === app.name;
     });
     return app ? app.root : null;
@@ -149,8 +149,7 @@ module.exports.run = function (N, args, callback) {
       var apps;
       if (app_name) {
         apps = [ { name: app_name, root: get_app_path(app_name) } ];
-      }
-      else {
+      } else {
         apps = N.apps;
       }
 
@@ -180,7 +179,7 @@ module.exports.run = function (N, args, callback) {
         }
 
         // check that specified seed exists
-        _.forEach(args.seed_numbers, function(number) {
+        _.forEach(args.seed_numbers, function (number) {
           if (!seed_list[number - 1]) {
             console.log(format('Seed number %d not exists', number));
             process.exit(1);
@@ -188,7 +187,7 @@ module.exports.run = function (N, args, callback) {
         });
 
         // Execute seeds
-        async.eachSeries(args.seed_numbers, function(seed_number, next) {
+        async.eachSeries(args.seed_numbers, function (seed_number, next) {
           seed_run(N, seed_list[seed_number - 1].name, seed_list[seed_number - 1].seed_path, next);
         }, function (err) {
           if (err) { return callback(err); }
@@ -204,7 +203,7 @@ module.exports.run = function (N, args, callback) {
       //
       console.log('Available seeds:\n');
 
-      _.forEach(seed_list, function(seed, idx) {
+      _.forEach(seed_list, function (seed, idx) {
         console.log(format('  %d. %s: %s', idx + 1, seed.name, path.basename(seed.seed_path)));
       });
 
