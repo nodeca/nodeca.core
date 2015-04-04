@@ -17,7 +17,7 @@ N.wire.on('io.complete', function debug_timeline(info) {
   var $timeline = $('#debug_timeline');
 
   // Skip if there is no #debug_timeline
-  if (0 === $timeline.length) {
+  if ($timeline.length === 0) {
     return;
   }
 

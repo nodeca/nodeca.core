@@ -45,7 +45,7 @@ var tracker = {};
 function Notification(options) {
   if (!options) {
     options = {};
-  } else if ('string' === typeof options) {
+  } else if (typeof options === 'string') {
     options = { message: options };
   }
 

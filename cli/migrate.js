@@ -58,7 +58,7 @@ module.exports.run = function (N, args, callback) {
 
         outstandingMigrations = Migration.checkMigrations(N, currentMigrations);
 
-        if (0 === outstandingMigrations.length) {
+        if (outstandingMigrations.length === 0) {
           console.log(args.all  ? 'Already up-to-date.'
                                 : 'You have no outstanding migrations');
           process.exit(0);

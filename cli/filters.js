@@ -63,7 +63,7 @@ module.exports.run = function (N, args, callback) {
 
       _.forEach(N.wire.stat(), function (hook) {
         // try to filter by pattern, if set
-        if (args.mask && (-1 === hook.name.indexOf(args.mask))) {
+        if (args.mask && (hook.name.indexOf(args.mask) === -1)) {
           return;
         }
 

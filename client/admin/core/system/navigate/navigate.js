@@ -69,7 +69,7 @@ function normalizeURL(url) {
 function parseOptions(options) {
   var match, href, anchor, apiPath, params, errorReport;
 
-  if ('string' === typeof options) {
+  if (typeof options === 'string') {
     options = { href: options };
   }
 
@@ -110,7 +110,7 @@ function parseOptions(options) {
   }
 
   // Add anchor hash-prefix if not exists.
-  if (anchor && '#' !== anchor.charAt(0)) {
+  if (anchor && anchor.charAt(0) !== '#') {
     anchor = '#' + anchor;
   }
 
@@ -310,7 +310,7 @@ fsm.onLOAD = function (event, from, to, params) {
     }
 
     // Redirect url
-    if ('string' === typeof result) {
+    if (typeof result === 'string') {
 
       // Go back to `IDLE` and to `LOAD` again, otherwise `onLOAD` will not emitted
       fsm.terminate();
@@ -439,11 +439,11 @@ N.wire.once('navigate.done', { priority: 999 }, function navigate_click_handler(
     }
 
     // Continue as normal for cmd clicks etc
-    if (2 === event.which || event.metaKey) {
+    if (event.which === 2 || event.metaKey) {
       return;
     }
 
-    if ('#' === $this.attr('href')) {
+    if ($this.attr('href') === '#') {
       // Prevent clicks on special "button"-links.
       event.preventDefault();
       return;

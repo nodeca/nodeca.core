@@ -18,7 +18,7 @@ function submit() {
 
   settingModels.forEach(function (setting) {
     if (setting.value.isDirty()) {
-      if ('number' === setting.type) {
+      if (setting.type === 'number') {
         payload[setting.name] = Number(setting.value());
       } else {
         payload[setting.name] = setting.value();
@@ -53,7 +53,7 @@ function SettingModel(name, schema, value) {
     };
   });
 
-  if ('combobox' === schema.type) {
+  if (schema.type === 'combobox') {
     this.value = ko.observableArray(value).extend({ dirty: false });
   } else {
     this.value = ko.observable(value).extend({ dirty: false });

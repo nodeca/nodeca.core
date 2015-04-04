@@ -65,7 +65,7 @@ module.exports = function (N) {
         settings = settings || new GlobalSettings();
 
         _.forEach(values, function (options, name) {
-          if (null === options) {
+          if (options === null) {
             delete settings.data[name];
           } else {
             settings.data[name] = options.value;

@@ -29,7 +29,7 @@ module.exports = function (N, apiPath) {
     //
 
     _.forEach(N.config.setting_groups, function (config, name) {
-      if (null === config.parent) {
+      if (config.parent === null) {
         res.tabs.push({ name: name, priority: config.priority });
         res.groups[name] = [];
       }

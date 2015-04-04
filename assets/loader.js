@@ -36,7 +36,7 @@
   }
 
   function isFunction(object) {
-    return '[object Function]' === Object.prototype.toString.call(object);
+    return Object.prototype.toString.call(object) === '[object Function]';
   }
 
   // Cached non-operable function.
@@ -161,7 +161,7 @@
   // Initialize client module. Used once per module.
   function initSingleClientModule(module) {
     function resolveI18nPath(path) {
-      if ('@' === path.charAt(0)) {
+      if (path.charAt(0) === '@') {
         return path.slice(1);
       }
       return module.internal.apiPath + '.' + path;

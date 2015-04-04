@@ -102,7 +102,7 @@ module.exports.run = function (N, args, callback) {
               return;
             }
 
-            if ((/\.js$/).test(file) && '.' !== path.basename(file)[0]) {
+            if ((/\.js$/).test(file) && path.basename(file)[0] !== '.') {
               mocha.files.push(file);
             }
           });
