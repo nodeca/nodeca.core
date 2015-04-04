@@ -235,10 +235,10 @@ module.exports = function (N, collectionName) {
 
     // connect to database
     var options = {
-      server  : {
+      server: {
         socketOptions: { keepAlive: 1 }
       },
-      replset : {
+      replset: {
         socketOptions: { keepAlive: 1 }
       }
     };
