@@ -13,14 +13,14 @@ describe('Queue', function () {
     q2 = new Queue(TEST.N.redis);
 
     q1.on('error', function (err) {
-      if (err === 'test err') {
+      if (err instanceof Queue.QueueError) {
         return;
       }
       throw err;
     });
 
     q2.on('error', function (err) {
-      if (err === 'test err') {
+      if (err instanceof Queue.QueueError) {
         return;
       }
       throw err;
