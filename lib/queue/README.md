@@ -19,9 +19,11 @@
 - **PENDING** is initial state for all new chunks. Available transitions:
   - to **ACTIVE** before run `process`
 - **ACTIVE** transitions:
-  - to **ACTIVE** by watchdog, if `process` suspend
-  - to **ACTIVE** in case of error while `process` execution
+  - to **PENDING** by watchdog, if `process` suspend
+  - to **ERRORED** in case of error while `process` execution
   - to **DONE** after `process` done
+- **ERRORED** transitions:
+  - to **PENDING** after retry delay
 - **DONE** is last task state
 
 ## Redis data structure
@@ -34,5 +36,6 @@ All keys starts with prefix defined in constructor, "queue:" by default.
 - &lt;taskID&gt; (hash) - task options (type, retries, state, data)
 - &lt;taskID&gt;:chunks:pending (set)  - pending chunks IDs
 - &lt;taskID&gt;:chunks:active (zset) - active chunks IDs
+- &lt;taskID&gt;:chunks:errored (zset) - errored chunks IDs
 - &lt;taskID&gt;:chunks:done (set)  - finished chunks IDs
 - &lt;taskID&gt;:&lt;chunkID&gt; (hash) - chunk's data (retries, data, result)
