@@ -56,7 +56,7 @@ describe('Queue', function () {
       process: function (data, callback) {
         process1Chunks++;
 
-        setTimeout(callback, 700); // check interval + max drift
+        setTimeout(callback, 1000); // check interval + max drift
       }
     };
 
@@ -83,7 +83,7 @@ describe('Queue', function () {
       process: function (data, callback) {
         process2Chunks++;
 
-        setTimeout(callback, 700); // check interval + max drift
+        setTimeout(callback, 1000); // check interval + max drift
       }
     };
 
@@ -134,7 +134,7 @@ describe('Queue', function () {
   it('should remove broken chunk', function (done) {
     var worker = {
       name: 'test3',
-      retryDelay: 1, // 1 sec
+      retryDelay: 1, // 1 ms
       retry: 1,
       map: function (taskData, callback) {
         callback(null, [ 1, 2, 3 ]);
@@ -169,7 +169,7 @@ describe('Queue', function () {
 
     var worker = {
       name: 'test4',
-      retryDelay: 1, // 1 sec
+      retryDelay: 1, // 1 ms
       retry: 1,
       map: function (taskData, callback) {
         if (localCounter === 0) {
@@ -204,7 +204,7 @@ describe('Queue', function () {
 
     var worker = {
       name: 'test5',
-      retryDelay: 1, // 1 sec
+      retryDelay: 1, // 1 ms
       retry: 1,
       map: function (taskData, callback) {
         callback(null, [ 1 ]);
@@ -240,7 +240,7 @@ describe('Queue', function () {
 
     var worker = {
       name: 'test6',
-      retryDelay: 1, // 1 sec
+      retryDelay: 1, // 1 ms
       retry: 1,
       map: function (taskData, callback) {
         callback(null, [ 1 ]);
