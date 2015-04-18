@@ -4,8 +4,6 @@ var assert = require('assert');
 var Queue  = require('nodeca.core/lib/queue');
 
 describe('Queue', function () {
-  this.timeout(5000);
-
   var q1, q2;
 
   before(function (done) {

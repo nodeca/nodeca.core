@@ -9,10 +9,11 @@ var path      = require('path');
 
 
 // 3rd-party
-var _         = require('lodash');
-var Mocha     = require('mocha');
-var Browser  = require('nodeca.core/lib/test/browser');
-var fstools   = require('fs-tools');
+var _            = require('lodash');
+var Mocha        = require('mocha');
+var navit        = require('navit');
+var navitPlugins = require('nodeca.core/lib/test/navit_plugins');
+var fstools      = require('fs-tools');
 
 
 
@@ -70,7 +71,7 @@ module.exports.run = function (N, args, callback) {
         return;
       }
 
-      var mocha = new Mocha();
+      var mocha = new Mocha({ timeout: 10000 });
       var applications = N.apps;
 
       mocha.reporter('spec');
@@ -112,7 +113,7 @@ module.exports.run = function (N, args, callback) {
       // Expose N to globals for tests
       global.TEST = {
         N: N,
-        browser: new Browser()
+        browser: navit().use(navitPlugins)
       };
 
       mocha.run(function (err) {
