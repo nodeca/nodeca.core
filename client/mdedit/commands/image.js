@@ -3,7 +3,7 @@
 var _ = require('lodash');
 
 N.wire.once('init:mdedit', function () {
-  N.MDEdit.prototype.commands.cmdImage = function (editor) {
+  N.MDEdit.commands.cmdImage = function (editor) {
     var range = editor.getSelectionRange();
     var document = editor.getSession().getDocument();
     var $linkDialog = $(N.runtime.render('mdedit.add_image_dlg'));

@@ -1,8 +1,22 @@
-.mdedit(data-on-dragdrop='core.mdedit:dd_' + self.editorId).no-attachments
-  .mdedit__inner
-    .mdedit-toolbar
-    .mdedit__edit-area
+.mdedit.mdedit__m-no-attachments(data-on-dragdrop='mdedit:dd')
+  .mdedit__collapser(data-on-click='mdedit.collapse')
+    .icon.icon-collapse
+    .icon.icon-expand
+
   .mdedit__resizer
 
-  .mdedit__help!= self.t('drop_help')
-  .mdedit__attachments
+  .mdedit-header
+
+  .mdedit__body
+
+    .mdedit__editor
+      .mdedit__toolbar
+      .mdedit__edit-area
+
+    ul.mdedit-attachments
+
+    .mdedit__preview
+
+  .mdedit-controlls
+    button.btn.btn-primary(data-on-click='mdedit.submit')=self.t('submit')
+    button.btn.btn-link(data-on-click='mdedit.cancel')=self.t('cancel')

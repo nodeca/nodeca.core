@@ -1,7 +1,7 @@
 'use strict';
 
 N.wire.once('init:mdedit', function () {
-  N.MDEdit.prototype.commands.cmdBold = function (editor) {
+  N.MDEdit.commands.cmdBold = function (editor) {
     var range = editor.getSelectionRange();
     var document = editor.getSession().getDocument();
     var selection = editor.getSelection();

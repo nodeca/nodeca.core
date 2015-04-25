@@ -1,7 +1,7 @@
 'use strict';
 
 N.wire.once('init:mdedit', function () {
-  N.MDEdit.prototype.commands.cmdAttach = function () {
+  N.MDEdit.commands.cmdAttach = function () {
     // TODO: move this method to nodeca.users
 
     var self = this;

@@ -3,7 +3,7 @@
 var _ = require('lodash');
 
 N.wire.once('init:mdedit', function () {
-  N.MDEdit.prototype.commands.cmdLink = function (editor) {
+  N.MDEdit.commands.cmdLink = function (editor) {
     var range = editor.getSelectionRange();
     var textSelected = !(range.end.column === range.start.column && range.end.row === range.start.row);
     var document = editor.getSession().getDocument();

@@ -16,3 +16,5 @@ en-US:
     cut_text: enter cut text here
 
   drop_help: Drag photos to editor to upload or click <span class="icon icon-attach"></span> to select from albums
+  cancel: Cancel
+  submit: Submit

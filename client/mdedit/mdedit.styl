@@ -1,29 +1,27 @@
 @import "nodeca.core/client/common/_variables"
 
 .mdedit
+  min-height 250px
+  position fixed
+  bottom -250px
+  left 0px
+  right 0px
+  padding 0px 15px
+  background-color grayLightest
+  display flex
+  flex-direction column
   .ace_print-margin-layer
     display none
   .ace_editor
     font-size 14px
     font-family monoFontFamily
 
-
-.mdedit__inner
-  background-color #fff
-  border 1px solid grayLighter
-  border-bottom none
-  border-radius 4px 4px 0 0
-
-.mdedit__edit-area
-  min-height 150px
-  width 100%
-
 .mdedit__resizer
+  flex-grow 0
   height 9px
   background-color grayLightest
   cursor s-resize
   border-radius 0 0 4px 4px
-  margin-bottom 5px
   text-align middle
   position relative
   &:before
@@ -39,17 +37,89 @@
   &:after
     top 5px
 
-.mdedit__help
-  text-align center
-  font-size 12px
-  color grayLighter
-  display none
+.mdedit-header
+  flex-grow 0
+  margin 5px 0
 
-.no-attachments
-  .mdedit__help
-    display block
-  .mdedit__attachments
+.mdedit__body
+  display flex
+  flex-direction row
+  flex-grow 1
+  height 100%
+
+.mdedit__editor
+  display flex
+  flex-direction column
+  flex-grow 1
+  flex-basis 50%
+  background-color #fff
+  border 1px solid grayLighter
+  border-radius 4px 4px 0 0
+
+.mdedit__toolbar
+  flex-grow 0
+
+.mdedit__edit-area
+  flex-grow 1
+
+.mdedit-attachments
+  flex-grow 1
+  flex-basis 70px
+  overflow-y: auto
+  list-style none
+  padding 0 0 0 5px
+  margin 0
+
+.mdedit-attachments__item
+  position relative
+  width 100%
+  margin 5px 0
+  &:first-child
+    margin-top 0
+  &:last-child
+    margin-bottom 0
+
+.mdedit-attachments__item-image
+  width 100%
+
+.mdedit__preview
+  flex-grow 1
+  flex-basis 50%
+  font-family sansWideFontFamily
+  border 1px dashed grayLight
+  padding 10px 10px
+  border-radius 4px
+  background-color #fff
+  overflow-y: auto
+  margin-left 5px
+
+  .medialink-video__m-stub
+    background grayLightest
+    border-radius 4px
+
+.mdedit-controlls
+  flex-grow 0
+  margin 5px 0
+
+@media (max-width: screenSm - 1)
+  .mdedit__editor
+    flex-basis 100%
+  .mdedit__preview
     display none
+
+.mdedit.mdedit__m-no-attachments
+  .mdedit-attachments
+    display none
+
+.mdedit.mdedit__m-active
+  border 1px dashed grayLight
+
+.mdedit-attachments__item-remove
+  position absolute
+  top 1px
+  right 1px
+  opacity .7
+  transition opacity .2s ease
 
 .mdedit-toolbar
   border-bottom 1px solid grayLightest
@@ -71,26 +141,34 @@
     background-color grayLightest
     color grayDark
 
+    .mdedit-attachments__item-remove
+      opacity 1
+
 .mdedit-toolbar__sep
   width 1px
   height 1.2em
-  background grayLightest
+  background gray
   cursor auto
   margin 0 .4em
 
+.mdedit__collapser
+  position absolute
+  top 0
+  right 2px
+  cursor pointer
 
-.mdedit__attachments
-  margin-top 10px
+.mdedit__collapser .icon-collapse
+  display none
 
-
-.mdedit__preview
-  font-family sansWideFontFamily
-  border 1px dashed grayLight
-  margin-top 20px
-  padding 10px 10px
-  border-radius 4px
-  background-color #fff
-
-  .medialink-video__m-stub
-    background grayLightest
-    border-radius 4px
+.mdedit.mdedit__m-collapsed
+  .mdedit__resizer
+    display none
+  .mdedit__body
+    display none
+  .mdedit-controlls
+    display none
+  .mdedit__collapser
+    .icon-expand
+      display none
+    .icon-collapse
+      display block

@@ -1,21 +1,6 @@
-// Add editor class to 'N' & emit event for plugins
+// Add editor instance to 'N' & emit event for plugins
 //
-// options:
-// - editArea - CSS selector of editor container div
-// - previewArea - CSS selector of preview container div
-// - attachments - array of attachments
-// - text - source markdown text
-// - parseOptions - object with plugins config like `{ images: true, links: true, attachments: false }`
-// - onChange - event fires when `markdown` or `attachments` changed
-// - toolbar - name of toolbar config - `default` by default
-//
-// methods:
-// - setOptions - update options
-//
-// getters/setters:
-// - attachments() - array of attachments
-// - text() - user input markdown text
-//
+
 
 /*global ace*/
 
@@ -28,10 +13,8 @@ var TEXT_MARGIN = 5;
 var TOOLBAR = '$$ JSON.stringify(N.config.mdedit) $$';
 
 
-// Unique editor id to bind wire events (incremented)
-var editorId = 0;
-
-
+// Compile toolbar config
+//
 var compileToolbarConfig = _.memoize(function (name) {
   var buttonName;
 
@@ -55,44 +38,151 @@ var compileToolbarConfig = _.memoize(function (name) {
 });
 
 
-function MDEdit(options) {
-  var $editorArea = $(options.editArea);
+// Editor init
+//
+function MDEdit() {
+  this.commands = {};
+  this.__attachments__ = [];
+  this.__options__ = null;
+  this.__layout__ = null;
+  this.__minHeight__ = 0;
+}
 
-  this.__editorId__ = editorId++;
 
-  $editorArea.empty().append(N.runtime.render('mdedit', {
-    editorId: this.__editorId__
-  }));
+// Create new layout and show
+//
+// Options:
+//
+// - parseOptions (Object) - optional, object with plugins config like
+//   `{ images: true, links: true, attachments: false }`, default `{}`
+// - text (String) - optional, text, default empty string
+// - attachments (Array) - optional, attachments, default empty array
+// - toolbar (String) - optional, name of toolbar config, default `default`
+//
+// returns jQuery object
+//
+// Events:
+//
+// - `show.nd.mdedit` - before editor shown (when animation start)
+// - `shown.nd.mdedit` - on editor shown
+// - `hide.nd.mdedit` - before editor hide (when animation start)
+// - `hidden.nd.mdedit` - on editor hide
+// - `submit.nd.mdedit` - on done button press (if you want to prevent editor closing - call `event.preventDefault()`)
+// - `change.nd.mdedit` - on update preview, you can save drafts on this event
+//
+MDEdit.prototype.show = function (options) {
+  var self = this;
+  var $oldLayout = this.__layout__;
 
-  this.__preview__ = $(options.previewArea);
-  this.__editArea__ = $editorArea.find('.mdedit__edit-area');
-  this.__ace__ = ace.edit(this.__editArea__.get(0));
-  this.__toolbar__ = $editorArea.find('.mdedit-toolbar');
-  this.__attachmentsArea__ = $editorArea.find('.mdedit__attachments');
-  this.__resize__ = $editorArea.find('.mdedit__resizer');
-  this.__editorContainer__ = $editorArea.find('.mdedit');
-  this.__toolbarConfig__ = compileToolbarConfig(options.toolbar || 'default');
-  this.options = options;
+  this.__layout__ = $(N.runtime.render('mdedit'));
+  this.__options__ = _.clone(options);
+  this.__options__.toolbar = compileToolbarConfig(this.__options__.toolbar || 'default');
+  this.__options__.parseOptions = this.__options__.parseOptions || {};
 
-  this.__ace__.renderer.scrollMargin.top = TEXT_MARGIN;
-  this.__ace__.renderer.scrollMargin.bottom = TEXT_MARGIN;
+  $('body').append(this.__layout__);
 
   this.__initAce__();
   this.__initResize__();
-  this.__initAttachmentsArea__();
   this.__initToolbar__();
 
-  this.__updateToolbar__();
-
-  // Set initial value
   this.text(options.text || '');
   this.attachments(options.attachments || []);
-}
+
+  setTimeout(function () {
+    self.__layout__.trigger('show');
+    self.__layout__.animate({ bottom: 0 }, $oldLayout ? 0 : 'fast', function () {
+      self.__layout__.trigger('shown');
+
+      // Hide previous editor
+      if ($oldLayout) {
+        $oldLayout.trigger('hide');
+        $oldLayout.trigger('hidden');
+        $oldLayout.remove();
+      }
+
+      self.__ace__.resize();
+    });
+  }, 0);
+
+  return this.__layout__;
+};
+
+
+// Hide editor
+//
+MDEdit.prototype.hide = function () {
+  var self = this;
+  var $layout = this.__layout__;
+
+  if (!$layout) {
+    return;
+  }
+
+  setTimeout(function () {
+    $layout.trigger('hide');
+    $layout.animate({ bottom: -$layout.height() }, 'fast', function () {
+      self.__layout__ = null;
+      $layout.trigger('hidden');
+      $layout.remove();
+    });
+  }, 0);
+};
+
+
+// Get/set text
+//
+MDEdit.prototype.text = function (text) {
+  if (!text) {
+    return this.__ace__.getValue();
+  }
+
+  this.__ace__.setValue(text, -1);
+
+  this.__updatePreview__();
+};
+
+
+// Get/set attachments
+//
+MDEdit.prototype.attachments = function (attachments) {
+  if (!attachments) {
+    return this.__attachments__;
+  }
+
+  this.__attachments__ = attachments;
+
+  if (this.__attachments__.length === 0) {
+    this.__layout__.addClass('mdedit__m-no-attachments');
+  } else {
+    this.__layout__.removeClass('mdedit__m-no-attachments');
+  }
+
+  this.__updatePreview__();
+};
+
+
+// Get/set parse options
+//
+MDEdit.prototype.parseOptions = function (parseOptions) {
+  if (!parseOptions) {
+    return this.__options__.parseOptions;
+  }
+
+  this.__options__.parseOptions = parseOptions;
+
+  this.__initToolbar__();
+  this.__updatePreview__();
+};
 
 
 // Set initial Ace options
 //
 MDEdit.prototype.__initAce__ = function () {
+  this.__ace__ = ace.edit(this.__layout__.find('.mdedit__edit-area').get(0));
+
+  this.__ace__.renderer.scrollMargin.top = TEXT_MARGIN;
+  this.__ace__.renderer.scrollMargin.bottom = TEXT_MARGIN;
+
   var aceSession = this.__ace__.getSession();
 
   aceSession.setMode('ace/mode/markdown');
@@ -107,120 +197,22 @@ MDEdit.prototype.__initAce__ = function () {
 
   aceSession.on('change', this.__updatePreview__.bind(this));
 
-  if (this.options.onChange) {
-    aceSession.on('change', this.options.onChange);
-  }
-
   this.__ace__.focus();
-};
-
-
-// Added attachments bar event handlers
-//
-MDEdit.prototype.__initAttachmentsArea__ = function () {
-  var self = this;
-
-  N.wire.on('core.mdedit:dd_' + this.__editorId__, function mdedit_dd(data) {
-    var x0, y0, x1, y1, ex, ey, uploaderData;
-
-    switch (data.event.type) {
-      case 'dragenter':
-        self.__editorContainer__.addClass('active');
-        break;
-      case 'dragleave':
-        // 'dragleave' occurs when user move cursor over child HTML element
-        // track this situation and don't remove 'active' class
-        // http://stackoverflow.com/questions/10867506/
-        x0 = self.__editorContainer__.offset().left;
-        y0 = self.__editorContainer__.offset().top;
-        x1 = x0 + self.__editorContainer__.outerWidth();
-        y1 = y0 + self.__editorContainer__.outerHeight();
-        ex = data.event.originalEvent.pageX;
-        ey = data.event.originalEvent.pageY;
-
-        if (ex > x1 || ex < x0 || ey > y1 || ey < y0) {
-          self.__editorContainer__.removeClass('active');
-        }
-        break;
-      case 'drop':
-        self.__editorContainer__.removeClass('active');
-
-        if (data.event.dataTransfer && data.event.dataTransfer.files && data.event.dataTransfer.files.length) {
-
-          uploaderData = {
-            files: data.event.dataTransfer.files,
-            url: N.router.linkTo('users.media.upload'),
-            config: 'users.uploader_config',
-            uploaded: null
-          };
-
-          N.wire.emit('users.uploader:add', uploaderData, function () {
-            var attachments = self.attachments();
-
-            uploaderData.uploaded.forEach(function (media) {
-              attachments.unshift(_.pick(media, [ 'media_id', 'file_name', 'type' ]));
-            });
-
-            self.attachments(attachments);
-          });
-        }
-        break;
-      default:
-    }
-  });
-
-  // Remove attachment handler
-  N.wire.on('mdedit.attachments:remove', function remove_attachment(data) {
-    if (data.$this.data('editor-id') !== self.__editorId__) {
-      data.event.stopPropagation();
-      return;
-    }
-
-    var id = data.$this.data('media-id');
-    var attachments = self.attachments();
-
-    attachments = _.remove(attachments, function (val) { return val.media_id !== id; });
-    self.attachments(attachments);
-
-    self.__ace__.find(
-      new RegExp('\\!?\\[[^\\]]*\\]\\([^)]*?' + id + '[^)]*\\)', 'gm'),
-      { regExp: true }
-    );
-    self.__ace__.replaceAll('');
-
-    // Reset selection
-    self.__ace__.setValue(self.__ace__.getValue(), 1);
-
-    data.event.stopPropagation();
-  });
-
-  // Click on attachment to insert into text
-  N.wire.on('mdedit.attachments:insert', function insert_attachment(data) {
-    if (data.$this.data('editor-id') !== self.__editorId__) {
-      data.event.stopPropagation();
-      return;
-    }
-
-    var url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: data.$this.data('media-id') });
-
-    self.__ace__.insert('![](' + url + ')');
-    self.__ace__.focus();
-
-    data.event.stopPropagation();
-  });
 };
 
 
 // Add editor resize handler
 //
 MDEdit.prototype.__initResize__ = function () {
-  var minHeight = parseInt(this.__editArea__.height(), 10);
   var self = this;
   var $body = $('body');
 
-  this.__resize__.on('mousedown touchstart', function (event) {
+  self.__minHeight__ = parseInt(this.__layout__.css('minHeight'), 10);
+  self.__layout__.height(self.__minHeight__);
+
+  this.__layout__.find('.mdedit__resizer').on('mousedown touchstart', function (event) {
     var clickStart = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
-    var currentHeight = parseInt(self.__editArea__.height(), 10);
+    var currentHeight = parseInt(self.__layout__.height(), 10);
 
     $body
       .on('mouseup.nd.mdedit touchend.nd.mdedit', function () {
@@ -228,44 +220,61 @@ MDEdit.prototype.__initResize__ = function () {
       })
       .on('mousemove.nd.mdedit touchmove.nd.mdedit', _.debounce(function (event) {
         var point = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
-        var newHeight = currentHeight + (point.pageY - clickStart.pageY);
+        var newHeight = currentHeight - (point.pageY - clickStart.pageY);
 
-        self.__editArea__.height(newHeight > minHeight ? newHeight : minHeight);
+        self.__layout__.height(newHeight > self.__minHeight__ ? newHeight : self.__minHeight__);
         self.__ace__.resize();
-
       }, 20, { maxWait: 20 }));
+
+    return false;
   });
 };
 
 
-// Add toolbar click handler
+// Update attachments, preview and save draft
 //
-MDEdit.prototype.__initToolbar__ = function () {
+MDEdit.prototype.__updatePreview__ = _.debounce(function () {
   var self = this;
 
-  this.__toolbar__.on('click', '.mdedit-toolbar__item', function () {
-    var command = self.commands[$(this).data('command')].bind(self);
+  self.__layout__.trigger('change');
 
-    if (command) {
-      command(self.__ace__);
+  N.parse(
+    {
+      text: this.text(),
+      attachments: this.attachments(),
+      options: this.__options__.parseOptions
+    },
+    function (err, result) {
+      if (err) {
+        // TODO: notify about err
+        throw err;
+      }
 
-      // Restore focus on editor after command execution
-      self.__ace__.focus();
+      self.__layout__.find('.mdedit__preview').html(N.runtime.render('mdedit.preview', {
+        user_hid: N.runtime.user_hid,
+        html: result.html,
+        attachments: result.tail
+      }));
+
+      self.__layout__.find('.mdedit-attachments').html(N.runtime.render('mdedit.attachments', {
+        attachments: self.attachments()
+      }));
     }
-  });
-};
+  );
+}, 500, { maxWait: 500, leading: true });
 
 
 // Update toolbar button list
 //
-MDEdit.prototype.__updateToolbar__ = function () {
+MDEdit.prototype.__initToolbar__ = function () {
   var self = this;
+  var $toolbar = this.__layout__.find('.mdedit__toolbar');
 
   // Get actual buttons
-  var buttons = _.reduce(this.__toolbarConfig__, function (result, btn) {
+  var buttons = _.reduce(this.__options__.toolbar, function (result, btn) {
 
     // If parser plugin inactive - remove button
-    if (self.options.parseOptions[btn.depend] === false) {
+    if (self.__options__.parseOptions[btn.depend] === false) {
       return result;
     }
 
@@ -290,7 +299,7 @@ MDEdit.prototype.__updateToolbar__ = function () {
   }
 
   // Render toolbar
-  this.__toolbar__.html(N.runtime.render('mdedit.toolbar', {
+  $toolbar.html(N.runtime.render('mdedit.toolbar', {
     buttons: buttons
   }));
 
@@ -312,89 +321,140 @@ MDEdit.prototype.__updateToolbar__ = function () {
 };
 
 
-// Set options
+// Toolbar button click
 //
-MDEdit.prototype.setOptions = function (options) {
-  this.options = _.assign(this.options, options);
-  this.__updateToolbar__();
-  this.__updatePreview__();
-};
+N.wire.on('mdedit.toolbar:click', function toolbar_click(data) {
+  var command = N.MDEdit.commands[data.$this.data('command')].bind(N.MDEdit);
+
+  if (command) {
+    command(N.MDEdit.__ace__);
+
+    // Restore focus on editor after command execution
+    N.MDEdit.__ace__.focus();
+  }
+});
 
 
-// Update editor preview
+// Attachment click
 //
-MDEdit.prototype.__updatePreview__ = _.debounce(function () {
-  var self = this;
+N.wire.on('mdedit.attachments:insert', function attachments_insert(data) {
+  var url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: data.$this.data('media-id') });
 
-  N.parse(
-    {
-      text: this.text(),
-      attachments: self.attachments(),
-      options: self.options.parseOptions
-    },
-    function (err, result) {
-      if (err) {
-        // TODO: notify about err
-        return;
-      }
+  N.MDEdit.__ace__.insert('![](' + url + ')');
+  N.MDEdit.__ace__.focus();
 
-      self.__preview__.html(N.runtime.render('mdedit.preview', {
-        user_hid: N.runtime.user_hid,
-        html: result.html,
-        attachments: result.tail
-      }));
-    }
-  );
-
-}, 500, { maxWait: 500 });
+  data.event.stopPropagation();
+});
 
 
-MDEdit.prototype.text = function (text) {
-  if (!text) {
-    return this.__ace__.getValue();
-  }
-
-  this.__ace__.setValue(text, -1);
-  this.__updatePreview__();
-};
-
-
-MDEdit.prototype.attachments = function (attachments) {
-  if (!attachments) {
-    return this._attachments;
-  }
-
-  this._attachments = attachments;
-  this.__updateAttachments__();
-
-  if (this.options.onChange) {
-    this.options.onChange();
-  }
-};
-
-
-// Update attachments panel
+// Remove attachment
 //
-MDEdit.prototype.__updateAttachments__ = function () {
-  if (this.attachments().length > 0) {
-    this.__editorContainer__.removeClass('no-attachments');
+N.wire.on('mdedit.attachments:remove', function attachments_insert(data) {
+  var id = data.$this.data('media-id');
+  var attachments = N.MDEdit.attachments();
+
+  attachments = _.remove(attachments, function (val) { return val.media_id !== id; });
+  N.MDEdit.attachments(attachments);
+  data.event.stopPropagation();
+});
+
+
+// Done handler
+//
+N.wire.on('mdedit.submit', function done_click() {
+  var event = new $.Event('submit');
+
+  N.MDEdit.__layout__.trigger(event);
+
+  if (!event.isDefaultPrevented()) {
+    N.MDEdit.hide();
+  }
+});
+
+
+// Hide on cancel
+//
+N.wire.on('mdedit.cancel', function close() {
+  N.MDEdit.hide();
+});
+
+
+// Collapse/expand editor
+//
+N.wire.on('mdedit.collapse', function collapse() {
+  var $layout = N.MDEdit.__layout__;
+
+  // Expand
+  if ($layout.hasClass('mdedit__m-collapsed')) {
+    $layout.removeClass('mdedit__m-collapsed');
+    $layout.height(N.MDEdit.__minHeight__);
+
+  // Collapse
   } else {
-    this.__editorContainer__.addClass('no-attachments');
+    $layout.addClass('mdedit__m-collapsed');
+    $layout.css('minHeight', 0);
+    $layout.height($layout.find('.mdedit-header').height());
   }
-
-  this.__attachmentsArea__.html(
-    N.runtime.render('mdedit.attachments', { attachments: this.attachments(), editor_id: this.__editorId__ })
-  );
-
-  this.__updatePreview__();
-};
+});
 
 
-MDEdit.prototype.commands = {};
+// Dragdrop file to editor
+//
+N.wire.on('mdedit:dd', function mdedit_dd(data) {
+  var $layout = N.MDEdit.__layout__;
+  var x0, y0, x1, y1, ex, ey, uploaderData;
+
+  switch (data.event.type) {
+    case 'dragenter':
+      $layout.addClass('mdedit__m-active');
+      break;
+    case 'dragleave':
+      // 'dragleave' occurs when user move cursor over child HTML element
+      // track this situation and don't remove 'active' class
+      // http://stackoverflow.com/questions/10867506/
+      x0 = $layout.offset().left;
+      y0 = $layout.offset().top;
+      x1 = x0 + $layout.outerWidth();
+      y1 = y0 + $layout.outerHeight();
+      ex = data.event.originalEvent.pageX;
+      ey = data.event.originalEvent.pageY;
+
+      if (ex > x1 || ex < x0 || ey > y1 || ey < y0) {
+        $layout.removeClass('mdedit__m-active');
+      }
+      break;
+    case 'drop':
+      $layout.removeClass('mdedit__m-active');
+
+      if (data.event.dataTransfer && data.event.dataTransfer.files && data.event.dataTransfer.files.length) {
+
+        uploaderData = {
+          files: data.event.dataTransfer.files,
+          url: N.router.linkTo('users.media.upload'),
+          config: 'users.uploader_config',
+          uploaded: null
+        };
+
+        N.wire.emit('users.uploader:add', uploaderData, function () {
+          var attachments = N.MDEdit.attachments();
+
+          uploaderData.uploaded.forEach(function (media) {
+            attachments.unshift(_.pick(media, [ 'media_id', 'file_name', 'type' ]));
+          });
+
+          N.MDEdit.attachments(attachments);
+        });
+      }
+      break;
+    default:
+  }
+});
 
 
+// Add editor instance to 'N' & emit event for plugins
+//
 N.wire.once('init:assets', function (__, callback) {
-  N.MDEdit = MDEdit;
+  N.MDEdit = new MDEdit();
 
   N.wire.emit('init:mdedit', {}, callback);
 });

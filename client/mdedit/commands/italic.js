@@ -1,7 +1,7 @@
 'use strict';
 
 N.wire.once('init:mdedit', function () {
-  N.MDEdit.prototype.commands.cmdItalic = function (editor) {
+  N.MDEdit.commands.cmdItalic = function (editor) {
     // TODO: copypaste from cmd_bold
     var range = editor.getSelectionRange();
     var document = editor.getSession().getDocument();
