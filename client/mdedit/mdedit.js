@@ -390,7 +390,6 @@ N.wire.on('mdedit.collapse', function collapse() {
   // Expand
   if ($layout.hasClass('mdedit__m-collapsed')) {
     $layout.removeClass('mdedit__m-collapsed');
-    $layout.height(N.MDEdit.__minHeight__);
 
   // Collapse
   } else {
