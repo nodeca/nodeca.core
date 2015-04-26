@@ -32,7 +32,8 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
       != self.inject_header
 
   //- class nav-horiz-on/nav-vert-on defines navigation type
-  body.nav-horiz-on._affix(data-affix={ top: 500, class: 'layout-scroll-top__active' })
+  body.nav-horiz-on
+    //-._affix(data-affix={ top: 500, class: 'layout-scroll-top__active' })
     != self.partial('@common.blocks.nav_horiz', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
     .layout__container.container-fluid
       != self.partial('@common.blocks.nav_vert', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
@@ -50,6 +51,6 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
         .debug.hidden-xs
           //{{PUNCHER_STATS}}
 
-      a.layout-scroll-top.icon.icon-scroll-up(href='#' data-on-click='common.layout:scroll_top')
+      //-a.layout-scroll-top.icon.icon-scroll-up(href='#' data-on-click='common.layout:scroll_top')
 
     div#runtime(style="display: none")= JSON.stringify(self.runtime)

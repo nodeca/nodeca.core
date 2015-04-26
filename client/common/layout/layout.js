@@ -24,11 +24,11 @@ N.wire.on('common.layout.nav_toggle', function layout_toggle_navbar() {
 
 // Scroll page to top
 //
-N.wire.on('common.layout:scroll_top', function layout_scroll_top() {
+/*N.wire.on('common.layout:scroll_top', function layout_scroll_top() {
   $('html, body').animate({
     scrollTop:  0
   }, 'fast');
-});
+});*/
 
 
 // Sync navigation style with cookie value,
