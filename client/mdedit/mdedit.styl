@@ -8,8 +8,10 @@
   right 0px
   padding 0px 15px
   background-color grayLightest
+  box-shadow 0 0 20px grayLight
   display flex
   flex-direction column
+  z-index 1040
   .ace_print-margin-layer
     display none
   .ace_editor
@@ -17,58 +19,60 @@
     font-family monoFontFamily
 
 .mdedit__resizer
-  flex-grow 0
-  height 9px
-  background-color grayLightest
-  cursor s-resize
-  border-radius 0 0 4px 4px
-  text-align middle
-  position relative
+  cursor row-resize
+  position absolute
+  top 0
+  left 50%
+  margin-left -20px
+  width 40px
+  height 8px
+
   &:before
   &:after
     content ' '
-    width 40px
+    width 100%
     height 1px
     background-color grayLighter
     position absolute
-    left 50%
     top 3px
-    margin-left -20px
   &:after
     top 5px
 
 .mdedit-header
-  flex-grow 0
-  margin 5px 0
+  margin 5px 30px 5px 0
+  shortable()
 
 .mdedit__body
   display flex
   flex-direction row
-  flex-grow 1
-  height 100%
+  flex 2
+  overflow hidden
 
 .mdedit__editor
   display flex
   flex-direction column
-  flex-grow 1
-  flex-basis 50%
+  flex 20
   background-color #fff
   border 1px solid grayLighter
-  border-radius 4px 4px 0 0
+  border-radius 4px
+  overflow hidden
 
 .mdedit__toolbar
-  flex-grow 0
+  padding 5px
+  font-size 16px
+  z-index 1
+  box-shadow 0 0 1px grayLighter
 
 .mdedit__edit-area
-  flex-grow 1
+  flex 2
+  border-radius 0 0 4px 4px
 
 .mdedit-attachments
-  flex-grow 1
-  flex-basis 70px
+  flex-basis 90px
   overflow-y: auto
   list-style none
-  padding 0 0 0 5px
-  margin 0
+  padding 0
+  margin 0 0 0 5px
 
 .mdedit-attachments__item
   position relative
@@ -81,12 +85,12 @@
 
 .mdedit-attachments__item-image
   width 100%
+  border-radius 2px
 
 .mdedit__preview
-  flex-grow 1
-  flex-basis 50%
+  flex 20
   font-family sansWideFontFamily
-  border 1px dashed grayLight
+  border 1px dashed grayLighter
   padding 10px 10px
   border-radius 4px
   background-color #fff
@@ -98,12 +102,9 @@
     border-radius 4px
 
 .mdedit-controlls
-  flex-grow 0
   margin 5px 0
 
 @media (max-width: screenSm - 1)
-  .mdedit__editor
-    flex-basis 100%
   .mdedit__preview
     display none
 
@@ -153,8 +154,14 @@
 
 .mdedit__collapser
   position absolute
-  top 0
-  right 2px
+  top -15px
+  right 10px
+  width 30px
+  height 30px
+  line-height 30px
+  text-align center
+  background-color darken(grayLightest, 10%)
+  border-radius 30px
   cursor pointer
 
 .mdedit__collapser .icon-collapse
