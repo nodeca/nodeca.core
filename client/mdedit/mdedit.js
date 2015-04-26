@@ -214,9 +214,12 @@ MDEdit.prototype.__initResize__ = function () {
     var clickStart = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
     var currentHeight = parseInt(self.__layout__.height(), 10);
 
+    self.__layout__.addClass('mdedit__m-resizing');
+
     $body
       .on('mouseup.nd.mdedit touchend.nd.mdedit', function () {
         $body.off('.nd.mdedit');
+        self.__layout__.removeClass('mdedit__m-resizing');
       })
       .on('mousemove.nd.mdedit touchmove.nd.mdedit', _.debounce(function (event) {
         var point = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
@@ -391,9 +394,8 @@ N.wire.on('mdedit.collapse', function collapse() {
 
   // Collapse
   } else {
-    $layout.addClass('mdedit__m-collapsed');
     $layout.css('minHeight', 0);
-    $layout.height($layout.find('.mdedit-header').height());
+    $layout.addClass('mdedit__m-collapsed');
   }
 });
 

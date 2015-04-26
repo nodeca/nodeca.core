@@ -12,6 +12,7 @@
   display flex
   flex-direction column
   z-index 1040
+  transition height 0.2s ease
   .ace_print-margin-layer
     display none
   .ace_editor
@@ -39,7 +40,9 @@
     top 5px
 
 .mdedit-header
-  margin 5px 30px 5px 0
+  margin 5px 0
+.mdedit-header__caption
+  margin-right 30px
   shortable()
 
 .mdedit__body
@@ -101,12 +104,11 @@
     background grayLightest
     border-radius 4px
 
-.mdedit-controlls
-  margin 5px 0
-
-@media (max-width: screenSm - 1)
-  .mdedit__preview
+  @media (max-width: screenSm - 1)
     display none
+
+.mdedit-footer
+  margin 5px 0
 
 .mdedit.mdedit__m-no-attachments
   .mdedit-attachments
@@ -168,14 +170,18 @@
   display none
 
 .mdedit.mdedit__m-collapsed
+  height 30px !important;
   .mdedit__resizer
-    display none
   .mdedit__body
-    display none
-  .mdedit-controlls
+  .mdedit-footer
+  .mdedit-header__addon
     display none
   .mdedit__collapser
     .icon-expand
       display none
     .icon-collapse
       display block
+
+// Avoid lags
+.mdedit.mdedit__m-resizing
+  transition none
