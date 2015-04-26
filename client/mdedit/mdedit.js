@@ -71,8 +71,8 @@ function MDEdit() {
 // - `change.nd.mdedit` - on update preview, you can save drafts on this event
 //
 MDEdit.prototype.show = function (options) {
-  var self = this;
-  var $oldLayout = this.__layout__;
+  var self = this,
+      $oldLayout = this.__layout__;
 
   this.__layout__ = $(N.runtime.render('mdedit'));
   this.__options__ = _.clone(options);
@@ -101,6 +101,8 @@ MDEdit.prototype.show = function (options) {
       }
 
       self.__ace__.resize();
+
+      $(window).on('resize.nd.mdedit', self.__clampHeight__.bind(self));
     });
   }, 0);
 
@@ -117,6 +119,8 @@ MDEdit.prototype.hide = function () {
   if (!$layout) {
     return;
   }
+
+  $(window).off('resize.nd.mdedit');
 
   setTimeout(function () {
     $layout.trigger('hide');
@@ -204,11 +208,18 @@ MDEdit.prototype.__initAce__ = function () {
 // Add editor resize handler
 //
 MDEdit.prototype.__initResize__ = function () {
-  var self = this;
-  var $body = $('body');
+  var self = this,
+      $body = $('body'),
+      $window = $(window);
 
+  // load min-height limit & reset it to enable animation
   self.__minHeight__ = parseInt(this.__layout__.css('minHeight'), 10);
-  self.__layout__.height(self.__minHeight__);
+  self.__layout__.css('minHeight', 0);
+
+  // TODO: set previously recorded height
+  self.__layout__.height(self.__layout__.height());
+
+  self.__clampHeight__();
 
   this.__layout__.find('.mdedit__resizer').on('mousedown touchstart', function (event) {
     var clickStart = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
@@ -222,16 +233,32 @@ MDEdit.prototype.__initResize__ = function () {
         self.__layout__.removeClass('mdedit__m-resizing');
       })
       .on('mousemove.nd.mdedit touchmove.nd.mdedit', _.debounce(function (event) {
-        var point = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
-        var newHeight = currentHeight - (point.pageY - clickStart.pageY);
+        var point = event.originalEvent.touches ? event.originalEvent.touches[0] : event,
+            newHeight = currentHeight - (point.pageY - clickStart.pageY),
+            winHeight = $window.height();
 
-        self.__layout__.height(newHeight > self.__minHeight__ ? newHeight : self.__minHeight__);
+        newHeight = newHeight > winHeight ? winHeight : newHeight;
+        newHeight = newHeight < self.__minHeight__ ? self.__minHeight__ : newHeight;
+
+        self.__layout__.height(newHeight);
         self.__ace__.resize();
       }, 20, { maxWait: 20 }));
 
     return false;
   });
 };
+
+
+// Reduce size on small viewports
+//
+MDEdit.prototype.__clampHeight__ = _.debounce(function (height) {
+  var winHeight = $(window).height();
+
+  if (this.__layout__.height() > winHeight &&
+      winHeight >= this.__minHeight__) {
+    this.__layout__.height(winHeight);
+  }
+}, 50, { maxWait: 50 });
 
 
 // Update attachments, preview and save draft
@@ -393,7 +420,6 @@ N.wire.on('mdedit.collapse', function collapse() {
 
   // Collapse
   } else {
-    $layout.css('minHeight', 0);
     $layout.addClass('mdedit__m-collapsed');
   }
 });
