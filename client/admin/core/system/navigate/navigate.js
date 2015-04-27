@@ -65,13 +65,18 @@ function normalizeURL(url) {
 //   - apiPath (required if `href` is not set)
 //   - params
 //   - anchor
+//   - force (reloads the page even if new url matches the old one)
+//
+// `force` flag is internal, consider using `navigate.reload` in other modules instead
 //
 function parseOptions(options) {
-  var match, href, anchor, apiPath, params, errorReport;
+  var match, href, anchor, apiPath, params, errorReport, force;
 
   if (typeof options === 'string') {
     options = { href: options };
   }
+
+  force = !!options.force;
 
   if (options.href) {
     href = normalizeURL(options.href).split('#')[0];
@@ -118,7 +123,8 @@ function parseOptions(options) {
     apiPath: apiPath,
     params: params,
     href: href,
-    anchor: anchor
+    anchor: anchor,
+    force: force
   };
 }
 
@@ -265,7 +271,8 @@ fsm.onIDLE = function () {
 };
 
 fsm.onLOAD = function (event, from, to, params) {
-  var options = parseOptions(params);
+  var options = parseOptions(params),
+      same_url = (options.href === (location.protocol + '//' + location.host + location.pathname));
 
   // If errors while parsing
   if (!options) {
@@ -288,7 +295,7 @@ fsm.onLOAD = function (event, from, to, params) {
 
   // Stop here if base URL (all except anchor) haven't changed.
 
-  if (options.href === (location.protocol + '//' + location.host + location.pathname)) {
+  if (same_url && !options.force) {
 
     // Update anchor if it's changed.
     if (location.hash !== options.anchor) {
@@ -319,7 +326,11 @@ fsm.onLOAD = function (event, from, to, params) {
     }
 
     render(result, true, function () {
-      History.pushState(null, result.locals.head.title, options.href + options.anchor);
+      if (same_url) {
+        History.replaceState(null, result.locals.head.title, options.href + options.anchor);
+      } else {
+        History.pushState(null, result.locals.head.title, options.href + options.anchor);
+      }
       fsm.complete();
     });
   });
@@ -400,6 +411,16 @@ N.wire.on('navigate.to', function navigate_to(options, callback) {
 
   navigateCallback = callback;
   fsm.link(options);
+});
+
+
+// Reload current page.
+//
+N.wire.on('navigate.reload', function navigate_reload(__, callback) {
+  fsm.terminate();
+
+  navigateCallback = callback;
+  fsm.link({ href: location.href, force: true });
 });
 
 
