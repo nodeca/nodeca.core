@@ -4,15 +4,12 @@ var _ = require('lodash');
 
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdLink = function (editor) {
-    var range = editor.getSelectionRange();
-    var textSelected = !(range.end.column === range.start.column && range.end.row === range.start.row);
-    var document = editor.getSession().getDocument();
     var $linkDialog = $(N.runtime.render('mdedit.add_link_dlg'));
     var tpl = _.template('[<%= desc %>](<%= url %>)');
 
     $('body').append($linkDialog);
 
-    if (textSelected) {
+    if (editor.somethingSelected()) {
       $linkDialog.addClass('add-link-dialog__m-no-text');
     }
 
@@ -29,19 +26,15 @@ N.wire.once('init:mdedit', function () {
       $linkDialog.modal('hide');
 
       // Do nothing on empty input
-      if (!url || (!textSelected && !text)) { return; }
+      if (!url || (!editor.somethingSelected() && !text)) { return; }
 
-      if (textSelected) {
-        document.replace(range, tpl({
-          desc: editor.getSession().getTextRange(range),
-          url: url
-        }));
+      if (editor.somethingSelected()) {
+        editor.replaceSelection(tpl({ desc: editor.getSelection(), url: url }));
       } else {
-        document.insert(range.end, tpl({
-          desc: text,
-          url: url
-        }));
+        editor.replaceRange(tpl({ desc: text, url: url }), editor.getCursor(), editor.getCursor());
       }
+
+      editor.focus();
     });
   };
 });

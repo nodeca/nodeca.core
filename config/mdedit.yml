@@ -27,7 +27,7 @@ mdedit:
       tooltip: "@mdedit.toolbar.bold"
       bind_key:
         win: 'Ctrl-B'
-        mac: 'Command-B'
+        mac: 'Cmd-B'
       command: cmdBold
       priority: 10
       depend: emphasis
@@ -37,7 +37,7 @@ mdedit:
       tooltip: "@mdedit.toolbar.italic"
       bind_key:
         win: 'Ctrl-I'
-        mac: 'Command-I'
+        mac: 'Cmd-I'
       command: cmdItalic
       priority: 20
       depend: emphasis
@@ -47,7 +47,7 @@ mdedit:
       tooltip: "@mdedit.toolbar.link"
       bind_key:
         win: 'Ctrl-L'
-        mac: 'Command-L'
+        mac: 'Cmd-L'
       command: cmdLink
       priority: 40
       depend: links
@@ -57,7 +57,7 @@ mdedit:
       tooltip: "@mdedit.toolbar.image"
       bind_key:
         win: 'Ctrl-G'
-        mac: 'Command-G'
+        mac: 'Cmd-G'
       command: cmdImage
       priority: 50
       depend: images
@@ -74,7 +74,7 @@ mdedit:
       tooltip: "@mdedit.toolbar.ol"
       bind_key:
         win: 'Ctrl-O'
-        mac: 'Command-O'
+        mac: 'Cmd-O'
       command: cmdOl
       priority: 80
       depend: lists
@@ -84,7 +84,7 @@ mdedit:
       tooltip: "@mdedit.toolbar.ul"
       bind_key:
         win: 'Ctrl-U'
-        mac: 'Command-U'
+        mac: 'Cmd-U'
       command: cmdUl
       priority: 90
       depend: lists

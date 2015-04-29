@@ -2,9 +2,10 @@
 
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdHeading = function (editor) {
-    var range = editor.getSelectionRange();
-    var document = editor.getSession().getDocument();
-    var selectedText = document.getLine(range.start.row);
+    var selectionStart = editor.getCursor(true);
+    var selectionEnd = editor.getCursor(false);
+
+    var selectedText = editor.getLine(selectionStart.line);
     var regExp = /^(#*) ?/;
     var headerStart = selectedText.match(regExp);
 
@@ -21,15 +22,10 @@ N.wire.once('init:mdedit', function () {
     }
     replace += ' ';
 
-    document.replace({
-      start: {
-        column: 0,
-        row: range.start.row
-      },
-      end: {
-        column: selectedText.length,
-        row: range.start.row
-      }
-    }, selectedText.replace(regExp, replace));
+    editor.replaceRange(
+      selectedText.replace(regExp, replace),
+      { ch: 0, line: selectionStart.line },
+      { ch: selectedText.length, line: selectionStart.line }
+    );
   };
 });

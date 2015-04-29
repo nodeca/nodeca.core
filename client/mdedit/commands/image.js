@@ -4,8 +4,6 @@ var _ = require('lodash');
 
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdImage = function (editor) {
-    var range = editor.getSelectionRange();
-    var document = editor.getSession().getDocument();
     var $linkDialog = $(N.runtime.render('mdedit.add_image_dlg'));
     var tpl = _.template('![<%= alt %>](<%= url %>)');
 
@@ -24,17 +22,13 @@ N.wire.once('init:mdedit', function () {
       // Do nothing on empty input
       if (!url) { return; }
 
-      if (range.end.column === range.start.column && range.end.row === range.start.row) {
-        document.insert(range.end, tpl({
-          alt: '',
-          url: url
-        }));
+      if (editor.somethingSelected()) {
+        editor.replaceSelection(tpl({ alt: '', url: url }));
       } else {
-        document.replace(range, tpl({
-          alt: '',
-          url: url
-        }));
+        editor.replaceRange(tpl({ alt: '', url: url }), editor.getCursor(), editor.getCursor());
       }
+
+      editor.focus();
     });
   };
 });

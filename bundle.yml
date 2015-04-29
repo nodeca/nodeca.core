@@ -109,6 +109,7 @@ packages:
       exclude: /(^|\/|\\)_.*/
 
     styles:
+      main: assets/main_mdedit.styl
       include: client/mdedit/**.styl
 
     views:

@@ -1,11 +1,9 @@
 // Add editor instance to 'N' & emit event for plugins
 //
-
-
-/*global ace*/
-
 'use strict';
 
+
+/*global CodeMirror*/
 var _ = require('lodash');
 
 
@@ -46,6 +44,7 @@ function MDEdit() {
   this.__options__ = null;
   this.__layout__ = null;
   this.__minHeight__ = 0;
+  this.__cm__ = null;
 }
 
 
@@ -81,7 +80,7 @@ MDEdit.prototype.show = function (options) {
 
   $('body').append(this.__layout__);
 
-  this.__initAce__();
+  this.__initCodeMirror__();
   this.__initResize__();
   this.__initToolbar__();
 
@@ -100,8 +99,7 @@ MDEdit.prototype.show = function (options) {
         $oldLayout.remove();
       }
 
-      self.__ace__.resize();
-
+      self.__cm__.setSize('100%', self.__layout__.find('.mdedit__edit-area').height());
       $(window).on('resize.nd.mdedit', self.__clampHeight__.bind(self));
     });
   }, 0);
@@ -137,10 +135,11 @@ MDEdit.prototype.hide = function () {
 //
 MDEdit.prototype.text = function (text) {
   if (!text) {
-    return this.__ace__.getValue();
+    return this.__cm__.getValue();
   }
 
-  this.__ace__.setValue(text, -1);
+  this.__cm__.setValue(text);
+  this.__cm__.setCursor(this.__cm__.lineCount(), 0);
 
   this.__updatePreview__();
 };
@@ -179,29 +178,20 @@ MDEdit.prototype.parseOptions = function (parseOptions) {
 };
 
 
-// Set initial Ace options
+// Set initial CodeMirror options
 //
-MDEdit.prototype.__initAce__ = function () {
-  this.__ace__ = ace.edit(this.__layout__.find('.mdedit__edit-area').get(0));
+MDEdit.prototype.__initCodeMirror__ = function () {
+  var self = this;
 
-  this.__ace__.renderer.scrollMargin.top = TEXT_MARGIN;
-  this.__ace__.renderer.scrollMargin.bottom = TEXT_MARGIN;
-
-  var aceSession = this.__ace__.getSession();
-
-  aceSession.setMode('ace/mode/markdown');
-
-  this.__ace__.setOptions({
-    showLineNumbers: false,
-    showGutter: false,
-    highlightActiveLine: false
+  this.__cm__ = new CodeMirror(this.__layout__.find('.mdedit__edit-area').get(0), {
+    cursorScrollMargin: TEXT_MARGIN,
+    lineWrapping: true,
+    lineNumbers: false,
+    mode: 'markdown'
   });
 
-  aceSession.setUseWrapMode(true);
-
-  aceSession.on('change', this.__updatePreview__.bind(this));
-
-  this.__ace__.focus();
+  this.__cm__.on('change', this.__updatePreview__.bind(this));
+  this.__cm__.focus();
 };
 
 
@@ -241,7 +231,7 @@ MDEdit.prototype.__initResize__ = function () {
         newHeight = newHeight < self.__minHeight__ ? self.__minHeight__ : newHeight;
 
         self.__layout__.height(newHeight);
-        self.__ace__.resize();
+        self.__cm__.setSize('100%', self.__layout__.find('.mdedit__edit-area').height());
       }, 20, { maxWait: 20 }));
 
     return false;
@@ -257,6 +247,7 @@ MDEdit.prototype.__clampHeight__ = _.debounce(function (height) {
   if (this.__layout__.height() > winHeight &&
       winHeight >= this.__minHeight__) {
     this.__layout__.height(winHeight);
+    this.__cm__.setSize('100%', this.__layout__.find('.mdedit__edit-area').height());
   }
 }, 50, { maxWait: 50 });
 
@@ -333,21 +324,23 @@ MDEdit.prototype.__initToolbar__ = function () {
     buttons: buttons
   }));
 
-  // Disable all hotkeys
-  this.__ace__.commands.removeCommands(Object.keys(this.commands));
-
-  // Enable active button's hotkeys
-  buttons.forEach(function (button) {
+  // Process hotkeys for editor
+  var hotkeys = _.reduce(buttons, function (result, button) {
     if (!button.command || !button.bind_key || !self.commands[button.command]) {
-      return;
+      return result;
     }
 
-    self.__ace__.commands.addCommand({
-      name: button.command,
-      bindKey: button.bind_key,
-      exec: self.commands[button.command].bind(self)
+    _.forEach(button.bind_key, function (bindKey) {
+      result[bindKey] = function () {
+        self.commands[button.command](self.__cm__);
+      };
     });
-  });
+
+    return result;
+  }, {});
+
+  // Enable active button's hotkeys
+  self.__cm__.setOption('extraKeys', hotkeys);
 };
 
 
@@ -357,10 +350,10 @@ N.wire.on('mdedit.toolbar:click', function toolbar_click(data) {
   var command = N.MDEdit.commands[data.$this.data('command')].bind(N.MDEdit);
 
   if (command) {
-    command(N.MDEdit.__ace__);
+    command(N.MDEdit.__cm__);
 
     // Restore focus on editor after command execution
-    N.MDEdit.__ace__.focus();
+    N.MDEdit.__cm__.focus();
   }
 });
 
@@ -369,9 +362,10 @@ N.wire.on('mdedit.toolbar:click', function toolbar_click(data) {
 //
 N.wire.on('mdedit.attachments:insert', function attachments_insert(data) {
   var url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: data.$this.data('media-id') });
+  var cm = N.MDEdit.__cm__;
 
-  N.MDEdit.__ace__.insert('![](' + url + ')');
-  N.MDEdit.__ace__.focus();
+  cm.replaceRange('![](' + url + ')', cm.getCursor(), cm.getCursor());
+  cm.focus();
 
   data.event.stopPropagation();
 });
