@@ -14,7 +14,10 @@
   flex-direction column
   z-index 1040
   transition height 0.2s ease
+
   .CodeMirror
+    // height before init to avoid bugs in FF with real size calc
+    height 1px
     font-size 14px
     font-family monoFontFamily
 
@@ -69,6 +72,7 @@
   flex 2
   flex-basis 50%
   border-radius 0 0 4px 4px
+  overflow hidden
 
 .mdedit-attachments
   flex-basis 90px
