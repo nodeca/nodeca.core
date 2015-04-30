@@ -4,7 +4,8 @@
 
 
 /*global CodeMirror*/
-var _ = require('lodash');
+var _    = require('lodash');
+var Bag  = require('bag.js');
 
 
 var TEXT_MARGIN = 5;
@@ -45,6 +46,7 @@ function MDEdit() {
   this.__layout__ = null;
   this.__minHeight__ = 0;
   this.__cm__ = null;
+  this.__bag__ = new Bag({ prefix: 'nodeca_editor' });
 }
 
 
@@ -78,17 +80,32 @@ MDEdit.prototype.show = function (options) {
   this.__options__.toolbar = compileToolbarConfig(this.__options__.toolbar || 'default');
   this.__options__.parseOptions = this.__options__.parseOptions || {};
 
-  $('body').append(this.__layout__);
+  self.__initCodeMirror__();
 
-  this.__initCodeMirror__();
-  this.__initResize__();
-  this.__initToolbar__();
+  // Get editor height from localstore
+  this.__bag__.get('height', function (__, height) {
 
-  this.text(options.text || '');
-  this.attachments(options.attachments || []);
+    if (height) {
+      // If no prevoius editor - set `bottom` for animation
+      if (!$oldLayout) {
+        self.__layout__.css({ bottom: -height });
+      }
 
-  setTimeout(function () {
+      // Restore prevoius editor height
+      self.__layout__.height(height);
+    }
+
+    $('body').append(self.__layout__);
+
+    self.__initResize__();
+    self.__initToolbar__();
+
+    self.text(options.text || '');
+    self.attachments(options.attachments || []);
+
     self.__layout__.trigger('show');
+
+    // If no prevoius editor - animate editor from bottom viewport botder
     self.__layout__.animate({ bottom: 0 }, $oldLayout ? 0 : 'fast', function () {
       self.__layout__.trigger('shown');
 
@@ -99,10 +116,13 @@ MDEdit.prototype.show = function (options) {
         $oldLayout.remove();
       }
 
+      // Update codemirror height
       self.__cm__.setSize('100%', self.__layout__.find('.mdedit__edit-area').height());
+      // Focus cursor to editor
+      self.__cm__.focus();
       $(window).on('resize.nd.mdedit', self.__clampHeight__.bind(self));
     });
-  }, 0);
+  });
 
   return this.__layout__;
 };
@@ -191,7 +211,6 @@ MDEdit.prototype.__initCodeMirror__ = function () {
   });
 
   this.__cm__.on('change', this.__updatePreview__.bind(this));
-  this.__cm__.focus();
 };
 
 
@@ -230,6 +249,7 @@ MDEdit.prototype.__initResize__ = function () {
         newHeight = newHeight > winHeight ? winHeight : newHeight;
         newHeight = newHeight < self.__minHeight__ ? self.__minHeight__ : newHeight;
 
+        self.__bag__.set('height', newHeight);
         self.__layout__.height(newHeight);
         self.__cm__.setSize('100%', self.__layout__.find('.mdedit__edit-area').height());
       }, 20, { maxWait: 20 }));
