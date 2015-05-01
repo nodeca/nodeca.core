@@ -122,23 +122,21 @@ module.exports = function (N, collectionName) {
 
     // remove by `_id`
     if (id) {
-      gfs.remove({ _id: id }, function (err) {
-        if (err) { return callback(err); }
 
-        if (!all) { return callback(); }
+      // if `all` flag is set - find files by `filename` pattern and remove all
+      if (all) {
+        gfs.files.find({ filename: new RegExp('^' + escapeRegexp(String(name))) }).toArray(function (err, files) {
+          if (err) {
+            callback(err);
+            return;
+          }
 
-        // remove "nested" (thumbnails)
-        var pattern = new RegExp('^' + escapeRegexp(String(name)) + '_');
-        gfs.files.find({ filename: pattern }).toArray(function (err, files) {
-          if (err) { return callback(err); }
-
-          _.forEach(files, function (file) {
-            gfs.remove({ _id: file._id }, function () {}); // don't wait
-          });
-
-          callback();
+          gfs.remove({ filename: _.pluck(files, 'filename') }, callback);
         });
-      });
+        return;
+      }
+
+      gfs.remove({ _id: id }, callback);
       return;
     }
 
