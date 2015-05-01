@@ -228,7 +228,6 @@ MDEdit.prototype.__initResize__ = function () {
   self.__minHeight__ = parseInt(this.__layout__.css('minHeight'), 10);
   self.__layout__.css('minHeight', 0);
 
-  // TODO: set previously recorded height
   self.__layout__.height(self.__layout__.height());
 
   self.__clampHeight__();
@@ -280,54 +279,50 @@ MDEdit.prototype.__clampHeight__ = _.debounce(function (height) {
 MDEdit.prototype.__initSyncScroll__ = function () {
   var self = this;
   var $preview = this.__layout__.find('.mdedit__preview');
-  var interactWithPreview = false;
+  var $editor = this.__layout__.find('.CodeMirror-scroll');
+  var editorScroll, previewScroll;
 
-  // When user start to interact with editor - reset `interactWithPreview`
-  this.__layout__.find('.mdedit__edit-area').on('touchstart mouseover', function () {
-    interactWithPreview = false;
-  });
 
-  // When user start to interact with editor - set `interactWithPreview`
-  $preview.on('touchstart mouseover', function () {
-    interactWithPreview = true;
+  // When user resize window - remove outdated scroll map
+  $(window).on('resize.nd.mdedit', function () {
+    self.__scrollMap__ = null;
   });
 
 
   // Editor scroll handler
   //
-  this.__cm__.on('scroll', _.debounce(function () {
-    // If user interact with preview - skip
-    if (interactWithPreview) {
-      return;
-    }
-
+  editorScroll = _.debounce(function () {
     if (!self.__scrollMap__) {
       self.__buildScrollMap__();
     }
 
     // Get top visible editor line number
-    var line = self.__cm__.lineAtHeight(self.__cm__.getScrollInfo().top, 'local');
+    var lh = parseInt(self.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);
+    var line = Math.round(self.__cm__.getScrollInfo().top / lh);
     // Get preview offset
     var posTo = self.__scrollMap__[line];
 
-    $preview.stop(true).animate({ scrollTop: posTo }, 'fast', 'linear');
-  }, 50, { maxWait: 50 }));
+    // Remove scroll handler for preview when scroll it programmatically
+    $preview.off('scroll.nd.mdedit');
+
+    $preview.stop(true).animate({ scrollTop: posTo }, 'fast', 'linear', function () {
+      // Restore scroll handler after 50 ms delay to avoid non-user scroll events
+      setTimeout(function () {
+        $preview.on('scroll.nd.mdedit', previewScroll);
+      }, 50);
+    });
+  }, 50, { maxWait: 50 });
 
 
   // Preview scroll handler
   //
-  $preview.on('scroll', _.debounce(function () {
-    // If user interact with editor - skip
-    if (!interactWithPreview) {
-      return;
-    }
-
+  previewScroll = _.debounce(function () {
     if (!self.__scrollMap__) {
       self.__buildScrollMap__();
     }
 
     var scrollTop = $preview.scrollTop();
-    var line, posTo;
+    var line;
 
     // Get editor line number by preview offset
     for (line = 0; line < self.__scrollMap__.length; line++) {
@@ -336,48 +331,68 @@ MDEdit.prototype.__initSyncScroll__ = function () {
       }
     }
 
-    posTo = self.__cm__.heightAtLine(line, 'local');
+    var lh = parseInt(self.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);
+    var posTo = line * lh;
 
-    self.__layout__.find('.CodeMirror-scroll').stop(true).animate({ scrollTop: posTo }, 'fast', 'linear');
-  }, 50, { maxWait: 50 }));
+    // Remove scroll handler for editor when scroll it programmatically
+    $editor.off('scroll.nd.mdedit');
+
+    $editor.stop(true).animate({ scrollTop: posTo }, 'fast', 'linear', function () {
+      // Restore scroll handler after 50 ms delay to avoid non-user scroll events
+      setTimeout(function () {
+        $editor.on('scroll.nd.mdedit', editorScroll);
+      }, 50);
+    });
+  }, 50, { maxWait: 50 });
+
+
+  // Bind events
+  $editor.on('scroll.nd.mdedit', editorScroll);
+  $preview.on('scroll.nd.mdedit', previewScroll);
 };
 
 
 // Build offsets for each line
 //
 MDEdit.prototype.__buildScrollMap__ = function () {
-  var self = this,
-      $preview = this.__layout__.find('.mdedit__preview'),
-      lineCount = this.__cm__.lineCount(),
+  var $preview = this.__layout__.find('.mdedit__preview'),
       offset = $preview.offset().top - $preview.scrollTop(),
-      line,
-      $el,
-      i,
-      a,
-      b,
+      mappedLinesNumbers = [],
+      lineHeightMap = [],
+      scrollMap = [],
+      lineCount = 0,
       pos = 0,
-      scrollMap = new Array(lineCount),
-      mappedLinesNumbers = [];
+      line, $el, lh, i, a, b;
+
+  // Calculate wrapped lines count and fill map real->wrapped
+  lh = parseInt(this.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);
+  this.__cm__.eachLine(function (lineHandle) {
+    lineHeightMap.push(lineCount);
+    lineCount += lineHandle.height / lh;
+  });
+
+  // Init `scrollMap` array
+  for (i = 0; i < lineCount; i++) {
+    scrollMap.push(-1);
+  }
 
   // Define first line offset
-  scrollMap[0] = 0;
   mappedLinesNumbers.push(0);
+  scrollMap[0] = 0;
 
   // Get mapped lines offsets and fill mapped lines numbers
-  this.__layout__.find('.mdedit__preview > [data-line]').each(function (n) {
-    if (n === 0) {
+  this.__layout__.find('.mdedit__preview > [data-line]').each(function () {
+    $el = $(this);
+    line = lineHeightMap[$el.data('line')];
+
+    if (line === 0) {
       return;
     }
 
-    $el = $(this);
-    line = $el.data('line');
+    scrollMap[line] = $el.offset().top - offset;
 
-    if (line !== '') {
-      scrollMap[line] = $el.offset().top - offset;
-
-      if (line !== lineCount - 1) {
-        mappedLinesNumbers.push(line);
-      }
+    if (line !== lineCount - 1) {
+      mappedLinesNumbers.push(line);
     }
   });
 
@@ -387,7 +402,7 @@ MDEdit.prototype.__buildScrollMap__ = function () {
 
   // Interpolate offset of lines between mapped lines
   for (i = 0; i < scrollMap.length; i++) {
-    if (!_.isUndefined(scrollMap[i])) {
+    if (scrollMap[i] !== -1) {
       pos++;
       continue;
     }
@@ -417,8 +432,9 @@ MDEdit.prototype.__updatePreview__ = _.debounce(function () {
     },
     function (err, result) {
       if (err) {
-        // TODO: notify about err
-        throw err;
+        // It should never happen
+        N.wire.emit('notify', { type: 'error', message: err.message });
+        return;
       }
 
       self.__layout__.find('.mdedit__preview').html(N.runtime.render('mdedit.preview', {
