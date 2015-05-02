@@ -1,46 +1,9 @@
 @import "nodeca.core/client/common/_variables"
 
 
-// Pagination
-//
-.pgn
-  display: inline-block
-  font-size 12px
-  padding 7px 0
-  margin 0
-
-.pgn__item
-  display: inline-block
-
-a.pgn__link
-  display inline-block
-  transition background-color 0.3s ease
-  border-radius 2px
-  color grayDark
-  padding 0 9px
-  line-height 20px
-  &:hover
-    background-color grayLighter
-
-.interval > .pgn__link
-  padding: 0 3px;
-
-.current > .pgn__link
-  background-color grayDark
-  color white
-  font-weight bold
-  text-decoration none
-  box-shadow 0 0 1px gray
-  &:hover
-    background-color gray          
-
-//
-// Dropdown menu tweaks
-//
-
-.pgn__menu
-  min-width 150px
-  padding 7px 10px
-
-.pgn__label
-  margin-bottom 0
+.pagination .active
+  span
+  span:hover
+  span:focus
+    background-color gray
+    border-color gray
