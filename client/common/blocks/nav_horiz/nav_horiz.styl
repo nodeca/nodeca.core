@@ -23,30 +23,47 @@
 .navbar-nav li:hover a:after
   opacity 1
 
-// Show secondary navbar if and only if m-secondary modifier is present
-.navbar
-  .navbar-alt
-    display none
+//
+// Alternative navigation. Shown when `navbar__m-secondary` modifier added
+//
+.navbar-primary
+  opacity 1
+  transition opacity .5s ease
+
+.navbar-alt
+  position absolute;
+  left 0
+  right 0
+  top -60px
+  background-color #eee
+  opacity 0
+  transition opacity .5s ease, top 0s ease .5s
 
 .navbar__m-secondary
-  .navbar__primary
-    display none
-
+  .navbar-collapse
+    display none  // hide expanded menu
+  .navbar-primary
+    opacity 0
   .navbar-alt
-    display block
+    opacity 1
+    top 0px
+    transition opacity .5s ease
 
-// Show navbar dropdowns on hover, instead of click
+
+.navbar-alt__title
+  shortable()
+  font-size 18px
+  padding 12px 5px
+
 //
-@media (min-width: gridFloatBreakpoint)
-  .nav-horiz__hoverable
-    .dropdown:hover > .dropdown-menu
-      height auto
-      opacity 1
+// Buttons in navbar
+//
 
-    // - hack `display` to make opacity work
-    .dropdown > .dropdown-menu
-      display block
-      height 0
-      overflow hidden
-      opacity 0
-      transition opacity 0.3s ease
+.nav-alt__btn
+  display inline-block
+  position relative
+  margin-top 8px
+  margin-bottom 8px
+
+.nav-alt__btn + .nav-alt__btn
+  margin-left 5px
