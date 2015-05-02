@@ -9,7 +9,7 @@ var _ = require('lodash');
 N.wire.on('navigate.done', function navbar_menu_change_active(target) {
   var targetPath = target.apiPath.split('.'), tabs, active;
 
-  tabs = $('.nav-horiz').find('[data-api-path]');
+  tabs = $('.navbar').find('[data-api-path]');
   tabs.removeClass('active');
 
   // Select the most specific tab - with the longest API path match.
@@ -37,6 +37,6 @@ N.wire.on('navigate.to', function navbar_menu_minimize() {
   // Remove class manually:
   // - animation not needed
   // - avoid nasty effect on full menu
-  // $('.nav-horiz .navbar-collapse').collapse('hide');
-  $('.nav-horiz .navbar-collapse').removeClass('in');
+  // $('.navbar .navbar-collapse').collapse('hide');
+  $('.navbar .navbar-collapse').removeClass('in');
 });

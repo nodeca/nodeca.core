@@ -13,7 +13,7 @@
 -   return result.sort(compare);
 - }
 
-nav.navbar.navbar-default.navbar-fixed-top.nav-horiz
+nav.navbar.navbar-default.navbar-fixed-top
   .navbar-primary.layout__container.container-fluid
     .navbar-header
       button.navbar-toggle(
@@ -28,7 +28,7 @@ nav.navbar.navbar-default.navbar-fixed-top.nav-horiz
       a.navbar-brand(href="/") Nodeca
 
     .navbar-collapse.collapse
-      ul.nav.navbar-nav.nav-horiz__hoverable
+      ul.nav.navbar-nav
         each item in sortedItems(self.runtime.navbar)
           - var info = item.info;
           li(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
@@ -42,12 +42,7 @@ nav.navbar.navbar-default.navbar-fixed-top.nav-horiz
 
       ul.nav.navbar-nav.navbar-right
         //- NOTE: This block is located in `nodeca.users`
-        != self.partial('@common.blocks.nav_horiz_auth', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
+        != self.partial('@common.blocks.navbar_auth', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
 
-        li: a.icon.icon-nav-vert(
-              href='#'
-              data-on-click='common.layout.nav_toggle'
-              title=self.t('vert_nav')
-            )
-
+  //- Alternative navbar container
   .navbar-alt.layout__container.container-fluid

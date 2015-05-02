@@ -13,62 +13,8 @@ body
   // jitter on change between short and long pages.
   overflow-y scroll
 
-body.nav-vert-on
-  padding-top 0
-
 .layout__container
   max-width pageMaxWidth
-
-
-// Tweak offsets & background for vertical vavigation
-//
-.nav-vert-on
-  .layout__container
-    min-height 100%
-    padding-left 0
-    background-color white
-
-  .layout__content
-    padding-top (gridGutterWidth / 2)
-    padding-left (gridGutterWidth / 2)
-    padding-right (gridGutterWidth / 2)
-    margin-left navPanelWidth
-
-body.nav-vert-on
-  background-color lighten(grayLightest, 30%)
-
-
-// Floating buttun to scroll page to top
-//
-/*a.layout-scroll-top
-  display none
-  position fixed
-  right 10px
-  bottom 10px
-  width 40px
-  height 40px
-  border-radius 20px
-  background-color #f4f4f4
-  color grayLighter
-  font-size 16px
-  z-index 10
-  &:focus
-    outline none
-  &:hover
-    color grayLight
-  &:before
-    margin-right 0
-    line-height 36px
-    width 100%
-
-.layout-scroll-top__active .layout-scroll-top
-  display block
-*/
-
-// hide scrolltop when vertical navbar used,
-// because it already has such feature.
-.nav-vert-on .layout-scroll-top
-  display none
 
 
 // Debug output block at page bottom
