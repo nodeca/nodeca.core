@@ -77,6 +77,7 @@ packages:
     vendor:
       - lodash
       - knockout
+      - event-wire
       - steady # scroll tracker
       # force embedding, init called from main_lib.js
       - kernel: nodeca.core/lib/system/client/kernel.js
