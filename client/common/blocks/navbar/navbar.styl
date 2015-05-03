@@ -4,7 +4,20 @@
 .navbar
   box-shadow 0 1px 3px rgba(0, 0, 0, 0.05)
 
-.navbar-nav li a:after
+.navbar__level-up
+  display inline-block
+  position relative
+  padding 0 10px
+  margin-left -10px
+  height 50px
+  line-height 50px
+  color grayLight
+  &:hover
+  &:focus
+    text-decoration none
+
+.navbar-nav > li > a:after
+.navbar__level-up:after
   position absolute
   left 0
   right 0
@@ -15,8 +28,9 @@
   opacity 0
   transition opacity .3s ease
 
-.navbar-nav li.active a:after
-.navbar-nav li:hover a:after
+.navbar-nav > li.active > a:after
+.navbar-nav > li:hover > a:after
+.navbar__level-up:hover:after
   opacity 1
 
 //
