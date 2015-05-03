@@ -42,7 +42,7 @@ nav.navbar.navbar-default.navbar-fixed-top
 
       ul.nav.navbar-nav.navbar-right
         //- NOTE: This block is located in `nodeca.users`
-        != self.partial('@common.blocks.navbar_auth', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
+        != self.partial('@common.blocks.navbar_auth')
 
   //- Alternative navbar container
   .navbar-alt.layout__container.container-fluid
