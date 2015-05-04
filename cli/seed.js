@@ -62,7 +62,8 @@ module.exports.commandLineArguments = [
     args: [ '-f' ],
     options: {
       help: 'force run without env checking',
-      action: 'storeTrue'
+      action: 'storeTrue',
+      dest: 'force'
     }
   },
   {
