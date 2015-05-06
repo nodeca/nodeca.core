@@ -352,6 +352,7 @@
           [ 'navigate.done', 'navigate.done:' + route.meta.methods.get ],
           {
             url:     location.href,
+            anchor:  location.hash,
             apiPath: route.meta.methods.get,
             params:  route.params
           },
