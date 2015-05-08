@@ -10,12 +10,8 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
     if self.head
       if self.head.title
         title #{self.head.title}
-      //- description
-      if self.head.desc
-        meta(name='description', content=self.head.desc)
-      //- keywords
-      if self.head.keywords
-        meta(name='description', content=self.head.keywords)
+
+      != self.partial('meta')
 
     if self.head.stylesheets[self.apiPath.split('.').shift()]
       each cssPath in self.head.stylesheets[self.apiPath.split('.').shift()]

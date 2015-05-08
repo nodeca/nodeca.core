@@ -1,0 +1,49 @@
+if self.head
+  if self.head.title
+    meta(name='title', content=self.head.title)
+
+  if self.head.description
+    meta(name='description', content=self.head.description)
+
+  if self.head.keywords
+    meta(name='keywords', content=self.head.keywords)
+
+  if self.head.canonical
+    link(rel='canonical', href=self.head.canonical)
+
+  if self.head.prev
+    link(rel='prev', href=self.head.prev)
+
+  if self.head.next
+    link(rel='next', href=self.head.next)
+
+  //- opengraph properties, see http://ogp.me/
+  if self.head.site_name
+    meta(property='og:site_name', content=self.head.site_name)
+
+  if self.head.canonical
+    meta(property='og:url', content=self.head.canonical)
+
+  if self.head.title
+    meta(property='og:title', content=self.head.title)
+
+  if self.head.thumbnail
+    meta(property='og:image', content=self.head.thumbnail)
+
+  if self.head.description
+    meta(property='og:description', content=self.head.description)
+
+  //- twitter card, see https://dev.twitter.com/cards/types/summary
+  meta(name='twitter:card', content='summary')
+
+  if self.head.title
+    meta(name='twitter:title', content=self.head.title)
+
+  if self.head.description
+    meta(name='twitter:description', content=self.head.description)
+
+  if self.head.thumbnail
+    meta(name='twitter:image', content=self.head.thumbnail)
+
+  if self.head.canonical
+    meta(name='twitter:url', content=self.head.canonical)
