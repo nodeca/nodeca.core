@@ -8,7 +8,7 @@
 N.wire.on('io.error', function io_err_init(err) {
   switch (err.code) {
   case N.io.INVALID_CSRF_TOKEN:
-    N.runtime.csrf = err.data.token;
+    N.runtime.token_csrf = err.data.token;
     N.wire.emit('notify', t('invalid_csrf_token'));
     break;
 
