@@ -1,0 +1,260 @@
+parser:
+  emojis:
+    named:
+      smile: 😀
+      happy: 😆
+      joy: 😂
+      smiley: 😃
+      haha: 😆
+      grinning: 😀
+      proud: 😊
+      wink: 😉
+      flirt: 😘
+      heart_eyes: 😍
+      crush: 😍
+      kissing_heart: 😘
+      kissing_closed_eyes: 😚
+      kissing: 😗
+      kissing_smiling_eyes: 😙
+      stuck_out_tongue_winking_eye: 😜
+      prank: 😝
+      silly: 😜
+      stuck_out_tongue_closed_eyes: 😝
+      stuck_out_tongue: 😛
+      flushed: 😳
+      grin: 😁
+      pensive: 😔
+      relieved: 😌
+      whew: 😌
+      unamused: 😒
+      meh: 😐
+      disappointed: 😞
+      persevere: 😣
+      struggling: 😣
+      cry: 😭
+      tear: 😿
+      tears: 😂
+      sob: 😭
+      bawling: 😭
+      sleepy: 😪
+      tired: 😩
+      disappointed_relieved: 😥
+      phew: 😥
+      sweat: 😓
+      nervous: 😟
+      cold_sweat: 😰
+      sweat_smile: 😅
+      hot: 😅
+      weary: 😩
+      tired_face: 😫
+      upset: 😫
+      whine: 😫
+      fearful: 😨
+      scared: 😨
+      shocked: 😱
+      oops: 😨
+      scream: 😱
+      horror: 🙀
+      mad: 😠
+      annoyed: 😠
+      rage: 😡
+      smug: 😏
+      confounded: 😖
+      laughing: 😆
+      satisfied: 😆
+      yum: 😋
+      lick: 😋
+      mask: 😷
+      sick: 😷
+      ill: 😷
+      sunglasses: 😎
+      dizzy_face: 😵
+      astonished: 😲
+      amazed: 😲
+      gasp: 😲
+      worried: 😟
+      frowning: 😦
+      anguished: 😧
+      stunned: 😧
+      smiling_imp: 😈
+      open_mouth: 😮
+      surprise: 😮
+      impressed: 😮
+      wow: 😮
+      neutral_face: 😐
+      confused: ❓
+      hushed: 😯
+      silence: 😶
+      speechless: 😯
+      no_mouth: 😶
+      innocent: 😇
+      smirk: 😏
+      expressionless: 😑
+      smiley_cat: 😺
+      smile_cat: 😸
+      heart_eyes_cat: 😻
+      kissing_cat: 😽
+      smirk_cat: 😼
+      scream_cat: 🙀
+      crying_cat_face: 😿
+      joy_cat: 😹
+      pouting_cat: 😾
+      sparkles: ✨
+      shiny: ✨
+      star: ⭐
+      watch: ⌚
+      fist: ✊
+      hand: ✋
+      raised_hand: ✋
+      highfive: ✋
+      rain: ☔
+      cat: 🐱
+      mouse: 🐭
+      cow: 🐮
+      monkey_face: 🐵
+      zap: ⚡
+      lightning: ⚡
+      thunder: ⚡
+      umbrella: ☔
+      time: ⌚
+      hourglass: ⌛
+      black_joker: 🃏
+      mahjong: 🀄
+      coffee: ☕
+      cafe: ☕
+      espresso: ☕
+      anchor: ⚓
+      loop: ➿
+      wheelchair: ♿
+      accessibility: ♿
+      negative_squared_cross_mark: ❎
+      white_check_mark: ✅
+      aries: ♈
+      taurus: ♉
+      gemini: ♊
+      cancer: ♋
+      leo: ♌
+      virgo: ♍
+      libra: ♎
+      scorpius: ♏
+      sagittarius: ♐
+      capricorn: ♑
+      aquarius: ♒
+      pisces: ♓
+      x: ❌
+      exclamation: ❗
+      heavy_exclamation_mark: ❗
+      bang: ❗
+      question: ❓
+      grey_exclamation: ❕
+      grey_question: ❔
+      heavy_plus_sign: ➕
+      heavy_minus_sign: ➖
+      heavy_division_sign: ➗
+      curly_loop: ➰
+      black_medium_small_square: ◾
+      white_medium_small_square: ◽
+      black_circle: ⚫
+      white_circle: ⚪
+      white_large_square: ⬜
+      black_large_square: ⬛
+
+    aliases:
+      # Emoticons -> Emoji mapping.
+      mad:
+        - '>:('
+        - '>:-('
+      blush:
+        - :")
+        - :-")
+      broken_heart:
+        - </3
+        - <\3
+      confused:
+        # disabled because of conflicts with links
+        # - :\
+        # - :/
+        - :-\
+        - :-/
+      cry:
+        - :'(
+        - :'-(
+        - :,(
+        - :,-(
+      frowning:
+        - :(
+        - :-(
+      heart:
+        - <3
+      imp:
+        - ']:('
+        - ']:-('
+      innocent:
+        - o:)
+        - O:)
+        - o:-)
+        - O:-)
+        - 0:)
+        - 0:-)
+      joy:
+        - :')
+        - :'-)
+        - :,)
+        - :,-)
+        - :'D
+        - :'-D
+        - :,D
+        - :,-D
+      kissing:
+        - :*
+        - :-*
+      laughing:
+        - x-)
+        - X-)
+      neutral_face:
+        - :|
+        - :-|
+      open_mouth:
+        - :o
+        - :-o
+        - :O
+        - :-O
+      rage:
+        - :@
+        - :-@
+      smile:
+        - :D
+        - :-D
+      smiley:
+        - :)
+        - :-)
+      smiling_imp:
+        - ']:)'
+        - ']:-)'
+      sob:
+        - :,'(
+        - :,'-(
+        - ;(
+        - ;-(
+      stuck_out_tongue:
+        - :P
+        - :-P
+      sunglasses:
+        - 8-)
+        - B-)
+      sweat:
+        - ',:('
+        - ',:-('
+      sweat_smile:
+        - ',:)'
+        - ',:-)'
+      unamused:
+        - :s
+        - :-S
+        - :z
+        - :-Z
+        - :$
+        - :-$
+      wink:
+        - ;)
+        - ;-)

@@ -97,6 +97,13 @@ parser:
       h5:
         group: block
 
+    emojis:
+
+      emoji:
+        group: inline
+        attributes:
+          data-nd-content: true
+
     attachments:
 
       attach:
