@@ -105,6 +105,15 @@ parser:
           data-nd-id: true
           data-nd-content: true
 
+    spoilers:
+
+      spoiler:
+        group: block
+        children:
+          group_block: true
+        attributes:
+          data-nd-title: true
+
     attachments:
 
       attach:
