@@ -70,6 +70,10 @@ packages:
       include: server/common/**.js
       exclude: /(^|\/|\\)_.*/
 
+    internal:
+      include: internal/common/**.js
+      exclude: /(^|\/|\\)_.*/
+
     i18n_server:
       include: server/common/**i18n/*.yml
 
