@@ -11,7 +11,7 @@
 var _ = require('lodash');
 
 
-N.wire.once('navigate.done', { priority: -1000 }, function runtime_vars_init() {
+N.wire.once('init:assets', { priority: -1000 }, function runtime_vars_init() {
   var runtime_page_data = JSON.parse($('#runtime').text());
   _.defaults(N.runtime, runtime_page_data);
 });
