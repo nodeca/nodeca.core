@@ -102,6 +102,7 @@ parser:
       emoji:
         group: inline
         attributes:
+          data-nd-id: true
           data-nd-content: true
 
     attachments:
