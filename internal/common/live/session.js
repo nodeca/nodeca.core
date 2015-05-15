@@ -1,24 +1,17 @@
 // Add session loader helper
 //
-//   data.helpers.sessionLoad(function (err) {
-//     if (err) {
-//       callback(err);
-//       return;
-//     }
-//
-//     // `data.session` is available here
+//   data.getSession(function (err, session) {
+//     // ...
 //   });
 //
 'use strict';
 
 module.exports = function (N) {
   N.wire.before('internal.live.*', { priority: -100 }, function add_session_loader(data) {
-    data.helpers = data.helpers || {};
-
-    data.helpers.sessionLoad = function (callback) {
+    data.getSession = function (callback) {
       // If session already loaded - skip
-      if (data.session) {
-        callback();
+      if (data.__session__ || data.__session__ === null) {
+        callback(null, data.__session__);
         return;
       }
 
@@ -38,19 +31,20 @@ module.exports = function (N) {
 
           // If session not found
           if (!rawData) {
-            callback('Session not found');
+            data.__session__ = null;
+            callback(null, data.__session__);
             return;
           }
 
           try {
-            data.session = JSON.parse(rawData);
+            data.__session__ = JSON.parse(rawData);
           } catch (__) {
             // If session data is broken
             callback('Session is broken');
             return;
           }
 
-          callback();
+          callback(null, data.__session__);
         });
       });
     };
