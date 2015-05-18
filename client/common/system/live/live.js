@@ -14,10 +14,6 @@ N.wire.once('init:assets', function live_init(__, callback) {
     return N.runtime.token_live;
   });
 
-  transport.onerror = function (error) {
-    N.wire.emit('io.error', error.code ? error : { message: error });
-  };
-
   N.live = new Live({
     transport: transport
   });
