@@ -2,24 +2,43 @@
 
 @import "nodeca.core/client/common/_variables"
 
+.spoiler
+  border-left 4px solid grayLighter
+  margin-bottom (baseLineHeight/2)
+
 .spoiler__title
   cursor pointer
+  background-color #F8F8F8
+  font-size 12px
+  font-weight bold
+  padding 5px 10px
+
+.spoiler__inner
+  overflow hidden
 
 .spoiler__content
-  display none
+  transition margin 0.3s ease
+  padding 5px 10px 0 10px
+  margin-top -100%
+  margin-bottom -10px
 
 // writing explicit paths to the content here, because
 // ".spoiler__m-open .spoiler__content" selector would match
 // a closed spoiler inside of an open one (same with icons below)
 //
-.spoiler__m-open > .spoiler__title > .spoiler__content
-  display inline
+.spoiler__m-open > .spoiler__inner > .spoiler__content
+  margin-top 0
 
 .spoiler__icon-collapse
   display none
 
-.spoiler__m-open > .spoiler__title > .spoiler__icon-collapse
-  display inline
+.spoiler__m-open > .spoiler__title
+  .spoiler__icon-collapse
+    display inline
+  .spoiler__icon-expand
+    display none
 
-.spoiler__m-open > .spoiler__title > .spoiler__icon-expand
-  display none
+// Always open spoiler in editor in preview
+//
+.mdedit__preview .spoiler__content
+  margin-top 0
