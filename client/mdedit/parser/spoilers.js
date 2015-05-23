@@ -2,7 +2,7 @@
 
 N.wire.once('init:parser', function spoiler_plugin_init() {
   N.parse.addPlugin(
-    'spoiler',
-    require('nodeca.core/lib/parser/plugins/spoiler')(N)
+    'spoilers',
+    require('nodeca.core/lib/parser/plugins/spoilers')(N)
   );
 });

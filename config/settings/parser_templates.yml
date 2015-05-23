@@ -69,10 +69,10 @@ setting_schemas:
       as: smiles
       default: true
 
-    markup_spoiler:
+    markup_spoilers:
       priority: 10
       type: boolean
-      as: spoiler
+      as: spoilers
       default: true
 
     markup_sub:
