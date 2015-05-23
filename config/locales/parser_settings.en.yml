@@ -11,6 +11,8 @@ i18n:
           markup_images: Enable images
           markup_links: Enable links
           markup_lists: Enable lists
+          markup_hrs: Enable horizontal rules
+          markup_codes: Enable code blocks (fenced / indented / inline)
           markup_medialinks: Enable medialinks
           markup_quotes: Enable quotes
           markup_smiles: Enable smiles

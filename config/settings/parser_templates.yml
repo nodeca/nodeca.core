@@ -51,6 +51,18 @@ setting_schemas:
       as: lists
       default: true
 
+    markup_hrs:
+      priority: 10
+      type: boolean
+      as: hrs
+      default: true
+
+    markup_codes:
+      priority: 10
+      type: boolean
+      as: codes
+      default: true
+
     markup_medialinks:
       priority: 10
       type: boolean

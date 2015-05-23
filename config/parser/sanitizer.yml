@@ -76,6 +76,24 @@ parser:
           group_inline: true
         remove_empty: true
 
+    hrs:
+
+      hr:
+        group: block
+
+    codes:
+
+      code:
+        group: inline
+        children:
+          text: true
+
+      pre:
+        group: block
+        children:
+          code: true
+        attributes: false # skip attributes check
+
     sub:
 
       sub:
