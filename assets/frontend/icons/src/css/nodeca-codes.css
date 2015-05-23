@@ -14,6 +14,8 @@
 .icon-link:before { content: '\e807'; } /* '' */
 .icon-to-top:before { content: '\e808'; } /* '' */
 .icon-to-bottom:before { content: '\e809'; } /* '' */
+.icon-expand-alt:before { content: '\e80a'; } /* '' */
+.icon-collapse-alt:before { content: '\e80b'; } /* '' */
 .icon-menu:before { content: '\e80d'; } /* '' */
 .icon-vkontakte:before { content: '\e811'; } /* '' */
 .icon-gplus:before { content: '\e812'; } /* '' */
