@@ -86,6 +86,7 @@ parser:
       code:
         group: inline
         children: false   # it will kill fenced blocks highlight in other case
+        attributes: false # skip attributes check
 
       pre:
         group: block
