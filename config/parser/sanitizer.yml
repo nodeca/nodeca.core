@@ -85,8 +85,7 @@ parser:
 
       code:
         group: inline
-        children:
-          text: true
+        children: false   # it will kill fenced blocks highlight in other case
 
       pre:
         group: block
