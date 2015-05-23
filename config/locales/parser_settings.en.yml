@@ -4,7 +4,7 @@ i18n:
       core:
         setting_names:
           markup_cut: Enable cut
-          markup_emphasis: Enable emphasis
+          markup_emphasis: Enable emphasis (bold / italic / strike)
           markup_attachments: Enable attachments
           markup_footnotes: Enable footnotes
           markup_headings: Enable headings
