@@ -15,8 +15,8 @@ i18n:
           markup_codes: Enable code blocks (fenced / indented / inline)
           markup_medialinks: Enable medialinks
           markup_quotes: Enable quotes
-          markup_smiles: Enable smiles
+          markup_emojis: Enable emoticons
           markup_spoilers: Enable spoilers
-          markup_sub: Enable sub
-          markup_sup: Enable sup
+          markup_sub: Enable subscripts
+          markup_sup: Enable superscripts
           markup_tables: Enable tables

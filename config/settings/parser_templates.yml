@@ -75,10 +75,10 @@ setting_schemas:
       as: quotes
       default: true
 
-    markup_smiles:
+    markup_emojis:
       priority: 10
       type: boolean
-      as: smiles
+      as: emojis
       default: true
 
     markup_spoilers:

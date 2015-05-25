@@ -12,8 +12,8 @@
               = self.t('medialinks')
           .checkbox
             label
-              input(type='checkbox' tabindex='2' checked=!self.no_smiles name='smiles')
-              = self.t('smiles')
+              input(type='checkbox' tabindex='2' checked=!self.no_emojis name='emojis')
+              = self.t('emojis')
 
         .modal-footer
             button.btn.btn-default(type='button' tabindex='3' data-dismiss='modal')= self.t('cancel')

@@ -3,7 +3,7 @@
 // options (in/out):
 //
 // - no_mlinks (Boolean) - don't convert medialinks
-// - no_smiles (Boolean) - don't convert smiles
+// - no_emojis (Boolean) - don't convert emoticons
 //
 'use strict';
 
@@ -38,7 +38,7 @@ N.wire.on(module.apiPath, function show_posting_options_dlg(data, callback) {
 //
 N.wire.on(module.apiPath + ':submit', function submit_posting_options_dlg(data) {
   options.no_mlinks = !data.fields.mlinks;
-  options.no_smiles = !data.fields.smiles;
+  options.no_emojis = !data.fields.emojis;
 
   doneCallback();
 
