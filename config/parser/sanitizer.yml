@@ -28,7 +28,7 @@ parser:
         children:
           group_inline: true
         remove_empty: true
-      del:
+      s:
         group: inline
         children:
           group_inline: true
@@ -108,14 +108,28 @@ parser:
 
       h1:
         group: block
+        children:
+          text: true
       h2:
         group: block
+        children:
+          text: true
       h3:
         group: block
+        children:
+          text: true
       h4:
         group: block
+        children:
+          text: true
       h5:
         group: block
+        children:
+          text: true
+      h6:
+        group: block
+        children:
+          text: true
 
     emojis:
 
