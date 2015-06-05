@@ -1,4 +1,5 @@
-// Add tabex client to 'N' as `live` and init faye client for instnt messaging
+// Add tabex client to 'N' as `live` and init faye client for instnt messaging.
+// Prefix `local.` used to communicate between tabs without server
 //
 'use strict';
 
@@ -18,33 +19,85 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init(__, callback
   /////////////////////////////////////////////////////////////////////////////
   // Init faye client
   //
-  var flive = tabex.client();
 
+  // Tabex client to communicate with faye
+  var flive = tabex.client();
+  // Faye client to communicate with server
   var fayeClient = null;
+  // Channels subscribed by faye
   var trackedChannels = {};
-  // TODO: update token
+  // Token to validate connection
   var token = N.runtime.token_live;
+  // Flag - waiting token update
+  var tokenUpdateStarted = false;
+  // Handlers subscribed to token update
+  var updateHandlers = [];
+
+
+  // Update live token
+  //
+  // - callback (Function) - call after token update
+  //
+  function tokenUpdate(callback) {
+
+    // Collect handlers who want update token
+    if (callback) {
+      updateHandlers.push(callback);
+    }
+
+    // If update already started - just wait for finish
+    if (tokenUpdateStarted) {
+      return;
+    }
+
+    // Mark update started
+    tokenUpdateStarted = true;
+
+    // Make RPC request to get new token
+    N.io.rpc('common.core.token_live')
+      .done(function (res) {
+        var handlers = updateHandlers;
+
+        token = res.token_live;
+        updateHandlers = [];
+
+        // Notify handlers about update
+        handlers.forEach(function (handler) {
+          handler();
+        });
+      })
+      .finish(function () {
+        tokenUpdateStarted = false;
+      });
+  }
+
 
   // Convert channel names to faye-compatible format: add '/' at start of
   // channel name and replace '.' with '!!'
   //
-  flive.filterIn(function (channel, message, callback) {
-    if (channel.indexOf('remote.') === 0) {
-      callback('/' + channel.replace(/\./g, '!!'), message);
-      return;
-    }
+  function toFayeCompatible(ch) {
+    return '/' + ch.replace(/\./g, '!!');
+  }
 
-    callback(channel, message);
-  });
 
-  // Resend local events with prefix `/remote!!` to server
+  // Resend events to server (except prefix `local.` and `!sys.`)
   //
   flive.filterIn(function (channel, message, callback) {
-    if (channel.indexOf('/remote!!') === 0) {
-      // Make sure current tab is master
-      if (fayeClient) {
-        fayeClient.publish(channel, message.data);
-      }
+    if (fayeClient && channel.indexOf('local.') !== 0 && channel.indexOf('!sys.') !== 0) {
+
+      fayeClient.publish(toFayeCompatible(channel), message.data).then(function () {}, function (err) {
+
+        // If token is invalid - request new and try one more time
+        if (err.message.code !== N.io.INVALID_LIVE_TOKEN) {
+          return;
+        }
+
+        // `tokenUpdate` called here at second time (first in incoming faye filter).
+        // It is needed to wait token update and retry after it
+        tokenUpdate(function () {
+          fayeClient.publish(toFayeCompatible(channel), message.data);
+        });
+      });
 
       return;
     }
@@ -52,17 +105,6 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init(__, callback
     callback(channel, message);
   });
 
-  // Convert channel name back from faye compatible format: remove '/'
-  // at start of channel name and replace '!!' with '.'
-  //
-  flive.filterOut(function (channel, message, callback) {
-    if (channel[0] === '/') {
-      callback(channel.slice(1).replace(/!!/g, '.'), message);
-      return;
-    }
-
-    callback(channel, message);
-  });
 
   // Connect to messaging server when become master and
   // kill connection if master changed
@@ -79,6 +121,11 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init(__, callback
             callback(message);
           },
           incoming: function (message, callback) {
+            // If token error - request update
+            if (message.error && message.error.code === N.io.INVALID_LIVE_TOKEN) {
+              tokenUpdate();
+            }
+
             callback(message);
           }
         });
@@ -94,6 +141,16 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init(__, callback
     }
   });
 
+
+  // Subscribe faye client to chennel and return subscription object
+  //
+  function fayeSubscribe(channel) {
+    return fayeClient.subscribe(toFayeCompatible(channel), function (message) {
+      flive.emit(channel, message.data);
+    });
+  }
+
+
   // If list of active channels changed - subscribe to new channels and
   // remove outdated ones.
   //
@@ -103,10 +160,11 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init(__, callback
       return;
     }
 
-    // Filter channels by prefix `remote.`
+    // Filter channels by prefix `local.` and system channels (starts with `!sys.`)
     var channels = data.channels.filter(function (channel) {
-      return channel.indexOf('remote.') === 0;
+      return channel.indexOf('local.') !== 0 && channel.indexOf('!sys.') !== 0;
     });
+
 
     // Unsubscribe removed channels
     //
@@ -117,16 +175,25 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init(__, callback
       }
     });
 
+
     // Subscribe to new channels
     //
     channels.forEach(function (channel) {
       if (!trackedChannels.hasOwnProperty(channel)) {
-        trackedChannels[channel] = fayeClient.subscribe(
-          '/' + channel.slice('remote.'.length).replace(/\./g, '!!'),
-          function (message) {
-            flive.emit(channel, message.data);
+        trackedChannels[channel] = fayeSubscribe(channel);
+
+        // If token invalid - update token and try subscribe again
+        trackedChannels[channel].errback(function (err) {
+          if (err.message.code !== N.io.INVALID_LIVE_TOKEN) {
+            return;
           }
-        );
+
+          // `tokenUpdate` called here at second time (first in incoming faye filter).
+          // It is needed to wait token update and retry after it
+          tokenUpdate(function () {
+            trackedChannels[channel] = fayeSubscribe(channel);
+          });
+        });
       }
     });
   });
