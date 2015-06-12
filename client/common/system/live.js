@@ -17,6 +17,22 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init(__, callback
 
 
   /////////////////////////////////////////////////////////////////////////////
+  // Token update request
+  //
+  N.live.on('local.common.core.token_live.update_request', function (requestID) {
+
+    // Run RPC request only in one client - lock by unique `requestID`
+    N.live.lock('token_live_update_' + requestID, 5000, function () {
+      N.io.rpc('common.core.token_live').done(function (res) {
+
+        // Send new token back
+        N.live.emit('local.common.core.token_live.update_result', res.token_live);
+      });
+    });
+  });
+
+
+  /////////////////////////////////////////////////////////////////////////////
   // Init faye client
   //
 
@@ -32,9 +48,10 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init(__, callback
   var tokenUpdateStarted = false;
   // Handlers subscribed to token update
   var updateHandlers = [];
+  var updateTimeout = null;
 
 
-  // Update live token
+  // Request update live token
   //
   // - callback (Function) - call after token update
   //
@@ -53,23 +70,33 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init(__, callback
     // Mark update started
     tokenUpdateStarted = true;
 
-    // Make RPC request to get new token
-    N.io.rpc('common.core.token_live')
-      .done(function (res) {
-        var handlers = updateHandlers;
+    // Emit update request event to each tab with random ID for lock
+    flive.emit('local.common.core.token_live.update_request', Math.round(Math.random() * 1e10));
 
-        token = res.token_live;
-        updateHandlers = [];
-
-        // Notify handlers about update
-        handlers.forEach(function (handler) {
-          handler();
-        });
-      })
-      .finish(function () {
-        tokenUpdateStarted = false;
-      });
+    // If no response in 5 sec - allow retry
+    updateTimeout = setTimeout(function () {
+      tokenUpdateStarted = false;
+    }, 5000);
   }
+
+  // Handle token update result
+  //
+  flive.on('local.common.core.token_live.update_result', function (newToken) {
+    var handlers = updateHandlers;
+
+    // Update token locally
+    token = newToken;
+    updateHandlers = [];
+
+    // Mark request stopped
+    tokenUpdateStarted = false;
+    clearTimeout(updateTimeout);
+
+    // Notify handlers about update
+    handlers.forEach(function (handler) {
+      handler();
+    });
+  });
 
 
   // Convert channel names to faye-compatible format: add '/' at start of
