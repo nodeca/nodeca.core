@@ -133,7 +133,34 @@ function loadData(options, callback) {
   var id = ++requestID;
 
   // History is enabled - try RPC navigation.
-  N.io.rpc(options.apiPath, options.params, { handleAllErrors: true }, function (err, res) {
+  N.io.rpc(options.apiPath, options.params, { handleAllErrors: true }).done(function (res) {
+
+    // Page loading is terminated
+    if (id !== requestID) {
+      callback(null);
+      return;
+    }
+
+    N.loader.loadAssets(options.apiPath.split('.')[0], function () {
+
+      // Page loading is terminated
+      if (id !== requestID) {
+        callback(null);
+        return;
+      }
+
+      var state = {
+        apiPath: options.apiPath,
+        params: options.params,
+        anchor: options.anchor,
+        view: options.apiPath,
+        locals: res || {}
+      };
+
+      callback(state);
+    });
+
+  }).fail(function (err) {
 
     // Page loading is terminated
     if (id !== requestID) {
@@ -200,25 +227,6 @@ function loadData(options, callback) {
       });
       return;
     }
-
-    N.loader.loadAssets(options.apiPath.split('.')[0], function () {
-
-      // Page loading is terminated
-      if (id !== requestID) {
-        callback(null);
-        return;
-      }
-
-      var state = {
-        apiPath: options.apiPath,
-        params: options.params,
-        anchor: options.anchor,
-        view: options.apiPath,
-        locals: res || {}
-      };
-
-      callback(state);
-    });
   });
 }
 
