@@ -51,7 +51,7 @@ module.exports.parserParameters = {
     'Or, all seeds from `./db/seeds/seed-name/` folder. If <seed-name>' +
     'missed, then script will show all available seeds for given app. ' +
     'If `-a` missed, then all seed for all apps will be shown.',
-  epilog : 'Note: Loading seeds is limited to development/test enviroment. ' +
+  epilog : 'Note: Loading seeds is limited to development/test environment. ' +
     'If you really need to run seed  on production/stageing, use ' +
     'option -f.',
   help: 'show or run existing seeds'
@@ -97,7 +97,7 @@ module.exports.commandLineArguments = [
 module.exports.run = function (N, args, callback) {
   var app_name = args.app;
   var seed_name = args.seed;
-  var env = N.enviroment;
+  var env = N.environment;
 
   function get_app_path(app_name) {
     var app = _.find(N.apps, function (app) {
@@ -123,7 +123,7 @@ module.exports.run = function (N, args, callback) {
       if (!!app_name && !!seed_name) {
         // protect production env from accident run
         if ([ 'development', 'test' ].indexOf(env) === -1 && !args.force) {
-          callback(format('Error: Can\'t run seed from %s enviroment. Please, use -f to force.', env));
+          callback(format('Error: Can\'t run seed from %s environment. Please, use -f to force.', env));
           return;
         }
 
@@ -175,7 +175,7 @@ module.exports.run = function (N, args, callback) {
       if (!_.isEmpty(args.seed_numbers)) {
         // protect production env from accident run
         if ([ 'development', 'test' ].indexOf(env) === -1 && !args.force) {
-          callback(format('Error: Can\'t run seed from %s enviroment. Please, use -f to force.', env));
+          callback(format('Error: Can\'t run seed from %s environment. Please, use -f to force.', env));
           return;
         }
 
