@@ -10,58 +10,38 @@ medialinks:
   #
   # name:
   #   match     - regexp or array of regexps to check link
-  #   fetch     - function(require, url, callback) to get provider data
-  #               for template. Should be string (function body)
-  #   template  - lodash template to render fetched data
+  #   type      - `block`, `inline` or `any`
+  #   fetch_url - template to fetch additional data (for example via
+  #               oembed `http://www.youtube.com/oembed?url=<%- self.src %>`)
+  #   view      - normal view template
+  #   stub      - dummy view template (without data)
+  #   thumb_url - thumbnail url template (only for video in albums)
+  #
+  # Use `lodash` templates. Additional helpers:
+  #
+  #   - encode (mdurl.encode)
+  #   - decode (mdurl.decode)
   #
   providers:
 
-    youtube:
+    youtube_block:
       name: YouTube
       home: http://www.youtube.com/
+      type: block
 
       match:
         - /https?://(www\.)?youtube\.com/watch.*/i
         - /https?://(www\.)?youtube\.com/playlist.*/i
         - /https?://youtu\.be/.*/i
 
-      fetch: |
-        var request = require('request');
+      fetch_url: |
+        http://www.youtube.com/oembed?url=<%= self.helpers.encode(self.src, self.helpers.encode.componentChars) %>
 
-        request('http://www.youtube.com/oembed?url=' + url, function (err, response, body) {
-          if (err) {
-            callback(err);
-            return;
-          }
-
-          var oembed;
-          try {
-            oembed = JSON.parse(body);
-          } catch (err) {
-            callback(err);
-            return;
-          }
-
-          var video_url = oembed.html.match(/src="([^"]+)/i)[1];
-          video_url = video_url.replace(/^https?:/, '');
-
-          var result = {
-            provider: 'youtube',
-            src: url,
-            video_url: video_url,
-            thumb: oembed.thumbnail_url.replace(/^https?:/, '').replace(/[a-z0-9]+\.jpg$/, 'mqdefault.jpg'),
-            video_height: oembed.height,
-            video_width: oembed.width,
-            title: oembed.title
-          };
-
-          callback(null, result);
-        });
-
-      template: |
-        <div class="medialink-video medialink-<%= self.provider %>" data-nd-type="medialink" data-nd-rule="<%= self.provider %>" data-nd-src="<%= self.src %>" data-nd-cache=\'{ url: "<%= self.video_url %>" }\'>
-          <div class="embed-responsive embed-responsive-<%= self.video_width/self.video_height > 1.5 ? '16by9' : '4by3' %>">
-            <iframe src="<%= self.video_url %>" allowfullscreen></iframe>
+      view: |
+        <% var videoUrl = _.unescape(self.data.html.match(/src="([^"]+)/i)[1]).replace(/^https?:/, ''); %>
+        <div class="medialink-video medialink-youtube" data-nd-type="medialink" data-nd-rule="youtube" data-nd-src="<%- self.src %>">
+          <div class="embed-responsive" style="padding-bottom: <%- 100 / self.data.width * self.data.height %>%;">
+            <iframe src="<%- videoUrl %>" allowfullscreen></iframe>
           </div>
         </div>
 
@@ -71,49 +51,42 @@ medialinks:
           </div>
         </div>
 
-    vimeo:
+      thumb_url: <%= self.data.thumbnail_url.replace(/^https?:/, '').replace(/\?.+$/, '?size=s') %>
+
+    youtube_inline:
+      name: YouTube
+      home: http://www.youtube.com/
+      type: inline
+
+      match:
+        - /https?://(www\.)?youtube\.com/watch.*/i
+        - /https?://(www\.)?youtube\.com/playlist.*/i
+        - /https?://youtu\.be/.*/i
+
+      fetch_url: |
+        http://www.youtube.com/oembed?url=<%= self.helpers.encode(self.src, self.helpers.encode.componentChars) %>
+
+      view: |
+        <a target="_blank" href="<%- self.src %>">[YouTube] <%- self.data.title %></a>
+
+      stub: |
+        <a href="<%- self.src %>">[YouTube] <%- self.helpers.decode(self.src) %></a>
+
+    vimeo_block:
       name: Vimeo
       home: https://vimeo.com/
+      type: block
 
       match: /https?://(.+\.)?vimeo\.com/.*/i
 
-      fetch: |
-        var request = require('request');
+      fetch_url: |
+        http://vimeo.com/api/oembed.json?url=<%= self.helpers.encode(self.src, self.helpers.encode.componentChars) %>
 
-        request('http://vimeo.com/api/oembed.json?url=' + url, function (err, response, body) {
-          if (err) {
-            callback(err);
-            return;
-          }
-
-          var oembed;
-          try {
-            oembed = JSON.parse(body);
-          } catch (err) {
-            callback(err);
-            return;
-          }
-
-          var video_url = oembed.html.match(/src="([^"]+)/i)[1];
-          video_url = video_url.replace(/^https?:/, '');
-
-          var result = {
-            provider: 'vimeo',
-            src: url,
-            video_url: video_url,
-            thumb: oembed.thumbnail_url.replace(/^https?:/, '').replace(/_[0-9]+\.jpg$/, '_200.jpg'),
-            video_height: oembed.height,
-            video_width: oembed.width,
-            title: oembed.title
-          };
-
-          callback(null, result);
-        });
-
-      template: |
-        <div class="medialink-video medialink-<%= self.provider %>" data-nd-type="medialink" data-nd-rule="<%= self.provider %>" data-nd-src="<%= self.src %>" data-nd-cache=\'{ url: "<%= self.video_url %>" }\'>
-          <div class="embed-responsive embed-responsive-<%= self.video_width/self.video_height > 1.5 ? '16by9' : '4by3' %>">
-            <iframe src="<%= self.video_url %>" allowfullscreen></iframe>
+      view: |
+        <% var videoUrl = _.unescape(self.data.html.match(/src="([^"]+)/i)[1]).replace(/^https?:/, ''); %>
+        <div class="medialink-video medialink-vimeo" data-nd-type="medialink" data-nd-rule="vimeo" data-nd-src="<%- self.src %>">
+          <div class="embed-responsive" style="padding-bottom: <%- 100 / self.data.width * self.data.height %>%;">
+            <iframe src="<%- videoUrl %>" allowfullscreen></iframe>
           </div>
         </div>
 
@@ -123,49 +96,39 @@ medialinks:
           </div>
         </div>
 
-    rutube:
+      thumb_url: <%= self.data.thumbnail_url.replace(/^https?:/, '').replace(/_[0-9]+\.jpg$/, '_200.jpg') %>
+
+    vimeo_inline:
+      name: Vimeo
+      home: https://vimeo.com/
+      type: inline
+
+      match: /https?://(.+\.)?vimeo\.com/.*/i
+
+      fetch_url: |
+        http://vimeo.com/api/oembed.json?url=<%= self.helpers.encode(self.src, self.helpers.encode.componentChars) %>
+
+      view: |
+        <a target="_blank" href="<%- self.src %>">[Vimeo] <%- self.data.title %></a>
+
+      stub: |
+        <a href="<%- self.src %>">[Vimeo] <%- self.helpers.decode(self.src) %></a>
+
+    rutube_block:
       name: Rutube
       home: http://rutube.ru/
+      type: block
 
       match: /https?://(.+\.)?rutube\.ru/.*/i
 
-      fetch: |
-        var request = require('request');
+      fetch_url: |
+        http://rutube.ru/api/oembed/?format=json&url=<%= self.helpers.encode(self.src, self.helpers.encode.componentChars) %>
 
-        request('http://rutube.ru/api/oembed/?format=json&url=' + url, function (err, response, body) {
-          if (err) {
-            callback(err);
-            return;
-          }
-
-          var oembed;
-          try {
-            oembed = JSON.parse(body);
-          } catch (err) {
-            callback(err);
-            return;
-          }
-
-          var video_url = oembed.html.match(/src="([^"]+)/i)[1];
-          video_url = video_url.replace(/^https?:/, '');
-
-          var result = {
-            provider: 'rutube',
-            src: url,
-            video_url: video_url,
-            thumb: oembed.thumbnail_url.replace(/^https?:/, '').replace(/\?.+$/, '?size=s'),
-            video_height: oembed.height,
-            video_width: oembed.width,
-            title: oembed.title
-          };
-
-          callback(null, result);
-        });
-
-      template: |
-        <div class="medialink-video medialink-<%= self.provider %>" data-nd-type="medialink" data-nd-rule="<%= self.provider %>" data-nd-src="<%= self.src %>" data-nd-cache=\'{ url: "<%= self.video_url %>" }\'>
-          <div class="embed-responsive embed-responsive-<%= self.video_width/self.video_height > 1.5 ? '16by9' : '4by3' %>">
-            <iframe src="<%= self.video_url %>" allowfullscreen></iframe>
+      view: |
+        <% var videoUrl = _.unescape(self.data.html.match(/src="([^"]+)/i)[1]).replace(/^https?:/, ''); %>
+        <div class="medialink-video medialink-rutube" data-nd-type="medialink" data-nd-rule="rutube" data-nd-src="<%- self.src %>">
+          <div class="embed-responsive" style="padding-bottom: <%- 100 / self.data.width * self.data.height %>%;">
+            <iframe src="<%- videoUrl %>" allowfullscreen></iframe>
           </div>
         </div>
 
@@ -174,3 +137,21 @@ medialinks:
           <div class="embed-responsive embed-responsive-16by9">
           </div>
         </div>
+
+      thumb_url: <%= self.data.thumbnail_url.replace(/^https?:/, '').replace(/\?.+$/, '?size=s') %>
+
+    rutube_inline:
+      name: Rutube
+      home: http://rutube.ru/
+      type: inline
+
+      match: /https?://(.+\.)?rutube\.ru/.*/i
+
+      fetch_url: |
+        http://rutube.ru/api/oembed/?format=json&url=<%= self.helpers.encode(self.src, self.helpers.encode.componentChars) %>
+
+      view: |
+        <a target="_blank" href="<%- self.src %>">[Rutube] <%- self.data.title %></a>
+
+      stub: |
+        <a href="<%- self.src %>">[Rutube] <%- self.helpers.decode(self.src) %></a>
