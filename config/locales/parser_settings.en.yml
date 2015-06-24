@@ -17,6 +17,8 @@ i18n:
           markup_quote: Enable quotes
           markup_emoji: Enable emoticons
           markup_spoiler: Enable spoilers
+          markup_link_to_snippet: Replace internal links with previews
+          markup_link_to_title: Add titles to internal links
           markup_sub: Enable subscripts
           markup_sup: Enable superscripts
           markup_table: Enable tables

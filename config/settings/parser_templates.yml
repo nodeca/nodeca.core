@@ -87,6 +87,18 @@ setting_schemas:
       as: spoiler
       default: true
 
+    markup_link_to_title:
+      priority: 10
+      type: boolean
+      as: link_to_title
+      default: true
+
+    markup_link_to_snippet:
+      priority: 10
+      type: boolean
+      as: link_to_snippet
+      default: true
+
     markup_sub:
       priority: 10
       type: boolean
