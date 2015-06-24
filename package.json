@@ -2,14 +2,7 @@
   "name"            : "nodeca.core",
   "description"     : "Core nodeca app",
   "version"         : "0.0.1",
-  "keywords"        : ["nodeca", "core", "main", "app"],
-  "homepage"        : "https://github.com/nodeca/nodeca.core",
-
-  "author"          : "Aleksey V Zapparov <ixti@member.fsf.org> (http://ixti.net/)",
-
-  "bugs"            : { "url": "https://github.com/nodeca/nodeca.core/issues" },
-  "license"         : { "type": "MIT", "url": "https://github.com/nodeca/nodeca.core/blob/master/LICENSE" },
-  "repository"      : { "type": "git", "url": "git://github.com/nodeca/nodeca.core.git" },
-
-  "main"            : "./index.js"
+  "keywords"        : ["nodeca", "core"],
+  "license"         : "MIT",
+  "repository"      : "nodeca/nodeca.core"
 }
