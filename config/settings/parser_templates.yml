@@ -15,76 +15,76 @@ setting_schemas:
       as: emphasis
       default: true
 
-    markup_footnotes:
+    markup_footnote:
       priority: 10
       type: boolean
-      as: footnotes
+      as: footnote
       default: true
 
-    markup_headings:
+    markup_heading:
       priority: 10
       type: boolean
-      as: headings
+      as: heading
       default: true
 
-    markup_images:
+    markup_image:
       priority: 10
       type: boolean
-      as: images
+      as: image
       default: true
 
-    markup_attachments:
+    markup_attachment:
       priority: 10
       type: boolean
-      as: attachments
+      as: attachment
       default: true
 
-    markup_links:
+    markup_link:
       priority: 10
       type: boolean
-      as: links
+      as: link
       default: true
 
-    markup_lists:
+    markup_list:
       priority: 10
       type: boolean
-      as: lists
+      as: list
       default: true
 
-    markup_hrs:
+    markup_hr:
       priority: 10
       type: boolean
-      as: hrs
+      as: hr
       default: true
 
-    markup_codes:
+    markup_code:
       priority: 10
       type: boolean
-      as: codes
+      as: code
       default: true
 
-    markup_medialinks:
+    markup_medialink:
       priority: 10
       type: boolean
-      as: medialinks
+      as: medialink
       default: true
 
-    markup_quotes:
+    markup_quote:
       priority: 10
       type: boolean
-      as: quotes
+      as: quote
       default: true
 
-    markup_emojis:
+    markup_emoji:
       priority: 10
       type: boolean
-      as: emojis
+      as: emoji
       default: true
 
-    markup_spoilers:
+    markup_spoiler:
       priority: 10
       type: boolean
-      as: spoilers
+      as: spoiler
       default: true
 
     markup_sub:
@@ -99,8 +99,8 @@ setting_schemas:
       as: sup
       default: true
 
-    markup_tables:
+    markup_table:
       priority: 10
       type: boolean
-      as: tables
+      as: table
       default: true

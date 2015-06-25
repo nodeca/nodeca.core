@@ -5,18 +5,18 @@ i18n:
         setting_names:
           markup_cut: Enable cut
           markup_emphasis: Enable emphasis (bold / italic / strike)
-          markup_attachments: Enable attachments
-          markup_footnotes: Enable footnotes
-          markup_headings: Enable headings
-          markup_images: Enable images
-          markup_links: Enable links
-          markup_lists: Enable lists
-          markup_hrs: Enable horizontal rules
-          markup_codes: Enable code blocks (fenced / indented / inline)
-          markup_medialinks: Enable medialinks
-          markup_quotes: Enable quotes
-          markup_emojis: Enable emoticons
-          markup_spoilers: Enable spoilers
+          markup_attachment: Enable attachments
+          markup_footnote: Enable footnotes
+          markup_heading: Enable headings
+          markup_image: Enable images
+          markup_link: Enable links
+          markup_list: Enable lists
+          markup_hr: Enable horizontal rules
+          markup_code: Enable code blocks (fenced / indented / inline)
+          markup_medialink: Enable medialinks
+          markup_quote: Enable quotes
+          markup_emoji: Enable emoticons
+          markup_spoiler: Enable spoilers
           markup_sub: Enable subscripts
           markup_sup: Enable superscripts
-          markup_tables: Enable tables
+          markup_table: Enable tables
