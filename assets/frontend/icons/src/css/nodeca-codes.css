@@ -1,8 +1,11 @@
 
+.icon-ref-local:before { content: '\2191'; } /* '↑' */
+.icon-ref-outer:before { content: '\2192'; } /* '→' */
 .icon-collapse:before { content: '\25b4'; } /* '▴' */
 .icon-expand:before { content: '\25be'; } /* '▾' */
 .icon-edit:before { content: '\270e'; } /* '✎' */
 .icon-check:before { content: '\2713'; } /* '✓' */
+.icon-reply-for:before { content: '\27a6'; } /* '➦' */
 .icon-more:before { content: '\e4b0'; } /* '' */
 .icon-search:before { content: '\e800'; } /* '' */
 .icon-level-up:before { content: '\e801'; } /* '' */
