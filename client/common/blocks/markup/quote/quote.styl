@@ -1,0 +1,32 @@
+// Quote style definitions
+
+@import "nodeca.core/client/common/_variables"
+
+
+.quote
+  font-size 14px
+  background-color #f8f8f8
+  border-radius 4px
+
+.quote__title
+  margin-top -5px
+  margin-right -10px
+  padding 5px 0
+
+.quote__controls
+  margin-top -3px
+
+.quote__collapse
+  display none
+
+.quote__ref-local
+.quote__ref-outer
+  opacity .8
+  color inherit
+
+.quote__m-expanded
+.quote__m-expanded > .quote__title
+  & > .quote__expand
+    display none
+  & > .quote__collapse
+    display inline-block
