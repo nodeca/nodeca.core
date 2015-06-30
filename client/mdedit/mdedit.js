@@ -4,8 +4,9 @@
 
 
 /*global CodeMirror*/
-var _    = require('lodash');
-var Bag  = require('bag.js');
+var _        = require('lodash');
+var Bag      = require('bag.js');
+var RpcCache = require('./_lib/rpc_cache')(N);
 
 
 var TEXT_MARGIN = 5;
@@ -40,6 +41,7 @@ var compileToolbarConfig = _.memoize(function (name) {
 // Editor init
 //
 function MDEdit() {
+  var self = this;
   this.commands = {};
   this.__attachments__ = [];
   this.__options__ = null;
@@ -48,6 +50,11 @@ function MDEdit() {
   this.__cm__ = null;
   this.__bag__ = new Bag({ prefix: 'nodeca_editor' });
   this.__scrollMap__ = null;
+  this.__cache__ = new RpcCache();
+
+  this.__cache__.on('update', function () {
+    self.__updatePreview__();
+  });
 }
 
 
@@ -428,7 +435,8 @@ MDEdit.prototype.__updatePreview__ = _.debounce(function () {
     {
       text: this.text(),
       attachments: this.attachments(),
-      options: this.__options__.parseOptions
+      options: this.__options__.parseOptions,
+      rpc_cache: self.__cache__
     },
     function (err, result) {
       if (err) {
