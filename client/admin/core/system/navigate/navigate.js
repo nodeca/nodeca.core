@@ -468,7 +468,7 @@ N.wire.once('navigate.done', { priority: 999 }, function navigate_click_handler(
     }
 
     // Continue as normal for cmd clicks etc
-    if (event.which === 2 || event.metaKey) {
+    if (event.which !== 1 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
       return;
     }
 
