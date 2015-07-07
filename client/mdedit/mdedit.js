@@ -46,6 +46,7 @@ function MDEdit() {
   this.__attachments__ = [];
   this.__options__ = null;
   this.__layout__ = null;
+  this.__hotkeys__ = {};
   this.__minHeight__ = 0;
   this.__cm__ = null;
   this.__bag__ = new Bag({ prefix: 'nodeca_editor' });
@@ -105,9 +106,17 @@ MDEdit.prototype.show = function (options) {
 
     $('body').append(self.__layout__);
 
+    self.__hotkeys__ = {
+      'Esc':        function () { N.wire.emit('mdedit.cancel'); },
+      'Ctrl-Enter': function () { N.wire.emit('mdedit.submit'); }
+    };
+
     self.__initResize__();
     self.__initToolbar__();
     self.__initSyncScroll__();
+
+    // Enable active button's hotkeys
+    self.__cm__.setOption('extraKeys', self.__hotkeys__);
 
     self.text(options.text || '');
     self.attachments(options.attachments || []);
@@ -203,8 +212,16 @@ MDEdit.prototype.parseOptions = function (parseOptions) {
 
   this.__options__.parseOptions = parseOptions;
 
+  this.__hotkeys__ = {
+    'Esc':        function () { N.wire.emit('mdedit.cancel'); },
+    'Ctrl-Enter': function () { N.wire.emit('mdedit.submit'); }
+  };
+
   this.__initToolbar__();
   this.__updatePreview__();
+
+  // Enable active button's hotkeys
+  this.__cm__.setOption('extraKeys', this.__hotkeys__);
 };
 
 
@@ -501,22 +518,17 @@ MDEdit.prototype.__initToolbar__ = function () {
   }));
 
   // Process hotkeys for editor
-  var hotkeys = _.reduce(buttons, function (result, button) {
+  buttons.forEach(function (button) {
     if (!button.command || !button.bind_key || !self.commands[button.command]) {
-      return result;
+      return;
     }
 
     _.forEach(button.bind_key, function (bindKey) {
-      result[bindKey] = function () {
+      self.__hotkeys__[bindKey] = function () {
         self.commands[button.command](self.__cm__);
       };
     });
-
-    return result;
-  }, {});
-
-  // Enable active button's hotkeys
-  self.__cm__.setOption('extraKeys', hotkeys);
+  });
 };
 
 
@@ -569,6 +581,13 @@ N.wire.on('mdedit.submit', function done_click() {
   if (!event.isDefaultPrevented()) {
     N.MDEdit.hide();
   }
+});
+
+
+// Hide when escape key is pressed
+//
+N.wire.on('event.keypress.escape', function mdedit_close() {
+  N.MDEdit.hide();
 });
 
 
