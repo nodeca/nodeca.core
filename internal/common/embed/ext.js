@@ -4,6 +4,7 @@
 //
 // - link (String) - link to content
 // - type ([String]) - suitable format list, in priority order ('block', 'inline')
+// - cacheOnly (Boolean) - use cache only
 //
 // Out:
 //
@@ -13,37 +14,60 @@
 'use strict';
 
 
-var async = require('async');
+var Embedza = require('embedza');
+var _       = require('lodash');
 
 
 module.exports = function (N, apiPath) {
-  N.wire.on(apiPath, function embed_ext(data, callback) {
-    var medialinker = N.medialinker(N.config.parser.medialinks);
 
-    async.eachSeries(data.type, function (type, next) {
-      // Requested template already rendered - skip
-      if (data.html) {
-        next();
+  // Init embedza instance
+  //
+  var embedzaInit = _.memoize(function (cacheOnly) {
+    var enabledProviders;
+
+    // If config is array - convert to hash (embedza compatible)
+    if (_.isArray(N.config.parser.embed)) {
+      enabledProviders = {};
+      N.config.album.embed.forEach(function (id) {
+        enabledProviders[id] = true;
+      });
+    } else {
+      enabledProviders = N.config.parser.embed;
+    }
+
+    var instance = new Embedza({
+      cache: N.models.core.EmbedzaCache,
+      enabledProviders: enabledProviders
+    });
+
+    // If we should read data only from cache - overwrite `request` method by stub
+    if (cacheOnly) {
+      instance.request = function (__, callback) {
+        callback(null, {});
+      };
+    }
+
+    return instance;
+  });
+
+
+  // Process link
+  //
+  N.wire.on(apiPath, function embed_ext(data, callback) {
+    embedzaInit(data.cacheOnly).render(data.link, data.type, function (err, result) {
+      // If any errors happen, ignore them and leave the link as is
+      if (err) {
+        callback();
         return;
       }
 
-      // TODO: replace medialinker
-      medialinker.render(data.link, type, function (err, result) {
-        if (err) {
-          next(err);
-          return;
-        }
-
-        if (!result) {
-          next();
-          return;
-        }
-
+      // If no result is returned, leave the link as is
+      if (result) {
         data.html = result.html;
-        data.type = type;
+        data.type = result.type;
+      }
 
-        next();
-      });
-    }, callback);
+      callback();
+    });
   });
 };

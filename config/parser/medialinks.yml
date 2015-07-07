@@ -1,4 +1,0 @@
-parser:
-
-  # Enabled providers list name (`albums`, `content`)
-  medialinks: content
