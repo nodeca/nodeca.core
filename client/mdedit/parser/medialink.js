@@ -9,7 +9,7 @@ N.wire.once('init:parser', function medialink_plugin_init() {
           return;
         }
 
-        data.ast.find('.link[data-nd-auto]').each(function () {
+        data.ast.find('msg-link[data-nd-auto]').each(function () {
           var $tag = $(this);
           var type = [ 'inline' ];
 
