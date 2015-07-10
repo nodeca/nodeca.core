@@ -435,6 +435,8 @@ MDEdit.prototype.__buildScrollMap__ = function () {
 MDEdit.prototype.__updatePreview__ = _.debounce(function () {
   var self = this;
 
+  if (!self.__layout__) { return; }
+
   self.__layout__.trigger('change');
 
   N.parse(
@@ -450,6 +452,8 @@ MDEdit.prototype.__updatePreview__ = _.debounce(function () {
         N.wire.emit('notify', { type: 'error', message: err.message });
         return;
       }
+
+      if (!self.__layout__) { return; }
 
       self.__layout__.find('.mdedit__preview').html(N.runtime.render('mdedit.preview', {
         user_hid: N.runtime.user_hid,
