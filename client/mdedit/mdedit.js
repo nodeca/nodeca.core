@@ -106,17 +106,14 @@ MDEdit.prototype.show = function (options) {
 
     $('body').append(self.__layout__);
 
-    self.__hotkeys__ = {
+    self.__cm__.setOption('extraKeys', {
       'Esc':        function () { N.wire.emit('mdedit.cancel'); },
       'Ctrl-Enter': function () { N.wire.emit('mdedit.submit'); }
-    };
+    });
 
     self.__initResize__();
     self.__initToolbar__();
     self.__initSyncScroll__();
-
-    // Enable active button's hotkeys
-    self.__cm__.setOption('extraKeys', self.__hotkeys__);
 
     self.text(options.text || '');
     self.attachments(options.attachments || []);
@@ -212,16 +209,8 @@ MDEdit.prototype.parseOptions = function (parseOptions) {
 
   this.__options__.parseOptions = parseOptions;
 
-  this.__hotkeys__ = {
-    'Esc':        function () { N.wire.emit('mdedit.cancel'); },
-    'Ctrl-Enter': function () { N.wire.emit('mdedit.submit'); }
-  };
-
   this.__initToolbar__();
   this.__updatePreview__();
-
-  // Enable active button's hotkeys
-  this.__cm__.setOption('extraKeys', this.__hotkeys__);
 };
 
 
@@ -484,6 +473,10 @@ MDEdit.prototype.__initToolbar__ = function () {
   var self = this;
   var $toolbar = this.__layout__.find('.mdedit__toolbar');
 
+  if (this.__toolbarHotkeys__) {
+    this.__cm__.removeKeyMap(this.__toolbarHotkeys__);
+  }
+
   // Get actual buttons
   var buttons = _.reduce(this.__options__.toolbar, function (result, btn) {
 
@@ -518,17 +511,22 @@ MDEdit.prototype.__initToolbar__ = function () {
   }));
 
   // Process hotkeys for editor
-  buttons.forEach(function (button) {
+  this.__toolbarHotkeys__ = buttons.reduce(function (result, button) {
     if (!button.command || !button.bind_key || !self.commands[button.command]) {
-      return;
+      return result;
     }
 
     _.forEach(button.bind_key, function (bindKey) {
-      self.__hotkeys__[bindKey] = function () {
+      result[bindKey] = function () {
         self.commands[button.command](self.__cm__);
       };
     });
-  });
+
+    return result;
+  }, {});
+
+  // Enable active button's hotkeys
+  this.__cm__.addKeyMap(this.__toolbarHotkeys__);
 };
 
 
