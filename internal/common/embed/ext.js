@@ -23,21 +23,9 @@ module.exports = function (N, apiPath) {
   // Init embedza instance
   //
   var embedzaInit = _.memoize(function (cacheOnly) {
-    var enabledProviders;
-
-    // If config is array - convert to hash (embedza compatible)
-    if (_.isArray(N.config.parser.embed)) {
-      enabledProviders = {};
-      N.config.album.embed.forEach(function (id) {
-        enabledProviders[id] = true;
-      });
-    } else {
-      enabledProviders = N.config.parser.embed;
-    }
-
     var instance = new Embedza({
       cache: N.models.core.EmbedzaCache,
-      enabledProviders: enabledProviders
+      enabledProviders: N.config.parser.embed
     });
 
     // If we should read data only from cache - overwrite `request` method by stub
