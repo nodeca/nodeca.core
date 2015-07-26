@@ -10,7 +10,7 @@ var faye = require('faye/browser/faye-browser');
 
 // Emit event for connectors & add live instance to 'N' (after init `N.runtime`)
 //
-N.wire.once('navigate.done', { priority: -900 }, function live_init(__, callback) {
+N.wire.once('navigate.done', { priority: -900 }, function live_init() {
 
   // Init client for `N.live`
   N.live = tabex.client();

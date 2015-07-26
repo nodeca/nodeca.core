@@ -5,7 +5,6 @@
 
 var _ = require('lodash');
 var StateMachine = require('javascript-state-machine');
-var History = window.history;
 
 var lastPageData;
 var navigateCallback;
@@ -296,7 +295,7 @@ fsm.onLOAD = function (event, from, to, params) {
   }
 
   // Fallback for old browsers.
-  if (!History || !History.pushState) {
+  if (!window.history || !window.history.pushState) {
     window.location = options.href + options.anchor;
     return;
   }
@@ -335,9 +334,9 @@ fsm.onLOAD = function (event, from, to, params) {
 
     render(result, true, function () {
       if (same_url) {
-        History.replaceState(null, result.locals.head.title, options.href + options.anchor);
+        window.history.replaceState(null, result.locals.head.title, options.href + options.anchor);
       } else {
-        History.pushState(null, result.locals.head.title, options.href + options.anchor);
+        window.history.pushState(null, result.locals.head.title, options.href + options.anchor);
       }
       fsm.complete();
     });
@@ -359,7 +358,7 @@ fsm.onBACK_FORWARD = function () {
 
   loadData(options, function (result) {
     render(result, false, function () {
-      History.replaceState(null, result.locals.head.title, options.href + options.anchor);
+      window.history.replaceState(null, result.locals.head.title, options.href + options.anchor);
       fsm.complete();
     });
   });
@@ -369,7 +368,7 @@ fsm.onBACK_FORWARD = function () {
 ///////////////////////////////////////////////////////////////////////////////
 // statechange handler
 
-if (History && History.pushState) {
+if (window.history && window.history.pushState) {
   window.addEventListener('popstate', function () {
     fsm.stateChange();
   });
@@ -444,7 +443,7 @@ N.wire.on('navigate.replace', function navigate_replace(options, callback) {
   var title = options.title || document.title;
 
   if (document.title !== title || normalizeURL(location.href) !== url) {
-    History.replaceState(null, title, url);
+    window.history.replaceState(null, title, url);
     document.title = title;
   }
 

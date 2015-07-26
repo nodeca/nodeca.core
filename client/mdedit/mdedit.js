@@ -107,7 +107,7 @@ MDEdit.prototype.show = function (options) {
     $('body').append(self.__layout__);
 
     self.__cm__.setOption('extraKeys', {
-      'Esc':        function () { N.wire.emit('mdedit.cancel'); },
+      Esc:          function () { N.wire.emit('mdedit.cancel'); },
       'Ctrl-Enter': function () { N.wire.emit('mdedit.submit'); }
     });
 
@@ -217,8 +217,6 @@ MDEdit.prototype.parseOptions = function (parseOptions) {
 // Set initial CodeMirror options
 //
 MDEdit.prototype.__initCodeMirror__ = function () {
-  var self = this;
-
   this.__cm__ = new CodeMirror(this.__layout__.find('.mdedit__edit-area').get(0), {
     cursorScrollMargin: TEXT_MARGIN,
     lineWrapping: true,
@@ -276,7 +274,7 @@ MDEdit.prototype.__initResize__ = function () {
 
 // Reduce size on small viewports
 //
-MDEdit.prototype.__clampHeight__ = _.debounce(function (height) {
+MDEdit.prototype.__clampHeight__ = _.debounce(function () {
   var winHeight = $(window).height();
 
   if (this.__layout__.height() > winHeight &&

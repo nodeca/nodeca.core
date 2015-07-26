@@ -3,7 +3,7 @@
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdHeading = function (editor) {
     var selectionStart = editor.getCursor(true);
-    var selectionEnd = editor.getCursor(false);
+    // var selectionEnd = editor.getCursor(false);
 
     var selectedText = editor.getLine(selectionStart.line);
     var regExp = /^(#*) ?/;

@@ -6,7 +6,7 @@
 
 N.wire.once('navigate.done', function () {
 
-  $(document).on('click', '.spoiler__title', function (event) {
+  $(document).on('click', '.spoiler__title', function () {
     $(this).parent('.spoiler').toggleClass('spoiler__m-open');
   });
 });

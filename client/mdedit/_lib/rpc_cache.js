@@ -22,7 +22,6 @@ var N;
 // - delay (Number) - optional, delay before make request to actualize request, default 3000 ms
 //
 function RpcCache(delay) {
-  var self = this;
   this.__delay__ = delay || 3000;
 
   // Response cache
