@@ -40,3 +40,15 @@ N.wire.once('navigate.done', function () {
     quote.data('alternate-content', old_content);
   });
 });
+
+
+// Add localized titles to control buttons
+//
+N.wire.on([ 'navigate.done', 'navigate.update' ], function translate_titles(data) {
+  (data.$ || $(document)).find('.quote__controls [data-i18n-title]').each(function () {
+    var $tag = $(this);
+
+    $tag.attr('title', N.runtime.t('common.blocks.markup.quote.' + $tag.attr('data-i18n-title')));
+    $tag.removeAttr('data-i18n-title');
+  });
+});
