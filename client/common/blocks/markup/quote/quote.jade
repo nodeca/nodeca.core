@@ -1,4 +1,19 @@
-blockquote.quote
-  if self.title
-    footer.quote__title= self.title
+blockquote(cite=self.href || false).quote
+  if self.title || self.href
+    footer.quote__title
+      if self.title
+        = self.title
+      if self.href
+        .quote__controls.pull-right
+          button.quote__expand.btn.btn-xs.icon.icon-expand
+          button.quote__collapse.btn.btn-xs.icon.icon-collapse
+          a.quote__ref-local.btn.btn-xs.icon.icon-ref-local(href=self.href)
+          a.quote__ref-outer.btn.btn-xs.icon.icon-ref-outer(href=self.href)
+      if self.user
+        cite.quote__author
+          img._identicon(data-user-id=String(self.user._id), data-avatar-size='sm')
+          = self.user.nick
+        | :
   .quote__content
+    if self.html
+      != self.html
