@@ -7,14 +7,29 @@
 N.wire.once('navigate.done', function () {
 
   $(document).on('click', '.quote__expand', function () {
-    var quote       = $(this).closest('.quote');
-    var old_content = quote.children('.quote__content').html();
+    var quote         = $(this).closest('.quote');
+    var quote_content = quote.children('.quote__content');
+    var old_height    = quote_content.height();
 
-    if (quote.data('alternate-content')) {
+    if (quote.attr('data-full-content')) {
       // we previously expanded this post, so get it from cache
       quote.addClass('quote__m-expanded');
-      quote.children('.quote__content').html(quote.data('alternate-content'));
-      quote.data('alternate-content', old_content);
+
+      // Use `quote.attr('data-X')` instead of `quote.data('X')` to force
+      // jQuery to write data to DOM. Otherwise nested quotes would fail
+      // to expand/collapse sometimes.
+      quote.attr('data-short-content', quote_content.html());
+      quote_content.html(quote.attr('data-full-content'));
+
+      var new_height = quote_content.height();
+
+      quote_content
+        .stop()
+        .css({ height: old_height })
+        .animate({ height: new_height }, 'fast', function () {
+          quote_content.css({ height: '' });
+        });
+
       return;
     }
 
@@ -25,19 +40,38 @@ N.wire.once('navigate.done', function () {
 
       N.wire.emit('navigate.update', { $: $result, locals: res }, function () {
         quote.addClass('quote__m-expanded');
-        quote.data('alternate-content', old_content);
-        quote.children('.quote__content').html($result);
+        quote.attr('data-short-content', quote_content.html());
+        quote_content.empty().append($result);
+
+        var new_height = quote_content.height();
+
+        quote_content
+          .stop()
+          .css({ height: old_height })
+          .animate({ height: new_height }, 'fast', function () {
+            quote_content.css({ height: '' });
+          });
       });
     });
   });
 
   $(document).on('click', '.quote__collapse', function () {
-    var quote       = $(this).closest('.quote');
-    var old_content = quote.children('.quote__content').html();
+    var quote         = $(this).closest('.quote');
+    var quote_content = quote.children('.quote__content');
+    var old_height    = quote_content.height();
 
     quote.removeClass('quote__m-expanded');
-    quote.children('.quote__content').html(quote.data('alternate-content'));
-    quote.data('alternate-content', old_content);
+    quote.attr('data-full-content', quote_content.html());
+    quote_content.html(quote.attr('data-short-content'));
+
+    var new_height = quote_content.height();
+
+    quote_content
+      .stop()
+      .css({ height: old_height })
+      .animate({ height: new_height }, 'fast', function () {
+        quote_content.css({ height: '' });
+      });
   });
 });
 
