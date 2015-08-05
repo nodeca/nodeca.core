@@ -86,3 +86,31 @@ N.wire.on([ 'navigate.done', 'navigate.update' ], function translate_titles(data
     $tag.removeAttr('data-i18n-title');
   });
 });
+
+
+// Replace user nick name (in case it's changed and we didn't rebuild posts yet)
+//
+N.wire.on([ 'navigate.done', 'navigate.update' ], function replace_nick(data) {
+  var users;
+
+  if (data.locals) {
+    // page generated on client-side, so we have all the locals
+    users = data.locals.users;
+  } else {
+    // page generated on server-side with users provided through page_data
+    users = N.runtime.page_data.users;
+  }
+
+  if (!users) { return; }
+
+  (data.$ || $(document)).find('.quote__author-name[data-user-id]').each(function () {
+    var $tag = $(this);
+    var user_id = $tag.attr('data-user-id');
+
+    if (users[user_id]) {
+      $tag.text(users[user_id].nick);
+    }
+
+    $tag.removeAttr('data-user-id');
+  });
+});
