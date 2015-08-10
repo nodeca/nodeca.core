@@ -30,6 +30,11 @@ N.wire.once('init:parser', function medialink_plugin_init() {
 
           var result = data.params.rpc_cache.get('common.embed', { url: url, types: types });
 
+          // Switch url destination if it's been unshortened
+          if (result && result.canonical) {
+            $tag.attr('href', result.canonical);
+          }
+
           if (!result || !result.html) {
             return;
           }

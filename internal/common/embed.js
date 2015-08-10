@@ -8,18 +8,38 @@
 //
 // Out:
 //
-// - html  (String)  - rendered template
-// - type  (String)  - format type
-// - local (Boolean) - is the link local or external (local ones will need permission checks later)
+// - html  (String)     - rendered template
+// - type  (String)     - format type
+// - local (Boolean)    - is the link local or external (local ones will need permission checks later)
+// - canonical (String) - original url if it got cut with url shortened service
 //
 'use strict';
 
 
 var Embedza = require('embedza');
 var _       = require('lodash');
+var Unshort = require('url-unshort');
 
 
 module.exports = function (N, apiPath) {
+
+  // Init url-unshort instance
+  //
+  var unshortCreate = _.memoize(function (cacheOnly) {
+    var instance = new Unshort({
+      cache: N.models.core.UnshortCache
+    });
+
+    // If we should read data only from cache - overwrite `request` method by stub
+    if (cacheOnly) {
+      instance.request = function (options, callback) {
+        callback(null, { statusCode: 404, headers: {} }, '');
+      };
+    }
+
+    return instance;
+  });
+
 
   // Init embedza instance
   //
@@ -40,7 +60,26 @@ module.exports = function (N, apiPath) {
   });
 
 
-  // Pross link as local
+  // Expand shortened links
+  //
+  N.wire.on(apiPath, function expand_short_links(data, callback) {
+    unshortCreate(data.cacheOnly).expand(data.url, function (err, url) {
+      if (err) {
+        // ignore connection/parse errors
+        callback();
+        return;
+      }
+
+      if (url) {
+        data.canonical = url;
+      }
+
+      callback();
+    });
+  });
+
+
+  // Process link as local
   //
   N.wire.on(apiPath, function embed_local(data, callback) {
     if (data.html) {
@@ -58,7 +97,7 @@ module.exports = function (N, apiPath) {
       }
 
       var type = types.shift();
-      var subcall_data = { url: data.url, type: type };
+      var subcall_data = { url: data.canonical || data.url, type: type };
 
       N.wire.emit('internal:common.embed.local', subcall_data, function (err) {
         if (err) {
@@ -91,7 +130,7 @@ module.exports = function (N, apiPath) {
       return;
     }
 
-    embedzaCreate(data.cacheOnly).render(data.url, data.types, function (err, result) {
+    embedzaCreate(data.cacheOnly).render(data.canonical || data.url, data.types, function (err, result) {
       // If any errors happen, ignore them and leave the link as is
       if (err) {
         callback();

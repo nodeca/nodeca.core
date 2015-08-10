@@ -72,6 +72,9 @@ module.exports = function (N, apiPath) {
           return;
         }
 
+        // unshortened urls
+        env.res.canonical = data.canonical;
+
         if (allowed) {
           env.res.html = data.html;
           env.res.type = data.type;
