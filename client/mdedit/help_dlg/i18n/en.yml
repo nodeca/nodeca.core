@@ -26,14 +26,34 @@ en-US:
           <td><i>italic text</i></td>
         </tr>
         <tr>
+          <td>subscript</td>
+          <td>CH~3~CH~2~OH</td>
+          <td>CH<sub>3</sub>CH<sub>2</sub>OH</td>
+        </tr>
+        <tr>
+          <td>superscript</td>
+          <td>E^2^ = (mc^2^)^2^ + (pc)^2^2</td>
+          <td>E<sup>2</sup> = (mc<sup>2</sup>)<sup>2</sup> + (pc)<sup>2</sup></td>
+        </tr>
+        <tr>
           <td>link</td>
           <td>[link text]&#x200b;(http://&#x200b;google.com/)</td>
           <td><a href="http://google.com/">link text</a></td>
         </tr>
         <tr>
           <td>quote</td>
-          <td>> qoute<br />> text</td>
-          <td><blockquote>qoute<br />text</blockquote></td>
+          <td>> quote<br />> text</td>
+          <td><blockquote class="quote"><div class="quote__content">quote<br />text</div></blockquote></td>
+        </tr>
+        <tr>
+          <td>quote (alt)</td>
+          <td>```quote<br />quote<br />text<br />```</td>
+          <td><blockquote class="quote"><div class="quote__content">quote<br />text</div></blockquote></td>
+        </tr>
+        <tr>
+          <td>spoiler</td>
+          <td>```spoiler click me<br />text<br />```</td>
+          <td><div class="spoiler"><div class="spoiler__title"><span class="spoiler__icon-collapse icon icon-collapse-alt icon-space-after"></span><span class="spoiler__icon-expand icon icon-expand-alt icon-space-after"></span>click me</div><div class="spoiler__inner"><div class="spoiler__content">text</div></div></div></td>
         </tr>
         <tr>
           <td>image</td>
@@ -49,6 +69,30 @@ en-US:
           <td>bulleted list</td>
           <td>- apple<br />- banana<br />- pineapple</td>
           <td><ul><li>apple</li><li>banana</li><li>pineapple</li></ul></td>
+        </tr>
+        <tr>
+          <td>horizontal line</td>
+          <td>text over line<br /> - - - -<br />text under line</td>
+          <td>text over line<hr />text under line</td>
+        </tr>
+        <tr>
+          <td>code block</td>
+          <td>```js<br />let f = (n) =><br />  n < 2 ?<br />  n :<br />  f(n-1)<br />   + f(n-2)<br />```</td>
+          <td><pre><code class="js"><span class="hljs-keyword">let</span> f = (n) =&gt;
+      n &lt; <span class="hljs-number">2</span> ?
+      n :
+      f(n-<span class="hljs-number">1</span>)
+        + f(n-<span class="hljs-number">2</span>)</code></pre></td>
+        </tr>
+        <tr>
+          <td>table</td>
+          <td>| 1820 | 1920 | 2000 |<br />| --- | --- | --- |<br />| 35000 | 15000 | 17 |<br />| 14.2 | 14.9 | 15.8 |</td>
+          <td><table><tr><th>1820</th><th>1920</th><th>2000</th></tr><tr><td>35000</td><td>15000</td><td>17</td></tr><tr><td>14.2</td><td>14.9</td><td>15.8</td></tr></table></td>
+        </tr>
+        <tr>
+          <td>footnote</td>
+          <td>this is a text[^1]<br /><br />[^1]: with a footnote</td>
+          <td>this is a text<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup></p><hr class="footnotes-sep"><section class="footnotes"><ol class="footnotes-list"><li id="fn1" class="footnote-item"><p>with a footnote <a href="#fnref1" class="footnote-backref">↩</a></p></li></ol></section></td>
         </tr>
       </table>
     </div>
