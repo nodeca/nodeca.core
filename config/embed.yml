@@ -1,0 +1,10 @@
+embed:
+
+  # Enabled providers ID array ('youtube.com', 'vimeo.com', ...). `true` to enable all providers
+  enabled: true
+
+  # Additional configuration example:
+  #
+  # config:
+  #   youtube.com:
+  #     API_key: AKzcSyYMN-rOqQZklvyb_pNA3OVo1skn5BcenaQ # insert your own from Google Developer Console

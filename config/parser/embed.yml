@@ -1,4 +1,0 @@
-parser:
-
-  # Enabled providers ID array ('youtube.com', 'vimeo.com', ...). `true` to enable all providers
-  embed: true
