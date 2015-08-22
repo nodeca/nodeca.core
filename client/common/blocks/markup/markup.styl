@@ -5,11 +5,17 @@
 .markup
   font-family sansWideFontFamily
 
-  img
+  // External images
+  .image
     max-width 100%
     border-radius 2px
 
+  // Attachments in text
+  .thumb__image
+    border-radius 2px
+
   a.link
+  a.ez-inline
     color red
     border-bottom 1px dotted
     text-decoration none
@@ -22,3 +28,12 @@
 
   pre code
     white-space unset
+
+  .ez-block
+    margin-bottom (baseLineHeight / 2)
+    border-radius 2px
+
+.forum-post__tail
+  // Attachments thumbnails
+  .thumb__image
+    border-radius 2px
