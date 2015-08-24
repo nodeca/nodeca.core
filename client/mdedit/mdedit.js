@@ -133,8 +133,16 @@ MDEdit.prototype.show = function (options) {
 
       // Update codemirror height
       self.__cm__.setSize('100%', self.__layout__.find('.mdedit__edit-area').height());
-      // Focus cursor to editor
-      self.__cm__.focus();
+
+      var $focusItem = self.__layout__.find('[tabindex=1]');
+
+      if ($focusItem.length !== 0) {
+        // Focus to element with tabindex = 1 if exists
+        $focusItem.focus();
+      } else {
+        // Or focus to editor window
+        self.__cm__.focus();
+      }
 
       $(window).on('resize.nd.mdedit', self.__clampHeight__.bind(self));
     });
@@ -221,6 +229,7 @@ MDEdit.prototype.__initCodeMirror__ = function () {
     cursorScrollMargin: TEXT_MARGIN,
     lineWrapping: true,
     lineNumbers: false,
+    tabindex: 2,
     mode: 'markdown'
   });
 

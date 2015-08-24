@@ -14,6 +14,10 @@ N.wire.once('init:mdedit', function () {
       $linkDialog.remove();
     });
 
+    $linkDialog.on('shown.bs.modal', function () {
+      $linkDialog.find('.add-image-dialog__input').focus();
+    });
+
     $linkDialog.find('.add-image-dialog__apply').click(function () {
       var url = $linkDialog.find('.add-image-dialog__input').val();
 

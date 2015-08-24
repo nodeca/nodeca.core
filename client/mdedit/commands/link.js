@@ -19,6 +19,14 @@ N.wire.once('init:mdedit', function () {
       $linkDialog.remove();
     });
 
+    $linkDialog.on('shown.bs.modal', function () {
+      if (editor.somethingSelected()) {
+        $linkDialog.find('.add-link-dialog__link').focus();
+      } else {
+        $linkDialog.find('.add-link-dialog__text').focus();
+      }
+    });
+
     $linkDialog.find('.add-link-dialog__apply').click(function () {
       var url = $linkDialog.find('.add-link-dialog__link').val();
       var text = $linkDialog.find('.add-link-dialog__text').val();
