@@ -449,7 +449,9 @@ MDEdit.prototype.__updatePreview__ = _.debounce(function () {
   N.parse(
     {
       text: this.text(),
-      attachments: this.attachments(),
+      attachments: this.attachments().map(function (attach) {
+        return attach.media_id;
+      }),
       options: this.__options__.parseOptions,
       rpc_cache: self.__cache__
     },
