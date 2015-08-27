@@ -13,11 +13,13 @@ N.wire.once('init:parser', function attachment_plugin_init() {
   N.parse.addPlugin(
     'attachment',
     function (parser) {
-      parser.bus.on('render', function fetch_attachment_data(data) {
+      parser.bus.on('render', function fetch_attachment_data(data, callback) {
         if (!data.params.rpc_cache) {
+          callback();
           return;
         }
 
+        // find all images that point to an attachment and set data-nd-media-id attr
         data.ast.find('.image').each(function () {
           var $attach = $(this);
           var match = _.find(N.router.matchAll($attach.attr('src')), function (match) {
@@ -29,47 +31,58 @@ N.wire.once('init:parser', function attachment_plugin_init() {
           }
 
           $attach.attr('data-nd-media-id', match.params.media_id);
-
-          var result = data.params.rpc_cache.get('common.content.attachment', { id: match.params.media_id });
-
-          if (!result || !result.type) {
-            return;
-          }
-
-          $attach.data('nd-media-type', result.type);
-          $attach.data('nd-media-filename', result.file_name);
         });
-      });
 
+        // Fetch all images and calculate attach tail
+        //
+        var refs = [];
 
-      // Calculate attach tail
-      //
-      parser.bus.on('render', function fetch_tail(data) {
-        // Get refs from `attach` tag
-        var refs = _.uniq(data.ast.find('[data-nd-media-id]').map(function () {
-          return $(this).data('nd-media-id');
-        }));
+        data.ast.find('[data-nd-media-id]').map(function () {
+          refs.push($(this).data('nd-media-id'));
+        });
 
-        var tail = _.uniq(data.params.attachments).map(function (media_id) {
-          if (refs.indexOf(media_id) !== -1) {
-            // attach referenced in message body, so remove it from tail
-            return null;
-          }
+        var tail_ids = data.params.attachments.filter(function (media_id) {
+          return refs.indexOf(media_id) === -1;
+        });
 
-          var result = data.params.rpc_cache.get('common.content.attachment', { id: media_id });
+        var result = data.params.rpc_cache.get('common.content.attachments', {
+          ids: _.uniq(tail_ids.concat(refs)).sort()
+        });
 
-          if (!result || !result.type) {
-            return null;
-          }
+        if (!result) {
+          data.ast.find('[data-nd-media-id]').each(function () {
+            var $attach = $(this);
 
-          return {
-            type:      result.type,
+            $attach.data('nd-media-placeholder', true);
+          });
+
+          callback();
+          return;
+        }
+
+        var attachments = result.attachments || {};
+
+        data.ast.find('[data-nd-media-id]').each(function () {
+          var $attach = $(this);
+          var media_id = $attach.data('nd-media-id');
+
+          if (!attachments[media_id]) { return; }
+
+          $attach.data('nd-media-type', attachments[media_id].type);
+          $attach.data('nd-media-filename', attachments[media_id].file_name);
+        });
+
+        data.result.tail = tail_ids.map(function (media_id) {
+          if (!attachments[media_id]) { return null; }
+
+          return _.omit({
             media_id:  media_id,
-            file_name: result.file_name
-          };
+            type:      attachments[media_id].type,
+            file_name: attachments[media_id].file_name
+          }, _.isUndefined);
         }).filter(Boolean);
 
-        data.result.tail = tail;
+        callback();
       });
 
 
