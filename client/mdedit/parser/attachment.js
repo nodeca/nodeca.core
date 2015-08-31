@@ -5,9 +5,10 @@ var _ = require('lodash');
 
 
 N.wire.once('init:parser', function attachment_plugin_init() {
+  var sizes = '$$ JSON.stringify(N.config.users.uploads.resize) $$';
+
   var plugin = require('nodeca.core/lib/parser/plugins/attachment')(N, {
-    types: '$$ JSON.stringify(N.models.users.MediaInfo.types) $$',
-    sizes: '$$ JSON.stringify(N.config.users.uploads.resize) $$'
+    types: '$$ JSON.stringify(N.models.users.MediaInfo.types) $$'
   });
 
   N.parse.addPlugin(
@@ -31,6 +32,24 @@ N.wire.once('init:parser', function attachment_plugin_init() {
           }
 
           $attach.attr('data-nd-media-id', match.params.media_id);
+
+          // Get a size from img alt attribute, e.g.:
+          //  - ![md](link)
+          //  - ![arbitrary text|md](link)
+          //
+          var size = $attach.attr('alt');
+
+          if (size.indexOf('|') !== -1) {
+            size = size.slice('|');
+          }
+
+          size = size.trim();
+
+          if (!sizes[size]) {
+            size = 'sm';
+          }
+
+          $attach.data('nd-media-size', size);
         });
 
         // Fetch all images and calculate attach tail
