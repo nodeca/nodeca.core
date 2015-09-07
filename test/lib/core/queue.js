@@ -34,7 +34,7 @@ describe('Queue', function () {
     var worker1 = {
       name: 'test',
       chunksPerInstance: 2,
-      map: function (taskData, callback) {
+      map: function (callback) {
         callback(null, [ 1, 2, 3 ]);
       },
       reduce: function (chunksResult, callback) {
@@ -51,7 +51,7 @@ describe('Queue', function () {
 
         callback();
       },
-      process: function (data, callback) {
+      process: function (callback) {
         process1Chunks++;
 
         setTimeout(callback, 1000); // check interval + max drift
@@ -61,10 +61,10 @@ describe('Queue', function () {
     var worker2 = {
       name: 'test',
       chunksPerInstance: 2,
-      map: function (taskData, callback) {
+      map: function (callback) {
         callback(null, [ 1, 2, 3 ]);
       },
-      reduce: function (chunksResult, callback) {
+      reduce: function (callback) {
 
         if (process1Chunks > process2Chunks) {
           assert.equal(process1Chunks, 2);
@@ -78,7 +78,7 @@ describe('Queue', function () {
 
         callback();
       },
-      process: function (data, callback) {
+      process: function (callback) {
         process2Chunks++;
 
         setTimeout(callback, 1000); // check interval + max drift
@@ -98,16 +98,16 @@ describe('Queue', function () {
   it('should run `map`, `process` and `reduce` with correct data', function (done) {
     var worker = {
       name: 'test2',
-      map: function (taskData, callback) {
-        assert.deepEqual(taskData, { taskDataTest1: 1, taskDataTest2: 2 });
+      map: function (callback) {
+        assert.deepEqual(this.data, { taskDataTest1: 1, taskDataTest2: 2 });
         callback(null, [
           { chunkDataTest1: 1, chunkDataTest2: 2 },
           { chunkDataTest1: 1, chunkDataTest2: 2 },
           { chunkDataTest1: 1, chunkDataTest2: 2 }
         ]);
       },
-      process: function (data, callback) {
-        assert.deepEqual(data, { chunkDataTest1: 1, chunkDataTest2: 2 });
+      process: function (callback) {
+        assert.deepEqual(this.data, { chunkDataTest1: 1, chunkDataTest2: 2 });
         callback(null, { reduceDataTest1: 1, reduceDataTest2: 2 });
       },
       reduce: function (chunksResult, callback) {
@@ -134,16 +134,16 @@ describe('Queue', function () {
       name: 'test3',
       retryDelay: 1, // 1 ms
       retry: 1,
-      map: function (taskData, callback) {
+      map: function (callback) {
         callback(null, [ 1, 2, 3 ]);
       },
-      process: function (data, callback) {
-        if (data === 2) {
+      process: function (callback) {
+        if (this.data === 2) {
           callback('test err');
           return;
         }
 
-        callback(null, data);
+        callback(null, this.data);
       },
       reduce: function (chunksResult, callback) {
         assert.deepEqual(chunksResult.sort(), [ 1, 3 ]);
@@ -169,7 +169,7 @@ describe('Queue', function () {
       name: 'test4',
       retryDelay: 1, // 1 ms
       retry: 1,
-      map: function (taskData, callback) {
+      map: function (callback) {
         if (localCounter === 0) {
           callback('test err');
           localCounter++;
@@ -177,8 +177,8 @@ describe('Queue', function () {
         }
         callback(null, [ 1 ]);
       },
-      process: function (data, callback) {
-        callback(null, data);
+      process: function (callback) {
+        callback(null, this.data);
       },
       reduce: function (chunksResult, callback) {
         assert.deepEqual(chunksResult, [ 1 ]);
@@ -204,11 +204,11 @@ describe('Queue', function () {
       name: 'test5',
       retryDelay: 1, // 1 ms
       retry: 1,
-      map: function (taskData, callback) {
+      map: function (callback) {
         callback(null, [ 1 ]);
       },
-      process: function (data, callback) {
-        callback(null, data);
+      process: function (callback) {
+        callback(null, this.data);
       },
       reduce: function (chunksResult, callback) {
         if (localCounter === 0) {
@@ -240,17 +240,17 @@ describe('Queue', function () {
       name: 'test6',
       retryDelay: 1, // 1 ms
       retry: 1,
-      map: function (taskData, callback) {
+      map: function (callback) {
         callback(null, [ 1 ]);
       },
-      process: function (data, callback) {
+      process: function (callback) {
         if (localCounter === 0) {
           callback('test err');
           localCounter++;
           return;
         }
 
-        callback(null, data);
+        callback(null, this.data);
       },
       reduce: function (chunksResult, callback) {
         assert.deepEqual(chunksResult, [ 1 ]);
@@ -275,7 +275,7 @@ describe('Queue', function () {
     var worker = {
       name: 'test7',
       timeout: 1,
-      map: function (taskData, callback) {
+      map: function (callback) {
         if (localCounter === 0) {
           localCounter++;
           // nothing to do
@@ -283,8 +283,8 @@ describe('Queue', function () {
         }
         callback(null, [ 1 ]);
       },
-      process: function (data, callback) {
-        callback(null, data);
+      process: function (callback) {
+        callback(null, this.data);
       },
       reduce: function (chunksResult, callback) {
         assert.deepEqual(chunksResult, [ 1 ]);
@@ -309,11 +309,11 @@ describe('Queue', function () {
     var worker = {
       name: 'test8',
       timeout: 1,
-      map: function (taskData, callback) {
+      map: function (callback) {
         callback(null, [ 1 ]);
       },
-      process: function (data, callback) {
-        callback(null, data);
+      process: function (callback) {
+        callback(null, this.data);
       },
       reduce: function (chunksResult, callback) {
         if (localCounter === 0) {
@@ -344,16 +344,16 @@ describe('Queue', function () {
     var worker = {
       name: 'test9',
       timeout: 1,
-      map: function (taskData, callback) {
+      map: function (callback) {
         callback(null, [ 1 ]);
       },
-      process: function (data, callback) {
+      process: function (callback) {
         if (localCounter === 0) {
           localCounter++;
           // nothing to do
           return;
         }
-        callback(null, data);
+        callback(null, this.data);
       },
       reduce: function (chunksResult, callback) {
         assert.deepEqual(chunksResult, [ 1 ]);
