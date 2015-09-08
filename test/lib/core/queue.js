@@ -64,7 +64,7 @@ describe('Queue', function () {
       map: function (callback) {
         callback(null, [ 1, 2, 3 ]);
       },
-      reduce: function (callback) {
+      reduce: function (chunksResult, callback) {
 
         if (process1Chunks > process2Chunks) {
           assert.equal(process1Chunks, 2);
