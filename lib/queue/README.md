@@ -98,6 +98,15 @@ Run the task immediately.
  - **taskData** (Object) - optional, the task params
  - **callback** (Function) - called as: `function (err)`
 
+### .postpone(workerName, taskData, time, callback)
+
+Postpone the task executions.
+
+ - **workerName** (String) - the worker name
+ - **taskData** (Object) - optional, the task params
+ - **time** (Number || Date) - run at defined time
+ - **callback** (Function) - called as: `function (err)`
+
 ### .shutdown()
 
 Stop accepting new tasks from queue. Active tasks continue execution.
