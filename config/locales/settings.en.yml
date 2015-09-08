@@ -6,10 +6,12 @@ i18n:
           core: Core
           general: General
           email: Email
+          content: Content
 
         category_names:
           general_common: Common
           email_common: Common
+          content_common: Common
 
         setting_names:
           general_project_name: Project name
@@ -27,6 +29,7 @@ i18n:
           email_header_from_help: Email address for auto-generated letters
             (email validation, notifications, etc)
 
+          content_read_marks_expire: Max time to store read marks, older content considered read (days)
 
         setting_values:
           email_transport:

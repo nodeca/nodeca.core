@@ -4,3 +4,6 @@ globals:
   TEST: false
   before: false
   after: false
+
+rules:
+  max-nested-callbacks:   [ 1, 6 ]
