@@ -30,6 +30,7 @@ Options:
  - **retry** (Number) - optional, number of retry on error, default 2
  - **retryDelay** (Number) - optional, delay in ms after retries, default 60000 ms
  - **timeout** (Number) - optional, `map`, `chunk` and `reduce` execution timeout, default 30000 ms
+ - **postponeDelay** (Number) - optional, if postpone is called without delay, delay is assumed to be equal to this
  - **cron** (String) - optional, cron string ("15 \*/6 \* \* \*"), default null
  - **map** (Function) - optional, proxy taskData to single chunk by default,
    called as: `task.map(callback)`
@@ -98,14 +99,16 @@ Run the task immediately.
  - **taskData** (Object) - optional, the task params
  - **callback** (Function) - called as: `function (err)`
 
-### .postpone(workerName, taskData, time, callback)
+### .postpone(workerName, taskData, delay, callback)
 
-Postpone the task executions.
+Postpone the task execution.
 
  - **workerName** (String) - the worker name
- - **taskData** (Object) - optional, the task params
- - **time** (Number || Date) - run at defined time
+ - **taskData** (Object) - optional, the task params, default: `null`
+ - **delay** (Number) - optional, delay execution for the given amount of time, default: `worker.postponeDelay`
  - **callback** (Function) - called as: `function (err)`
+
+Note: if you call `.postpone()` with 3 arguments, queue figures out desired signature based on argument type (if it's a number, it's a delay). Thus, if you want to supply a numeric `taskData`, you *must* also specify `delay`.
 
 ### .shutdown()
 
