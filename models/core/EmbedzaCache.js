@@ -23,6 +23,28 @@ module.exports = function (N, collectionName) {
 
 
   EmbedzaCache.statics.get = function (key, callback) {
+    // Get image dimensions cache from redis instead of mongodb
+    if (key.indexOf('image#') === 0) {
+      N.redis.get('embedza:' + key, function (err, cache) {
+        if (err) {
+          callback(err);
+          return;
+        }
+
+        if (cache) {
+          try {
+            cache = JSON.parse(cache);
+          } catch (__) {
+            cache = null;
+          }
+        }
+
+        callback(null, cache);
+      });
+
+      return;
+    }
+
     this.findOne({ key: key }).lean(true).exec(function (err, result) {
       if (err) {
         callback(err);
@@ -40,6 +62,13 @@ module.exports = function (N, collectionName) {
 
 
   EmbedzaCache.statics.set = function (key, value, callback) {
+    // Store image dimensions cache in redis instead of mongodb
+    if (key.indexOf('image#') === 0) {
+      // Will expire after one hour
+      N.redis.setex('embedza:' + key, 60 * 60, JSON.stringify(value), callback);
+      return;
+    }
+
     var record = new this({ key: key, value: value });
 
     record.save(callback);
