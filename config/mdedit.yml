@@ -12,6 +12,7 @@ mdedit:
       priority: 70
     ol: true
     ul: true
+    emoji: true
     separator3:
       priority: 100
     help: true
@@ -88,6 +89,13 @@ mdedit:
       command: cmdUl
       priority: 90
       depend: lists
+
+    emoji:
+      css_class: icon icon-track-normal # TODO: update icon list and set icon-smile
+      tooltip: "@mdedit.toolbar.emoji"
+      command: cmdEmoji
+      priority: 100
+      depend: emoji
 
     help:
       css_class: icon icon-help

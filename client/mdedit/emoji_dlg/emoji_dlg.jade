@@ -1,0 +1,13 @@
+.emoji-dlg.modal.fade(tabindex='-1' role='dialog' aria-hidden='true')
+  form.modal-dialog(onsubmit="return false;")
+    .modal-content
+      .modal-header
+        button.close(type='button' tabindex='-1' data-dismiss='modal') &times;
+        h4.modal-title= self.t('title')
+      .modal-body
+        ul.emoji-dlg__list.clearfix
+          each emoji, name in self.emojis
+            li.emoji-dlg__item
+              a.emoji-dlg__item-link(href='#' data-value=name title=name)=emoji
+      .modal-footer
+        button.btn.btn-default(type='button' data-dismiss='modal')= self.t('cancel')

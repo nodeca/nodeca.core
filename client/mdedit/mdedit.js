@@ -11,6 +11,7 @@ var RpcCache = require('./_lib/rpc_cache')(N);
 
 var TEXT_MARGIN = 5;
 var TOOLBAR = '$$ JSON.stringify(N.config.mdedit) $$';
+var EMOJIS = '$$ JSON.stringify(N.config.parser.emojis) $$';
 
 
 // Compile toolbar config
@@ -42,6 +43,8 @@ var compileToolbarConfig = _.memoize(function (name) {
 //
 function MDEdit() {
   var self = this;
+
+  this.emojis = EMOJIS;
   this.commands = {};
   this.__attachments__ = [];
   this.__options__ = null;
