@@ -97,7 +97,7 @@ mdedit:
       depend: lists
 
     emoji:
-      css_class: icon icon-track-normal # TODO: update icon list and set icon-smile
+      css_class: icon icon-emoji
       tooltip: "@mdedit.toolbar.emoji"
       command: cmdEmoji
       priority: 100
