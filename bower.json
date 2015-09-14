@@ -2,7 +2,6 @@
   "name"        : "nodeca",
   "private"     : false,
   "dependencies": {
-    "codemirror"            : "~5.2.0",
     "jquery"                : "~2.1.1",
     "jquery-ui"             : "~1.10.3",
     "blueimp-canvas-to-blob": "~2.1.0",
