@@ -109,12 +109,10 @@ packages:
   mdedit:
 
     client:
-      main: assets/main_mdedit.js
       include: client/mdedit/**.js
       exclude: /(^|\/|\\)_.*/
 
     styles:
-      main: assets/main_mdedit.styl
       include: client/mdedit/**.styl
 
     views:

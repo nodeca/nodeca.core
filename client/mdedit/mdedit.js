@@ -3,10 +3,14 @@
 'use strict';
 
 
-/*global CodeMirror*/
-var _        = require('lodash');
-var Bag      = require('bag.js');
-var RpcCache = require('./_lib/rpc_cache')(N);
+var CodeMirror = require('codemirror');
+var _          = require('lodash');
+var Bag        = require('bag.js');
+var RpcCache   = require('./_lib/rpc_cache')(N);
+
+
+// Require markdown highlighter (mode) for CodeMirror
+require('codemirror/mode/markdown/markdown');
 
 
 var TEXT_MARGIN = 5;
