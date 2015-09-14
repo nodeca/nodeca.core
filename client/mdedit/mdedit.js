@@ -117,6 +117,7 @@ MDEdit.prototype.show = function (options) {
     self.__initResize__();
     self.__initToolbar__();
     self.__initSyncScroll__();
+    self.__initEmojis__();
 
     self.text(options.text || '');
     self.attachments(options.attachments || []);
@@ -237,6 +238,247 @@ MDEdit.prototype.__initCodeMirror__ = function () {
   });
 
   this.__cm__.on('change', this.__updatePreview__.bind(this));
+};
+
+
+// Init emojis select popup.
+//
+// Behaviour:
+//
+// - show when
+//   - ':' typed at start of line or after space
+//   - backspace typed and string before cursor finished to emoji start
+// - hide when
+//   - escape pressed
+//   - editor lost focus
+//   - cursor position changed
+// - apply when
+//   - enter or right arrow pressed
+//   - click by emoji
+//
+MDEdit.prototype.__initEmojis__ = function () {
+  var self = this;
+  var $popup = this.__layout__.find('.emoji-autocomplete');
+
+  // To check emoji start at line end (and extract emoji text)
+  var emojiAtEndRE = /(?:^|\s):([^:\s]*)$/;
+
+
+  // Show or update popup
+  //
+  function showPopup(text) {
+    var emojis = {};
+
+    // Filter emijis by text (but not more than 5)
+    _.forEach(self.emojis.named, function (val, name) {
+      if (name.indexOf(text) !== -1) {
+        emojis[name] = val;
+      } else {
+        return true; // continue
+      }
+
+      if (Object.keys(emojis).length >= 5) {
+        return false; // break;
+      }
+    });
+
+    // If nothing found - hide popup
+    if (Object.keys(emojis).length === 0) {
+      $popup.removeClass('emoji-autocomplete__m-visible');
+      return;
+    }
+
+    // Render emojis list
+    $popup.html(N.runtime.render('mdedit.emoji_autocomplete', { emojis: emojis, search: text }));
+
+    // Should be called after cursor position change (after event propagation finish)
+    setTimeout(function () {
+      // Show popup
+      $popup.addClass('emoji-autocomplete__m-visible');
+
+      var $cursor = self.__layout__.find('.CodeMirror-cursor');
+      var layoutOffset = self.__layout__.offset();
+      var cursorOffset = $cursor.offset();
+      var layoutPadding = parseInt(self.__layout__.css('padding-right'), 10);
+      var top = cursorOffset.top - layoutOffset.top - $popup.height();
+      var left = cursorOffset.left - layoutOffset.left;
+
+      // If popup outside right editor edge - attach it to right edge
+      if (left + $popup.outerWidth() > layoutOffset.left + self.__layout__.outerWidth() - layoutPadding) {
+        left = (layoutOffset.left + self.__layout__.outerWidth() - layoutPadding) - $popup.outerWidth();
+      }
+
+      // If popup outside top editor edge - move it under cursor
+      if (top < 0) {
+        top = cursorOffset.top - layoutOffset.top + $cursor.outerHeight();
+      }
+
+      // Set popup position above cursor
+      $popup.css({ top: top, left: left });
+    }, 0);
+  }
+
+
+  // Insert emoji to editor area and hide popup
+  //
+  function insert(emoji) {
+    var curEnd = self.__cm__.getCursor();
+    var line = self.__cm__.getDoc().getLine(curEnd.line);
+
+    // Find nearest ':' symbol before cursor
+    var curBegin = { ch: _.lastIndexOf(line, ':', curEnd.ch), line: curEnd.line };
+
+    if (curBegin.ch === -1) {
+      curBegin.ch = 0;
+    }
+
+    self.__cm__.replaceRange(':' + emoji + ':', curBegin, curEnd);
+    $popup.removeClass('emoji-autocomplete__m-visible');
+    self.__cm__.focus();
+  }
+
+
+  // Show or hide popup if text changed
+  //
+  this.__cm__.on('change', function (editor, changeObj) {
+    if (!self.__options__.parseOptions.emoji) {
+      // Stop here if emoji disabled
+      return;
+    }
+
+    var poputShown = $popup.hasClass('emoji-autocomplete__m-visible');
+    var cursor = editor.getCursor();
+    // Get line before cursor
+    var line = editor.getDoc().getLine(cursor.line).substr(0, cursor.ch);
+
+    if (!emojiAtEndRE.test(line)) {
+      if (poputShown) {
+        $popup.removeClass('emoji-autocomplete__m-visible');
+      }
+      return;
+    }
+
+    var emojiText = line.match(emojiAtEndRE)[1];
+
+    if (changeObj.origin === '+input') {
+      if (poputShown) {
+        // Update popup if already shown
+        showPopup(emojiText);
+      } if (emojiText === '') {
+        // Show popup if ':' typed
+        showPopup(emojiText);
+      }
+      return;
+    }
+
+    if (changeObj.origin === '+delete') {
+      // Show popup if backspace pressed and line match pattern
+      showPopup(emojiText);
+    }
+  });
+
+
+  // Hide or update popup if cursor position changed (can be done with mouse, touch or left arrow)
+  //
+  this.__cm__.on('cursorActivity', function () {
+    if (!$popup.hasClass('emoji-autocomplete__m-visible')) {
+      return;
+    }
+
+    if (self.__cm__.somethingSelected()) {
+      $popup.removeClass('emoji-autocomplete__m-visible');
+      return;
+    }
+
+    var cursor = self.__cm__.getCursor();
+    var line = self.__cm__.getDoc().getLine(cursor.line).substr(0, cursor.ch);
+
+    if (!emojiAtEndRE.test(line)) {
+      $popup.removeClass('emoji-autocomplete__m-visible');
+      return;
+    }
+
+    showPopup(line.match(emojiAtEndRE)[1]);
+  });
+
+
+  // Insert emoji to text if clicked
+  //
+  $popup.on('click', '.emoji-autocomplete-item__link', function () {
+    insert($(this).data('value'));
+
+    return false;
+  });
+
+
+  // Handle keypress if popup shown
+  //
+  this.__cm__.on('keydown', function (editor, event) {
+    if (!$popup.hasClass('emoji-autocomplete__m-visible')) {
+      return;
+    }
+
+    // `keyCode` for IE, `which` for others
+    var code = event.which || event.keyCode;
+    var $item;
+    var $selected;
+
+    switch (code) {
+      // Up - select previous popup list item
+      case 38:
+        $selected = $popup.find('.emoji-autocomplete-item__m-selected');
+        $item = $popup.find('.emoji-autocomplete-item:nth-child(' + ((1 + $selected.index()) - 1) + ')');
+
+        if ($item.length) {
+          $selected.removeClass('emoji-autocomplete-item__m-selected');
+          $item.addClass('emoji-autocomplete-item__m-selected');
+        }
+        break;
+
+      // Down - select next popup list item
+      case 40:
+        $selected = $popup.find('.emoji-autocomplete-item__m-selected');
+        $item = $popup.find('.emoji-autocomplete-item:nth-child(' + ((1 + $selected.index() + 1)) + ')');
+
+        if ($item.length) {
+          $selected.removeClass('emoji-autocomplete-item__m-selected');
+          $item.addClass('emoji-autocomplete-item__m-selected');
+        }
+        break;
+
+      // Enter or right - insert current emoji
+      case 13:
+      case 39:
+        $selected = $popup.find('.emoji-autocomplete-item__m-selected .emoji-autocomplete-item__link');
+        insert($selected.data('value'));
+
+        break;
+
+      // Esc - hide popup
+      case 27:
+        $popup.removeClass('emoji-autocomplete__m-visible');
+        break;
+
+      default:
+        return;
+    }
+
+    event.preventDefault();
+  });
+
+
+  // Hide popup if focus lost
+  //
+  this.__cm__.on('blur', function () {
+    // Wait 50 ms before hide popup to allow click by popup item
+    setTimeout(function () {
+      if (!$popup.hasClass('emoji-autocomplete__m-visible')) {
+        return;
+      }
+
+      $popup.removeClass('emoji-autocomplete__m-visible');
+    }, 50);
+  });
 };
 
 

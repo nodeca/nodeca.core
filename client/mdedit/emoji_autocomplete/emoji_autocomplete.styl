@@ -1,0 +1,30 @@
+@import "nodeca.core/client/common/_variables"
+
+.emoji-autocomplete
+  position absolute
+  z-index 100
+  background #ffffff
+  display none
+
+  &.emoji-autocomplete__m-visible
+    display block
+
+.emoji-autocomplete__list
+  list-style none
+  padding 0
+
+.emoji-autocomplete-item
+  padding 2px 5px
+  border 1px solid #ffffff
+  border-radius 2px
+
+  &.emoji-autocomplete-item__m-selected
+    background-color lighten(grayLightest, 70%)
+    border 1px solid grayLightest
+    border-radius 2px
+
+.emoji-autocomplete-item__link-text
+  padding-left 3px
+
+.emoji-autocomplete-item__search
+  font-weight bold

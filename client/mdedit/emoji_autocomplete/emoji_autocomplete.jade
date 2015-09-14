@@ -1,0 +1,10 @@
+- var search = jade.escape(self.search);
+
+ul.emoji-autocomplete__list
+  - var i = 0;
+  each emoji, name in self.emojis
+    li.emoji-autocomplete-item(class=(i === 0) ? 'emoji-autocomplete-item__m-selected' : '')
+      a.emoji-autocomplete-item__link(href='#' data-value=name title=name)
+        span.emoji-autocomplete-item__link-emoji.emoji(class='emoji-' + name)=emoji
+        span.emoji-autocomplete-item__link-text!=jade.escape(name).replace(search, '<span class="emoji-autocomplete-item__search">' + search + '</span>')
+    - i++;

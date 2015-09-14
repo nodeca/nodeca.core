@@ -1,5 +1,8 @@
 mdedit:
 
+
+  # buttons list for toolbar
+
   default:
     bold: true
     italic: true
@@ -16,6 +19,9 @@ mdedit:
     separator3:
       priority: 100
     help: true
+
+
+  # buttons templates
 
   buttons:
 
