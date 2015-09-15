@@ -1,10 +1,28 @@
+@import "nodeca.core/client/common/_variables"
+
 .emoji-dlg__list
   list-style none
   padding 0
 
 .emoji-dlg__item
   float left
-  padding 5px 5px
 
-.emoji-dlg__item-link:hover
-  text-decoration none
+.emoji-dlg__item-link
+  font-size 16px
+  text-align center
+  display inline-block
+  vertical-align middle
+  min-width 1.7em
+  height 1.5em
+  line-height 1.5em
+  border none
+  background none
+  padding 0
+  border-radius 4px
+  color gray
+  transition .2s ease
+
+  &:hover
+    background-color grayLightest
+    color grayDark
+    text-decoration none

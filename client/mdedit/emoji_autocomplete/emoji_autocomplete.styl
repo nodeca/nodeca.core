@@ -5,6 +5,8 @@
   z-index 100
   background #ffffff
   display none
+  border 1px solid grayLighter
+  border-radius 4px
 
   &.emoji-autocomplete__m-visible
     display block
@@ -12,19 +14,31 @@
 .emoji-autocomplete__list
   list-style none
   padding 0
+  margin 0
 
 .emoji-autocomplete-item
-  padding 2px 5px
-  border 1px solid #ffffff
-  border-radius 2px
+  font-size 16px
+  padding 0 5px
+  height 1.5em
+  line-height 1.5em
+  border-radius 4px
+  background none
+  color gray
+  transition .2s ease
 
-  &.emoji-autocomplete-item__m-selected
-    background-color lighten(grayLightest, 70%)
-    border 1px solid grayLightest
-    border-radius 2px
+  &.emoji-autocomplete-item__m-selected, &:hover
+    color grayDark
+    background-color grayLightest
+
+.emoji-autocomplete-item__link
+  color inherit
+
+  &:hover
+    text-decoration none
 
 .emoji-autocomplete-item__link-text
   padding-left 3px
+  color inherit
 
 .emoji-autocomplete-item__search
   font-weight bold
