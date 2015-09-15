@@ -8,7 +8,17 @@
   // External images
   .image
     max-width 100%
+    display inline-block
     border-radius 2px
+    position relative
+
+    & > img
+      max-width 100%
+      border-radius 2px
+      position absolute
+
+  .image__spacer
+    display block
 
   // Attachments in text
   .thumb__image

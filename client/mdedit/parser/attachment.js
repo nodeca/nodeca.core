@@ -37,15 +37,21 @@ N.wire.once('init:parser', function attachment_plugin_init() {
           //  - ![md](link)
           //  - ![arbitrary text|md](link)
           //
-          var size = $attach.attr('alt');
+          var alt = $attach.attr('alt') || '';
+          var pos = alt.lastIndexOf('|');
+          var size;
 
-          if (size.indexOf('|') !== -1) {
-            size = size.slice('|');
+          if (pos !== -1) {
+            size = alt.slice(pos + 1).trim();
+            alt = alt.slice(0, pos);
+          } else {
+            size = alt.trim();
+            alt = '';
           }
 
-          size = size.trim();
-
-          if (!sizes[size]) {
+          if (sizes[size]) {
+            $attach.attr('alt', alt);
+          } else {
             size = 'sm';
           }
 
