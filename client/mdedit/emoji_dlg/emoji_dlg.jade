@@ -6,8 +6,8 @@
         h4.modal-title= self.t('title')
       .modal-body
         ul.emoji-dlg__list.clearfix
-          each emoji, name in self.emojis
+          each data, emoji in self.emojis
             li.emoji-dlg__item
-              a.emoji-dlg__item-link(href='#' data-value=name title=name)=emoji
+              a.emoji-dlg__item-link(href='#' data-value=data.name title=data.aliases.join(', '))=emoji
       .modal-footer
         button.btn.btn-default(type='button' data-dismiss='modal')= self.t('cancel')
