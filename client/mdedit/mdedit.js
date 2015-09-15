@@ -406,9 +406,10 @@ MDEdit.prototype.__initEmojis__ = function () {
   });
 
 
-  // Insert emoji to text if clicked
+  // Insert emoji to text if clicked. We should use `mousedown` instead of `click`
+  // because `click` could be canceled (if mouseup event cause when popup invisible)
   //
-  $popup.on('click', '.emoji-autocomplete-item__link', function () {
+  $popup.on('mousedown touchstart', '.emoji-autocomplete-item__link', function () {
     insert($(this).data('value'));
 
     return false;
