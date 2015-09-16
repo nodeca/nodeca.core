@@ -75,9 +75,9 @@ N.wire.once('init:mdedit', function () {
   }
 
 
-  // Update attachments, preview and save draft
+  // Update preview and save draft
   //
-  N.wire.on('mdedit:update', _.debounce(function updatePreview() {
+  N.wire.on('mdedit:update.*', _.debounce(function updatePreview() {
     if (!N.MDEdit.__layout__) { return; }
 
     N.MDEdit.__layout__.trigger('change');
@@ -104,10 +104,6 @@ N.wire.once('init:mdedit', function () {
           user_hid: N.runtime.user_hid,
           html: result.html,
           attachments: result.tail
-        }));
-
-        N.MDEdit.__layout__.find('.mdedit-attachments').html(N.runtime.render('mdedit.attachments', {
-          attachments: N.MDEdit.attachments()
         }));
 
         N.MDEdit.__scrollMap__ = null;
