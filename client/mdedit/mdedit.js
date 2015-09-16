@@ -46,8 +46,6 @@ var compileToolbarConfig = _.memoize(function (name) {
 // Editor init
 //
 function MDEdit() {
-  var self = this;
-
   this.emojis = EMOJIS;
   this.commands = {};
   this.__attachments__ = [];
@@ -57,11 +55,10 @@ function MDEdit() {
   this.__minHeight__ = 0;
   this.__cm__ = null;
   this.__bag__ = new Bag({ prefix: 'nodeca_editor' });
-  this.__scrollMap__ = null;
   this.__cache__ = new RpcCache();
 
   this.__cache__.on('update', function () {
-    self.__updatePreview__();
+    N.wire.emit('mdedit:update');
   });
 }
 
@@ -113,11 +110,13 @@ MDEdit.prototype.show = function (options) {
     Esc:          function () { N.wire.emit('mdedit.cancel'); },
     'Ctrl-Enter': function () { N.wire.emit('mdedit.submit'); }
   });
-  self.__cm__.on('change', self.__updatePreview__.bind(self));
+
+  self.__cm__.on('change', function () {
+    N.wire.emit('mdedit:update');
+  });
 
   self.__initResize__();
   self.__initToolbar__();
-  self.__initSyncScroll__();
   N.wire.emit('mdedit:init');
 
   self.text(options.text || '');
@@ -201,7 +200,7 @@ MDEdit.prototype.text = function (text) {
   this.__cm__.setValue(text);
   this.__cm__.setCursor(this.__cm__.lineCount(), 0);
 
-  this.__updatePreview__();
+  N.wire.emit('mdedit:update');
 };
 
 
@@ -220,7 +219,7 @@ MDEdit.prototype.attachments = function (attachments) {
     this.__layout__.removeClass('mdedit__m-no-attachments');
   }
 
-  this.__updatePreview__();
+  N.wire.emit('mdedit:update');
 };
 
 
@@ -234,7 +233,7 @@ MDEdit.prototype.parseOptions = function (parseOptions) {
   this.__options__.parseOptions = parseOptions;
 
   this.__initToolbar__();
-  this.__updatePreview__();
+  N.wire.emit('mdedit:update');
 };
 
 
@@ -293,192 +292,6 @@ MDEdit.prototype.__clampHeight__ = _.debounce(function () {
     this.__cm__.setSize('100%', this.__layout__.find('.mdedit__edit-area').height());
   }
 }, 50, { maxWait: 50 });
-
-
-// Init scroll listeners to synchronize position between editor and preview
-//
-MDEdit.prototype.__initSyncScroll__ = function () {
-  var self = this;
-  var $preview = this.__layout__.find('.mdedit__preview');
-  var $editor = this.__layout__.find('.CodeMirror-scroll');
-  var editorScroll, previewScroll;
-
-
-  // When user resize window - remove outdated scroll map
-  $(window).on('resize.nd.mdedit', function () {
-    self.__scrollMap__ = null;
-  });
-
-
-  // Editor scroll handler
-  //
-  editorScroll = _.debounce(function () {
-    if (!self.__scrollMap__) {
-      self.__buildScrollMap__();
-    }
-
-    // Get top visible editor line number
-    var lh = parseInt(self.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);
-    var line = Math.round(self.__cm__.getScrollInfo().top / lh);
-    // Get preview offset
-    var posTo = self.__scrollMap__[line];
-
-    // Remove scroll handler for preview when scroll it programmatically
-    $preview.off('scroll.nd.mdedit');
-
-    $preview.stop(true).animate({ scrollTop: posTo }, 'fast', 'linear', function () {
-      // Restore scroll handler after 50 ms delay to avoid non-user scroll events
-      setTimeout(function () {
-        $preview.on('scroll.nd.mdedit', previewScroll);
-      }, 50);
-    });
-  }, 50, { maxWait: 50 });
-
-
-  // Preview scroll handler
-  //
-  previewScroll = _.debounce(function () {
-    if (!self.__scrollMap__) {
-      self.__buildScrollMap__();
-    }
-
-    var scrollTop = $preview.scrollTop();
-    var line;
-
-    // Get editor line number by preview offset
-    for (line = 0; line < self.__scrollMap__.length; line++) {
-      if (self.__scrollMap__[line] >= scrollTop) {
-        break;
-      }
-    }
-
-    var lh = parseInt(self.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);
-    var posTo = line * lh;
-
-    // Remove scroll handler for editor when scroll it programmatically
-    $editor.off('scroll.nd.mdedit');
-
-    $editor.stop(true).animate({ scrollTop: posTo }, 'fast', 'linear', function () {
-      // Restore scroll handler after 50 ms delay to avoid non-user scroll events
-      setTimeout(function () {
-        $editor.on('scroll.nd.mdedit', editorScroll);
-      }, 50);
-    });
-  }, 50, { maxWait: 50 });
-
-
-  // Bind events
-  $editor.on('scroll.nd.mdedit', editorScroll);
-  $preview.on('scroll.nd.mdedit', previewScroll);
-};
-
-
-// Build offsets for each line
-//
-MDEdit.prototype.__buildScrollMap__ = function () {
-  var $preview = this.__layout__.find('.mdedit__preview'),
-      offset = $preview.offset().top - $preview.scrollTop(),
-      mappedLinesNumbers = [],
-      lineHeightMap = [],
-      scrollMap = [],
-      lineCount = 0,
-      pos = 0,
-      line, $el, lh, i, a, b;
-
-  // Calculate wrapped lines count and fill map real->wrapped
-  lh = parseInt(this.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);
-  this.__cm__.eachLine(function (lineHandle) {
-    lineHeightMap.push(lineCount);
-    lineCount += lineHandle.height / lh;
-  });
-
-  // Init `scrollMap` array
-  for (i = 0; i < lineCount; i++) {
-    scrollMap.push(-1);
-  }
-
-  // Define first line offset
-  mappedLinesNumbers.push(0);
-  scrollMap[0] = 0;
-
-  // Get mapped lines offsets and fill mapped lines numbers
-  this.__layout__.find('.mdedit__preview > [data-line]').each(function () {
-    $el = $(this);
-    line = lineHeightMap[$el.data('line')];
-
-    if (line === 0) {
-      return;
-    }
-
-    scrollMap[line] = $el.offset().top - offset;
-
-    if (line !== lineCount - 1) {
-      mappedLinesNumbers.push(line);
-    }
-  });
-
-  // Define last line offset
-  scrollMap[lineCount - 1] = $preview.get(0).scrollHeight;
-  mappedLinesNumbers.push(lineCount - 1);
-
-  // Interpolate offset of lines between mapped lines
-  for (i = 0; i < scrollMap.length; i++) {
-    if (scrollMap[i] !== -1) {
-      pos++;
-      continue;
-    }
-
-    a = mappedLinesNumbers[pos - 1];
-    b = mappedLinesNumbers[pos];
-
-    scrollMap[i] = Math.round((scrollMap[b] * (i - a) + scrollMap[a] * (b - i)) / (b - a));
-  }
-
-  this.__scrollMap__ = scrollMap;
-};
-
-
-// Update attachments, preview and save draft
-//
-MDEdit.prototype.__updatePreview__ = _.debounce(function () {
-  var self = this;
-
-  if (!self.__layout__) { return; }
-
-  self.__layout__.trigger('change');
-
-  N.parse(
-    {
-      text: this.text(),
-      attachments: this.attachments().map(function (attach) {
-        return attach.media_id;
-      }),
-      options: this.__options__.parseOptions,
-      rpc_cache: self.__cache__
-    },
-    function (err, result) {
-      if (err) {
-        // It should never happen
-        N.wire.emit('notify', { type: 'error', message: err.message });
-        return;
-      }
-
-      if (!self.__layout__) { return; }
-
-      self.__layout__.find('.mdedit__preview').html(N.runtime.render('mdedit.preview', {
-        user_hid: N.runtime.user_hid,
-        html: result.html,
-        attachments: result.tail
-      }));
-
-      self.__layout__.find('.mdedit-attachments').html(N.runtime.render('mdedit.attachments', {
-        attachments: self.attachments()
-      }));
-
-      self.__scrollMap__ = null;
-    }
-  );
-}, 500, { maxWait: 500, leading: true });
 
 
 // Update toolbar button list
