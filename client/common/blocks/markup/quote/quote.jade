@@ -11,8 +11,8 @@ blockquote(cite=self.href || false).quote
           a.quote__ref-outer.btn.btn-xs.icon.icon-ref-outer(href=self.href, data-i18n-title='jump')
       if self.user
         cite.quote__author
+          //- src is a transparent 1x1 gif
           img.quote__author-avatar._identicon(
-            //- transparent 1x1 gif
             src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
             data-user-id=String(self.user._id)
             data-avatar-size='sm'

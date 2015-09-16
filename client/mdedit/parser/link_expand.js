@@ -39,7 +39,7 @@ N.wire.once('init:parser', function medialink_plugin_init() {
             return;
           }
 
-          if (data.type === 'block') {
+          if (result.type === 'block') {
             // if result is a block, replace parent `P` tag
             $tag.parent().replaceWith(result.html);
           } else {
