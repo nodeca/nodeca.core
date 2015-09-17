@@ -39,12 +39,16 @@ N.wire.once('init:parser', function medialink_plugin_init() {
             return;
           }
 
+          var replacement = $(result.html);
+
+          replacement.attr('data-nd-orig', url);
+
           if (result.type === 'block') {
             // if result is a block, replace parent `P` tag
-            $tag.parent().replaceWith(result.html);
+            $tag.parent().replaceWith(replacement);
           } else {
             // otherwise replace `A` tag itself
-            $tag.replaceWith(result.html);
+            $tag.replaceWith(replacement);
           }
         });
       });
