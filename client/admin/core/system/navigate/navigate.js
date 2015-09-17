@@ -82,7 +82,13 @@ function parseOptions(options) {
     anchor = normalizeURL(options.href).slice(href.length) || '';
 
     match = _.find(N.router.matchAll(href), function (match) {
-      return _.has(match.meta.methods, 'get');
+      // Filter out methods that we can't get with RPC. Currently, responder
+      // may have 'bin' or 'http' value, and only 'http' corresponds 1x1 to rpc.
+      //
+      // For example, static files (favicon.ico), attachments and assets
+      // shouldn't be handled by the navigator.
+      //
+      return _.has(match.meta.methods, 'get') && match.meta.responder !== 'bin';
     });
 
     if (match) {
