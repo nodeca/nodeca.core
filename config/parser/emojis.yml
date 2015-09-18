@@ -66,9 +66,6 @@ parser:
       joy_cat: 😹
       pouting_cat: 😾
       sparkles: ✨
-      fist: ✊
-      hand: ✋
-      raised_hand: ✋
       cat: 🐱
       mouse: 🐭
       cow: 🐮
@@ -78,36 +75,17 @@ parser:
       umbrella: ☔
       hourglass: ⌛
       watch: ⌚
-      black_joker: 🃏
-      mahjong: 🀄
       coffee: ☕
-      anchor: ⚓
-      wheelchair: ♿
       negative_squared_cross_mark: ❎
       white_check_mark: ✅
-      loop: ➿
-      aries: ♈
-      taurus: ♉
-      gemini: ♊
-      cancer: ♋
-      leo: ♌
-      virgo: ♍
-      libra: ♎
-      scorpius: ♏
-      sagittarius: ♐
-      capricorn: ♑
-      aquarius: ♒
-      pisces: ♓
       x: ❌
       exclamation: ❗
-      heavy_exclamation_mark: ❗
       question: ❓
       grey_exclamation: ❕
       grey_question: ❔
       heavy_plus_sign: ➕
       heavy_minus_sign: ➖
       heavy_division_sign: ➗
-      curly_loop: ➰
       black_medium_small_square: ◾
       white_medium_small_square: ◽
       black_circle: ⚫
