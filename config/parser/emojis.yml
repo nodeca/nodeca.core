@@ -65,33 +65,15 @@ parser:
       crying_cat_face: 😿
       joy_cat: 😹
       pouting_cat: 😾
-      sparkles: ✨
       cat: 🐱
       mouse: 🐭
       cow: 🐮
       monkey_face: 🐵
-      star: ⭐
-      zap: ⚡
-      umbrella: ☔
       hourglass: ⌛
       watch: ⌚
       coffee: ☕
-      negative_squared_cross_mark: ❎
-      white_check_mark: ✅
-      x: ❌
       exclamation: ❗
       question: ❓
-      grey_exclamation: ❕
-      grey_question: ❔
-      heavy_plus_sign: ➕
-      heavy_minus_sign: ➖
-      heavy_division_sign: ➗
-      black_medium_small_square: ◾
-      white_medium_small_square: ◽
-      black_circle: ⚫
-      white_circle: ⚪
-      white_large_square: ⬜
-      black_large_square: ⬛
 
     aliases:
       # Emoticons -> Emoji mapping.
