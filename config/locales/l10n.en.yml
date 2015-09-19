@@ -4,16 +4,16 @@ i18n:
       # Custom formats. If you do translation - make sure to override ALL root
       # names (variations of the same format are not mandatory)
       =date_formats:
-        date: '%d %b %Y'
+        date: '%e %b %Y'
         time: '%H:%M'
-        datetime: '%d %B %Y, %H:%M'
+        datetime: '%e %B %Y, %H:%M'
 
         compact:
           default:  '=%b %Y'
           past_d:   '%H:%M'
-          past_Y:   '%d %b'
+          past_Y:   '%e %b'
           future_d: '%H:%M'
-          future_Y: '%d %b'
+          future_Y: '%e %b'
 
         relative:
           default:  '%=b %Y'
@@ -26,6 +26,6 @@ i18n:
           # past_1d:  'Вчера'
           past_7d:  '#{days}d'
           #past_M:   '%d %b'
-          past_Y:   '%d %b'
+          past_Y:   '%e %b'
           future_d: '%H:%M'
-          future_Y: '%d %b'
+          future_Y: '%e %b'
