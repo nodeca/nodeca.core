@@ -4,7 +4,6 @@
 'use strict';
 
 
-var crypto   = require('crypto');
 var memoizee = require('memoizee');
 var Mongoose = require('mongoose');
 var Schema   = Mongoose.Schema;
@@ -13,8 +12,7 @@ var Schema   = Mongoose.Schema;
 module.exports = function (N, collectionName) {
 
   var MessageParams = new Schema({
-    hash: String,
-    data: Schema.Types.Mixed
+    data: String
   }, {
     versionKey: false
   });
@@ -24,28 +22,14 @@ module.exports = function (N, collectionName) {
   //////////////////////////////////////////////////////////////////////////////
 
   // find data by its hash
-  MessageParams.index({ key: 'hashed', unique: true });
+  MessageParams.index({ data: 'hashed', unique: true });
 
-  // Store parameter set to the database and return its id
-  //
-  MessageParams.statics.setParams = memoizee(
+  var setParams = memoizee(
 
-    function (params, callback) {
-      params = params || {};
-
-      var sorted = {};
-
-      Object.keys(params).sort().forEach(function (k) {
-        sorted[k] = params[k];
-      });
-
-      var hash = crypto.createHash('sha1')
-                       .update(JSON.stringify(sorted))
-                       .digest('hex');
-
-      this.findOneAndUpdate(
-        { hash: hash },
-        { $setOnInsert: { hash: hash, data: params } },
+    function (data, callback) {
+      N.models.core.MessageParams.findOneAndUpdate(
+        { data: data },
+        { $setOnInsert: { data: data } },
         { 'new': true, upsert: true },
         function (err, found) {
           if (err) {
@@ -63,6 +47,20 @@ module.exports = function (N, collectionName) {
     }
   );
 
+  // Store parameter set to the database and return its id
+  //
+  MessageParams.statics.setParams = function (params, callback) {
+    params = params || {};
+
+    var sorted = {};
+
+    Object.keys(params).sort().forEach(function (k) {
+      sorted[k] = params[k];
+    });
+
+    setParams(JSON.stringify(sorted), callback);
+  };
+
 
   // Get message parameters by message id
   //
@@ -75,9 +73,15 @@ module.exports = function (N, collectionName) {
           return;
         }
 
-        if (!params) { params = {}; }
+        var data = {};
 
-        callback(null, params.data || {});
+        try {
+          data = JSON.parse(params.data);
+        } catch (__) {
+          data = {};
+        }
+
+        callback(null, data);
       });
     },
     {
