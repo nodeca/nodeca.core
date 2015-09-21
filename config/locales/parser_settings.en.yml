@@ -13,7 +13,6 @@ i18n:
           markup_list: Enable lists
           markup_hr: Enable horizontal rules
           markup_code: Enable code blocks (fenced / indented / inline)
-          markup_medialink: Enable medialinks
           markup_quote: Enable quotes
           markup_emoji: Enable emoticons
           markup_spoiler: Enable spoilers

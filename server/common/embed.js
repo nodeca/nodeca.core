@@ -21,7 +21,6 @@ module.exports = function (N, apiPath) {
       type: 'array',
       required: true,
       uniqueItems: true,
-      minItems: 1,
       items: {
         type: 'string',
         'enum': [ 'block', 'inline' ]

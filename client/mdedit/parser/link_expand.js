@@ -1,15 +1,11 @@
 'use strict';
 
-N.wire.once('init:parser', function medialink_plugin_init() {
+N.wire.once('init:parser', function link_expand_plugin_init() {
   N.parse.addPlugin(
-    'medialink',
+    'link_expand',
     function (parser) {
-      parser.bus.on('render', function render_medialinks(data) {
+      parser.bus.on('render', function expand_links(data) {
         if (!data.params.rpc_cache) {
-          return;
-        }
-
-        if (!data.params.options.link_to_title && !data.params.options.link_to_snippet) {
           return;
         }
 
@@ -22,10 +18,6 @@ N.wire.once('init:parser', function medialink_plugin_init() {
             if (data.params.options.link_to_snippet) {
               types.unshift('block');
             }
-          }
-
-          if (!types.length) {
-            return;
           }
 
           var result = data.params.rpc_cache.get('common.embed', { url: url, types: types });

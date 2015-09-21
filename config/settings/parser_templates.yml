@@ -63,12 +63,6 @@ setting_schemas:
       as: code
       default: true
 
-    markup_medialink:
-      priority: 10
-      type: boolean
-      as: medialink
-      default: true
-
     markup_quote:
       priority: 10
       type: boolean
