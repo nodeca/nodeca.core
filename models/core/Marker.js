@@ -4,9 +4,11 @@
 //
 // - `marker_cut:<user_id>:<section_id>` (key) - contain timestamp of read cut
 // - `marker_marks:<user_id>` (zset) - contain `_id` of read content and timestamp as index
-// - `marker_pos:<user_id>:<content_id>` (hash) - content postinion
-//   - `current`
-//   - `max` - last read
+// - `marker_pos:<user_id>` (hash) - content postinion
+//   - <content_id> (JSON)
+//     - `current`
+//     - `max` - last read
+//     - `ts` - last update
 // - `marker_pos_updates` (zset) - last update info for `marker_pos:*`
 // - `marker_cut_updates` (zset) - last update info for `marker_cut:*`
 // - `marker_marks_items` (set) - items list for `marker_marks:*`
@@ -87,6 +89,61 @@ module.exports = function (N, collectionName) {
   };
 
 
+  // Remove extra position markers if user have more than limit
+  //
+  function limitPositionMarkers(userId, callback) {
+    var maxItems = 1000;
+    var gcThreshold = maxItems + Math.round(maxItems * 0.10) + 1;
+
+    // Get position records count
+    N.redis.hlen('marker_pos:' + userId, function (err, cnt) {
+      if (err) {
+        callback(err);
+        return;
+      }
+
+      // If count less than limit - skip
+      if (cnt <= gcThreshold) {
+        callback();
+        return;
+      }
+
+      N.redis.hgetall('marker_pos:' + userId, function (err, items) {
+        if (err) {
+          callback(err);
+          return;
+        }
+
+        var query = N.redis.multi();
+
+        _(items)
+          .mapValues(function (json, id) {
+            var result = { ts: -1 };
+
+            if (json) {
+              try {
+                result = JSON.parse(json);
+              } catch (__) {}
+            }
+
+            result.id = id;
+
+            return result;
+          })
+          .sortBy('ts')
+          .take(_.values(items).length - maxItems)
+          .forEach(function (item) {
+            query.hdel('marker_pos:' + userId, item.id);
+            query.zrem('marker_pos_updates', userId + ':' + item.id);
+          })
+          .commit();
+
+        query.exec(callback);
+      });
+    });
+  }
+
+
   // Set current scroll position in topic
   //
   // - userId (ObjectId)
@@ -102,19 +159,28 @@ module.exports = function (N, collectionName) {
 
     var now = Date.now();
 
-    N.redis.hgetall('marker_pos:' + userId + ':' + contentId, function (err, pos) {
+    N.redis.hget('marker_pos:' + userId, contentId, function (err, posJson) {
       if (err) {
         callback(err);
         return;
       }
 
-      pos = pos || { max: position, current: position };
+      var pos;
+
+      if (posJson) {
+        try {
+          pos = JSON.parse(posJson);
+        } catch (__) {}
+      }
+
+      pos = pos || { max: position, current: position, ts: +now };
 
       if (pos.max < position) {
         pos.max = position;
       }
 
       pos.current = position;
+      pos.ts = +now;
 
       N.redis.zadd('marker_pos_updates', now, userId + ':' + contentId, function (err) {
         if (err) {
@@ -122,7 +188,14 @@ module.exports = function (N, collectionName) {
           return;
         }
 
-        N.redis.hmset('marker_pos:' + userId + ':' + contentId, pos, callback);
+        N.redis.hset('marker_pos:' + userId, contentId, JSON.stringify(pos), function (err) {
+          if (err) {
+            callback(err);
+            return;
+          }
+
+          limitPositionMarkers(userId, callback);
+        });
       });
     });
   };
@@ -238,7 +311,7 @@ module.exports = function (N, collectionName) {
         var max;
 
         contentIds.forEach(function (id) {
-          query.hgetall('marker_pos:' + userId + ':' + id);
+          query.hget('marker_pos:' + userId, id);
         });
 
         query.exec(function (err, posInfo) {
@@ -246,6 +319,18 @@ module.exports = function (N, collectionName) {
             next(err);
             return;
           }
+
+          posInfo = posInfo.map(function (json) {
+            var result;
+
+            if (json) {
+              try {
+                result = JSON.parse(json);
+              } catch (__) {}
+            }
+
+            return result;
+          });
 
           _.forEach(contentData, function (item) {
             max = (posInfo[contentIds.indexOf(String(item.contentId))] || {}).max || -1;
@@ -297,7 +382,9 @@ module.exports = function (N, collectionName) {
         var query = N.redis.multi();
 
         items.forEach(function (item) {
-          query.del('marker_pos:' + item);
+          var parts = item.split(':');
+
+          query.hdel('marker_pos:' + parts[0], parts[1]);
           query.zrem('marker_pos_updates', item);
         });
 

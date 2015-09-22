@@ -157,15 +157,53 @@ describe('Marker', function () {
 
           assert.ok(now - 1000 <= res && res <= now + 1000);
 
-          redis.hgetall('marker_pos:' + uid + ':' + cid, function (err, res) {
+          redis.hget('marker_pos:' + uid, cid, function (err, resJson) {
             if (err) {
               done(err);
               return;
             }
 
-            assert.deepEqual(res, { current: 2, max: 6 });
+            var res = JSON.parse(resJson);
+
+            assert.equal(res.current, 2);
+            assert.equal(res.max, 6);
             done();
           });
+        });
+      });
+    });
+  });
+
+
+  it('.setPos() - limit position markers', function (done) {
+    var uid = randObjectIdByTimestamp(Date.now());
+    var query = redis.multi();
+
+    for (var i = 0; i < 2000; i++) {
+      query.hset('marker_pos:' + uid, i, JSON.stringify({}));
+    }
+
+    query.exec(function (err) {
+      if (err) {
+        done(err);
+        return;
+      }
+
+      Marker.setPos(uid, 'qqq', 6, function (err) {
+        if (err) {
+          done(err);
+          return;
+        }
+
+        redis.hlen('marker_pos:' + uid, function (err, cnt) {
+          if (err) {
+            done(err);
+            return;
+          }
+
+          assert.equal(cnt, 1000);
+
+          done();
         });
       });
     });
@@ -285,8 +323,8 @@ describe('Marker', function () {
     query.zadd('marker_marks:' + uid, now - expire - 1000, 'ewq');
     query.sadd('marker_marks_items', uid);
 
-    query.hmset('marker_pos:' + uid + ':fgh', { max: 22, current: 11 });
-    query.hmset('marker_pos:' + uid + ':hgf', { max: 33, current: 15 });
+    query.hset('marker_pos:' + uid, 'fgh', JSON.stringify({ max: 22, current: 11, ts: +now }));
+    query.hset('marker_pos:' + uid, 'hgf', JSON.stringify({ max: 33, current: 15, ts: +now }));
     query.zadd('marker_pos_updates', now, uid + ':fgh');
     query.zadd('marker_pos_updates', now - expire - 1000, uid + ':hgf');
 
@@ -312,8 +350,8 @@ describe('Marker', function () {
               .zscore('marker_marks:' + uid, 'qwe')
               .zscore('marker_marks:' + uid, 'ewq')
 
-              .hget('marker_pos:' + uid + ':fgh', 'max')
-              .hget('marker_pos:' + uid + ':hgf', 'max')
+              .hget('marker_pos:' + uid, 'fgh')
+              .hget('marker_pos:' + uid, 'hgf')
               .zscore('marker_pos_updates', uid + ':fgh')
               .zscore('marker_pos_updates', uid + ':hgf')
 
