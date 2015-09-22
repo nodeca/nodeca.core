@@ -21,7 +21,10 @@ N.wire.on('io.error', function io_err_init(err) {
     break;
 
   case N.io.ECOMMUNICATION:
-    N.wire.emit('notify', t('communication_timeout'));
+    N.wire.emit('notify', {
+      message:     t('communication_timeout'),
+      deduplicate: true
+    });
     break;
 
   default:

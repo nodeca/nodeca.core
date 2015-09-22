@@ -12,12 +12,19 @@ N.wire.on('io.error', function io_err_init(err) {
     N.wire.emit('notify', t('invalid_csrf_token'));
     break;
 
+  case N.io.INVALID_LIVE_TOKEN:
+    N.wire.emit('notify', t('invalid_live_token'));
+    break;
+
   case N.io.APP_ERROR:
     N.wire.emit('notify', err.message || t('application_fuckup'));
     break;
 
   case N.io.ECOMMUNICATION:
-    N.wire.emit('notify', t('communication_timeout'));
+    N.wire.emit('notify', {
+      message:     t('communication_timeout'),
+      deduplicate: true
+    });
     break;
 
   default:
