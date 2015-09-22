@@ -14,7 +14,11 @@
             label
               input(type='checkbox' tabindex='2' checked=!self.no_emojis name='emojis')
               = self.t('emojis')
+          .checkbox
+            label
+              input(type='checkbox' tabindex='3' checked=!self.no_quote_collapse name='quote_collapse')
+              = self.t('quote_collapse')
 
         .modal-footer
-            button.btn.btn-default(type='button' tabindex='3' data-dismiss='modal')= self.t('cancel')
-            button.btn.btn-primary(type='submit' tabindex='4')= self.t('ok')
+            button.btn.btn-default(type='button' tabindex='4' data-dismiss='modal')= self.t('cancel')
+            button.btn.btn-primary(type='submit' tabindex='5')= self.t('ok')

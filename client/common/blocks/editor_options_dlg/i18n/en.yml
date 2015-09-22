@@ -2,5 +2,6 @@ en-US:
   title: Options
   medialinks: Convert media links
   emojis: Convert emoticons
+  quote_collapse: Collapse content inside quotes
   ok: OK
   cancel: Cancel

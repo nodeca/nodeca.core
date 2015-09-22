@@ -110,3 +110,9 @@ setting_schemas:
       type: boolean
       as: table
       default: true
+
+    markup_quote_collapse:
+      priority: 10
+      type: boolean
+      as: quote_collapse
+      default: true

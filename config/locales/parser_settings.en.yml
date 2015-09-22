@@ -21,3 +21,4 @@ i18n:
           markup_sub: Enable subscripts
           markup_sup: Enable superscripts
           markup_table: Enable tables
+          markup_quote_collapse: Collapse content inside quotes
