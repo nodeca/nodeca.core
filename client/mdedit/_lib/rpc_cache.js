@@ -34,6 +34,8 @@ function RpcCache(delay) {
   this.__handlers__ = {};
   // Check timer
   this.__timer__ = null;
+  // Sandbox for keeping a state (custom caches) between parser executions
+  this.sandbox = {};
 }
 
 // Get cache key by params

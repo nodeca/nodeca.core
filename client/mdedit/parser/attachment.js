@@ -4,6 +4,41 @@
 var _ = require('lodash');
 
 
+// Get attachments and cache them
+//
+function get_attachments(data, ids) {
+  var cache = data.params.rpc_cache.sandbox.attachments;
+
+  if (!cache) {
+    cache = data.params.rpc_cache.sandbox.attachments = {};
+  }
+
+  var attachments = {};
+  var pending = [];
+
+  _.uniq(ids.sort(), true).forEach(function (id) {
+    if (!cache.hasOwnProperty(id)) {
+      pending.push(id);
+      attachments[id] = null;
+    } else {
+      attachments[id] = cache[id];
+    }
+  });
+
+  var result = data.params.rpc_cache.get('common.content.attachments', {
+    ids: pending
+  });
+
+  if (result && result.attachments) {
+    pending.forEach(function (id) {
+      attachments[id] = cache[id] = result.attachments[id];
+    });
+  }
+
+  return attachments;
+}
+
+
 N.wire.once('init:parser', function attachment_plugin_init() {
   var sizes = '$$ JSON.stringify(N.config.users.uploads.resize) $$';
 
@@ -70,31 +105,23 @@ N.wire.once('init:parser', function attachment_plugin_init() {
           return refs.indexOf(media_id) === -1;
         });
 
-        var result = data.params.rpc_cache.get('common.content.attachments', {
-          ids: _.uniq(tail_ids.concat(refs)).sort()
-        });
-
-        if (!result) {
-          data.ast.find('[data-nd-media-id]').each(function () {
-            var $attach = $(this);
-
-            $attach.data('nd-media-placeholder', true);
-          });
-
-          callback();
-          return;
-        }
-
-        var attachments = result.attachments || {};
+        var attachments = get_attachments(data, tail_ids.concat(refs));
 
         data.ast.find('[data-nd-media-id]').each(function () {
           var $attach = $(this);
           var media_id = $attach.data('nd-media-id');
 
-          if (!attachments[media_id]) { return; }
-
-          $attach.data('nd-media-type', attachments[media_id].type);
-          $attach.data('nd-media-filename', attachments[media_id].file_name);
+          // attachments[media_id] could be:
+          //  - object { type, file_name } - if attachment exists
+          //  - undefined - if attachment does not exist
+          //  - null - if we don't have that information yet
+          //
+          if (attachments[media_id]) {
+            $attach.data('nd-media-type', attachments[media_id].type);
+            $attach.data('nd-media-filename', attachments[media_id].file_name);
+          } else if (attachments[media_id] === null) {
+            $attach.data('nd-media-placeholder', true);
+          }
         });
 
         data.result.tail = tail_ids.map(function (media_id) {
