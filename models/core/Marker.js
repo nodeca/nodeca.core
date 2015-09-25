@@ -149,9 +149,10 @@ module.exports = function (N, collectionName) {
   // - userId (ObjectId)
   // - contentId (ObjectId)
   // - position (Number) - post number in thread (post hid)
+  // - max (Number) - last read post in thread
   // - callback (Function) - `function (err)`
   //
-  Marker.setPos = function (userId, contentId, position, callback) {
+  Marker.setPos = function (userId, contentId, position, max, callback) {
     if (!userId) {
       callback();
       return;
@@ -173,10 +174,10 @@ module.exports = function (N, collectionName) {
         } catch (__) {}
       }
 
-      pos = pos || { max: position, current: position, ts: +now };
+      pos = pos || { max: max, current: position, ts: +now };
 
-      if (pos.max < position) {
-        pos.max = position;
+      if (pos.max < max) {
+        pos.max = max;
       }
 
       pos.current = position;

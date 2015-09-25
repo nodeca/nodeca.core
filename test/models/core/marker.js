@@ -137,13 +137,13 @@ describe('Marker', function () {
     var cid = new ObjectId();
     var now = Date.now();
 
-    Marker.setPos(uid, cid, 6, function (err) {
+    Marker.setPos(uid, cid, 6, 6, function (err) {
       if (err) {
         done(err);
         return;
       }
 
-      Marker.setPos(uid, cid, 2, function (err) {
+      Marker.setPos(uid, cid, 2, 1, function (err) {
         if (err) {
           done(err);
           return;
@@ -189,7 +189,7 @@ describe('Marker', function () {
         return;
       }
 
-      Marker.setPos(uid, 'qqq', 6, function (err) {
+      Marker.setPos(uid, 'qqq', 6, 6, function (err) {
         if (err) {
           done(err);
           return;
@@ -263,22 +263,22 @@ describe('Marker', function () {
 
       async.series([
         function (next) {
-          Marker.setPos(uid, cid1, 11, next);
+          Marker.setPos(uid, cid1, 11, 11, next);
         },
         function (next) {
-          Marker.setPos(uid, cid1, 7, next);
+          Marker.setPos(uid, cid1, 7, 7, next);
         },
         function (next) {
-          Marker.setPos(uid, cid2, 3, next);
+          Marker.setPos(uid, cid2, 3, 3, next);
         },
         function (next) {
-          Marker.setPos(uid, cid2, 35, next);
+          Marker.setPos(uid, cid2, 35, 35, next);
         },
         function (next) {
-          Marker.setPos(uid, cid3, 3, next);
+          Marker.setPos(uid, cid3, 3, 3, next);
         },
         function (next) {
-          Marker.setPos(uid, cid3, 35, next);
+          Marker.setPos(uid, cid3, 35, 35, next);
         },
         function (next) {
           Marker.info(uid, [
