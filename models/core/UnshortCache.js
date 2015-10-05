@@ -19,7 +19,7 @@ module.exports = function (N, collectionName) {
   //////////////////////////////////////////////////////////////////////////////
 
   // find value by key
-  UnshortCache.index({ key: 'hashed', unique: true });
+  UnshortCache.index({ key: 'hashed' }, { unique: true });
 
 
   UnshortCache.statics.get = function (key, callback) {
