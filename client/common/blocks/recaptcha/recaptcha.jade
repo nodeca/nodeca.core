@@ -3,21 +3,9 @@
 
 .form-group.recaptcha-control(data-bind="visible: visible, css: css" style="display: none")
   label(for="recaptcha_response_field")= self.t('captcha')
-  input.form-control(
-    id="recaptcha_response_field"
-    name="recaptcha_response_field"
-    type='text'
-    placeholder=self.t('captcha_desc')
-  )
+  .recaptcha-container
+    #recaptcha_div
+
   // ko if: message
   p.help-block(data-bind="text: message")
   // /ko
-  .recaptcha-container
-    a(
-      tabindex=-1
-      href='#'
-      data-on-click="common.blocks.recaptcha.update"
-      title=self.t('change_image')
-    )
-      #recaptcha_image
-      span.recaptcha-container__reload-icon.icon.icon-refresh
