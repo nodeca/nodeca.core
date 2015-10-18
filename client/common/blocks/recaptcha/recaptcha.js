@@ -26,6 +26,10 @@ function loadRecaptchaScript(callback) {
 
 
 N.wire.on(module.apiPath + '.create', function recaptcha_create(__, callback) {
+  if (!N.runtime.recaptcha) {
+    callback();
+    return;
+  }
 
   var rc_id  = 'recaptcha_div';
   var rc_options = {
@@ -46,6 +50,10 @@ N.wire.on(module.apiPath + '.create', function recaptcha_create(__, callback) {
 
 
 N.wire.on(module.apiPath + '.update', function recaptcha_update() {
+  if (!N.runtime.recaptcha) {
+    return null;
+  }
+
   if (!window.grecaptcha) {
     return new Error('Cannot update ReCaptcha since it is not loaded.');
   }
