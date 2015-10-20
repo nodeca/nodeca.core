@@ -37,13 +37,15 @@ module.exports = function (N, apiPath) {
       return;
     }
 
-    N.wire.emit('internal:common.access', env, function (err) {
+    var access_env = { params: { url: env.params.url, user_info: env.user_info } };
+
+    N.wire.emit('internal:common.access', access_env, function (err) {
       if (err) {
         callback(err);
         return;
       }
 
-      callback(null, env.data.access_read);
+      callback(null, access_env.data.access_read);
     });
   }
 

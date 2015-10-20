@@ -20,13 +20,15 @@ module.exports = function (N, apiPath) {
         return;
       }
 
-      N.wire.emit('internal:common.access', env, function (err) {
+      var access_env = { params: { url: env.params.url, user_info: env.user_info } };
+
+      N.wire.emit('internal:common.access', access_env, function (err) {
         if (err) {
           callback(err);
           return;
         }
 
-        if (env.data.access_read) {
+        if (access_env.data.access_read) {
           env.res.html   = data.html;
           env.data.users = data.users;
         }
