@@ -128,7 +128,10 @@ module.exports.run = function (N, args, callback) {
         }
 
         var seed_path = path.join(get_app_path(app_name), SEEDS_DIR, seed_name);
-        if (!fs.existsSync(seed_path)) {
+
+        try {
+          fs.readFileSync(seed_path);
+        } catch (__) {
           callback(format('Error: Application "%s" - does not have %s', app_name, seed_name));
           return;
         }
