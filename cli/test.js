@@ -86,7 +86,7 @@ module.exports.run = function (N, args, callback) {
             'Valid apps are:  ',
              _.map(applications, function (app) { return app.name; }).join(', ')
           );
-          process.exit(1);
+          N.shutdown(1);
         }
       }
 
@@ -122,7 +122,7 @@ module.exports.run = function (N, args, callback) {
           return;
         }
 
-        process.exit(0);
+        N.shutdown();
       });
     }
   );

@@ -85,7 +85,7 @@ module.exports.run = function (N, args, callback) {
       });
 
       console.log('\n');
-      process.exit(0);
+      N.shutdown();
     }
   );
 };

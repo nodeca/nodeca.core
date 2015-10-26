@@ -60,7 +60,8 @@ module.exports.run = function (N, args, callback) {
         if (outstandingMigrations.length === 0) {
           console.log(args.all  ? 'Already up-to-date.'
                                 : 'You have no outstanding migrations');
-          process.exit(0);
+          N.shutdown();
+          return;
         }
 
         function formatMigrationTitle(migration) {
@@ -76,7 +77,8 @@ module.exports.run = function (N, args, callback) {
           });
 
           console.log('\nRun `migrate` command with `--all` to apply them.');
-          process.exit(0);
+          N.shutdown();
+          return;
         }
 
         console.log('Applying ' + outstandingMigrations.length +
@@ -116,7 +118,7 @@ module.exports.run = function (N, args, callback) {
             return;
           }
 
-          process.exit(0);
+          N.shutdown();
         });
       });
     }

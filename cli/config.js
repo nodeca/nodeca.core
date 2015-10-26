@@ -31,5 +31,5 @@ module.exports.run = function (N/*, args, callback*/) {
   // Don't emit any events
   console.log(inspect(N.config, { depth: null, colors: true }));
 
-  process.exit(0);
+  N.shutdown();
 };
