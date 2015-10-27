@@ -33,7 +33,7 @@ module.exports = function (N, collectionName) {
   // - callback (Function) - `function (err)`
   //
   Marker.mark = function (userId, contentId, callback) {
-    if (!userId) {
+    if (!userId || String(userId) === '000000000000000000000000') {
       callback();
       return;
     }
@@ -71,7 +71,7 @@ module.exports = function (N, collectionName) {
   // - callback (Function) - `function (err)`
   //
   Marker.markAll = function (userId, categoryId, callback) {
-    if (!userId) {
+    if (!userId || String(userId) === '000000000000000000000000') {
       callback();
       return;
     }
@@ -153,7 +153,7 @@ module.exports = function (N, collectionName) {
   // - callback (Function) - `function (err)`
   //
   Marker.setPos = function (userId, contentId, position, max, callback) {
-    if (!userId) {
+    if (!userId || String(userId) === '000000000000000000000000') {
       callback();
       return;
     }
@@ -223,7 +223,7 @@ module.exports = function (N, collectionName) {
       result[item.contentId] = { isNew: false, next: -1, position: -1 };
     });
 
-    if (!userId || contentData.length === 0) {
+    if (!userId || String(userId) === '000000000000000000000000' || contentData.length === 0) {
       callback(null, result);
       return;
     }
