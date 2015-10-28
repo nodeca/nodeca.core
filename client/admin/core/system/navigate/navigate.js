@@ -215,6 +215,13 @@ function loadData(options, callback) {
       return;
     }
 
+    if (err && N.io.EWRONGVER === err.code) {
+      // Server-side code is updated, and it should work fine after a reload
+      //
+      window.location = options.href + options.anchor;
+      return;
+    }
+
     if (err) {
       // Can't load via RPC - show error page.
       //
