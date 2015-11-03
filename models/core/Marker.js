@@ -202,6 +202,56 @@ module.exports = function (N, collectionName) {
   };
 
 
+  // Get cuts ts for categories
+  //
+  // - userId (ObjectId)
+  // - categoriesIds ([ObjectId])
+  // - callback (Function) - `function (err, result)`
+  //   - result (Hash) - key is `categoryId` value is number
+  //
+  Marker.cuts = function (userId, categoriesIds, callback) {
+    if (categoriesIds.length === 0) {
+      callback(null, []);
+      return;
+    }
+
+    N.settings.get('content_read_marks_expire', function (err, content_read_marks_expire) {
+      if (err) {
+        callback(err);
+        return;
+      }
+
+      var defaultCut = Date.now() - (content_read_marks_expire * 24 * 60 * 60 * 1000);
+      var result = categoriesIds.reduce(function (acc, id) {
+        acc[String(id)] = defaultCut;
+        return acc;
+      }, {});
+
+      if (!userId || String(userId) === '000000000000000000000000') {
+        callback(null, result);
+        return;
+      }
+
+      var cutKeys = Object.keys(result).map(function (id) {
+        return 'marker_cut:' + userId + ':' + id;
+      });
+
+      N.redis.mget(cutKeys, function (err, res) {
+        if (err) {
+          callback(err);
+          return;
+        }
+
+        Object.keys(result).forEach(function (id, i) {
+          result[id] = res[i] || defaultCut;
+        });
+
+        callback(null, result);
+      });
+    });
+  };
+
+
   // Build content info
   //
   // - userId (ObjectId)
@@ -228,45 +278,20 @@ module.exports = function (N, collectionName) {
       return;
     }
 
-    var lastTs;
-    var cuts = {};
+    var cuts;
 
     async.series([
-      // Fetch mark expire setting
+      // Fetch cuts
       function (next) {
-        N.settings.get('content_read_marks_expire', function (err, content_read_marks_expire) {
+        Marker.cuts(userId, _.pluck(contentData, 'categoryId'), function (err, res) {
           if (err) {
             next(err);
             return;
           }
 
-          lastTs = Date.now() - (content_read_marks_expire * 24 * 60 * 60 * 1000);
-          next();
-        });
-      },
+          cuts = res;
 
-      // Set `isNew` flag by cut
-      function (next) {
-        var categoryIds = _.uniq(_.pluck(contentData, 'categoryId'));
-
-        categoryIds = categoryIds.map(function (id) {
-          return String(id);
-        });
-
-        var cutKeys = categoryIds.map(function (id) {
-          return 'marker_cut:' + userId + ':' + id;
-        });
-
-        N.redis.mget(cutKeys, function (err, res) {
-          if (err) {
-            next(err);
-            return;
-          }
-
-          categoryIds.forEach(function (id, i) {
-            cuts[id] = res[i] || lastTs;
-          });
-
+          // Set `isNew` flag by cut
           contentData.forEach(function (item) {
             if (item.contentId.getTimestamp() > cuts[item.categoryId]) {
               result[item.contentId].isNew = true;
