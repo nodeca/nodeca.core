@@ -1,2 +1,0 @@
-cron:
-  markers_cleanup: 0 0 1 17 * * # everyday at 1:17
