@@ -110,6 +110,30 @@ Postpone the task execution.
 
 Note: if you call `.postpone()` with 3 arguments, queue figures out desired signature based on argument type (if it's a number, it's a delay). Thus, if you want to supply a numeric `taskData`, you *must* also specify `delay`.
 
+### .status(taskID, callback)
+
+Get information about task status.
+
+ - **taskID** (String) - full task ID returned from `push` or `postpone` functions
+ - **callback** (Function) - called as `function (err, info)`
+   - **info** (Object | Null) - task info if task exists, null otherwise
+     - **worker** (String) - worker name
+     - **state**  (String) - one of "mapping", "aggregating", "reducing" or "postponed"
+     - **chunks** (Object) - full chunk IDs by state (optional, only present if task is in "aggregating" state)
+       - **pending** (Array) - array of pending chunk IDs
+       - **active**  (Array) - array of active chunk IDs
+       - **done**    (Array) - array of completed chunk IDs
+       - **errored** (Array) - array of failed chunk IDs
+
+### .cancel(taskID, callback)
+
+Cancel the task and remove it from queue. Chunks that started execution
+will continue, but their results will be discarded and no new chunks
+will be processed.
+
+ - **taskID** (String) - full task ID returned from `push` or `postpone` functions
+ - **callback** (Function) - called as: `function (err)`
+
 ### .shutdown()
 
 Stop accepting new tasks from queue. Active tasks continue execution.

@@ -371,4 +371,100 @@ describe('Queue', function () {
       }
     });
   });
+
+  it('should cancel a task', function (done) {
+    var calls = 0;
+
+    var worker1 = {
+      name: 'test10',
+      chunksPerInstance: 1,
+      map: function (callback) {
+        callback(null, [ 1, 2, 3 ]);
+      },
+      reduce: function () {
+        throw new Error("reduce shouldn't be called");
+      },
+      process: function (callback) {
+        if (calls++ === 0) {
+          q1.cancel(this.task.id, function (err) {
+            callback();
+            done(err);
+          });
+        } else {
+          throw new Error("process shouldn't be called second time");
+        }
+      }
+    };
+
+    q1.registerWorker(worker1);
+
+    q1.push('test10', function (err) {
+      if (err) {
+        throw err;
+      }
+    });
+  });
+
+  it('should return task status', function (done) {
+    var calls = 0;
+
+    var worker1 = {
+      name: 'test11',
+      chunksPerInstance: 1,
+      map: function (callback) {
+        q1.status(this.id, function (err, data) {
+          assert.ifError(err);
+          assert.equal(data.worker, 'test11');
+          assert.equal(data.state,  'mapping');
+
+          callback(null, [ 1, 2, 3, 4 ]);
+        });
+      },
+      reduce: function (chunksResult, callback) {
+        q1.status(this.id, function (err, data) {
+          assert.ifError(err);
+          assert.equal(data.worker, 'test11');
+          assert.equal(data.state,  'reducing');
+
+          callback();
+          done();
+        });
+      },
+      process: function (callback) {
+        var self = this;
+
+        q1.status(self.task.id, function (err, data) {
+          assert.ifError(err);
+          assert.equal(data.worker, 'test11');
+          assert.equal(data.state,  'aggregating');
+
+          assert.equal(data.chunks.pending.length, 4 - calls - 1);
+          assert.equal(data.chunks.errored.length, 0);
+          assert.equal(data.chunks.done.length,    calls);
+          assert.equal(data.chunks.active.length,  1);
+          assert.equal(data.chunks.active[0],      self.id);
+
+          calls++;
+          callback(null, self.data);
+        });
+      }
+    };
+
+    q1.registerWorker(worker1);
+
+    q1.push('test11', function (err) {
+      if (err) {
+        throw err;
+      }
+    });
+  });
+
+  it("should return null if task doesn't exist", function (done) {
+    q1.status('non-existent-task', function (err, data) {
+      assert.ifError(err);
+      assert.strictEqual(data, null);
+
+      done();
+    });
+  });
 });
