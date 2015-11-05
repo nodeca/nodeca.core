@@ -6,7 +6,7 @@
 //= require ../../vendor/bootstrap/js/dropdown
 //= require ../../vendor/bootstrap/js/modal
 //= //require ../../vendor/bootstrap/js/scrollspy
-//= //require ../../vendor/bootstrap/js/tab
+//= require ../../vendor/bootstrap/js/tab
 //= require ../../vendor/bootstrap/js/tooltip
 //= require ../../vendor/bootstrap/js/transition
 
