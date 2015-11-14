@@ -1,6 +1,6 @@
 language: node_js
 node_js:
- - "4.0"
+ - "4"
 script: make test-ci
 services:
   - redis
@@ -8,5 +8,4 @@ services:
 addons:
   apt_packages:
     - graphicsmagick
-    - net-tools
 sudo: false
