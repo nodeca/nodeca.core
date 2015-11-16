@@ -102,7 +102,7 @@ N.wire.once('init:parser', function attachment_plugin_init() {
         });
 
         var tail_ids = data.params.attachments.filter(function (media_id) {
-          return refs.indexOf(media_id) === -1;
+          return refs.indexOf(String(media_id)) === -1;
         });
 
         var attachments = get_attachments(data, tail_ids.concat(refs));
