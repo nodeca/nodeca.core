@@ -15,6 +15,9 @@ router:
       "/core/global_settings/{group}":
         group: /\S+/
 
+    common.robots:
+      "/robots.txt": ~
+
   bin:
     core.assets:
       "/assets/{path}":
@@ -22,7 +25,7 @@ router:
 
     core.static:
       "/{file}":
-        file: /favicon.ico|robots.txt|snippet.png/
+        file: /favicon.ico|snippet.png/
 
     core.gridfs:
       "/files/{bucket}":
