@@ -19,7 +19,7 @@ module.exports = function (N, collectionName) {
   //////////////////////////////////////////////////////////////////////////////
 
   // find value by key
-  UnshortCache.index({ key: 'hashed' }, { unique: true });
+  UnshortCache.index({ key: 'hashed' });
 
 
   UnshortCache.statics.get = function (key, callback) {
@@ -40,9 +40,7 @@ module.exports = function (N, collectionName) {
 
 
   UnshortCache.statics.set = function (key, value, callback) {
-    var record = new this({ key: key, value: value });
-
-    record.save(callback);
+    this.update({ key: key }, { value: value }, { upsert: true }, callback);
   };
 
 

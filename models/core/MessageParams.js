@@ -22,7 +22,7 @@ module.exports = function (N, collectionName) {
   //////////////////////////////////////////////////////////////////////////////
 
   // find data by its hash
-  MessageParams.index({ data: 'hashed' }, { unique: true });
+  MessageParams.index({ data: 'hashed' });
 
   var setParams = memoizee(
 

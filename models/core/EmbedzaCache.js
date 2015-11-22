@@ -69,9 +69,7 @@ module.exports = function (N, collectionName) {
       return;
     }
 
-    var record = new this({ key: key, value: value });
-
-    record.save(callback);
+    this.update({ key: key }, { value: value }, { upsert: true }, callback);
   };
 
 
