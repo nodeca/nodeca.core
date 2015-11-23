@@ -309,6 +309,16 @@ fsm.onLOAD = function (event, from, to, params) {
     return;
   }
 
+  var target = document.createElement('a');
+
+  target.href = options.href;
+
+  // Target origin (protocol, host) different -> nаviagate by url, via http
+  if ((target.protocol && target.protocol !== location.protocol) || (target.host && target.host !== location.host)) {
+    window.location = options.href + options.anchor;
+    return;
+  }
+
   // It's an external link or 404 error if route is not matched. So perform
   // regular page requesting via HTTP.
   if (!options.apiPath) {
