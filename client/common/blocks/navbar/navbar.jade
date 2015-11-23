@@ -32,7 +32,7 @@ nav.navbar.navbar-default.navbar-fixed-top
         each item in sortedItems(self.runtime.navbar)
           - var info = item.info;
           li(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
-            a(href=self.url_to(info.to))= self.t(localizationPrefix + item.name)
+            a(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
 
         li: a(href='https://github.com/nodeca/nodeca', target='_blank') Github
 

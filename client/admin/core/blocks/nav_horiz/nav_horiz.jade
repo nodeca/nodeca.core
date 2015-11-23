@@ -22,10 +22,10 @@ mixin _create_submenus(submenu, localizationPrefix)
       - var info = item.info;
       if (item.submenu)
         li.dropdown-submenu
-          a(href=self.url_to(info.to), tabindex='-1')= self.t(localizationPrefix + item.name)
+          a(href=self.link_to(info.to), tabindex='-1')= self.t(localizationPrefix + item.name)
           +_create_submenus(info.submenu, localizationPrefix + item.name + '.')
       else
-        li: a(href=self.url_to(info.to))= self.t(localizationPrefix + item.name)
+        li: a(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
 
 
 nav.navbar.navbar-default.navbar-fixed-top
@@ -35,8 +35,8 @@ nav.navbar.navbar-default.navbar-fixed-top
         - var info = item.info;
         if (info.submenu)
           li.dropdown(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
-            a(href=self.url_to(info.to))= self.t(localizationPrefix + item.name)
+            a(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
             +_create_submenus(info.submenu, localizationPrefix + item.name + '.')
         else
           li(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
-            a(href=self.url_to(info.to))= self.t(localizationPrefix + item.name)
+            a(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
