@@ -227,17 +227,26 @@ function loadData(options, callback) {
       //
       // This is a generic error, e.g. forbidden / not found / client error.
 
-      callback({
-        apiPath: 'common.error',
+      var data = {
+        apiPath: null,
         params: {},
         anchor: '',
-        view: 'common.error',
+        view: '',
         locals: {
           err: err,
           head: { title: err.code + ' ' + err.message }
         }
+      };
+
+      // Here we can customize error behaviour (update apiPath/view)
+      N.wire.emit('navigate.error', data, function () {
+        if (!data.apiPath) {
+          window.location = options.href + options.anchor;
+          return;
+        }
+
+        callback(data);
       });
-      return;
     }
   });
 }
