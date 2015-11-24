@@ -37,7 +37,7 @@ All keys starts with prefix defined in constructor, "queue:" by default.
 - reducing                  (zset) - tasks with state `reducing`
 - \<taskID\>                (hash) - task options (type, retries, state, data)
 - \<taskID\>:postponed      (hash) - task options for postponed tasks
-- \<taskID\>:chunks:pending (set)  - pending chunks IDs
+- \<taskID\>:chunks:pending (list) - pending chunks IDs
 - \<taskID\>:chunks:active  (zset) - active chunks IDs
 - \<taskID\>:chunks:errored (zset) - errored chunks IDs
 - \<taskID\>:chunks:done    (set)  - finished chunks IDs

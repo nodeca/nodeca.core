@@ -13,7 +13,7 @@ if redis.call("zrem", prefix .. "mapping", taskID) == 1 then
   -- Save chunks
   for i = 2, #KEYS do
     redis.call("hmset", KEYS[i], "retries", 0, "data", ARGV[i])
-    redis.call("sadd", taskID .. ":chunks:pending", KEYS[i])
+    redis.call("lpush", taskID .. ":chunks:pending", KEYS[i])
   end
 
   return 1
