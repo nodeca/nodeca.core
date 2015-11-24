@@ -274,7 +274,7 @@ describe('Queue', function () {
 
     var worker = {
       name: 'test7',
-      timeout: 1,
+      timeout: 10,
       map: function (callback) {
         if (localCounter === 0) {
           localCounter++;
@@ -308,7 +308,7 @@ describe('Queue', function () {
 
     var worker = {
       name: 'test8',
-      timeout: 1,
+      timeout: 10,
       map: function (callback) {
         callback(null, [ 1 ]);
       },
@@ -343,7 +343,7 @@ describe('Queue', function () {
 
     var worker = {
       name: 'test9',
-      timeout: 1,
+      timeout: 10,
       map: function (callback) {
         callback(null, [ 1 ]);
       },
