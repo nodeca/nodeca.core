@@ -27,7 +27,10 @@ module.exports = function (N, apiPath) {
   //
   var unshortCreate = _.memoize(function (cacheOnly) {
     var instance = new Unshort({
-      cache: N.models.core.UnshortCache
+      cache: {
+        get: N.models.core.UnshortCache.get.bind(N.models.core.UnshortCache),
+        set: N.models.core.UnshortCache.set.bind(N.models.core.UnshortCache)
+      }
     });
 
     // If we should read data only from cache - overwrite `request` method by stub
@@ -45,7 +48,10 @@ module.exports = function (N, apiPath) {
   //
   var embedzaCreate = _.memoize(function (cacheOnly) {
     var instance = new Embedza({
-      cache: N.models.core.EmbedzaCache,
+      cache: {
+        get: N.models.core.EmbedzaCache.get.bind(N.models.core.EmbedzaCache),
+        set: N.models.core.EmbedzaCache.set.bind(N.models.core.EmbedzaCache)
+      },
       enabledProviders: N.config.embed.enabled
     });
 
