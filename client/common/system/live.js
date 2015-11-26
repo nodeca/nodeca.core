@@ -180,7 +180,7 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
   //
   function fayeSubscribe(channel) {
     return fayeClient.subscribe(toFayeCompatible(channel), function (message) {
-      flive.emit(channel, message.data);
+      flive.emit(channel, message);
     });
   }
 
