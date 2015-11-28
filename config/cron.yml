@@ -1,0 +1,2 @@
+cron:
+  ping_live_emit: '* * * * * *' # every second
