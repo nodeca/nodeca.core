@@ -4,5 +4,6 @@
   .main
     != self.partial('@admin.core.blocks.breadcrumbs')
 
-    h1 Hello World
-    p= self.now
+    h1= self.head.title
+
+    .ping-ticker
