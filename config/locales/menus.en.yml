@@ -6,3 +6,4 @@ i18n:
           core: Core
           core.dashboard: Dashboard
           core.global_settings: Global settings
+          core.rebuild: Rebuild

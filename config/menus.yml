@@ -9,3 +9,6 @@ menus:
 
           global_settings:
             to: admin.core.global_settings.index
+
+          rebuild:
+            to: admin.core.rebuild

@@ -1,0 +1,10 @@
+#content
+  != self.partial('@admin.core.blocks.sidebar_menu')
+
+  .main
+    != self.partial('@admin.core.blocks.breadcrumbs')
+
+    h1 #{self.head.title}
+
+    each block in self.blocks
+      != self.partial('@admin.core.rebuild.blocks.' + block.name, block)

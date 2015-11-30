@@ -15,6 +15,9 @@ router:
       "/core/global_settings/{group}":
         group: /\S+/
 
+    admin.core.rebuild:
+      "/rebuild": ~
+
     common.robots:
       "/robots.txt": ~
 
