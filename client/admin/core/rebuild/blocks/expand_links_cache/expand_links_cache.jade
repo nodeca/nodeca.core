@@ -3,10 +3,8 @@
 #rebuild-expand-links-cache-task.rebuild-widget
   h4
     = self.t('title')
-    = ':'
-    span.small(data-bind='visible: started')
-      = ' '
-      b(data-bind='text: (current() / total() * 100 || 0).toFixed(2) + "%"')
+    = ' '
+    small(data-bind='visible: started, text: (current() / total() * 100 || 0).toFixed(2) + "%"')
 
   .progress
     .progress-bar(
