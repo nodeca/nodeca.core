@@ -8,9 +8,10 @@ var Schema   = Mongoose.Schema;
 module.exports = function (N, collectionName) {
 
   var statuses = {
-    PENDING:  1,
-    SUCCESS:  2,
-    ERROR:    3
+    PENDING:     1,
+    SUCCESS:     2,
+    ERROR_RETRY: 3, // errors that we can recover from by retrying (TIMEOUT, etc.)
+    ERROR_FATAL: 4  // errors that we can't recover from (401, 403, 404)
   };
 
   var ExpandUrl = new Schema({
@@ -56,6 +57,9 @@ module.exports = function (N, collectionName) {
 
   // used to fetch url chunks
   ExpandUrl.index({ rand: 1 });
+
+  // used to retry errored urls (change ERROR status with PENDING)
+  ExpandUrl.index({ status: 1 });
 
 
   // Export statuses
