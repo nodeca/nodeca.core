@@ -1,9 +1,17 @@
 'use strict';
 
 
-// Put client timezone into cookies to properly correct time on generated pages
+// Put client timezone into cookies to properly display time on generated pages
+// (needed for server side rendering only).
 //
 N.wire.once('navigate.done', function timezone_store() {
-  var tz = new Date().getTimezoneOffset();
-  document.cookie = 'tz=' + tz + '; path=/; ' + new Date(0x7fffffff * 1e3);
+  var pairs = [];
+
+  pairs.push('tz=' + new Date().getTimezoneOffset());
+  pairs.push('path=/');
+  pairs.push('max-age=' + 3600 * 24 * 365);
+
+  if (location.protocol === 'https:') { pairs.push('secure'); }
+
+  document.cookie = pairs.join('; ');
 });
