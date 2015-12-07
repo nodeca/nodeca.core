@@ -132,14 +132,15 @@ Get information about task status.
        - **done**    (Array) - array of completed chunk IDs
        - **errored** (Array) - array of failed chunk IDs
 
-### .cancel(workerName, taskID, callback)
+### .cancel(workerName, [taskID,] callback)
 
 Cancel the task and remove it from queue. Chunks that started execution
 will continue, but their results will be discarded and no new chunks
 will be processed.
 
  - **workerName** (String) - the worker name
- - **taskID** (String) - full task ID returned from `push` or `postpone` functions
+ - **taskID** (String) - optional, task ID returned from `push` or `postpone`
+   functions, cancel all tasks if not defined
  - **callback** (Function) - called as: `function (err)`
 
 ### .shutdown()
