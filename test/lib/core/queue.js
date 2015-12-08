@@ -14,14 +14,14 @@ describe('Queue', function () {
     q2.start();
 
     q1.on('error', function (err) {
-      if (err instanceof Queue.QueueError) {
+      if (err instanceof Queue.Error) {
         return;
       }
       throw err;
     });
 
     q2.on('error', function (err) {
-      if (err instanceof Queue.QueueError) {
+      if (err instanceof Queue.Error) {
         return;
       }
       throw err;
