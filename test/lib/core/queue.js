@@ -10,6 +10,9 @@ describe('Queue', function () {
     q1 = new Queue(TEST.N.redis);
     q2 = new Queue(TEST.N.redis);
 
+    q1.start();
+    q2.start();
+
     q1.on('error', function (err) {
       if (err instanceof Queue.QueueError) {
         return;

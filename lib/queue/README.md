@@ -18,6 +18,10 @@ the most of projects. Advantage of this package is the ease of use.
  - **redis** (RedisClient) - redis client instance
  - **prefix** (String) - optional. Redis keys prefix, "queue:" by default
 
+### .start()
+
+Start queue processing. Should be called after all workers registration.
+
 ### .registerWorker(options) / .registerWorker(name [, cron], process)
 
 Options:
