@@ -14,6 +14,10 @@
     display inline-block
     border-radius 2px
     position relative
+    // protect from hidden images
+    min-width 10px
+    min-height 10px
+    background-color #ccc
 
     & > img
       max-width 100%
