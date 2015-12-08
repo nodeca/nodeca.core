@@ -386,7 +386,7 @@ describe('Queue', function () {
       },
       process: function (callback) {
         if (calls++ === 0) {
-          q1.cancel(this.task.id, function (err) {
+          q1.cancel('test10', this.task.id, function (err) {
             callback();
             done(err);
           });
@@ -412,7 +412,7 @@ describe('Queue', function () {
       name: 'test11',
       chunksPerInstance: 1,
       map: function (callback) {
-        q1.status(this.id, function (err, data) {
+        q1.status('test11', this.id, function (err, data) {
           assert.ifError(err);
           assert.equal(data.worker, 'test11');
           assert.equal(data.state,  'mapping');
@@ -421,7 +421,7 @@ describe('Queue', function () {
         });
       },
       reduce: function (chunksResult, callback) {
-        q1.status(this.id, function (err, data) {
+        q1.status('test11', this.id, function (err, data) {
           assert.ifError(err);
           assert.equal(data.worker, 'test11');
           assert.equal(data.state,  'reducing');
@@ -433,7 +433,7 @@ describe('Queue', function () {
       process: function (callback) {
         var self = this;
 
-        q1.status(self.task.id, function (err, data) {
+        q1.status('test11', self.task.id, function (err, data) {
           assert.ifError(err);
           assert.equal(data.worker, 'test11');
           assert.equal(data.state,  'aggregating');
@@ -460,11 +460,19 @@ describe('Queue', function () {
   });
 
   it("should return null if task doesn't exist", function (done) {
-    q1.status('non-existent-task', function (err, data) {
+    q1.registerWorker({ name: 'test12' });
+
+    q1.status('test12', 'non-existent-task', function (err, data) {
       assert.ifError(err);
       assert.strictEqual(data, null);
 
       done();
     });
+  });
+
+  it('worker instance should return correct taskID', function () {
+    q1.registerWorker({ name: 'test13', taskID: (data) => data.foo + 'test' });
+
+    assert.strictEqual(q1.worker('test13').taskID({ foo: 'bar' }), 'bartest');
   });
 });
