@@ -118,11 +118,11 @@ Get worker by name. Returns `null` if worker not exists.
 
  - **workerName** (String) - the worker name
 
-### worker.status(taskID, callback)
+### worker.status([taskID, ]callback)
 
 Get information about task status.
 
- - **taskID** (String) - full task ID returned from `push` or `postpone` functions
+ - **taskID** (String) - optional, task ID returned from `push` or `postpone` functions, result of `.taskID()` by default
  - **callback** (Function) - called as `function (err, info)`
    - **info** (Object | Null) - task info if task exists, null otherwise
      - **worker** (String) - worker name
@@ -139,8 +139,7 @@ Cancel the task and remove it from queue. Chunks that started execution
 will continue, but their results will be discarded and no new chunks
 will be processed.
 
- - **taskID** (String) - optional, task ID returned from `push` or `postpone`
-   functions, cancel all tasks if not defined
+ - **taskID** (String) - optional, task ID returned from `push` or `postpone` functions, result of `.taskID()` by default
  - **callback** (Function) - called as: `function (err)`
 
 ### .shutdown()
