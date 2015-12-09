@@ -95,24 +95,22 @@ This function is called after all chunks are processed. This is the last step of
  - **worker** (Object) - a worker instance this task corresponds to (see options above)
 
 
-### .push(workerName, taskData, callback)
+### worker.push(taskData, callback)
 
 Run the task immediately.
 
- - **workerName** (String) - the worker name
  - **taskData** (Object) - optional, the task params
  - **callback** (Function) - called as: `function (err)`
 
-### .postpone(workerName, taskData, delay, callback)
+### worker.postpone(taskData, delay, callback)
 
 Postpone the task execution.
 
- - **workerName** (String) - the worker name
  - **taskData** (Object) - optional, the task params, default: `null`
  - **delay** (Number) - optional, delay execution for the given amount of time, default: `worker.postponeDelay`
  - **callback** (Function) - called as: `function (err)`
 
-Note: if you call `.postpone()` with 3 arguments, queue figures out desired signature based on argument type (if it's a number, it's a delay). Thus, if you want to supply a numeric `taskData`, you *must* also specify `delay`.
+Note: if you call `.postpone()` with 2 arguments, queue figures out desired signature based on argument type (if it's a number, it's a delay). Thus, if you want to supply a numeric `taskData`, you *must* also specify `delay`.
 
 ### .worker(workerName)
 
@@ -120,11 +118,10 @@ Get worker by name. Returns `null` if worker not exists.
 
  - **workerName** (String) - the worker name
 
-### .status(workerName, taskID, callback)
+### worker.status(taskID, callback)
 
 Get information about task status.
 
- - **workerName** (String) - the worker name
  - **taskID** (String) - full task ID returned from `push` or `postpone` functions
  - **callback** (Function) - called as `function (err, info)`
    - **info** (Object | Null) - task info if task exists, null otherwise
@@ -136,13 +133,12 @@ Get information about task status.
        - **done**    (Array) - array of completed chunk IDs
        - **errored** (Array) - array of failed chunk IDs
 
-### .cancel(workerName, [taskID,] callback)
+### worker.cancel([taskID,] callback)
 
 Cancel the task and remove it from queue. Chunks that started execution
 will continue, but their results will be discarded and no new chunks
 will be processed.
 
- - **workerName** (String) - the worker name
  - **taskID** (String) - optional, task ID returned from `push` or `postpone`
    functions, cancel all tasks if not defined
  - **callback** (Function) - called as: `function (err)`

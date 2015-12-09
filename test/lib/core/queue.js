@@ -91,7 +91,7 @@ describe('Queue', function () {
     q1.registerWorker(worker1);
     q2.registerWorker(worker2);
 
-    q2.push('test', function (err) {
+    q2.worker('test').push(function (err) {
       if (err) {
         throw err;
       }
@@ -125,7 +125,7 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.push('test2', { taskDataTest1: 1, taskDataTest2: 2 }, function (err) {
+    q1.worker('test2').push({ taskDataTest1: 1, taskDataTest2: 2 }, function (err) {
       if (err) {
         throw err;
       }
@@ -158,7 +158,7 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.push('test3', {}, function (err) {
+    q1.worker('test3').push({}, function (err) {
       if (err) {
         throw err;
       }
@@ -193,7 +193,7 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.push('test4', {}, function (err) {
+    q1.worker('test4').push({}, function (err) {
       if (err) {
         throw err;
       }
@@ -229,7 +229,7 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.push('test5', {}, function (err) {
+    q1.worker('test5').push({}, function (err) {
       if (err) {
         throw err;
       }
@@ -265,7 +265,7 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.push('test6', {}, function (err) {
+    q1.worker('test6').push({}, function (err) {
       if (err) {
         throw err;
       }
@@ -299,7 +299,7 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.push('test7', {}, function (err) {
+    q1.worker('test7').push({}, function (err) {
       if (err) {
         throw err;
       }
@@ -334,7 +334,7 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.push('test8', {}, function (err) {
+    q1.worker('test8').push({}, function (err) {
       if (err) {
         throw err;
       }
@@ -368,7 +368,7 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.push('test9', {}, function (err) {
+    q1.worker('test9').push({}, function (err) {
       if (err) {
         throw err;
       }
@@ -389,7 +389,7 @@ describe('Queue', function () {
       },
       process: function (callback) {
         if (calls++ === 0) {
-          q1.cancel('test10', this.task.id, function (err) {
+          this.task.worker.cancel(this.task.id, function (err) {
             callback();
             done(err);
           });
@@ -401,7 +401,7 @@ describe('Queue', function () {
 
     q1.registerWorker(worker1);
 
-    q1.push('test10', function (err) {
+    q1.worker('test10').push(function (err) {
       if (err) {
         throw err;
       }
@@ -415,7 +415,7 @@ describe('Queue', function () {
       name: 'test11',
       chunksPerInstance: 1,
       map: function (callback) {
-        q1.status('test11', this.id, function (err, data) {
+        this.worker.status(this.id, function (err, data) {
           assert.ifError(err);
           assert.equal(data.worker, 'test11');
           assert.equal(data.state,  'mapping');
@@ -424,7 +424,7 @@ describe('Queue', function () {
         });
       },
       reduce: function (chunksResult, callback) {
-        q1.status('test11', this.id, function (err, data) {
+        this.worker.status(this.id, function (err, data) {
           assert.ifError(err);
           assert.equal(data.worker, 'test11');
           assert.equal(data.state,  'reducing');
@@ -436,7 +436,7 @@ describe('Queue', function () {
       process: function (callback) {
         var self = this;
 
-        q1.status('test11', self.task.id, function (err, data) {
+        this.task.worker.status(self.task.id, function (err, data) {
           assert.ifError(err);
           assert.equal(data.worker, 'test11');
           assert.equal(data.state,  'aggregating');
@@ -455,7 +455,7 @@ describe('Queue', function () {
 
     q1.registerWorker(worker1);
 
-    q1.push('test11', function (err) {
+    q1.worker('test11').push(function (err) {
       if (err) {
         throw err;
       }
@@ -465,7 +465,7 @@ describe('Queue', function () {
   it("should return null if task doesn't exist", function (done) {
     q1.registerWorker({ name: 'test12' });
 
-    q1.status('test12', 'non-existent-task', function (err, data) {
+    q1.worker('test12').status('non-existent-task', function (err, data) {
       assert.ifError(err);
       assert.strictEqual(data, null);
 
@@ -477,5 +477,70 @@ describe('Queue', function () {
     q1.registerWorker({ name: 'test13', taskID: (data) => data.foo + 'test' });
 
     assert.strictEqual(q1.worker('test13').taskID({ foo: 'bar' }), 'bartest');
+  });
+
+  describe('.postpone()', function () {
+
+    it('should works with 1 argument', function (done) {
+      var worker = {
+        name: 'test14',
+        postponeDelay: 1,
+        process: function (cb) {
+          cb();
+        },
+        reduce: function (__, cb) {
+          cb();
+          done();
+        }
+      };
+
+      q1.registerWorker(worker);
+
+      q1.worker('test14').postpone(function (err) {
+        assert.ifError(err);
+      });
+    });
+
+    it('should works with delay argument', function (done) {
+      var worker = {
+        name: 'test15',
+        postponeDelay: 1,
+        process: function (cb) {
+          cb(null, this.data);
+        },
+        reduce: function (res, cb) {
+          assert.deepEqual(res, [ null ]);
+          cb();
+          done();
+        }
+      };
+
+      q1.registerWorker(worker);
+
+      q1.worker('test15').postpone(2, function (err) {
+        assert.ifError(err);
+      });
+    });
+
+    it('should works with data argument', function (done) {
+      var worker = {
+        name: 'test16',
+        postponeDelay: 1,
+        process: function (cb) {
+          cb(null, this.data);
+        },
+        reduce: function (res, cb) {
+          assert.deepEqual(res, [ 'foo' ]);
+          cb();
+          done();
+        }
+      };
+
+      q1.registerWorker(worker);
+
+      q1.worker('test16').postpone('foo', function (err) {
+        assert.ifError(err);
+      });
+    });
   });
 });
