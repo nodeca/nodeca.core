@@ -36,7 +36,8 @@ module.exports = function (N, apiPath) {
     // If we should read data only from cache - overwrite `request` method by stub
     if (cacheOnly) {
       instance.request = function (options, callback) {
-        callback(null, { statusCode: 404, headers: {} }, '');
+        // return 503 status code because it's guaranteed not to be cached
+        callback(null, { statusCode: 503, headers: {} }, '');
       };
     }
 
