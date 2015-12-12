@@ -15,9 +15,9 @@ module.exports = function (N) {
       var task_info = {};
 
       if (data && data.state === 'aggregating') {
-        task_info.current = data.chunks.done.length + data.chunks.errored.length;
-        task_info.total   = data.chunks.done.length + data.chunks.errored.length +
-                            data.chunks.active.length + data.chunks.pending.length;
+        task_info.current = data.chunks.done + data.chunks.errored;
+        task_info.total   = data.chunks.done + data.chunks.errored +
+                            data.chunks.active + data.chunks.pending;
       }
 
       env.res.blocks.push({

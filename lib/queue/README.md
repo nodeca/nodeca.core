@@ -127,11 +127,11 @@ Get information about task status.
    - **info** (Object | Null) - task info if task exists, null otherwise
      - **worker** (String) - worker name
      - **state**  (String) - one of "mapping", "aggregating", "reducing" or "postponed"
-     - **chunks** (Object) - full chunk IDs by state (optional, only present if task is in "aggregating" state)
-       - **pending** (Array) - array of pending chunk IDs
-       - **active**  (Array) - array of active chunk IDs
-       - **done**    (Array) - array of completed chunk IDs
-       - **errored** (Array) - array of failed chunk IDs
+     - **chunks** (Object) - chunk counts by state (optional, only present if task is in "aggregating" state)
+       - **pending** - count of pending chunks
+       - **active**  - count of active chunks
+       - **done**    - count of completed chunks
+       - **errored** - count of failed chunks
 
 ### worker.cancel([taskID,] callback)
 

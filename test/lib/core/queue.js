@@ -441,11 +441,11 @@ describe('Queue', function () {
           assert.equal(data.worker, 'test11');
           assert.equal(data.state,  'aggregating');
 
-          assert.equal(data.chunks.pending.length, 4 - calls - 1);
-          assert.equal(data.chunks.errored.length, 0);
-          assert.equal(data.chunks.done.length,    calls);
-          assert.equal(data.chunks.active.length,  1);
-          assert.equal(data.chunks.active[0],      self.id);
+          assert.equal(data.chunks.pending, 4 - calls - 1);
+          assert.equal(data.chunks.errored, 0);
+          assert.equal(data.chunks.done,    calls);
+          assert.equal(data.chunks.active,  1);
+          // assert.equal(data.chunks.active[0],      self.id);
 
           calls++;
           callback(null, self.data);
