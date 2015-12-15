@@ -543,4 +543,66 @@ describe('Queue', function () {
       });
     });
   });
+
+  describe('.setDeadline()', function () {
+
+    it('task.setDeadline()', function (done) {
+      var calls = 0;
+
+      var worker = {
+        name: 'test17',
+        timeout: 1000000, // forever
+        process: function (cb) {
+          cb();
+        },
+        map: function (cb) {
+          if (calls === 0) {
+            calls++;
+            this.setDeadline(10);
+            return;
+          }
+
+          cb(null, [ 1 ]);
+        },
+        reduce: function (__, cb) {
+          cb();
+          done();
+        }
+      };
+
+      q1.registerWorker(worker);
+
+      q1.worker('test17').push(function (err) {
+        assert.ifError(err);
+      });
+    });
+
+    it('chunk.setDeadline()', function (done) {
+      var calls = 0;
+
+      var worker = {
+        name: 'test18',
+        timeout: 1000000, // forever
+        process: function (cb) {
+          if (calls === 0) {
+            calls++;
+            this.setDeadline(10);
+            return;
+          }
+
+          cb();
+        },
+        reduce: function (__, cb) {
+          cb();
+          done();
+        }
+      };
+
+      q1.registerWorker(worker);
+
+      q1.worker('test18').push(function (err) {
+        assert.ifError(err);
+      });
+    });
+  });
 });
