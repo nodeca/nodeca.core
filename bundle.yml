@@ -7,6 +7,7 @@ bundles:
     - common
 
   backend:
+    - lib-admin
     - admin
 
   mdedit:
@@ -18,6 +19,7 @@ packages:
     depends:
       - lib
       - l10n
+      - lib-admin
 
     client:
       main: assets/main_admin.js
@@ -77,9 +79,11 @@ packages:
     i18n_server:
       include: server/common/**i18n/*.yml
 
+  # jquery + kernel
   lib:
     vendor:
       - lodash
+      - jquery
       - knockout
       - event-wire
       - steady # scroll tracker
@@ -107,6 +111,20 @@ packages:
         - frontend/icons/src/font/*
         - backend/icons/src/font/*
 
+  # backend-specific libs
+  lib-admin:
+    vendor:
+      - jquery-ui
+
+    client:
+      include: client/lib-admin/**.js
+      exclude: /(^|\/|\\)_.*/
+
+    styles:
+      include: client/lib-admin/**.styl
+      exclude: /(^|\/|\\)_.*/
+
+  # Time formats
   l10n: {}
 
   mdedit:
