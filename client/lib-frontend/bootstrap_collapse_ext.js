@@ -4,7 +4,7 @@
 // of collapced area
 //
 
-
+/*eslint-disable strict*/
 $(function () {
   'use strict';
 
