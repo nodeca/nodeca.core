@@ -2,7 +2,6 @@
   "name"        : "nodeca",
   "private"     : false,
   "dependencies": {
-    "blueimp-canvas-to-blob": "~2.1.0",
     "typeahead.js"          : "~0.10.2",
     "bootstrap"             : "~3.2.0",
     "bag.js"                : "~0.1.3",
