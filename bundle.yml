@@ -4,6 +4,7 @@ bundles:
     - l10n
 
   frontend:
+    - lib-frontend
     - common
 
   backend:
@@ -123,6 +124,16 @@ packages:
 
     styles:
       include: client/lib-admin/**.styl
+      exclude: /(^|\/|\\)_.*/
+
+  # frontend-specific libs
+  lib-admin:
+    client:
+      include: client/lib-frontend/**.js
+      exclude: /(^|\/|\\)_.*/
+
+    styles:
+      include: client/lib-frontend/**.styl
       exclude: /(^|\/|\\)_.*/
 
   # Time formats
