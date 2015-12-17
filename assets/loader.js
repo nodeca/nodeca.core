@@ -1,5 +1,4 @@
 //= require vendor/modernizr.custom
-//= require vendor/raf.js/raf.js
 //= require vendor/bag.js/bag.js
 //= require_self
 
