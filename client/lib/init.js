@@ -7,3 +7,4 @@ require('kernel')(N);
 
 // Polyfills
 require('raf.js');
+require('blueimp-canvas-to-blob');
