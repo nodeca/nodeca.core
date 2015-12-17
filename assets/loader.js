@@ -17,22 +17,22 @@
 
   // Simple cross-browser `forEach` iterator for arrays.
   function forEach(array, iterator) {
-    var index, length;
-
-    for (index = 0, length = array.length; index < length; index += 1) {
+    for (var index = 0; index < array.length; index += 1) {
       iterator(array[index], index);
     }
   }
 
   // Simple cross-browser replacement for `Array.reduce`
   function reduce(array, iterator, value) {
-    var index, length;
-
-    for (index = 0, length = array.length; index < length; index += 1) {
+    for (var index = 0; index < array.length; index += 1) {
       value = iterator(value, array[index]);
     }
 
     return value;
+  }
+
+  function has(obj, prop) {
+    return Object.prototype.hasOwnProperty.call(obj, prop);
   }
 
   function isFunction(object) {
@@ -77,7 +77,7 @@
     for (index = 0, length = matchArray.length; index < length; index += 1) {
       match = matchArray[index];
 
-      if (Object.prototype.hasOwnProperty.call(match.meta.methods, method)) {
+      if (has(match.meta.methods, method)) {
         return match;
       }
     }
@@ -150,11 +150,15 @@
   var clientModules = {};
 
   function registerClientModule(apiPath, func) {
-    clientModules[apiPath] = {
-      initialized: false,
+    if (has(clientModules, apiPath) && clientModules[apiPath].initialized) { return; }
+
+    var module = clientModules[apiPath] = {
+      initialized: true,
       func: func,
       internal: { exports: {}, apiPath: apiPath }
     };
+
+    initSingleClientModule(module);
   }
 
   // Initialize client module. Used once per module.
@@ -188,11 +192,11 @@
   }
 
   // Initializes all loaded client modules. Once per module.
-  function initClientModules() {
+  /*function initClientModules() {
     var apiPath, module;
 
     for (apiPath in clientModules) {
-      if (!Object.prototype.hasOwnProperty.call(clientModules, apiPath)) {
+      if (!has(clientModules, apiPath)) {
         continue;
       }
 
@@ -205,7 +209,7 @@
       initSingleClientModule(module);
       module.initialized = true;
     }
-  }
+  }*/
 
   // Really needed export.
   NodecaLoader.registerClientModule = registerClientModule;
@@ -287,7 +291,7 @@
           loaded[url] = true;
         });
 
-        initClientModules();
+        // initClientModules();
 
         if (!N.wire) {
           alert('Asset load error: "N.Wire" unavailable after asset load.');
