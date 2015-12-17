@@ -158,6 +158,7 @@
       internal: { exports: {}, apiPath: apiPath }
     };
 
+    /*eslint-disable no-use-before-define*/
     initSingleClientModule(module);
   }
 
