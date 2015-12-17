@@ -23,7 +23,6 @@ packages:
       - lib-admin
 
     client:
-      main: assets/main_admin.js
       include: client/admin/**.js
       exclude: /(^|\/|\\)_.*/
 
@@ -123,17 +122,21 @@ packages:
       exclude: /(^|\/|\\)_.*/
 
     styles:
-      include: client/lib-admin/**.styl
+      include:
+        - client/lib-admin/**.styl
+        - client/lib-admin/**.less
       exclude: /(^|\/|\\)_.*/
 
   # frontend-specific libs
-  lib-admin:
+  lib-frontend:
     client:
       include: client/lib-frontend/**.js
       exclude: /(^|\/|\\)_.*/
 
     styles:
-      include: client/lib-frontend/**.styl
+      include:
+        - client/lib-frontend/**.styl
+        - client/lib-frontend/**.less
       exclude: /(^|\/|\\)_.*/
 
   # Time formats
