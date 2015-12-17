@@ -93,8 +93,11 @@ packages:
       - bag.js: nodeca.core/lib/bag.js
 
     client:
-      main: assets/main_lib.js
       include: client/lib/**.js
+      exclude: /(^|\/|\\)_.*/
+
+    styles:
+      include: client/lib/**.styl
       exclude: /(^|\/|\\)_.*/
 
     bin:
