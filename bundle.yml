@@ -52,7 +52,6 @@ packages:
       - l10n
 
     client:
-      main: assets/main_common.js
       include: client/common/**.js
       exclude: /(^|\/|\\)_.*/
 
