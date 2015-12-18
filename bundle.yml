@@ -1,13 +1,14 @@
 bundles:
   lib:
     - lib
-    - l10n
 
   frontend:
+    - l10n
     - lib-frontend
     - common
 
   backend:
+    - l10n
     - lib-admin
     - admin
 
@@ -113,9 +114,6 @@ packages:
 
   # backend-specific libs
   lib-admin:
-    vendor:
-      - jquery-ui
-
     client:
       include: client/lib-admin/**.js
       exclude: /(^|\/|\\)_.*/
