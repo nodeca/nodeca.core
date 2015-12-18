@@ -26,7 +26,8 @@ Options:
  - **name** (String) - the worker's name
  - **taskID** (Function) - optional, should return new task id. Needed only for
    creating "exclusive" tasks, return random value by default, called as:
-   `function (taskData)`
+   `function (taskData)`. Sugar: if you pass plain string, it will be wrapped to
+   function, that always return this string.
  - **chunksPerInstance** (Number) - optional, available count of parallel chunks
    in one process (Infinity - not restricted), default Infinity
  - **retry** (Number) - optional, number of retry on error, default 2
@@ -194,3 +195,13 @@ Generates task ID by task data. By default returns random string. Queue requires
 all tasks to be unique, and reject duplicating ones. So, you can customize
 `taskID()` on worker registration for specific worker behaviour. For example,
 you can return constant to allow only single task instance to run.
+
+
+### chunk.setDeadline([delay, callback])
+
+All chunks have a limited time to finish (timeout). If not complete, those will
+be considered as failed. But sometime you may need to extend default deadline.
+This can be done by `.setDeadline()` method of chunk.
+
+- Default timeout is defined on forker registration (30s if not set).
+- If `delay` param is not passed, default timeout will be used.
