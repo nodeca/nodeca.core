@@ -13,7 +13,6 @@ var fs    = require('fs');
 var _       = require('lodash');
 var async   = require('async');
 var fstools = require('fs-tools');
-var format  = require('util').format;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -35,12 +34,12 @@ function seed_run(N, app_name, seed_path, callback) {
     // May be, that's not correct to write console directly,
     // but it's cheap and enougth
     if (err) {
-      console.log(format('  %s:%s -- failed\n', app_name, basename));
+      console.log(`  ${app_name}:${basename} -- failed\n`);
       callback(err);
       return;
     }
 
-    console.log(format('  %s:%s -- success\n', app_name, basename));
+    console.log(`  ${app_name}:${basename} -- success\n`);
     callback();
   });
 }
@@ -100,9 +99,7 @@ module.exports.run = function (N, args, callback) {
   var env = N.environment;
 
   function get_app_path(app_name) {
-    var app = _.find(N.apps, function (app) {
-      return app_name === app.name;
-    });
+    let app = N.apps.some(a => a.name === app_name);
     return app ? app.root : null;
   }
 
@@ -123,7 +120,7 @@ module.exports.run = function (N, args, callback) {
       if (!!app_name && !!seed_name) {
         // protect production env from accident run
         if ([ 'development', 'test' ].indexOf(env) === -1 && !args.force) {
-          callback(format('Error: Can\'t run seed from %s environment. Please, use -f to force.', env));
+          callback(`Error: Can't run seed from ${env} environment. Please, use -f to force.`);
           return;
         }
 
@@ -132,7 +129,7 @@ module.exports.run = function (N, args, callback) {
         try {
           fs.readFileSync(seed_path);
         } catch (__) {
-          callback(format('Error: Application "%s" - does not have %s', app_name, seed_name));
+          callback(`Error: Application "${app_name}" - does not have ${seed_name}`);
           return;
         }
 
@@ -178,14 +175,14 @@ module.exports.run = function (N, args, callback) {
       if (!_.isEmpty(args.seed_numbers)) {
         // protect production env from accident run
         if ([ 'development', 'test' ].indexOf(env) === -1 && !args.force) {
-          callback(format('Error: Can\'t run seed from %s environment. Please, use -f to force.', env));
+          callback(`Error: Can't run seed from ${env} environment. Please, use -f to force.`);
           return;
         }
 
         // check that specified seed exists
         for (var i = 0; i < args.seed_numbers.length; i++) {
           if (!seed_list[args.seed_numbers[i] - 1]) {
-            console.log(format('Seed number %d not exists', args.seed_numbers[i]));
+            console.log(`Seed number ${args.seed_numbers[i]} not exists`);
             N.shutdown(1);
             return;
           }
@@ -209,7 +206,7 @@ module.exports.run = function (N, args, callback) {
       console.log('Available seeds:\n');
 
       _.forEach(seed_list, function (seed, idx) {
-        console.log(format('  %d. %s: %s', idx + 1, seed.name, path.basename(seed.seed_path)));
+        console.log(`  ${idx + 1}. ${seed.name}: ${path.basename(seed.seed_path)}`);
       });
 
       console.log('\nSeeds are shown in `<APP>: <SEED_NAME>` form.');
