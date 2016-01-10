@@ -15,7 +15,7 @@ describe('Parser', function () {
       assert.ifError(err);
       assert.strictEqual(
         res.html,
-        '<pre><code class="js"><span class="hljs-keyword">var</span> ' +
+        '<pre class="hljs"><code><span class="hljs-keyword">var</span> ' +
         'a = <span class="hljs-number">1</span>;\n</code></pre>\n'
       );
       done();
