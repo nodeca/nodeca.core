@@ -62,7 +62,6 @@ module.exports.run = function (N, args, callback) {
   N.wire.emit([
       'init:models',
       'init:bundle_new',
-      'init:bundle',
       'init:server'
     ], N,
 
