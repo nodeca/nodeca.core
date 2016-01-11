@@ -1,7 +1,0 @@
-{
-  "name"        : "nodeca",
-  "private"     : false,
-  "dependencies": {
-    "bag.js": "~0.1.4"
-  }
-}
