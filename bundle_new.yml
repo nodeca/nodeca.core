@@ -1,0 +1,64 @@
+bundles:
+  lib:
+    - lib
+
+  frontend:
+    - l10n
+    - lib-frontend
+    - common
+
+  backend:
+    - l10n
+    - lib-admin
+    - admin
+
+  mdedit:
+    - mdedit
+
+packages:
+
+  admin:
+    depends:
+      - lib
+      - l10n
+      - lib-admin
+    entries:
+      - client/admin
+      - server/admin
+
+  common:
+    depends:
+      - lib
+      - l10n
+    entries:
+      - client/common
+      - server/common
+
+  lib:
+    vendor:
+      - lodash
+      - async
+      - jquery
+      - knockout
+      - event-wire
+      - steady # scroll tracker
+      - raf.js
+      - webworkify
+      # force embedding, init called from main_lib.js
+      - kernel: nodeca.core/lib/system/client/kernel.js
+      # stub for jade runtime
+      - fs: nodeca.core/lib/system/dummy.js
+      # reuse global bug.js from the loader
+      - bag.js: nodeca.core/lib/bag.js
+    entries: client/lib
+
+  lib-admin:
+    entries: client/lib-admin
+
+  lib-frontend:
+    entries: client/lib-frontend
+
+  l10n: {}
+
+  mdedit:
+    entries: client/mdedit

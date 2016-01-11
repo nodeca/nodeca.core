@@ -1,0 +1,7 @@
+public: true
+inherit: false
+type:
+  js:
+    - loader.js
+    - "!npm:bagjs"
+    - modernizr.custom.js

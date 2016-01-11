@@ -1,0 +1,12 @@
+inherit: false
+recursive: false
+public: true
+type:
+  widget_css:
+    - index.css
+    - src/css/nodeca-codes.css
+  bin:
+    - src/font/nodeca.eot
+    - src/font/nodeca.svg
+    - src/font/nodeca.ttf
+    - src/font/nodeca.woff
