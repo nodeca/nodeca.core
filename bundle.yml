@@ -51,6 +51,9 @@ packages:
       - fs: nodeca.core/lib/system/dummy.js
       # reuse global bug.js from the loader
       - bag.js: nodeca.core/lib/bag.js
+      # Used by kernel & DateFormatter
+      - babelfish
+
     entries: client/lib
 
   lib-admin:
