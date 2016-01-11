@@ -41,6 +41,7 @@ packages:
       - jquery
       - knockout
       - event-wire
+      - co
       - steady # scroll tracker
       - raf.js
       - webworkify
