@@ -4,4 +4,5 @@ type:
   js:
     - loader.js
     - "!npm:bagjs"
+    - "!npm:browser-pack/prelude.js"
     - modernizr.custom.js

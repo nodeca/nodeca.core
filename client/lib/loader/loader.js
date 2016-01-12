@@ -9,6 +9,13 @@
 
   var NodecaLoader = window.NodecaLoader = { booted: false };
   var alert = window.alert;
+  var prelude = '$$ asset_body("browser-pack/prelude.js") $$';
+  var require = prelude({}, {}, []);
+
+
+  NodecaLoader.wrap = function (modules, cache, entry) {
+    require = prelude(modules, cache, entry);
+  };
 
 
   // Simple cross-browser `forEach` iterator for arrays.
@@ -82,68 +89,6 @@
     return null;
   }
 
-
-  // Storage of registered Node modules.
-  // Keys are absolute file paths like '/absolute/path/to/module.js'
-  var nodeModules = {};
-
-  // Storage of module aliases. Needed for vendor modules short names.
-  // Keys are short name, values are real paths.
-  var nodeModulesAliases = {};
-
-  function registerNodeModule(path, func, deps) {
-    // Don't overwrite
-    nodeModules[path] = nodeModules[path] || {
-      initialized: false,
-      func: func,
-      internal: { exports: {} },
-      dependencies: deps
-    };
-  }
-
-  function registerNodeModuleAlias(alias, path) {
-    if (!/^[a-z0-9._-]+$/g.test(alias)) {
-      throw new Error('Only [ a..z, A..Z, 1..9, ., _, - ] chars allowed for aliases');
-    }
-    // Don't overwrite
-    nodeModulesAliases[alias] = nodeModulesAliases[alias] || path;
-  }
-
-  function requireNodeModule(path) {
-    var _require = require;
-
-    return _require(path);
-
-    /*if (nodeModulesAliases[path]) {
-      path = nodeModulesAliases[path];
-    }
-
-    var module = nodeModules[path];
-
-    if (!module) {
-      throw new Error('Unknown module "' + path + '"');
-    }
-
-    // If it's a first require of the given module, initialize it first.
-    if (!module.initialized) {
-      module.func.call(
-        window, // this object
-        requireNodeModule,
-        module.internal,
-        module.internal.exports,
-        module.dependencies,
-        nodeModules
-      );
-      module.initialized = true;
-    }
-
-    return module.internal.exports;*/
-  }
-
-  // Really needed export.
-  NodecaLoader.registerNodeModule      = registerNodeModule;
-  NodecaLoader.registerNodeModuleAlias = registerNodeModuleAlias;
-
   // Storage of registered client modules.
   // Keys are API paths like 'app.method.submethod'
   var clientModules = {};
@@ -180,11 +125,11 @@
       return N.runtime.t.exists(resolveI18nPath(phrase));
     };
 
-    // Execute the module's `func` function. It will populate the exports.
+    // Execute the module's `func` function. It will populate the exports. Require
+    // function passed through `NodecaLoader.wrap()`.
     module.func.call(
       window, // this object
       N,
-      requireNodeModule,
       module.internal.exports,
       module.internal,
       translationHelper
@@ -375,7 +320,7 @@
   // Instantly executes the given `func` function passing `N` and `require`
   // as arguments.
   function execute(func) {
-    func.call({}, N, requireNodeModule);
+    func.call({}, N, require);
   }
 
   // Really needed export.
