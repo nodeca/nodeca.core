@@ -8,7 +8,7 @@
 var _         = require('lodash');
 var fs        = require('fs');
 var path      = require('path');
-var mimoza    = require('mimoza');
+var mime      = require('mime-types').lookup;
 
 var stream    = require('readable-stream');
 var mongoose  = require('mongoose');
@@ -192,7 +192,7 @@ module.exports = function (N, collectionName) {
         return;
       }
 
-      options.contentType = mimoza.getMimeType(path.extname(origName));
+      options.contentType = mime(origName);
       if (!options.contentType) {
         callback(new Error('File.put: can\'t guess ContentType'));
         return;
