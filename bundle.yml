@@ -36,6 +36,7 @@ packages:
 
   lib:
     vendor:
+      # shared
       - lodash
       - async
       - jquery
@@ -44,7 +45,8 @@ packages:
       - co
       - steady # scroll tracker
       - raf.js
-      - webworkify
+      - faye/browser/faye-browser
+      - tabex
       # force embedding, init called from main_lib.js
       - kernel: nodeca.core/lib/system/client/kernel.js
       # stub for jade runtime
