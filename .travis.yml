@@ -13,7 +13,6 @@ addons:
     packages:
       - redis-server
       - mongodb-org
-      - graphicsmagick
       - g++-4.8
 env:
   - CXX=g++-4.8
