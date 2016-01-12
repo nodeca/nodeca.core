@@ -29,7 +29,6 @@ function tryParseObjectId(string) {
 // Convert `src` (filename|buffer|stream) into readable stream
 //
 function getStream(src) {
-  var streamBuffer;
 
   if (_.isString(src)) {
     // file name passed
@@ -37,7 +36,7 @@ function getStream(src) {
 
   } else if (Buffer.isBuffer(src)) {
     // buffer passed
-    streamBuffer = new stream.Transform();
+    let streamBuffer = new stream.Transform();
     streamBuffer.push(src);
     streamBuffer.end();
     return streamBuffer;
