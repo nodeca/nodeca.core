@@ -7,7 +7,6 @@
 
 var _         = require('lodash');
 var fs        = require('fs');
-var path      = require('path');
 var mime      = require('mime-types').lookup;
 
 var stream    = require('readable-stream');
