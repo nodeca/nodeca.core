@@ -48,7 +48,7 @@ packages:
       - faye/browser/faye-browser
       - tabex
       # force embedding, init called from main_lib.js
-      - kernel: nodeca.core/lib/system/client/kernel.js
+      #- kernel: nodeca.core/lib/system/client/kernel.js
       # stub for jade runtime
       - fs: nodeca.core/lib/system/dummy.js
       # reuse global bug.js from the loader
