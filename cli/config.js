@@ -4,7 +4,7 @@
 'use strict';
 
 
-var inspect = require('util').inspect;
+const inspect = require('util').inspect;
 
 
 ////////////////////////////////////////////////////////////////////////////////

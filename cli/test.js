@@ -5,15 +5,15 @@
 
 
 // stdlib
-var path      = require('path');
+const path      = require('path');
 
 
 // 3rd-party
-var _            = require('lodash');
-var Mocha        = require('mocha');
-var navit        = require('navit');
-var navitPlugins = require('nodeca.core/lib/test/navit_plugins');
-var fstools      = require('fs-tools');
+const _            = require('lodash');
+const Mocha        = require('mocha');
+const navit        = require('navit');
+const navitPlugins = require('nodeca.core/lib/test/navit_plugins');
+const glob         = require('glob');
 
 
 
@@ -92,21 +92,21 @@ module.exports.run = function (N, args, callback) {
 
       _.forEach(applications, function (app) {
         if (!args.app || args.app === app.name) {
-          fstools.walkSync(app.root + '/test', function (file) {
+          glob.sync('**', { cwd: app.root + '/test' })
             // skip files when
             // - filename starts with _, e.g.: /foo/bar/_baz.js
             // - dirname in path starts _, e.g. /foo/_bar/baz.js
-            if (file.match(/(^|\/|\\)_/)) { return; }
+            .filter(name => !/^[._]|\\[._]|\/[_.]/.test(name))
+            .forEach(file => {
+              // try to filter by pattern, if set
+              if (args.mask && path.basename(file).indexOf(args.mask) === -1) {
+                return;
+              }
 
-            // try to filter by pattern, if set
-            if (args.mask && path.basename(file).indexOf(args.mask) === -1) {
-              return;
-            }
-
-            if ((/\.js$/).test(file) && path.basename(file)[0] !== '.') {
-              mocha.files.push(file);
-            }
-          });
+              if ((/\.js$/).test(file) && path.basename(file)[0] !== '.') {
+                mocha.files.push(`${app.root}/test/${file}`);
+              }
+            });
         }
       });
 

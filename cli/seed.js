@@ -5,20 +5,20 @@
 
 
 // stdlib
-var path  = require('path');
-var fs    = require('fs');
+const path  = require('path');
+const fs    = require('fs');
 
 
 // 3rd-party
-var _       = require('lodash');
-var async   = require('async');
-var fstools = require('fs-tools');
+const _       = require('lodash');
+const async   = require('async');
+const glob    = require('glob');
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
-var SEEDS_DIR = 'db/seeds';
+const SEEDS_DIR = 'db/seeds';
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ function seed_run(N, app_name, seed_path, callback) {
   console.log('Applying seed...\n');
 
   require(seed_path)(N, function (err) {
-    var basename = path.basename(seed_path);
+    let basename = path.basename(seed_path);
 
     // May be, that's not correct to write console directly,
     // but it's cheap and enougth
@@ -124,7 +124,7 @@ module.exports.run = function (N, args, callback) {
           return;
         }
 
-        var seed_path = path.join(get_app_path(app_name), SEEDS_DIR, seed_name);
+        let seed_path = path.join(get_app_path(app_name), SEEDS_DIR, seed_name);
 
         try {
           fs.readFileSync(seed_path);
@@ -156,18 +156,19 @@ module.exports.run = function (N, args, callback) {
 
       // Collect seeds
       //
-      var seed_list = [];
+      let seed_list = [];
       _.forEach(apps, function (app) {
+        let seed_dir = path.join(app.root, SEEDS_DIR);
 
-        var seed_dir = path.join(app.root, SEEDS_DIR);
-        fstools.walkSync(seed_dir, /\.js$/, function (file) {
+        glob.sync('**/*.js', { cwd: seed_dir })
           // skip files when
           // - filename starts with _, e.g.: /foo/bar/_baz.js
           // - dirname in path starts _, e.g. /foo/_bar/baz.js
-          if (file.match(/(^|\/|\\)_/)) { return; }
-
-          seed_list.push({ name: app.name, seed_path: file });
-        });
+          .filter(name => !/^[._]|\\[._]|\/[_.]/.test(name))
+          .forEach(file => seed_list.push({
+            name:      app.name,
+            seed_path: path.join(seed_dir, file)
+          }));
       });
 
       // Execute seed by number
@@ -180,7 +181,7 @@ module.exports.run = function (N, args, callback) {
         }
 
         // check that specified seed exists
-        for (var i = 0; i < args.seed_numbers.length; i++) {
+        for (let i = 0; i < args.seed_numbers.length; i++) {
           if (!seed_list[args.seed_numbers[i] - 1]) {
             console.log(`Seed number ${args.seed_numbers[i]} not exists`);
             N.shutdown(1);
