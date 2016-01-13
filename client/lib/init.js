@@ -12,4 +12,4 @@ if (!window.Promise) {
 }
 
 // Load kernel
-require('kernel')(N);
+require('nodeca.core/lib/system/client/kernel.js')(N);
