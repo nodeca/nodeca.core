@@ -12,8 +12,10 @@ if (!window.Promise) {
 }
 
 // Load kernel
-N.wire = require('event-wire')();
-const Pointer = require('pointer');
-N.router  = new Pointer('$$ N.router.stringify() $$');
+N.wire         = require('event-wire')();
+const Pointer  = require('pointer')
+N.router       = new Pointer('$$ N.router.stringify() $$');
+N.environment  = '$$ JSON.stringify(N.environment) $$';
+N.version_hash = '$$ JSON.stringify(N.version_hash) $$';
 
 require('nodeca.core/lib/system/client/kernel.js')(N);
