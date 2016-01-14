@@ -19,20 +19,13 @@ module.exports = function (N, apiPath) {
   });
 
 
-  N.wire.on(apiPath, function get_attachments(env, callback) {
+  N.wire.on(apiPath, function* get_attachments(env) {
     var data = {
       ids: env.params.ids
     };
 
-    N.wire.emit('internal:common.content.attachments', data, function (err) {
-      if (err) {
-        callback(err);
-        return;
-      }
+    yield N.wire.emit('internal:common.content.attachments', data);
 
-      env.res.attachments = data.attachments;
-
-      callback();
-    });
+    env.res.attachments = data.attachments;
   });
 };

@@ -9,31 +9,19 @@ module.exports = function (N, apiPath) {
   });
 
 
-  N.wire.on(apiPath, function quote_wrap(env, callback) {
-    var data = {
+  N.wire.on(apiPath, function* quote_wrap(env) {
+    let data = {
       url: env.params.url
     };
 
-    N.wire.emit('internal:common.content.quote_wrap', data, function (err) {
-      if (err) {
-        callback(err);
-        return;
-      }
+    yield N.wire.emit('internal:common.content.quote_wrap', data);
 
-      var access_env = { params: { url: env.params.url, user_info: env.user_info } };
+    let access_env = { params: { url: env.params.url, user_info: env.user_info } };
 
-      N.wire.emit('internal:common.access', access_env, function (err) {
-        if (err) {
-          callback(err);
-          return;
-        }
+    yield N.wire.emit('internal:common.access', access_env);
 
-        if (access_env.data.access_read) {
-          env.res.html = data.html;
-        }
-
-        callback();
-      });
-    });
+    if (access_env.data.access_read) {
+      env.res.html = data.html;
+    }
   });
 };

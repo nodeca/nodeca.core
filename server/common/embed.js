@@ -29,60 +29,32 @@ module.exports = function (N, apiPath) {
   });
 
 
-  function check_access(data, env, callback) {
-    if (!data.local) {
-      // don't check permissions for external links
-      // (not a big deal, just a micro-optimization here)
-      callback(null, true);
-      return;
-    }
-
-    var access_env = { params: { url: env.params.url, user_info: env.user_info } };
-
-    N.wire.emit('internal:common.access', access_env, function (err) {
-      if (err) {
-        callback(err);
-        return;
-      }
-
-      callback(null, access_env.data.access_read);
-    });
-  }
-
-
-  N.wire.on(apiPath, function embed(env, callback) {
+  N.wire.on(apiPath, function* embed(env) {
     if (env.user_info.is_guest) {
-      callback(N.io.FORBIDDEN);
-      return;
+      throw N.io.FORBIDDEN;
     }
 
-    var data = {
+    let data = {
       url:   env.params.url,
       types: env.params.types
     };
 
-    N.wire.emit('internal:common.embed', data, function (err) {
-      if (err) {
-        callback(err);
-        return;
-      }
+    yield N.wire.emit('internal:common.embed', data);
 
-      check_access(data, env, function (err, allowed) {
-        if (err) {
-          callback(err);
-          return;
-        }
+    // Check permissions for local links
+    //
+    if (data.local) {
+      let access_env = { params: { url: env.params.url, user_info: env.user_info } };
 
-        // unshortened urls
-        env.res.canonical = data.canonical;
+      yield N.wire.emit('internal:common.access', access_env);
 
-        if (allowed) {
-          env.res.html = data.html;
-          env.res.type = data.type;
-        }
+      if (!access_env.data.access_read) { return; }
+    }
 
-        callback();
-      });
-    });
+    // unshortened urls
+    env.res.canonical = data.canonical;
+
+    env.res.html = data.html;
+    env.res.type = data.type;
   });
 };

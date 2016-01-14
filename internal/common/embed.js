@@ -16,17 +16,16 @@
 'use strict';
 
 
-var Embedza = require('embedza');
-var _       = require('lodash');
-var Unshort = require('url-unshort');
+const Embedza = require('embedza');
+const Unshort = require('url-unshort');
 
 
 module.exports = function (N, apiPath) {
 
   // Init url-unshort instance
   //
-  var unshortCreate = _.memoize(function (cacheOnly) {
-    var instance = new Unshort({
+  function unshortCreate(cacheOnly) {
+    let instance = new Unshort({
       cache: {
         get: N.models.core.UnshortCache.get.bind(N.models.core.UnshortCache),
         set: N.models.core.UnshortCache.set.bind(N.models.core.UnshortCache)
@@ -35,20 +34,22 @@ module.exports = function (N, apiPath) {
 
     // If we should read data only from cache - overwrite `request` method by stub
     if (cacheOnly) {
-      instance.request = function (options, callback) {
+      instance.request = (options, callback) => {
         // return 503 status code because it's guaranteed not to be cached
         callback(null, { statusCode: 503, headers: {} }, '');
       };
     }
 
-    return instance;
-  });
+    return (url) => (callback) => instance.expand(url, callback);
+  }
+
+  let unshort = { normal: unshortCreate(false), cached: unshortCreate(true) };
 
 
   // Init embedza instance
   //
-  var embedzaCreate = _.memoize(function (cacheOnly) {
-    var instance = new Embedza({
+  function embedzaCreate(cacheOnly) {
+    let instance = new Embedza({
       cache: {
         get: N.models.core.EmbedzaCache.get.bind(N.models.core.EmbedzaCache),
         set: N.models.core.EmbedzaCache.set.bind(N.models.core.EmbedzaCache)
@@ -63,95 +64,71 @@ module.exports = function (N, apiPath) {
       };
     }
 
-    return instance;
-  });
+    return (url, types) => (callback) => instance.render(url, types, callback);
+  }
+
+  let embedza = { normal: embedzaCreate(false), cached: embedzaCreate(true) };
 
 
   // Expand shortened links
   //
-  N.wire.on(apiPath, function expand_short_links(data, callback) {
-    unshortCreate(data.cacheOnly).expand(data.url, function (err, url) {
-      if (err) {
-        // ignore connection/parse errors
-        callback();
-        return;
-      }
+  N.wire.on(apiPath, function* expand_short_links(data) {
+    let url;
 
-      if (url) {
-        data.canonical = url;
-      }
+    try {
+      url = yield unshort[data.cacheOnly ? 'cached' : 'normal'](data.url);
+    } catch (__) {
+      // ignore connection/parse errors
+    }
 
-      callback();
-    });
+    if (url) {
+      data.canonical = url;
+    }
   });
 
 
   // Process link as local
   //
-  N.wire.on(apiPath, function embed_local(data, callback) {
-    if (data.html) {
-      callback();
-      return;
-    }
+  N.wire.on(apiPath, function* embed_local(data) {
+    if (data.html) { return; }
 
-    var types = data.types.slice(0);
+    for (let i = 0; i < data.types.length; i++) {
+      let type = data.types[i];
+      let subcall_data = { url: data.canonical || data.url, type: type };
 
-    function next() {
-      if (!types.length) {
-        // delay callback until next tick to prevent stack overflow
-        process.nextTick(callback);
-        return;
-      }
+      yield N.wire.emit('internal:common.embed.local', subcall_data);
 
-      var type = types.shift();
-      var subcall_data = { url: data.canonical || data.url, type: type };
-
-      N.wire.emit('internal:common.embed.local', subcall_data, function (err) {
-        if (err) {
-          callback(err);
-          return;
-        }
-
-        if (!subcall_data.html) {
-          next();
-          return;
-        }
-
+      if (subcall_data.html) {
         data.html  = subcall_data.html;
         data.type  = type;
         data.local = true;
-
-        process.nextTick(callback);
-      });
+        return;
+      }
     }
-
-    next();
   });
 
 
   // Process external link
   //
-  N.wire.on(apiPath, function embed_ext(data, callback) {
-    if (data.html) {
-      callback();
-      return;
+  N.wire.on(apiPath, function* embed_ext(data) {
+    if (data.html) { return; }
+
+    let result;
+
+    try {
+      result = yield embedza[data.cacheOnly ? 'cached' : 'normal'](
+        data.canonical || data.url,
+        data.types
+      );
+    } catch (__) {
+      // If any errors happen, ignore them and leave the link as is
     }
 
-    embedzaCreate(data.cacheOnly).render(data.canonical || data.url, data.types, function (err, result) {
-      // If any errors happen, ignore them and leave the link as is
-      if (err) {
-        callback();
-        return;
-      }
-
-      // If no result is returned, leave the link as is
-      if (result) {
-        data.html  = result.html;
-        data.type  = result.type;
-        data.local = false;
-      }
-
-      callback();
-    });
+    // If no result is returned, leave the link as is
+    if (result) {
+      data.html  = result.html;
+      data.type  = result.type;
+      data.local = false;
+    }
   });
 };
