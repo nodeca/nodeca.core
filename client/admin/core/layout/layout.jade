@@ -18,7 +18,7 @@ html.no-js
         link(rel='stylesheet', href=cssPath)
 
     script(type="text/javascript").
-      !{self.asset_include('nodeca.core/client/lib/loader/loader.js')}
+      !{self.asset_body('nodeca.core/client/lib/loader/loader.js')}
       NodecaLoader.loadAssets.init(!{JSON.stringify(self.head.assets)}, 'admin');
 
   body
