@@ -18,6 +18,7 @@
 
 const Embedza = require('embedza');
 const Unshort = require('url-unshort');
+const thenify = require('thenify');
 
 
 module.exports = function (N, apiPath) {
@@ -40,7 +41,7 @@ module.exports = function (N, apiPath) {
       };
     }
 
-    return (url) => (callback) => instance.expand(url, callback);
+    return thenify(instance.expand.bind(instance));
   }
 
   let unshort = { normal: unshortCreate(false), cached: unshortCreate(true) };
@@ -64,7 +65,7 @@ module.exports = function (N, apiPath) {
       };
     }
 
-    return (url, types) => (callback) => instance.render(url, types, callback);
+    return thenify(instance.render.bind(instance));
   }
 
   let embedza = { normal: embedzaCreate(false), cached: embedzaCreate(true) };
