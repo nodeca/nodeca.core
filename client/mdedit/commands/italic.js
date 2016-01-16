@@ -7,9 +7,9 @@ N.wire.once('init:mdedit', function () {
       return;
     }
 
-    var selectionStart = editor.getCursor(true);
-    var selectionEnd = editor.getCursor(false);
-    var add = '_';
+    let selectionStart = editor.getCursor(true);
+    let selectionEnd = editor.getCursor(false);
+    let add = '_';
 
     editor.replaceSelection(add + editor.getSelection() + add);
 

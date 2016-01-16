@@ -2,9 +2,9 @@
 
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdUl = function (editor) {
-    var selectionStart = editor.getCursor(true);
-    var selectedText = editor.getSelection();
-    var lineStartRegexp = /^ *- /;
+    let selectionStart = editor.getCursor(true);
+    let selectedText = editor.getSelection();
+    let lineStartRegexp = /^ *- /;
 
     if (editor.somethingSelected()) {
       editor.replaceSelection(selectedText.split('\n').map(function (line) {

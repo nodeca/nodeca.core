@@ -15,7 +15,8 @@
 'use strict';
 
 
-var _ = require('lodash');
+const _ = require('lodash');
+
 var N;
 
 
@@ -61,17 +62,15 @@ RpcCache.prototype.emit = function (eventName, data) {
     return;
   }
 
-  this.__handlers__[eventName].forEach(function (handler) {
-    handler(data);
-  });
+  this.__handlers__[eventName].forEach(handler => handler(data));
 };
 
 
 // Check request is in cahce
 //
 RpcCache.prototype.has = function (apiPath, data) {
-  var key = getCacheKey(apiPath, data);
-  var result = this.__cache__.hasOwnProperty(key);
+  let key = getCacheKey(apiPath, data);
+  let result = this.__cache__.hasOwnProperty(key);
 
   if (!result) {
     // If new track started - append data to update
@@ -111,12 +110,11 @@ RpcCache.prototype.trackStart = function () {
 // Stop new tracker
 //
 RpcCache.prototype.trackStop = function () {
-  var self = this;
-  var tracked = this.__tracked__;
+  let tracked = this.__tracked__;
 
   // Remove requests if not added in tracker
-  tracked = _.reduce(tracked, function (acc, v, k) {
-    if (self.__trackedUpdate__[k]) {
+  tracked = _.reduce(tracked, (acc, v, k) => {
+    if (this.__trackedUpdate__[k]) {
       acc[k] = v;
     }
 
@@ -124,7 +122,7 @@ RpcCache.prototype.trackStop = function () {
   }, {});
 
   // Add new requests
-  _.forEach(this.__trackedUpdate__, function (v, k) {
+  _.forEach(this.__trackedUpdate__, (v, k) => {
     if (!tracked[k]) {
       tracked[k] = v;
     }
@@ -142,33 +140,31 @@ RpcCache.prototype.trackStop = function () {
 // Update timer tick
 //
 RpcCache.prototype.__tick__ = function () {
-  var self = this;
-
-  _.forEach(self.__tracked__, function (v, k) {
+  _.forEach(this.__tracked__, (v, k) => {
     // If request timeout is over
-    if (v[2] + self.__delay__ < Date.now()) {
+    if (v[2] + this.__delay__ < Date.now()) {
       // Remove request from tracked
-      delete self.__tracked__[k];
+      delete this.__tracked__[k];
 
       // Make request
       N.io.rpc(v[0], v[1], { persistent: true, handleAllErrors: true })
-        .done(function (res) {
+        .done(res => {
           // Update cache data and emit event
-          self.__cache__[k] = res;
-          self.emit('update');
+          this.__cache__[k] = res;
+          this.emit('update');
         })
-        .fail(function (err) {
+        .fail(err => {
           // Add 404 and 401 results to cache, skip other codes
           if ([ N.io.NOT_FOUND, N.io.FORBIDDEN ].indexOf(err.code) !== -1) {
-            self.__cache__[k] = null;
+            this.__cache__[k] = null;
           }
         });
     }
   });
 
   // If no more tracked data - stop timer
-  if (Object.keys(self.__tracked__).length === 0) {
-    clearInterval(self.__timer__);
+  if (Object.keys(this.__tracked__).length === 0) {
+    clearInterval(this.__timer__);
     this.__timer__ = null;
   }
 };

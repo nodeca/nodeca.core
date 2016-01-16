@@ -3,25 +3,25 @@
 'use strict';
 
 
-var CodeMirror = require('codemirror');
-var _          = require('lodash');
-var Bag        = require('bag.js');
-var RpcCache   = require('./_lib/rpc_cache')(N);
+const CodeMirror = require('codemirror');
+const _          = require('lodash');
+const Bag        = require('bag.js');
+const RpcCache   = require('./_lib/rpc_cache')(N);
 
 
 // Require markdown highlighter (mode) for CodeMirror
 require('codemirror/mode/markdown/markdown');
 
 
-var TEXT_MARGIN = 5;
-var TOOLBAR = '$$ JSON.stringify(N.config.mdedit) $$';
-var EMOJIS = '$$ JSON.stringify(N.config.parser.emojis) $$';
+const TEXT_MARGIN = 5;
+const TOOLBAR = '$$ JSON.stringify(N.config.mdedit) $$';
+const EMOJIS = '$$ JSON.stringify(N.config.parser.emojis) $$';
 
 
 // Compile toolbar config
 //
-var compileToolbarConfig = _.memoize(function (name) {
-  var buttonName;
+let compileToolbarConfig = _.memoize(function (name) {
+  let buttonName;
 
   return _.reduce(TOOLBAR[name], function (result, buttonParams, key) {
     if (!buttonParams) {
@@ -37,9 +37,7 @@ var compileToolbarConfig = _.memoize(function (name) {
     }
 
     return result;
-  }, []).sort(function (a, b) {
-    return a.priority - b.priority;
-  });
+  }, []).sort((a, b) => a.priority - b.priority);
 });
 
 
@@ -56,9 +54,7 @@ function MDEdit() {
   this.__bag__ = new Bag({ prefix: 'nodeca_editor' });
   this.__cache__ = new RpcCache();
 
-  this.__cache__.on('update', function () {
-    N.wire.emit('mdedit:update.text');
-  });
+  this.__cache__.on('update', () => N.wire.emit('mdedit:update.text'));
 }
 
 
@@ -84,28 +80,27 @@ function MDEdit() {
 // - `change.nd.mdedit` - on update preview, you can save drafts on this event
 //
 MDEdit.prototype.show = function (options) {
-  var self = this;
-  var $oldLayout = this.__layout__;
+  let $oldLayout = this.__layout__;
 
   this.__layout__ = $(N.runtime.render('mdedit'));
   this.__options__ = _.clone(options);
   this.__options__.toolbar = compileToolbarConfig(this.__options__.toolbar || 'default');
   this.__options__.parseOptions = this.__options__.parseOptions || {};
 
-  $('body').append(self.__layout__);
+  $('body').append(this.__layout__);
 
   // Clamp editor height
-  $(window).off('resize.nd.mdedit').on('resize.nd.mdedit', _.debounce(function () {
-    var winHeight = $(window).height();
+  $(window).off('resize.nd.mdedit').on('resize.nd.mdedit', _.debounce(() => {
+    let winHeight = $(window).height();
 
-    if (self.__layout__.height() > winHeight && winHeight >= self.__minHeight__) {
-      self.__layout__.height(winHeight);
-      self.__cm__.setSize('100%', self.__layout__.find('.mdedit__edit-area').height());
+    if (this.__layout__.height() > winHeight && winHeight >= this.__minHeight__) {
+      this.__layout__.height(winHeight);
+      this.__cm__.setSize('100%', this.__layout__.find('.mdedit__edit-area').height());
     }
   }, 50, { maxWait: 50 }));
 
   // Init CodeMirror instance
-  self.__cm__ = new CodeMirror(self.__layout__.find('.mdedit__edit-area').get(0), {
+  this.__cm__ = new CodeMirror(this.__layout__.find('.mdedit__edit-area').get(0), {
     cursorScrollMargin: TEXT_MARGIN,
     lineWrapping: true,
     lineNumbers: false,
@@ -114,48 +109,46 @@ MDEdit.prototype.show = function (options) {
   });
 
   // Set initial CodeMirror options
-  self.__cm__.setOption('extraKeys', {
-    Esc:          function () { N.wire.emit('mdedit.cancel'); },
-    'Ctrl-Enter': function () { N.wire.emit('mdedit.submit'); }
+  this.__cm__.setOption('extraKeys', {
+    Esc:          () => N.wire.emit('mdedit.cancel'),
+    'Ctrl-Enter': () => N.wire.emit('mdedit.submit')
   });
 
-  self.__cm__.on('change', function () {
-    N.wire.emit('mdedit:update.text');
-  });
+  this.__cm__.on('change', () => N.wire.emit('mdedit:update.text'));
 
   N.wire.emit('mdedit:init');
 
-  self.text(options.text || '');
-  self.attachments(options.attachments || []);
+  this.text(options.text || '');
+  this.attachments(options.attachments || []);
 
   // Get editor height from localstore
-  this.__bag__.get('height', function (__, height) {
+  this.__bag__.get('height', (__, height) => {
 
     if (height) {
       // If no prevoius editor - set `bottom` for animation
       if (!$oldLayout) {
-        self.__layout__.css({ bottom: -height });
+        this.__layout__.css({ bottom: -height });
       }
 
       // Restore prevoius editor height
-      self.__layout__.height(height);
+      this.__layout__.height(height);
     }
 
-    self.__layout__.trigger('show');
+    this.__layout__.trigger('show');
 
     // If no prevoius editor - animate editor from bottom viewport botder
-    self.__layout__.animate({ bottom: 0 }, $oldLayout ? 0 : 'fast', function () {
+    this.__layout__.animate({ bottom: 0 }, $oldLayout ? 0 : 'fast', () => {
       // Update codemirror height
-      self.__cm__.setSize('100%', self.__layout__.find('.mdedit__edit-area').height());
+      this.__cm__.setSize('100%', this.__layout__.find('.mdedit__edit-area').height());
 
-      var $focusItem = self.__layout__.find('[tabindex=1]');
+      let $focusItem = this.__layout__.find('[tabindex=1]');
 
       if ($focusItem.length !== 0) {
         // Focus to element with tabindex = 1 if exists
         $focusItem.focus();
       } else {
         // Or focus to editor window
-        self.__cm__.focus();
+        this.__cm__.focus();
       }
 
       // Hide previous editor
@@ -165,7 +158,7 @@ MDEdit.prototype.show = function (options) {
         $oldLayout.remove();
       }
 
-      self.__layout__.trigger('shown');
+      this.__layout__.trigger('shown');
     });
   });
 
@@ -176,8 +169,7 @@ MDEdit.prototype.show = function (options) {
 // Hide editor
 //
 MDEdit.prototype.hide = function () {
-  var self = this;
-  var $layout = this.__layout__;
+  let $layout = this.__layout__;
 
   if (!$layout) {
     return;
@@ -185,10 +177,10 @@ MDEdit.prototype.hide = function () {
 
   $(window).off('resize.nd.mdedit');
 
-  setTimeout(function () {
+  setTimeout(() => {
     $layout.trigger('hide');
-    $layout.animate({ bottom: -$layout.height() }, 'fast', function () {
-      self.__layout__ = null;
+    $layout.animate({ bottom: -$layout.height() }, 'fast', () => {
+      this.__layout__ = null;
       $layout.trigger('hidden');
       $layout.remove();
     });
@@ -245,9 +237,9 @@ MDEdit.prototype.parseOptions = function (parseOptions) {
 // Add editor resize handler
 //
 N.wire.on('mdedit:init', function initResize() {
-  var $body = $('body');
-  var $window = $(window);
-  var winHeight = $window.height();
+  let $body = $('body');
+  let $window = $(window);
+  let winHeight = $window.height();
 
   // load min-height limit & reset it to enable animation
   N.MDEdit.__minHeight__ = parseInt(N.MDEdit.__layout__.css('minHeight'), 10);
@@ -261,8 +253,8 @@ N.wire.on('mdedit:init', function initResize() {
   }
 
   N.MDEdit.__layout__.find('.mdedit__resizer').on('mousedown touchstart', function (event) {
-    var clickStart = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
-    var currentHeight = parseInt(N.MDEdit.__layout__.height(), 10);
+    let clickStart = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
+    let currentHeight = parseInt(N.MDEdit.__layout__.height(), 10);
 
     N.MDEdit.__layout__.addClass('mdedit__m-resizing');
 
@@ -272,7 +264,7 @@ N.wire.on('mdedit:init', function initResize() {
         N.MDEdit.__layout__.removeClass('mdedit__m-resizing');
       })
       .on('mousemove.nd.mdedit touchmove.nd.mdedit', _.debounce(function (event) {
-        var point = event.originalEvent.touches ? event.originalEvent.touches[0] : event,
+        let point = event.originalEvent.touches ? event.originalEvent.touches[0] : event,
           newHeight = currentHeight - (point.pageY - clickStart.pageY),
           winHeight = $window.height();
 
@@ -292,7 +284,7 @@ N.wire.on('mdedit:init', function initResize() {
 // Done handler
 //
 N.wire.on('mdedit.submit', function done_click() {
-  var event = new $.Event('submit');
+  let event = new $.Event('submit');
 
   N.MDEdit.__layout__.trigger(event);
 
@@ -304,22 +296,18 @@ N.wire.on('mdedit.submit', function done_click() {
 
 // Hide when escape key is pressed
 //
-N.wire.on('event.keypress.escape', function mdedit_close() {
-  N.MDEdit.hide();
-});
+N.wire.on('event.keypress.escape', () => N.MDEdit.hide());
 
 
 // Hide on cancel
 //
-N.wire.on('mdedit.cancel', function close() {
-  N.MDEdit.hide();
-});
+N.wire.on('mdedit.cancel', () => N.MDEdit.hide());
 
 
 // Collapse/expand editor
 //
 N.wire.on('mdedit.collapse', function collapse() {
-  var $layout = N.MDEdit.__layout__;
+  let $layout = N.MDEdit.__layout__;
 
   // Expand
   if ($layout.hasClass('mdedit__m-collapsed')) {

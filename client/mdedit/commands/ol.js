@@ -2,12 +2,12 @@
 
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdOl = function (editor) {
-    var selectionStart = editor.getCursor(true);
-    var selectedText = editor.getSelection();
-    var lineStartRegexp = /^ *[0-9]+\. /;
+    let selectionStart = editor.getCursor(true);
+    let selectedText = editor.getSelection();
+    let lineStartRegexp = /^ *[0-9]+\. /;
 
     if (editor.somethingSelected()) {
-      var i = 1;
+      let i = 1;
 
       editor.replaceSelection(selectedText.split('\n').map(function (line) {
         if (lineStartRegexp.test(line)) {

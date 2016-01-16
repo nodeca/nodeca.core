@@ -1,11 +1,11 @@
 'use strict';
 
-var _ = require('lodash');
+const _ = require('lodash');
 
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdImage = function (editor) {
-    var $linkDialog = $(N.runtime.render('mdedit.add_image_dlg'));
-    var tpl = _.template('![<%= alt %>](<%= url %>)');
+    let $linkDialog = $(N.runtime.render('mdedit.add_image_dlg'));
+    let tpl = _.template('![<%= alt %>](<%= url %>)');
 
     $('body').append($linkDialog);
     $linkDialog.modal('show');
@@ -19,7 +19,7 @@ N.wire.once('init:mdedit', function () {
     });
 
     $linkDialog.find('.add-image-dialog__apply').click(function () {
-      var url = $linkDialog.find('.add-image-dialog__input').val();
+      let url = $linkDialog.find('.add-image-dialog__input').val();
 
       $linkDialog.modal('hide');
 

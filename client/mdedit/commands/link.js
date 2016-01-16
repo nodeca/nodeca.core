@@ -1,11 +1,11 @@
 'use strict';
 
-var _ = require('lodash');
+const _ = require('lodash');
 
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdLink = function (editor) {
-    var $linkDialog = $(N.runtime.render('mdedit.add_link_dlg'));
-    var tpl = _.template('[<%= desc %>](<%= url %>)');
+    let $linkDialog = $(N.runtime.render('mdedit.add_link_dlg'));
+    let tpl = _.template('[<%= desc %>](<%= url %>)');
 
     $('body').append($linkDialog);
 
@@ -28,8 +28,8 @@ N.wire.once('init:mdedit', function () {
     });
 
     $linkDialog.find('.add-link-dialog__apply').click(function () {
-      var url = $linkDialog.find('.add-link-dialog__link').val();
-      var text = $linkDialog.find('.add-link-dialog__text').val();
+      let url = $linkDialog.find('.add-link-dialog__link').val();
+      let text = $linkDialog.find('.add-link-dialog__text').val();
 
       $linkDialog.modal('hide');
 
