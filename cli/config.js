@@ -22,10 +22,11 @@ module.exports.commandLineArguments = [
 
 
 module.exports.run = function (N/*, args */) {
-  // Reduce log level
-  N.logger.setLevel('info');
 
   return Promise.resolve().then(() => {
+    // Reduce log level
+    N.logger.setLevel('info');
+
     // Don't emit any events
 
     /*eslint-disable no-console*/

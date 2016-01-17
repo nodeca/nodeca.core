@@ -4,7 +4,8 @@
 'use strict';
 
 
-const _ = require('lodash');
+const _  = require('lodash');
+const co = require('co');
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,18 +42,16 @@ module.exports.commandLineArguments = [
 
 
 module.exports.run = function (N, args) {
-  // Reduce log level
-  N.logger.setLevel('info');
 
-  return Promise.resolve()
-  .then(() => {
-    return N.wire.emit([
+  return co(function* () {
+    // Reduce log level
+    N.logger.setLevel('info');
+
+    yield N.wire.emit([
       'init:models',
       'init:bundle',
       'init:server'
     ], N);
-  })
-  .then(() => {
 
     /*eslint-disable no-console*/
     console.log('\n');

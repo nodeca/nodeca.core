@@ -6,6 +6,7 @@
 
 const path         = require('path');
 const _            = require('lodash');
+const co           = require('co');
 const thenify      = require('thenify');
 const Mocha        = require('mocha');
 const navit        = require('navit');
@@ -50,20 +51,18 @@ module.exports.commandLineArguments = [
 
 /*eslint-disable no-throw-literal*/
 module.exports.run = function (N, args) {
-  return Promise.resolve()
-  .then(() => {
+
+  return co(function* () {
     if (!process.env.NODECA_ENV) {
       throw 'You must provide NODECA_ENV in order to run nodeca test';
     }
-  })
-  .then(() => {
-    return N.wire.emit([
+
+    yield N.wire.emit([
       'init:models',
       'init:bundle',
       'init:server'
     ], N);
-  })
-  .then(() => {
+
     let mocha        = new Mocha({ timeout: 10000 });
     let applications = N.apps;
 
@@ -107,11 +106,8 @@ module.exports.run = function (N, args) {
       browser: navit().use(navitPlugins)
     };
 
-    function mocha_run(cb) { mocha.run(cb); }
+    yield thenify(cb => mocha.run(cb))();
 
-    return thenify(mocha_run)();
-  })
-  .then(() => {
     N.shutdown();
   });
 };
