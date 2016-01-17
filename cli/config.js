@@ -21,15 +21,14 @@ module.exports.commandLineArguments = [
 ];
 
 
-module.exports.run = function (N/*, args, callback*/) {
-
+module.exports.run = function (N/*, args */) {
   // Reduce log level
   N.logger.setLevel('info');
 
-  /*eslint-disable no-console*/
+  return Promise.resolve().then(() => {
+    // Don't emit any events
 
-  // Don't emit any events
-  console.log(inspect(N.config, { depth: null, colors: true }));
-
-  N.shutdown();
+    /*eslint-disable no-console*/
+    console.log(inspect(N.config, { depth: null, colors: true }));
+  });
 };

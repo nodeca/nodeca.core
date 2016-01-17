@@ -4,17 +4,13 @@
 'use strict';
 
 
-// stdlib
-const path      = require('path');
-
-
-// 3rd-party
+const path         = require('path');
 const _            = require('lodash');
+const thenify      = require('thenify');
 const Mocha        = require('mocha');
 const navit        = require('navit');
 const navitPlugins = require('nodeca.core/lib/test/navit_plugins');
 const glob         = require('glob');
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,78 +48,70 @@ module.exports.commandLineArguments = [
 
 ////////////////////////////////////////////////////////////////////////////////
 
-
-module.exports.run = function (N, args, callback) {
-  if (!process.env.NODECA_ENV) {
-    callback('You must provide NODECA_ENV in order to run nodeca test');
-    return;
-  }
-
-  N.wire.emit([
+/*eslint-disable no-throw-literal*/
+module.exports.run = function (N, args) {
+  return Promise.resolve()
+  .then(() => {
+    if (!process.env.NODECA_ENV) {
+      throw 'You must provide NODECA_ENV in order to run nodeca test';
+    }
+  })
+  .then(() => {
+    return N.wire.emit([
       'init:models',
       'init:bundle',
       'init:server'
-    ], N,
+    ], N);
+  })
+  .then(() => {
+    let mocha        = new Mocha({ timeout: 10000 });
+    let applications = N.apps;
 
-    function (err) {
-      if (err) {
-        callback(err);
-        return;
+    mocha.reporter('spec');
+    // mocha.ui('bdd');
+
+    // if app set, check that it's valid
+    if (args.app) {
+      if (!_.find(applications, app => app.name === args.app)) {
+        /*eslint-disable no-console*/
+        let msg = `Invalid application name: ${args.app}` +
+            'Valid apps are:  ' + _.map(applications, app => app.name).join(', ');
+
+        throw msg;
       }
-
-      var mocha = new Mocha({ timeout: 10000 });
-      var applications = N.apps;
-
-      mocha.reporter('spec');
-      // mocha.ui('bdd');
-
-      // if app set, chack that it's valid
-      if (args.app) {
-        if (!_.find(applications, function (app) { return app.name === args.app; })) {
-          /*eslint-disable no-console*/
-          console.log('Invalid application name: ' + args.app);
-          console.log(
-            'Valid apps are:  ',
-             _.map(applications, function (app) { return app.name; }).join(', ')
-          );
-          N.shutdown(1);
-        }
-      }
-
-      _.forEach(applications, function (app) {
-        if (!args.app || args.app === app.name) {
-          glob.sync('**', { cwd: app.root + '/test' })
-            // skip files when
-            // - filename starts with _, e.g.: /foo/bar/_baz.js
-            // - dirname in path starts _, e.g. /foo/_bar/baz.js
-            .filter(name => !/^[._]|\\[._]|\/[_.]/.test(name))
-            .forEach(file => {
-              // try to filter by pattern, if set
-              if (args.mask && path.basename(file).indexOf(args.mask) === -1) {
-                return;
-              }
-
-              if ((/\.js$/).test(file) && path.basename(file)[0] !== '.') {
-                mocha.files.push(`${app.root}/test/${file}`);
-              }
-            });
-        }
-      });
-
-      // Expose N to globals for tests
-      global.TEST = {
-        N: N,
-        browser: navit().use(navitPlugins)
-      };
-
-      mocha.run(function (err) {
-        if (err) {
-          callback(err);
-          return;
-        }
-
-        N.shutdown();
-      });
     }
-  );
+
+    _.forEach(applications, app => {
+      if (!args.app || args.app === app.name) {
+        glob.sync('**', { cwd: app.root + '/test' })
+          // skip files when
+          // - filename starts with _, e.g.: /foo/bar/_baz.js
+          // - dirname in path starts _, e.g. /foo/_bar/baz.js
+          .filter(name => !/^[._]|\\[._]|\/[_.]/.test(name))
+          .forEach(file => {
+            // try to filter by pattern, if set
+            if (args.mask && path.basename(file).indexOf(args.mask) === -1) {
+              return;
+            }
+
+            if ((/\.js$/).test(file) && path.basename(file)[0] !== '.') {
+              mocha.files.push(`${app.root}/test/${file}`);
+            }
+          });
+      }
+    });
+
+    // Expose N to globals for tests
+    global.TEST = {
+      N: N,
+      browser: navit().use(navitPlugins)
+    };
+
+    function mocha_run(cb) { mocha.run(cb); }
+
+    return thenify(mocha_run)();
+  })
+  .then(() => {
+    N.shutdown();
+  });
 };
