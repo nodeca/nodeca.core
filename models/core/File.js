@@ -129,7 +129,7 @@ module.exports = function (N, collectionName) {
             return;
           }
 
-          gfs.remove({ filename: _.pluck(files, 'filename') }, callback);
+          gfs.remove({ filename: _.map(files, 'filename') }, callback);
         });
         return;
       }

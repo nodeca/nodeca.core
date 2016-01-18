@@ -5,7 +5,7 @@ var _ = require('lodash');
 
 
 function fetchGroupInfo(N, name) {
-  var settingsCount = _.where(N.config.setting_schemas.global, {
+  var settingsCount = _.filter(N.config.setting_schemas.global, {
     group_key: name
   }).length;
 
@@ -39,7 +39,7 @@ module.exports = function (N, apiPath) {
       return a.priority - b.priority;
     });
 
-    res.tabs = _.pluck(res.tabs, 'name');
+    res.tabs = _.map(res.tabs, 'name');
 
     //
     // Collect groups per tab.

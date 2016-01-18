@@ -16,7 +16,7 @@ N.wire.on('navigate.done', function navbar_menu_change_active(target) {
   items.removeClass('_active');
 
   // Select the most specific tab - with the longest API path match.
-  active = _.max(items, function (tab) {
+  active = _.maxBy(items, function (tab) {
     var tabPath = $(tab).data('apiPath').split('.'),
         index   = -1,
         length  = Math.min(tabPath.length, targetPath.length);

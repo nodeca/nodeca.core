@@ -16,7 +16,7 @@ function get_attachments(data, ids) {
   var attachments = {};
   var pending = [];
 
-  _.uniq(ids.sort(), true).forEach(function (id) {
+  _(ids).uniq().sort().forEach(function (id) {
     if (!cache.hasOwnProperty(id)) {
       pending.push(id);
       attachments[id] = null;
@@ -127,7 +127,7 @@ N.wire.once('init:parser', function attachment_plugin_init() {
         data.result.tail = tail_ids.map(function (media_id) {
           if (!attachments[media_id]) { return null; }
 
-          return _.omit({
+          return _.omitBy({
             media_id:  media_id,
             type:      attachments[media_id].type,
             file_name: attachments[media_id].file_name
