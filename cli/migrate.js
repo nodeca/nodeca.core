@@ -4,8 +4,7 @@
 'use strict';
 
 
-const co      = require('co');
-const thenify = require('thenify');
+const co = require('co');
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -70,9 +69,7 @@ module.exports.run = function (N, args) {
 
       process.stdout.write(`  ${migration.appName}:${migration.step} ... `);
 
-      let up = require(migration.filename).up;
-
-      yield thenify(up)(N);
+      yield require(migration.filename).up(N);
 
       console.log('OK');
 
