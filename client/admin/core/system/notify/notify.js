@@ -145,5 +145,6 @@ Notification.prototype = {
 
 
 N.wire.on('notify', function notification(options) {
-  return new Notification(options);
+  /*eslint-disable no-new*/
+  new Notification(options);
 });
