@@ -1,11 +1,11 @@
 'use strict';
 
 
-var _ = require('lodash');
+const _ = require('lodash');
 
 
 function fetchGroupInfo(N, name) {
-  var settingsCount = _.filter(N.config.setting_schemas.global, {
+  let settingsCount = _.filter(N.config.setting_schemas.global, {
     group_key: name
   }).length;
 
@@ -17,7 +17,7 @@ module.exports = function (N, apiPath) {
   N.validate(apiPath, {});
 
   N.wire.on(apiPath, function global_settings_index(env) {
-    var res = env.res;
+    let res = env.res;
 
     res.head.title = env.t('title');
 
@@ -28,16 +28,14 @@ module.exports = function (N, apiPath) {
     // Collect tabs, i.e. groups without `parent`.
     //
 
-    _.forEach(N.config.setting_groups, function (config, name) {
+    _.forEach(N.config.setting_groups, (config, name) => {
       if (config.parent === null) {
         res.tabs.push({ name: name, priority: config.priority });
         res.groups[name] = [];
       }
     });
 
-    res.tabs.sort(function (a, b) {
-      return a.priority - b.priority;
-    });
+    res.tabs.sort((a, b) => a.priority - b.priority);
 
     res.tabs = _.map(res.tabs, 'name');
 
@@ -45,16 +43,14 @@ module.exports = function (N, apiPath) {
     // Collect groups per tab.
     //
 
-    _.forEach(res.tabs, function (tab) {
-      _.forEach(N.config.setting_groups, function (config, name) {
+    _.forEach(res.tabs, tab => {
+      _.forEach(N.config.setting_groups, (config, name) => {
         if (tab === config.parent) {
           res.groups[tab].push(fetchGroupInfo(N, name));
         }
       });
 
-      res.groups[tab].sort(function (a, b) {
-        return a.priority - b.priority;
-      });
+      res.groups[tab].sort((a, b) => a.priority - b.priority);
     });
   });
 };

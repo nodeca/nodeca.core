@@ -1,24 +1,18 @@
 'use strict';
 
 
-var _     = require('lodash');
-var async = require('async');
+const _ = require('lodash');
 
 
 module.exports = function (N, apiPath) {
   N.validate(apiPath, {
-    group: {
-      type: 'string',
-      required: false
-    }
+    group: { type: 'string', required: false }
   });
 
 
-  N.wire.before(apiPath, function check_if_group_exists(env, callback) {
+  N.wire.before(apiPath, function* check_if_group_exists(env) {
     if (!N.config.setting_groups.hasOwnProperty(env.params.group)) {
-      callback(N.io.NOT_FOUND);
-    } else {
-      callback();
+      throw N.io.NOT_FOUND;
     }
   });
 
@@ -29,58 +23,51 @@ module.exports = function (N, apiPath) {
   });
 
 
-  N.wire.before(apiPath, function prepare_setting_schemas(env, callback) {
-    var config = N.config.setting_schemas.global;
+  N.wire.before(apiPath, function* prepare_setting_schemas(env) {
+    let config = N.config.setting_schemas.global;
+    let keys = _.keys(config);
 
-    async.each(_.keys(config), function (name, next) {
-      var schema = config[name];
+    for (let i = 0; i < keys.length; i++) {
+      let name = keys[i];
+      let schema = config[name];
 
       if (schema.group_key !== env.params.group) {
-        next();
-        return;
+        continue;
       }
 
       // Expose static schemas as is
       if (!_.isFunction(schema.values)) {
         env.res.setting_schemas[name] = schema;
-        next();
-        return;
+        continue;
       }
 
       // If schema `values` is a function, we need to compute it.
       schema = _.clone(schema); // Keep original schema untouched.
-      schema.values(function (err, values) {
-        schema.values = values; // Replace the function with computed values.
-        env.res.setting_schemas[name] = schema;
-        next(err);
-      });
-    }, callback);
+
+      // Replace the function with computed values.
+      schema.values = yield schema.values();
+
+      env.res.setting_schemas[name] = schema;
+    }
   });
 
 
-  N.wire.on(apiPath, function global_settings_edit(env, callback) {
-    var parentGroup = N.config.setting_groups[env.params.group].parent;
+  N.wire.on(apiPath, function* global_settings_edit(env) {
+    let parentGroup = N.config.setting_groups[env.params.group].parent;
 
-    env.res.head.title =
-      env.t('title', {
-        parent_group: env.t('@admin.core.group_names.' + parentGroup),
-        group: env.t('@admin.core.group_names.' + env.params.group)
-      });
+    env.res.head.title = env.t('title', {
+      parent_group: env.t('@admin.core.group_names.' + parentGroup),
+      group: env.t('@admin.core.group_names.' + env.params.group)
+    });
 
-    N.settings.getStore('global').get(_.keys(env.res.setting_schemas),
-                                      {},
-                                      { skipCache: true },
-                                      function (err, settings) {
-      if (err) {
-        callback(err);
-        return;
-      }
+    let settings = yield N.settings.getStore('global').get(
+      _.keys(env.res.setting_schemas),
+      {},
+      { skipCache: true }
+    );
 
-      _.forEach(settings, function (result, name) {
-        env.res.setting_values[name] = result.value;
-      });
-
-      callback();
+    _.forEach(settings, function (result, name) {
+      env.res.setting_values[name] = result.value;
     });
   });
 };
