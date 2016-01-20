@@ -5,14 +5,14 @@
 'use strict';
 
 
-var _         = require('lodash');
-var fs        = require('fs');
-var mime      = require('mime-types').lookup;
+const _         = require('lodash');
+const fs        = require('fs');
+const mime      = require('mime-types').lookup;
 
-var stream    = require('readable-stream');
-var mongoose  = require('mongoose');
-var grid      = require('gridfs-stream');
-var ObjectId  = mongoose.Types.ObjectId;
+const stream    = require('readable-stream');
+const mongoose  = require('mongoose');
+const grid      = require('gridfs-stream');
+const ObjectId  = mongoose.Types.ObjectId;
 
 function escapeRegexp(source) {
   return String(source).replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
@@ -51,7 +51,7 @@ function getStream(src) {
 
 module.exports = function (N, collectionName) {
 
-  var gfs;
+  let gfs;
 
   /*
    * There are 2 type of files:
@@ -96,10 +96,15 @@ module.exports = function (N, collectionName) {
    * - name (String) - `_id` {32 hex} or `filename`
    */
   File.getInfo = File.prototype.getInfo = function (name, callback) {
-    var id = name.toHexString ? name : tryParseObjectId(name);
-    var condition = id ? { _id: id } : { filename: name };
+    let id = name.toHexString ? name : tryParseObjectId(name);
+    let condition = id ? { _id: id } : { filename: name };
 
-    gfs.files.findOne(condition, callback);
+    if (callback) {
+      gfs.files.findOne(condition, callback);
+      return null;
+    }
+
+    return gfs.files.findOne(condition); // Promise
   };
 
   /*
@@ -116,30 +121,42 @@ module.exports = function (N, collectionName) {
       all = false;
     }
 
-    var id = name.toHexString ? name : tryParseObjectId(name);
+    let id = name.toHexString ? name : tryParseObjectId(name);
 
-    // remove by `_id`
-    if (id) {
+    if (callback) {
+      // remove by `_id`
+      if (id) {
+        // if `all` flag is set - find files by `filename` pattern and remove all
+        if (all) {
+          gfs.files.find({ filename: new RegExp('^' + escapeRegexp(String(name))) }).toArray(function (err, files) {
+            if (err) {
+              callback(err);
+              return null;
+            }
 
-      // if `all` flag is set - find files by `filename` pattern and remove all
-      if (all) {
-        gfs.files.find({ filename: new RegExp('^' + escapeRegexp(String(name))) }).toArray(function (err, files) {
-          if (err) {
-            callback(err);
-            return;
-          }
-
-          gfs.remove({ filename: _.map(files, 'filename') }, callback);
-        });
-        return;
+            gfs.remove({ filename: _.map(files, 'filename') }, callback);
+          });
+        } else {
+          gfs.remove({ _id: id }, callback);
+        }
+      } else {
+        // remove by `filename`
+        gfs.remove({ filename: name }, callback);
       }
-
-      gfs.remove({ _id: id }, callback);
-      return;
+      return null;
     }
 
-    // remove by `filename`
-    gfs.remove({ filename: name }, callback);
+    // The same as above, but via promise
+    if (id) {
+      if (all) {
+        return gfs.files.find({ filename: new RegExp('^' + escapeRegexp(String(name))) }).toArray()
+                  .then(function (files) {
+                    return gfs.remove({ filename: _.map(files, 'filename') });
+                  });
+      }
+      return gfs.remove({ _id: id });
+    }
+    return gfs.remove({ filename: name });
   };
 
 
@@ -159,56 +176,77 @@ module.exports = function (N, collectionName) {
    *     - origName (String) - original file name (used in downloads)
    */
   File.put = File.prototype.put = function (src, opt, callback) {
-    var input = getStream(src);
+    let input   = getStream(src);
+    let options = _.assign({}, opt); // protect opt from modifications
+    let err;
 
-    var options = _.assign({}, opt); // protect opt from modifications
-
-    if (!input) {
-      callback(new Error('File.put: unknown source data'));
-      return;
-    }
-
-    var _id = options._id || new ObjectId(null);
-    _id = _id.toHexString ? _id : tryParseObjectId(_id);
-
-    if (!_id) {
-      callback(new Error('File.put: invalid _id passed'));
-      return;
-    }
-
-    options._id = _id;
-
-    // if filename NOT set - that's original file (in other case that's thumbnail)
-    options.filename = options.filename || options._id.toHexString();
-
-    // if no contentType - try to guess from original file name
-    if (!options.contentType) {
-      var origName = (options.metadata || {}).origName;
-
-      if (!origName) {
-        callback(new Error('File.put: ContentType or metadata.origName must be set'));
-        return;
+    try {
+      if (!input) {
+        throw new Error('File.put: unknown source data');
       }
 
-      options.contentType = mime(origName);
+      let _id = options._id || new ObjectId(null);
+      _id = _id.toHexString ? _id : tryParseObjectId(_id);
+
+      if (!_id) {
+        throw new Error('File.put: invalid _id passed');
+      }
+
+      options._id = _id;
+
+      // if filename NOT set - that's original file (in other case that's thumbnail)
+      options.filename = options.filename || options._id.toHexString();
+
+      // if no contentType - try to guess from original file name
       if (!options.contentType) {
-        callback(new Error('File.put: can\'t guess ContentType'));
-        return;
+        let origName = (options.metadata || {}).origName;
+
+        if (!origName) {
+          throw new Error('File.put: ContentType or metadata.origName must be set');
+        }
+
+        options.contentType = mime(origName);
+        if (!options.contentType) {
+          throw new Error(`File.put: can't guess ContentType for ${origName}`);
+        }
       }
+    } catch (e) {
+      err = e;
     }
 
     // This 2 lines required to properly set `contentType` field
     options.content_type = options.contentType;
     options.mode = 'w';
 
-    var output = gfs.createWriteStream(options);
+    // Do cb call or return promise, depending on signature
+    if (callback) {
+      if (err) {
+        callback(err);
+        return null;
+      }
 
-    output.once('error', callback);
-    output.once('close', function (info) {
-      callback(null, info);
+      let output = gfs.createWriteStream(options);
+
+      output.once('error', callback);
+      output.once('close', info => { callback(null, info); });
+
+      input.pipe(output);
+      return null;
+    }
+
+    return new Promise(function (resolve, reject) {
+      if (err) {
+        reject(err);
+        return null;
+      }
+
+      let output = gfs.createWriteStream(options);
+
+      output.once('error', reject);
+      output.once('close', info => { resolve(info); });
+
+      input.pipe(output);
     });
-
-    input.pipe(output);
   };
 
 
@@ -220,8 +258,8 @@ module.exports = function (N, collectionName) {
   // https://gist.github.com/psi-4ward/7099001
   //
   File.getStream = File.prototype.getStream = function (name) {
-    var id = name.toHexString ? name : tryParseObjectId(name);
-    var options = id ? { _id: id } : { filename: name };
+    let id = name.toHexString ? name : tryParseObjectId(name);
+    let options = id ? { _id: id } : { filename: name };
 
     return gfs.createReadStream(options);
   };
@@ -230,7 +268,7 @@ module.exports = function (N, collectionName) {
   N.wire.on('init:models', function emit_init_File(__, callback) {
 
     // connect to database
-    var options = {
+    let options = {
       server: {
         socketOptions: { keepAlive: 1 }
       },
@@ -239,7 +277,7 @@ module.exports = function (N, collectionName) {
       }
     };
 
-    var conn = mongoose.createConnection(N.config.database.mongo, options);
+    let conn = mongoose.createConnection(N.config.database.mongo, options);
 
     conn.once('open', function () {
       gfs = grid(conn.db, mongoose.mongo);

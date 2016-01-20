@@ -49,7 +49,6 @@ module.exports.commandLineArguments = [
 
 ////////////////////////////////////////////////////////////////////////////////
 
-/*eslint-disable no-throw-literal*/
 module.exports.run = function (N, args) {
 
   return co(function* () {

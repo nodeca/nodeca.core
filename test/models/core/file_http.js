@@ -1,23 +1,23 @@
 'use strict';
 
 
-var fs      = require('fs');
-var path    = require('path');
+const fs      = require('fs');
+const path    = require('path');
 
-var request   = require('supertest')('');
+const request   = require('supertest')('');
 
-var fileName    = path.join(__dirname, 'fixtures', 'lorem.jpg');
-var fileBase    = path.basename(fileName);
-var fileContent = fs.readFileSync(fileName);
+const fileName    = path.join(__dirname, 'fixtures', 'lorem.jpg');
+const fileBase    = path.basename(fileName);
+const fileContent = fs.readFileSync(fileName);
 
-var file    = TEST.N.models.core.File;
-var router  = TEST.N.router;
+const file    = TEST.N.models.core.File;
+const router  = TEST.N.router;
 
 describe('File (GridFS) http requests test', function () {
-  var info;
+  let info;
 
   before(function (done) {
-    file.put(fileName, { metadata: { origName: fileBase } }, function (err, fileInfo) {
+    file.put(fileName, { metadata: { origName: fileBase } }, (err, fileInfo) => {
       info = fileInfo;
       done(err);
     });
