@@ -99,12 +99,8 @@ module.exports = function (N, collectionName) {
     let id = name.toHexString ? name : tryParseObjectId(name);
     let condition = id ? { _id: id } : { filename: name };
 
-    if (callback) {
-      gfs.files.findOne(condition, callback);
-      return null;
-    }
-
-    return gfs.files.findOne(condition); // Promise
+    // Promise if callback not passed
+    return gfs.files.findOne(condition, callback);
   };
 
   /*
@@ -178,7 +174,6 @@ module.exports = function (N, collectionName) {
   File.put = File.prototype.put = function (src, opt, callback) {
     let input   = getStream(src);
     let options = _.assign({}, opt); // protect opt from modifications
-    let err;
 
     try {
       if (!input) {
@@ -210,23 +205,22 @@ module.exports = function (N, collectionName) {
           throw new Error(`File.put: can't guess ContentType for ${origName}`);
         }
       }
-    } catch (e) {
-      err = e;
+    } catch (err) {
+      if (callback) {
+        callback(err);
+        return null;
+      }
+      return Promise.reject(err);
     }
 
     // This 2 lines required to properly set `contentType` field
     options.content_type = options.contentType;
     options.mode = 'w';
 
+    let output = gfs.createWriteStream(options);
+
     // Do cb call or return promise, depending on signature
     if (callback) {
-      if (err) {
-        callback(err);
-        return null;
-      }
-
-      let output = gfs.createWriteStream(options);
-
       output.once('error', callback);
       output.once('close', info => { callback(null, info); });
 
@@ -235,13 +229,6 @@ module.exports = function (N, collectionName) {
     }
 
     return new Promise(function (resolve, reject) {
-      if (err) {
-        reject(err);
-        return null;
-      }
-
-      let output = gfs.createWriteStream(options);
-
       output.once('error', reject);
       output.once('close', info => { resolve(info); });
 
