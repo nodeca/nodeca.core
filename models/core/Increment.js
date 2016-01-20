@@ -1,28 +1,30 @@
 'use strict';
 
 
-var Mongoose = require('mongoose');
-var Schema   = Mongoose.Schema;
+const Mongoose = require('mongoose');
+const Schema   = Mongoose.Schema;
 
 
 module.exports = function (N, collectionName) {
 
-  var Increment = new Schema({
+  let Increment = new Schema({
 
     key:    String,   // Counter name
     value:  Number    // Counter last value
   });
 
   Increment.statics.next = function next(name, callback) {
-    this.findOneAndUpdate({ key: name }, { $inc: { value: 1 } }, { 'new': true, upsert: true },
-      function (err, counter) {
-        if (err) {
-          callback(err, null);
-          return;
-        }
-        callback(null, counter.value);
-      }
+    let query = this.findOneAndUpdate(
+      { key: name },
+      { $inc: { value: 1 } },
+      { 'new': true, upsert: true }
     );
+
+    if (!callback) {
+      return query.then(counter => counter.value);
+    }
+
+    query.exec((err, counter) => { callback(err, (counter || {}).value); });
   };
 
   N.wire.on('init:models', function emit_init_Increment(__, callback) {
