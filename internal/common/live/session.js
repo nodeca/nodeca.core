@@ -6,9 +6,13 @@
 //
 'use strict';
 
+
+const thenify = require('thenify');
+
+
 module.exports = function (N) {
   N.wire.before('internal.live.*', { priority: -100 }, function add_session_loader(data) {
-    data.getSession = function (callback) {
+    data.getSession = thenify.withCallback(function (callback) {
       // If session already loaded - skip
       if (data.__session__ || data.__session__ === null) {
         callback(null, data.__session__);
@@ -47,6 +51,6 @@ module.exports = function (N) {
           callback(null, data.__session__);
         });
       });
-    };
+    });
   });
 };
