@@ -7,50 +7,32 @@
 'use strict';
 
 
-const thenify = require('thenify');
+const co = require('co');
 
 
 module.exports = function (N) {
   N.wire.before('internal.live.*', { priority: -100 }, function add_session_loader(data) {
-    data.getSession = thenify.withCallback(function (callback) {
+    data.getSession = co.wrap(function* () {
       // If session already loaded - skip
       if (data.__session__ || data.__session__ === null) {
-        callback(null, data.__session__);
-        return;
+        return data.__session__;
       }
 
       // Fetch session ID from token record
-      N.redis.get('token_live:' + data.message.token, function (err, sessionID) {
-        if (err) {
-          callback(err);
-          return;
-        }
+      let sessionID = yield N.redis.getAsync('token_live:' + data.message.token);
 
-        // Fetch session
-        N.redis.get('sess:' + sessionID, function (err, rawData) {
-          if (err) {
-            callback(err);
-            return;
-          }
+      // Fetch session
+      let rawData = yield N.redis.getAsync('sess:' + sessionID);
 
-          // If session not found
-          if (!rawData) {
-            data.__session__ = null;
-            callback(null, data.__session__);
-            return;
-          }
+      // If session not found
+      if (!rawData) {
+        data.__session__ = null;
+        return data.__session__;
+      }
 
-          try {
-            data.__session__ = JSON.parse(rawData);
-          } catch (__) {
-            // If session data is broken
-            callback('Session is broken');
-            return;
-          }
+      data.__session__ = JSON.parse(rawData);
 
-          callback(null, data.__session__);
-        });
-      });
+      return data.__session__;
     });
   });
 };
