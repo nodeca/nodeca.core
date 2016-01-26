@@ -1,8 +1,9 @@
 'use strict';
 
 
-var _        = require('lodash');
-var memoizee = require('memoizee');
+var _         = require('lodash');
+var memoizee  = require('memoizee');
+var thenify   = require('thenify');
 
 
 module.exports = function (N) {
@@ -43,7 +44,7 @@ module.exports = function (N) {
 
 
   GlobalStore = N.settings.createStore({
-    get: function (keys, params, options, callback) {
+    get: thenify.withCallback(function (keys, params, options, callback) {
       var fetch = options.skipCache ? fetchGlobalSettings : fetchGlobalSettingsCached;
 
       fetch(function (err, settings) {
@@ -54,8 +55,8 @@ module.exports = function (N) {
 
         callback(null, _.pick(settings, keys));
       });
-    },
-    set: function (values, params, callback) {
+    }),
+    set: thenify.withCallback(function (values, params, callback) {
       GlobalSettings.findOne().exec(function (err, settings) {
         if (err) {
           callback(err);
@@ -75,7 +76,7 @@ module.exports = function (N) {
         settings.markModified('data');
         settings.save(callback);
       });
-    }
+    })
   });
 
 
