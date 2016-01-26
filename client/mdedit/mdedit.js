@@ -265,8 +265,8 @@ N.wire.on('mdedit:init', function initResize() {
       })
       .on('mousemove.nd.mdedit touchmove.nd.mdedit', _.debounce(function (event) {
         let point = event.originalEvent.touches ? event.originalEvent.touches[0] : event,
-          newHeight = currentHeight - (point.pageY - clickStart.pageY),
-          winHeight = $window.height();
+            newHeight = currentHeight - (point.pageY - clickStart.pageY),
+            winHeight = $window.height();
 
         newHeight = newHeight > winHeight ? winHeight : newHeight;
         newHeight = newHeight < N.MDEdit.__minHeight__ ? N.MDEdit.__minHeight__ : newHeight;
