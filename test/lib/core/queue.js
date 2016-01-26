@@ -474,7 +474,7 @@ describe('Queue', function () {
   });
 
   it('worker instance should return correct taskID', function () {
-    q1.registerWorker({ name: 'test13', taskID: (data) => data.foo + 'test' });
+    q1.registerWorker({ name: 'test13', taskID: data => data.foo + 'test' });
 
     assert.strictEqual(q1.worker('test13').taskID({ foo: 'bar' }), 'bartest');
   });

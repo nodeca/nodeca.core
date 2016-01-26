@@ -55,7 +55,7 @@ module.exports = function (N, collectionName) {
 
     let sorted = {};
 
-    Object.keys(params).sort().forEach((k) => { sorted[k] = params[k]; });
+    Object.keys(params).sort().forEach(k => { sorted[k] = params[k]; });
 
     setParams(JSON.stringify(sorted), callback);
   });

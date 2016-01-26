@@ -73,7 +73,7 @@ describe('File model test', function () {
               assert.equal(i.contentType, 'image/jpeg');
 
               // Remove file + preview
-              file.remove(f1Info._id, true, (err) => {
+              file.remove(f1Info._id, true, err => {
                 if (err) {
                   done(err);
                   return;
