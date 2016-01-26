@@ -20,7 +20,7 @@ N.wire.once('init:parser', function link_expand_plugin_init() {
             }
           }
 
-          var result = data.params.rpc_cache.get('common.embed', { url: url, types: types });
+          var result = data.params.rpc_cache.get('common.embed', { url, types });
 
           // Switch url destination if it's been unshortened
           if (result && result.canonical) {

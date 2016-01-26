@@ -37,9 +37,9 @@ N.wire.once('init:mdedit', function () {
       if (!url || (!editor.somethingSelected() && !text)) { return; }
 
       if (editor.somethingSelected()) {
-        editor.replaceSelection(tpl({ desc: editor.getSelection(), url: url }));
+        editor.replaceSelection(tpl({ desc: editor.getSelection(), url }));
       } else {
-        editor.replaceRange(tpl({ desc: text, url: url }), editor.getCursor(), editor.getCursor());
+        editor.replaceRange(tpl({ desc: text, url }), editor.getCursor(), editor.getCursor());
       }
 
       editor.focus();

@@ -101,7 +101,7 @@ module.exports.run = function (N, args) {
 
     // Expose N to globals for tests
     global.TEST = {
-      N: N,
+      N,
       browser: navit().use(navitPlugins)
     };
 

@@ -13,8 +13,7 @@ var requestID = 0;
 
 var fsm = StateMachine.create({
   initial: 'IDLE',
-
-  error: function (eventName, from, to, args, errorCode, errorMessage) {
+  error(eventName, from, to, args, errorCode, errorMessage) {
     var errorReport = 'Navigator error: ' + errorMessage;
 
     window.alert(errorReport);
@@ -124,13 +123,7 @@ function parseOptions(options) {
     anchor = '#' + anchor;
   }
 
-  return {
-    apiPath: apiPath,
-    params: params,
-    href: href,
-    anchor: anchor,
-    force: force
-  };
+  return { apiPath, params, href, anchor, force };
 }
 
 
@@ -233,7 +226,7 @@ function loadData(options, callback) {
         anchor: '',
         view: '',
         locals: {
-          err: err,
+          err,
           head: { title: err.code + ' ' + err.message }
         }
       };

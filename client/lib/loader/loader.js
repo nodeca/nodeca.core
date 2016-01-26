@@ -1,4 +1,4 @@
-/*eslint-disable no-alert*/
+/*eslint-disable no-alert, object-shorthand*/
 
 '$$ asset_body("nodeca.core/client/lib/loader/modernizr.custom.js") $$';
 '$$ asset_body("bagjs") $$';

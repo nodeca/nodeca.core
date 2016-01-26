@@ -14,7 +14,7 @@ module.exports = function (N, apiPath) {
     let settings = {};
 
     _.forEach(env.params.settings, (value, name) => {
-      settings[name] = { value: value };
+      settings[name] = { value };
     });
 
     try {

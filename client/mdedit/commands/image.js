@@ -27,9 +27,9 @@ N.wire.once('init:mdedit', function () {
       if (!url) { return; }
 
       if (editor.somethingSelected()) {
-        editor.replaceSelection(tpl({ alt: '', url: url }));
+        editor.replaceSelection(tpl({ alt: '', url }));
       } else {
-        editor.replaceRange(tpl({ alt: '', url: url }), editor.getCursor(), editor.getCursor());
+        editor.replaceRange(tpl({ alt: '', url }), editor.getCursor(), editor.getCursor());
       }
 
       editor.focus();

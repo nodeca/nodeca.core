@@ -9,7 +9,7 @@ function fetchGroupInfo(N, name) {
     group_key: name
   }).length;
 
-  return { name: name, settingsCount: settingsCount };
+  return { name, settingsCount };
 }
 
 
@@ -30,7 +30,7 @@ module.exports = function (N, apiPath) {
 
     _.forEach(N.config.setting_groups, (config, name) => {
       if (config.parent === null) {
-        res.tabs.push({ name: name, priority: config.priority });
+        res.tabs.push({ name, priority: config.priority });
         res.groups[name] = [];
       }
     });

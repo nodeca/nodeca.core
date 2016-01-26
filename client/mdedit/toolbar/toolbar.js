@@ -48,9 +48,7 @@ N.wire.once('init:mdedit', function () {
     }
 
     // Render toolbar
-    $toolbar.html(N.runtime.render('mdedit.toolbar', {
-      buttons: buttons
-    }));
+    $toolbar.html(N.runtime.render('mdedit.toolbar', { buttons }));
 
     // Process hotkeys for editor
     N.MDEdit.__toolbarHotkeys__ = buttons.reduce(function (result, button) {

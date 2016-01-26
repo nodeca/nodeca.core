@@ -150,11 +150,11 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
         fayeClient = new faye.Client('/io/live');
 
         fayeClient.addExtension({
-          outgoing: function (message, callback) {
+          outgoing(message, callback) {
             message.token = token;
             callback(message);
           },
-          incoming: function (message, callback) {
+          incoming(message, callback) {
             // If token error - request update
             if (message.error && message.error.code === N.io.INVALID_LIVE_TOKEN) {
               tokenUpdate();

@@ -19,7 +19,7 @@ N.wire.once('init:parser', function quote_plugin_init() {
             return;
           }
 
-          var result = data.params.rpc_cache.get('common.content.quote_wrap', { url: url });
+          var result = data.params.rpc_cache.get('common.content.quote_wrap', { url });
 
           if (!result || !result.html) {
             return;

@@ -117,11 +117,11 @@ N.wire.on('navigate.done:' + module.apiPath, function global_settings_edit_init(
   });
 
   ko.applyBindings({
-    categoryKeys:     categoryKeys,
-    categoryNames:    categoryNames,
-    categorySettings: categorySettings,
-    isDirty:          isDirty,
-    submit:           submit
+    categoryKeys,
+    categoryNames,
+    categorySettings,
+    isDirty,
+    submit
   }, $('#content').get(0));
 
   $('#content form[data-bind]:first').show();

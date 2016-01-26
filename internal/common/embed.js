@@ -95,7 +95,7 @@ module.exports = function (N, apiPath) {
 
     for (let i = 0; i < data.types.length; i++) {
       let type = data.types[i];
-      let subcall_data = { url: data.canonical || data.url, type: type };
+      let subcall_data = { url: data.canonical || data.url, type };
 
       yield N.wire.emit('internal:common.embed.local', subcall_data);
 

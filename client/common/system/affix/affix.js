@@ -39,8 +39,8 @@ N.wire.on('navigate.done', function affix_init() {
     var className = params.class || 'affix';
 
     var steadyMin = new Steady({
-      throttle: throttle,
-      handler: function (values, done) {
+      throttle,
+      handler(values, done) {
         $el.addClass(className);
 
         if (wireChannel && position === 'top') {
@@ -57,8 +57,8 @@ N.wire.on('navigate.done', function affix_init() {
     trackers.push(steadyMin);
 
     var steadyMax = new Steady({
-      throttle: throttle,
-      handler: function (values, done) {
+      throttle,
+      handler(values, done) {
         $el.removeClass(className);
 
         if (wireChannel && position === 'bottom') {

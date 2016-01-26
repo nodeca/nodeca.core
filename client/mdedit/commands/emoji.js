@@ -9,7 +9,7 @@ N.wire.once('init:mdedit', function () {
     let emojis = _.reduce(N.MDEdit.emojis.named, (acc, emoji, name) => {
       if (!acc[emoji]) {
         acc[emoji] = {
-          name: name,
+          name,
           aliases: [ ':' + name + ':' ].concat(N.MDEdit.emojis.aliases[name] || [])
         };
 
@@ -20,7 +20,7 @@ N.wire.once('init:mdedit', function () {
       return acc;
     }, {});
 
-    let $emojiDialog = $(N.runtime.render('mdedit.emoji_dlg', { emojis: emojis }));
+    let $emojiDialog = $(N.runtime.render('mdedit.emoji_dlg', { emojis }));
 
     $('body').append($emojiDialog);
     $emojiDialog.modal('show');

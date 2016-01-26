@@ -128,7 +128,7 @@ N.wire.once('init:parser', function attachment_plugin_init() {
           if (!attachments[media_id]) { return null; }
 
           return _.omitBy({
-            media_id:  media_id,
+            media_id,
             type:      attachments[media_id].type,
             file_name: attachments[media_id].file_name
           }, _.isUndefined);

@@ -20,10 +20,7 @@ module.exports = function (N) {
                             data.chunks.active + data.chunks.pending;
       }
 
-      env.res.blocks.push({
-        name:      'expand_links_cache',
-        task_info: task_info
-      });
+      env.res.blocks.push({ name: 'expand_links_cache', task_info });
 
       callback();
     });

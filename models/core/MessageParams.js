@@ -29,8 +29,8 @@ module.exports = function (N, collectionName) {
 
     function (data, callback) {
       N.models.core.MessageParams.findOneAndUpdate(
-        { data: data },
-        { $setOnInsert: { data: data } },
+        { data },
+        { $setOnInsert: { data } },
         { 'new': true, upsert: true },
         function (err, found) {
           if (err) {

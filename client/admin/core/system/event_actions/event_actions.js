@@ -33,7 +33,7 @@ N.wire.once('navigate.done', function () {
 
   $(document).on('dragenter dragleave dragover drop', '[data-on-dragdrop]', function (event) {
     var data = {
-      event: event,
+      event,
       $this: $(this)
     };
     var apiPath = data.$this.data('onDragdrop');
@@ -44,7 +44,7 @@ N.wire.once('navigate.done', function () {
 
   $(document).on('click', '[data-on-click]', function (event) {
     var data = {
-      event: event,
+      event,
       $this: $(this)
     };
     var apiPath = data.$this.data('onClick');
@@ -55,7 +55,7 @@ N.wire.once('navigate.done', function () {
 
   $(document).on('submit', '[data-on-submit]', function (event) {
     var data = {
-      event: event,
+      event,
       $this: $(this),
       fields: {}
     };
@@ -72,7 +72,7 @@ N.wire.once('navigate.done', function () {
 
   $(document).on('input', '[data-on-input]', function (event) {
     var data = {
-      event: event,
+      event,
       $this: $(this)
     };
     var apiPath = data.$this.data('onInput');
@@ -83,7 +83,7 @@ N.wire.once('navigate.done', function () {
 
   $(document).on('change', '[data-on-change]', function (event) {
     var data = {
-      event: event,
+      event,
       $this: $(this)
     };
     var apiPath = data.$this.data('onChange');
@@ -164,7 +164,7 @@ N.wire.once('navigate.done', function () {
       // handlers can set it to "true" to allow other handlers to invoke
       allow_propagation: false,
 
-      event:             event,
+      event,
       $this:             $(this)
     };
 

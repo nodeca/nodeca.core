@@ -53,7 +53,7 @@ N.wire.once('init:mdedit', function () {
       }
 
       // Render emojis list
-      $popup.html(N.runtime.render('mdedit.emoji_autocomplete', { emojis: emojis, search: text }));
+      $popup.html(N.runtime.render('mdedit.emoji_autocomplete', { emojis, search: text }));
 
       // Should be called after cursor position change (after event propagation finish)
       setTimeout(function () {
@@ -78,7 +78,7 @@ N.wire.once('init:mdedit', function () {
         }
 
         // Set popup position above cursor
-        $popup.css({ top: top, left: left });
+        $popup.css({ top, left });
       }, 0);
     }
 

@@ -23,7 +23,7 @@ module.exports = function (N, collectionName) {
 
 
   UnshortCache.statics.get = function (key, callback) {
-    this.findOne({ key: key }).lean(true).exec(function (err, result) {
+    this.findOne({ key }).lean(true).exec(function (err, result) {
       if (err) {
         callback(err);
         return;
@@ -40,7 +40,7 @@ module.exports = function (N, collectionName) {
 
 
   UnshortCache.statics.set = function (key, value, callback) {
-    this.update({ key: key }, { value: value }, { upsert: true }, callback);
+    this.update({ key }, { value }, { upsert: true }, callback);
   };
 
 

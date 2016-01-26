@@ -101,7 +101,7 @@ function Notification(options) {
 Notification.prototype = {
   constructor: Notification,
 
-  show: function () {
+  show() {
     if (this.isShown) {
       return;
     }
@@ -117,7 +117,7 @@ Notification.prototype = {
       .focus();
   },
 
-  hide: function () {
+  hide() {
     var self = this, timeout;
 
     if (!this.isShown) {
