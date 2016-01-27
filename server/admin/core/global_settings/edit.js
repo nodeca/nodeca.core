@@ -10,7 +10,7 @@ module.exports = function (N, apiPath) {
   });
 
 
-  N.wire.before(apiPath, function* check_if_group_exists(env) {
+  N.wire.before(apiPath, function check_if_group_exists(env) {
     if (!N.config.setting_groups.hasOwnProperty(env.params.group)) {
       throw N.io.NOT_FOUND;
     }
