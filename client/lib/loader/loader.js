@@ -297,18 +297,18 @@
 
       // Execute after DOM is loaded:
       $(function () {
-        N.wire.emit(
-          [ 'navigate.done', 'navigate.done:' + route.meta.methods.get ],
-          {
-            url:     location.href,
-            anchor:  location.hash,
-            apiPath: route.meta.methods.get,
-            params:  route.params
-          },
-          function () {
-            NodecaLoader.booted = true;
-          }
-        );
+        var page_env = {
+          url:     location.href,
+          anchor:  location.hash,
+          apiPath: route.meta.methods.get,
+          params:  route.params
+        };
+
+        Promise.resolve()
+        .then(function () { return N.wire.emit('navigate.done', page_env); })
+        .then(function () { return N.wire.emit('navigate.done:' + route.meta.methods.get, page_env); })
+        .then(function () { NodecaLoader.booted = true; })
+        .catch(function (err) { console.error(err); })
       });
     });
   };
