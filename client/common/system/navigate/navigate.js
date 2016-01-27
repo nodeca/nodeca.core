@@ -245,40 +245,34 @@ function loadData(options, callback) {
 }
 
 
-function render(data, scroll, callback) {
+function render(data, scroll) {
+  return Promise.resolve()
+    .then(() => N.wire.emit('navigate.exit:' + lastPageData.apiPath, lastPageData))
+    .then(() => N.wire.emit('navigate.exit', lastPageData))
+    .then(() => {
+      N.runtime.page_data = {};
 
-  N.wire.emit([ 'navigate.exit:' + lastPageData.apiPath, 'navigate.exit' ], lastPageData, function (err) {
-    if (err) {
-      N.logger.error('%s', err); // Log error, but not stop.
-    }
+      var content = $(N.runtime.render(data.view, data.locals, {
+        apiPath: data.apiPath
+      }));
 
-    N.runtime.page_data = {};
+      document.title = data.locals.head.title;
 
-    var content = $(N.runtime.render(data.view, data.locals, {
-      apiPath: data.apiPath
-    }));
-
-    document.title = data.locals.head.title;
-
-    $('#content').replaceWith(content);
-
-    N.wire.emit([ 'navigate.done', 'navigate.done:' + data.apiPath ], data, function (err) {
-      if (err) {
-        N.logger.error('%s', err); // Log error, but not stop.
-      }
-
+      $('#content').replaceWith(content);
+    })
+    .then(() => N.wire.emit('navigate.done', data))
+    .then(() => N.wire.emit('navigate.done:' + data.apiPath, data))
+    .then(() => {
       if (scroll && !data.no_scroll) {
         // Without this delay firefox on android fails to scroll on long pages
         setTimeout(function () {
           $(window).scrollTop((data.anchor && $(data.anchor).length) ? $(data.anchor).offset().top : 0);
         }, 50);
       }
-
-      if (callback) {
-        callback();
-      }
+    })
+    .catch(err => {
+      N.logger.error('%s', err);
     });
-  });
 }
 
 
@@ -357,7 +351,7 @@ fsm.onLOAD = function (event, from, to, params) {
       return;
     }
 
-    render(result, true, function () {
+    render(result, true).then(() => {
       if (same_url) {
         window.history.replaceState(null, result.locals.head.title, options.href + options.anchor);
       } else {
@@ -382,7 +376,7 @@ fsm.onBACK_FORWARD = function () {
   }
 
   loadData(options, function (result) {
-    render(result, false, function () {
+    render(result, false).then(() => {
       window.history.replaceState(null, result.locals.head.title, options.href + options.anchor);
       fsm.complete();
     });

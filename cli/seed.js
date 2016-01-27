@@ -100,9 +100,7 @@ module.exports.run = function (N, args) {
   }
 
   return co(function* () {
-    yield N.wire.emit([
-      'init:models'
-    ], N);
+    yield N.wire.emit('init:models', N);
 
     /*eslint-disable no-console*/
 

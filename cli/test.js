@@ -56,11 +56,10 @@ module.exports.run = function (N, args) {
       throw 'You must provide NODECA_ENV in order to run nodeca test';
     }
 
-    yield N.wire.emit([
-      'init:models',
-      'init:bundle',
-      'init:server'
-    ], N);
+    yield Promise.resolve()
+      .then(() => N.wire.emit('init:models', N))
+      .then(() => N.wire.emit('init:bundle', N))
+      .then(() => N.wire.emit('init:server', N));
 
     let mocha        = new Mocha({ timeout: 10000 });
     let applications = N.apps;

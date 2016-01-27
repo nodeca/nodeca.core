@@ -32,7 +32,7 @@ module.exports.run = function (N, args) {
   return co(function* () {
     N.wire.skip('init:models', 'migrations_check');
 
-    yield N.wire.emit([ 'init:models' ], N);
+    yield N.wire.emit('init:models', N);
 
     /*eslint-disable no-console*/
 

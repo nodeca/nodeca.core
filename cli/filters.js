@@ -47,11 +47,10 @@ module.exports.run = function (N, args) {
     // Reduce log level
     N.logger.setLevel('info');
 
-    yield N.wire.emit([
-      'init:models',
-      'init:bundle',
-      'init:server'
-    ], N);
+    yield Promise.resolve()
+      .then(() => N.wire.emit('init:models', N))
+      .then(() => N.wire.emit('init:bundle', N))
+      .then(() => N.wire.emit('init:server', N));
 
     /*eslint-disable no-console*/
     console.log('\n');
