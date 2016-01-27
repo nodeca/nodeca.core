@@ -1,14 +1,14 @@
 'use strict';
 
 
-var _         = require('lodash');
-var memoizee  = require('memoizee');
-var thenify   = require('thenify');
+const _        = require('lodash');
+const memoizee = require('memoizee');
+const thenify  = require('thenify');
 
 
 module.exports = function (N) {
-  var GlobalSettings = N.models.core.GlobalSettings;
-  var GlobalStore;
+  const GlobalSettings = N.models.core.GlobalSettings;
+  let GlobalStore;
 
 
   function fetchGlobalSettings(callback) {
@@ -18,7 +18,7 @@ module.exports = function (N) {
         return;
       }
 
-      var result = {};
+      let result = {};
 
       // Fetch setting values written to the database, and use default values
       // for the others. If settings document does not exists - use default
@@ -35,34 +35,24 @@ module.exports = function (N) {
     });
   }
 
-  var fetchGlobalSettingsCached = memoizee(fetchGlobalSettings, {
+  let fetchGlobalSettingsCached = thenify(memoizee(fetchGlobalSettings, {
     // Memoizee options. Revalidate cache after each 10 sec.
     async:     true,
     maxAge:    10000,
     primitive: true
-  });
+  }));
+
+  let fetchGlobalSettingsAsync = thenify(fetchGlobalSettings);
 
 
   GlobalStore = N.settings.createStore({
-    get: thenify.withCallback(function (keys, params, options, callback) {
-      var fetch = options.skipCache ? fetchGlobalSettings : fetchGlobalSettingsCached;
+    get(keys, params, options) {
+      let fetch = options.skipCache ? fetchGlobalSettingsAsync : fetchGlobalSettingsCached;
 
-      fetch(function (err, settings) {
-        if (err) {
-          callback(err);
-          return;
-        }
-
-        callback(null, _.pick(settings, keys));
-      });
-    }),
-    set: thenify.withCallback(function (values, params, callback) {
-      GlobalSettings.findOne().exec(function (err, settings) {
-        if (err) {
-          callback(err);
-          return;
-        }
-
+      return fetch().then(settings => _.pick(settings, keys));
+    },
+    set(values) {
+      return GlobalSettings.findOne().then(settings => {
         settings = settings || new GlobalSettings();
 
         _.forEach(values, function (options, name) {
@@ -74,9 +64,10 @@ module.exports = function (N) {
         });
 
         settings.markModified('data');
-        settings.save(callback);
+
+        return settings.save();
       });
-    })
+    }
   });
 
 
