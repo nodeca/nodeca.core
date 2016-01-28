@@ -187,9 +187,8 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
     if (!fayeClient) return;
 
     // Filter channels by prefix `local.` and system channels (starts with `!sys.`)
-    var channels = data.channels.filter(channel => {
-      return channel.indexOf('local.') !== 0 && channel.indexOf('!sys.') !== 0;
-    });
+    var channels = data.channels.filter(channel =>
+      channel.indexOf('local.') !== 0 && channel.indexOf('!sys.') !== 0);
 
 
     // Unsubscribe removed channels
