@@ -6,6 +6,20 @@
 (function (window) {
   'use strict';
 
+  var polyfills = [
+    {
+      path: '$$ JSON.stringify(asset_url("raf.js")) $$',
+      needed: !window.requestAnimationFrame || !window.cancelAnimationFrame
+    },
+    {
+      path: '$$ JSON.stringify(asset_url("blueimp-canvas-to-blob")) $$',
+      needed: !((window.HTMLCanvasElement || {}).prototype || {}).toBlob
+    },
+    {
+      path: '$$ JSON.stringify(asset_url("es6-promise")) $$',
+      needed: !window.Promise
+    }
+  ];
 
   var NodecaLoader = window.NodecaLoader = { booted: false };
   var alert = window.alert;
@@ -256,7 +270,13 @@
 
   // Loads all necessary shims and libraries and assets for given package.
   loadAssets.init = function init(assetsMap, pkgName) {
-    var shims = [];
+    var shims = polyfills
+                  .filter(function (p) {
+                    return p.needed;
+                  })
+                  .map(function (p) {
+                    return p.path;
+                  });
 
     // Set internal assets map.
     assets = assetsMap;

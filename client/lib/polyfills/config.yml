@@ -1,0 +1,7 @@
+public: true
+inherit: false
+type:
+  js:
+    - "!npm:raf.js"
+    - "!npm:blueimp-canvas-to-blob"
+    - "!npm:es6-promise"
