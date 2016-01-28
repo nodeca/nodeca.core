@@ -62,9 +62,7 @@ N.wire.once('init:parser', function attachment_plugin_init() {
             return match.meta.methods.get === 'users.media';
           });
 
-          if (!match) {
-            return;
-          }
+          if (!match) return;
 
           $attach.attr('data-nd-media-id', match.params.media_id);
 

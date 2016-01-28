@@ -2,9 +2,7 @@
 
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdBold = function (editor) {
-    if (!editor.somethingSelected()) {
-      return;
-    }
+    if (!editor.somethingSelected()) return;
 
     let selectionStart = editor.getCursor(true);
     let selectionEnd = editor.getCursor(false);

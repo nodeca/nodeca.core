@@ -101,7 +101,7 @@ N.wire.on([ 'navigate.done', 'navigate.update' ], function replace_nick(data) {
     users = N.runtime.page_data.users;
   }
 
-  if (!users) { return; }
+  if (!users) return;
 
   (data.$ || $(document)).find('.quote__author-name[data-user-id]').each(function () {
     var $tag = $(this);

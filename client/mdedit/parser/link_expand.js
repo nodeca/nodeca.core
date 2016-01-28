@@ -5,9 +5,7 @@ N.wire.once('init:parser', function link_expand_plugin_init() {
     'link_expand',
     function (parser) {
       parser.bus.on('render', function expand_links(data) {
-        if (!data.params.rpc_cache) {
-          return;
-        }
+        if (!data.params.rpc_cache) return;
 
         data.ast.find('msg-link[data-nd-auto]').each(function () {
           var $tag  = $(this);
@@ -27,9 +25,7 @@ N.wire.once('init:parser', function link_expand_plugin_init() {
             $tag.attr('href', result.canonical);
           }
 
-          if (!result || !result.html) {
-            return;
-          }
+          if (!result || !result.html) return;
 
           var replacement = $(result.html);
 

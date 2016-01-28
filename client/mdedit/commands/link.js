@@ -34,7 +34,7 @@ N.wire.once('init:mdedit', function () {
       $linkDialog.modal('hide');
 
       // Do nothing on empty input
-      if (!url || (!editor.somethingSelected() && !text)) { return; }
+      if (!url || (!editor.somethingSelected() && !text)) return;
 
       if (editor.somethingSelected()) {
         editor.replaceSelection(tpl({ desc: editor.getSelection(), url }));

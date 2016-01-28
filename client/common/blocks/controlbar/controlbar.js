@@ -14,9 +14,7 @@ N.wire.on('navigate.done', function page_setup() {
   var $controlbar = $('.controlbar');
 
   // If `.controlbar` not exists - don't add handler
-  if (!$controlbar.length) {
-    return;
-  }
+  if (!$controlbar.length) return;
 
   var scrollBefore = 0;
   var scrollCurrent, scrollDiff;

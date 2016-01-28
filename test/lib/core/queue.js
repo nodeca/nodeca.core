@@ -14,16 +14,12 @@ describe('Queue', function () {
     q2.start();
 
     q1.on('error', function (err) {
-      if (err instanceof Queue.Error) {
-        return;
-      }
+      if (err instanceof Queue.Error) return;
       throw err;
     });
 
     q2.on('error', function (err) {
-      if (err instanceof Queue.Error) {
-        return;
-      }
+      if (err instanceof Queue.Error) return;
       throw err;
     });
 
@@ -92,9 +88,7 @@ describe('Queue', function () {
     q2.registerWorker(worker2);
 
     q2.worker('test').push(function (err) {
-      if (err) {
-        throw err;
-      }
+      if (err) throw err;
     });
   });
 
@@ -126,9 +120,7 @@ describe('Queue', function () {
     q1.registerWorker(worker);
 
     q1.worker('test2').push({ taskDataTest1: 1, taskDataTest2: 2 }, function (err) {
-      if (err) {
-        throw err;
-      }
+      if (err) throw err;
     });
   });
 
@@ -159,9 +151,7 @@ describe('Queue', function () {
     q1.registerWorker(worker);
 
     q1.worker('test3').push({}, function (err) {
-      if (err) {
-        throw err;
-      }
+      if (err) throw err;
     });
   });
 
@@ -194,9 +184,7 @@ describe('Queue', function () {
     q1.registerWorker(worker);
 
     q1.worker('test4').push({}, function (err) {
-      if (err) {
-        throw err;
-      }
+      if (err) throw err;
     });
   });
 
@@ -230,9 +218,7 @@ describe('Queue', function () {
     q1.registerWorker(worker);
 
     q1.worker('test5').push({}, function (err) {
-      if (err) {
-        throw err;
-      }
+      if (err) throw err;
     });
   });
 
@@ -266,9 +252,7 @@ describe('Queue', function () {
     q1.registerWorker(worker);
 
     q1.worker('test6').push({}, function (err) {
-      if (err) {
-        throw err;
-      }
+      if (err) throw err;
     });
   });
 
@@ -300,9 +284,7 @@ describe('Queue', function () {
     q1.registerWorker(worker);
 
     q1.worker('test7').push({}, function (err) {
-      if (err) {
-        throw err;
-      }
+      if (err) throw err;
     });
   });
 
@@ -335,9 +317,7 @@ describe('Queue', function () {
     q1.registerWorker(worker);
 
     q1.worker('test8').push({}, function (err) {
-      if (err) {
-        throw err;
-      }
+      if (err) throw err;
     });
   });
 
@@ -369,9 +349,7 @@ describe('Queue', function () {
     q1.registerWorker(worker);
 
     q1.worker('test9').push({}, function (err) {
-      if (err) {
-        throw err;
-      }
+      if (err) throw err;
     });
   });
 
@@ -402,9 +380,7 @@ describe('Queue', function () {
     q1.registerWorker(worker1);
 
     q1.worker('test10').push(function (err) {
-      if (err) {
-        throw err;
-      }
+      if (err) throw err;
     });
   });
 
@@ -456,9 +432,7 @@ describe('Queue', function () {
     q1.registerWorker(worker1);
 
     q1.worker('test11').push(function (err) {
-      if (err) {
-        throw err;
-      }
+      if (err) throw err;
     });
   });
 

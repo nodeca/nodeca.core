@@ -15,15 +15,11 @@ N.wire.once('init:parser', function quote_plugin_init() {
           var $tag = $(this);
           var url  = $tag.data('nd-title');
 
-          if (!N.router.match(url)) {
-            return;
-          }
+          if (!N.router.match(url)) return;
 
           var result = data.params.rpc_cache.get('common.content.quote_wrap', { url });
 
-          if (!result || !result.html) {
-            return;
-          }
+          if (!result || !result.html) return;
 
           var replacement = $(result.html);
 

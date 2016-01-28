@@ -30,9 +30,7 @@ module.exports = function (N, apiPath) {
 
 
   N.wire.on(apiPath, function* embed(env) {
-    if (env.user_info.is_guest) {
-      throw N.io.FORBIDDEN;
-    }
+    if (env.user_info.is_guest) throw N.io.FORBIDDEN;
 
     let data = {
       url:   env.params.url,
@@ -48,7 +46,7 @@ module.exports = function (N, apiPath) {
 
       yield N.wire.emit('internal:common.access', access_env);
 
-      if (!access_env.data.access_read) { return; }
+      if (!access_env.data.access_read) return;
     }
 
     // unshortened urls

@@ -171,9 +171,7 @@ MDEdit.prototype.show = function (options) {
 MDEdit.prototype.hide = function () {
   let $layout = this.__layout__;
 
-  if (!$layout) {
-    return;
-  }
+  if (!$layout) return;
 
   $(window).off('resize.nd.mdedit');
 
@@ -191,9 +189,7 @@ MDEdit.prototype.hide = function () {
 // Get/set text
 //
 MDEdit.prototype.text = function (text) {
-  if (!text) {
-    return this.__cm__.getValue();
-  }
+  if (!text) return this.__cm__.getValue();
 
   this.__cm__.setValue(text);
   this.__cm__.setCursor(this.__cm__.lineCount(), 0);
@@ -205,9 +201,7 @@ MDEdit.prototype.text = function (text) {
 // Get/set attachments
 //
 MDEdit.prototype.attachments = function (attachments) {
-  if (!attachments) {
-    return this.__attachments__;
-  }
+  if (!attachments) return this.__attachments__;
 
   this.__attachments__ = attachments;
 
@@ -224,9 +218,7 @@ MDEdit.prototype.attachments = function (attachments) {
 // Get/set parse options
 //
 MDEdit.prototype.parseOptions = function (parseOptions) {
-  if (!parseOptions) {
-    return this.__options__.parseOptions;
-  }
+  if (!parseOptions) return this.__options__.parseOptions;
 
   this.__options__.parseOptions = parseOptions;
 

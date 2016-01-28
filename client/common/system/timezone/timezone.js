@@ -11,7 +11,7 @@ N.wire.once('navigate.done', function timezone_store() {
   pairs.push('path=/');
   pairs.push('max-age=' + 3600 * 24 * 365);
 
-  if (location.protocol === 'https:') { pairs.push('secure'); }
+  if (location.protocol === 'https:') pairs.push('secure');
 
   document.cookie = pairs.join('; ');
 });

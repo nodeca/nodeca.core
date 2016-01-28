@@ -80,9 +80,7 @@
     for (index = 0, length = matchArray.length; index < length; index += 1) {
       match = matchArray[index];
 
-      if (has(match.meta.methods, method)) {
-        return match;
-      }
+      if (has(match.meta.methods, method)) return match;
     }
 
     // Not found.
@@ -94,7 +92,7 @@
   var clientModules = {};
 
   function registerClientModule(apiPath, func) {
-    if (has(clientModules, apiPath) && clientModules[apiPath].initialized) { return; }
+    if (has(clientModules, apiPath) && clientModules[apiPath].initialized) return;
 
     var module = clientModules[apiPath] = {
       initialized: true,
@@ -109,9 +107,7 @@
   // Initialize client module. Used once per module.
   function initSingleClientModule(module) {
     function resolveI18nPath(path) {
-      if (path.charAt(0) === '@') {
-        return path.slice(1);
-      }
+      if (path.charAt(0) === '@') return path.slice(1);
       return module.internal.apiPath + '.' + path;
     }
 

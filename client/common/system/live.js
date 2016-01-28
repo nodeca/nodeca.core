@@ -70,9 +70,7 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
     }
 
     // If update already started - just wait for finish
-    if (tokenUpdateStarted) {
-      return;
-    }
+    if (tokenUpdateStarted) return;
 
     // Mark update started
     tokenUpdateStarted = true;
@@ -100,9 +98,7 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
     clearTimeout(updateTimeout);
 
     // Notify handlers about update
-    handlers.forEach(function (handler) {
-      handler();
-    });
+    handlers.forEach(handler => handler());
   });
 
 
@@ -122,9 +118,7 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
       fayeClient.publish(toFayeCompatible(channel), message.data).then(function () {}, function (err) {
 
         // If token is invalid - request new and try one more time
-        if (err.message.code !== N.io.INVALID_LIVE_TOKEN) {
-          return;
-        }
+        if (err.message.code !== N.io.INVALID_LIVE_TOKEN) return;
 
         // `tokenUpdate` called here at second time (first in incoming faye filter).
         // It is needed to wait token update and retry after it
@@ -190,19 +184,17 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
   //
   flive.on('!sys.channels.refresh', function (data) {
 
-    if (!fayeClient) {
-      return;
-    }
+    if (!fayeClient) return;
 
     // Filter channels by prefix `local.` and system channels (starts with `!sys.`)
-    var channels = data.channels.filter(function (channel) {
+    var channels = data.channels.filter(channel => {
       return channel.indexOf('local.') !== 0 && channel.indexOf('!sys.') !== 0;
     });
 
 
     // Unsubscribe removed channels
     //
-    Object.keys(trackedChannels).forEach(function (channel) {
+    Object.keys(trackedChannels).forEach(channel => {
       if (channels.indexOf(channel) === -1) {
         trackedChannels[channel].cancel();
         delete trackedChannels[channel];
@@ -212,21 +204,17 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
 
     // Subscribe to new channels
     //
-    channels.forEach(function (channel) {
+    channels.forEach(channel => {
       if (!trackedChannels.hasOwnProperty(channel)) {
         trackedChannels[channel] = fayeSubscribe(channel);
 
         // If token invalid - update token and try subscribe again
-        trackedChannels[channel].errback(function (err) {
-          if (err.message.code !== N.io.INVALID_LIVE_TOKEN) {
-            return;
-          }
+        trackedChannels[channel].errback(err => {
+          if (err.message.code !== N.io.INVALID_LIVE_TOKEN) return;
 
           // `tokenUpdate` called here at second time (first in incoming faye filter).
           // It is needed to wait token update and retry after it
-          tokenUpdate(function () {
-            trackedChannels[channel] = fayeSubscribe(channel);
-          });
+          tokenUpdate(() => { trackedChannels[channel] = fayeSubscribe(channel); });
         });
       }
     });

@@ -120,9 +120,7 @@ Notification.prototype = {
   hide() {
     var self = this, timeout;
 
-    if (!this.isShown) {
-      return;
-    }
+    if (!this.isShown) return;
 
     if (this.track_id) {
       delete tracker[this.track_id];

@@ -34,7 +34,7 @@ N.wire.once('init:mdedit', function () {
     var id = data.$this.data('media-id');
     var attachments = N.MDEdit.attachments();
 
-    attachments = _.remove(attachments, function (val) { return val.media_id !== id; });
+    attachments = _.remove(attachments, val => val.media_id !== id);
     N.MDEdit.attachments(attachments);
     data.event.stopPropagation();
   });

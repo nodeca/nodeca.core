@@ -8,9 +8,7 @@ N.wire.once('init:mdedit', function () {
 
     if (editor.somethingSelected()) {
       editor.replaceSelection(selectedText.split('\n').map(function (line) {
-        if (lineStartRegexp.test(line)) {
-          return line;
-        }
+        if (lineStartRegexp.test(line)) return line;
 
         return '- ' + line;
       }).join('\n'));

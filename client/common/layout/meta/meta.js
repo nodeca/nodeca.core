@@ -5,9 +5,7 @@
 
 
 N.wire.on('navigate.done', function update_meta(data) {
-  if (!data.locals) {
-    return;
-  }
+  if (!data.locals) return;
 
   // Remove meta tags from previous page, i.e. loop through all link
   // and meta tags and remove known ones

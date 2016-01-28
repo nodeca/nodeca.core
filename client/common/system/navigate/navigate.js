@@ -496,11 +496,8 @@ N.wire.once('navigate.done', { priority: 999 }, function navigate_click_handler(
       return;
     }
 
-    N.wire.emit('navigate.to', $this.attr('href'), function (err) {
-      if (err) {
-        N.logger.error('%s', err);
-      }
-    });
+    N.wire.emit('navigate.to', $this.attr('href'))
+    .catch(err => { N.logger.error('%s', err); });
 
     event.preventDefault();
   });

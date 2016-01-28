@@ -43,9 +43,7 @@ N.wire.once('init:mdedit', function () {
       $el = $(this);
       line = lineHeightMap[$el.data('line')];
 
-      if (line === 0) {
-        return;
-      }
+      if (line === 0) return;
 
       scrollMap[line] = $el.offset().top - offset;
 
@@ -78,7 +76,7 @@ N.wire.once('init:mdedit', function () {
   // Update preview and save draft
   //
   N.wire.on('mdedit:update.*', _.debounce(function updatePreview() {
-    if (!N.MDEdit.__layout__) { return; }
+    if (!N.MDEdit.__layout__) return;
 
     N.MDEdit.__layout__.trigger('change');
 
@@ -98,7 +96,7 @@ N.wire.once('init:mdedit', function () {
           return;
         }
 
-        if (!N.MDEdit.__layout__) { return; }
+        if (!N.MDEdit.__layout__) return;
 
         N.MDEdit.__layout__.find('.mdedit__preview').html(N.runtime.render('mdedit.preview', {
           user_hid: N.runtime.user_hid,
@@ -161,9 +159,7 @@ N.wire.once('init:mdedit', function () {
 
       // Get editor line number by preview offset
       for (line = 0; line < N.MDEdit.__scrollMap__.length; line++) {
-        if (N.MDEdit.__scrollMap__[line] >= scrollTop) {
-          break;
-        }
+        if (N.MDEdit.__scrollMap__[line] >= scrollTop) break;
       }
 
       var lh = parseInt(N.MDEdit.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);

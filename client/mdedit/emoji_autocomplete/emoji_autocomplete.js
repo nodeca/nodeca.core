@@ -34,16 +34,14 @@ N.wire.once('init:mdedit', function () {
       var emojis = {};
 
       // Filter emijis by text (but not more than 5)
-      _.forEach(N.MDEdit.emojis.named, function (val, name) {
+      _.forEach(N.MDEdit.emojis.named, (val, name) => {
         if (name.indexOf(text) !== -1) {
           emojis[name] = val;
         } else {
           return true; // continue
         }
 
-        if (Object.keys(emojis).length >= 5) {
-          return false; // break;
-        }
+        if (Object.keys(emojis).length >= 5) return false; // break;
       });
 
       // If nothing found - hide popup
@@ -105,10 +103,8 @@ N.wire.once('init:mdedit', function () {
     // Show or hide popup if text changed
     //
     N.MDEdit.__cm__.on('change', function (editor, changeObj) {
-      if (!N.MDEdit.__options__.parseOptions.emoji) {
-        // Stop here if emoji disabled
-        return;
-      }
+      // Stop here if emoji disabled
+      if (!N.MDEdit.__options__.parseOptions.emoji) return;
 
       var poputShown = $popup.hasClass('emoji-autocomplete__m-visible');
       var cursor = editor.getCursor();
@@ -145,9 +141,7 @@ N.wire.once('init:mdedit', function () {
     // Hide or update popup if cursor position changed (can be done with mouse, touch or left arrow)
     //
     N.MDEdit.__cm__.on('cursorActivity', function () {
-      if (!$popup.hasClass('emoji-autocomplete__m-visible')) {
-        return;
-      }
+      if (!$popup.hasClass('emoji-autocomplete__m-visible')) return;
 
       if (N.MDEdit.__cm__.somethingSelected()) {
         $popup.removeClass('emoji-autocomplete__m-visible');
@@ -179,9 +173,7 @@ N.wire.once('init:mdedit', function () {
     // Handle keypress if popup shown
     //
     N.MDEdit.__cm__.on('keydown', function (editor, event) {
-      if (!$popup.hasClass('emoji-autocomplete__m-visible')) {
-        return;
-      }
+      if (!$popup.hasClass('emoji-autocomplete__m-visible')) return;
 
       // `keyCode` for IE, `which` for others
       var code = event.which || event.keyCode;
@@ -237,9 +229,7 @@ N.wire.once('init:mdedit', function () {
     N.MDEdit.__cm__.on('blur', function () {
       // Wait 50 ms before hide popup to allow click by popup item
       setTimeout(function () {
-        if (!$popup.hasClass('emoji-autocomplete__m-visible')) {
-          return;
-        }
+        if (!$popup.hasClass('emoji-autocomplete__m-visible')) return;
 
         $popup.removeClass('emoji-autocomplete__m-visible');
       }, 50);

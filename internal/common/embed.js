@@ -91,7 +91,7 @@ module.exports = function (N, apiPath) {
   // Process link as local
   //
   N.wire.on(apiPath, function* embed_local(data) {
-    if (data.html) { return; }
+    if (data.html) return;
 
     for (let i = 0; i < data.types.length; i++) {
       let type = data.types[i];
@@ -112,7 +112,7 @@ module.exports = function (N, apiPath) {
   // Process external link
   //
   N.wire.on(apiPath, function* embed_ext(data) {
-    if (data.html) { return; }
+    if (data.html) return;
 
     let result;
 

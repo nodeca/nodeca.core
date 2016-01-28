@@ -16,7 +16,7 @@
 function handleAction(apiPath, data) {
   N.loader.loadAssets(apiPath.split('.')[0], function () {
     if (N.wire.has(apiPath)) {
-      N.wire.emit(apiPath, data);
+      N.wire.emit(apiPath, data).catch((err) => { N.logger.error(err); });
     } else {
       N.logger.error('Unknown client Wire channel: %s', apiPath);
     }
@@ -120,17 +120,13 @@ N.wire.once('navigate.done', function () {
           $(target).hasClass('modal') ||
           $(target).parents('.modal').length) {
 
-        if ($(target).data('keymap-reset') !== false) {
-          return;
-        }
+        if ($(target).data('keymap-reset') !== false) return;
       }
     }
 
-    if ($(this).attr('id') === 'content') {
-      // #content(data-keymap) is delegated to html tag,
-      // so exclude it from normal propagation chain to avoid double calls
-      return;
-    }
+    // #content(data-keymap) is delegated to html tag,
+    // so exclude it from normal propagation chain to avoid double calls
+    if ($(this).attr('id') === 'content') return;
 
     var code_to_text = {
       8: 'backspace',
@@ -170,10 +166,10 @@ N.wire.once('navigate.done', function () {
 
     var key = '';
 
-    if (event.ctrlKey)  { key += 'ctrl+'; }
-    if (event.altKey)   { key += 'alt+'; }
-    if (event.shiftKey) { key += 'shift+'; }
-    if (event.metaKey)  { key += 'meta+'; }
+    if (event.ctrlKey)  key += 'ctrl+';
+    if (event.altKey)   key += 'alt+';
+    if (event.shiftKey) key += 'shift+';
+    if (event.metaKey)  key += 'meta+';
 
     if (code_to_text[event.which]) {
       key += code_to_text[event.which];
@@ -209,7 +205,7 @@ N.wire.once('navigate.done', function () {
       handleAction('event.keypress.escape', data);
     }
 
-    if (!data.allow_default)     { event.preventDefault(); }
-    if (!data.allow_propagation) { event.stopPropagation(); }
+    if (!data.allow_default)     event.preventDefault();
+    if (!data.allow_propagation) event.stopPropagation();
   });
 });

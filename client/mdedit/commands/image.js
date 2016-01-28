@@ -24,7 +24,7 @@ N.wire.once('init:mdedit', function () {
       $linkDialog.modal('hide');
 
       // Do nothing on empty input
-      if (!url) { return; }
+      if (!url) return;
 
       if (editor.somethingSelected()) {
         editor.replaceSelection(tpl({ alt: '', url }));

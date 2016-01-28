@@ -10,9 +10,7 @@ N.wire.once('init:mdedit', function () {
       let i = 1;
 
       editor.replaceSelection(selectedText.split('\n').map(function (line) {
-        if (lineStartRegexp.test(line)) {
-          return line;
-        }
+        if (lineStartRegexp.test(line)) return line;
 
         return i++ + '. ' + line;
       }).join('\n'));

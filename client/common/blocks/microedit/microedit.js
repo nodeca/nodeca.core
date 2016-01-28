@@ -25,9 +25,7 @@ var params;
 
 
 function destroy(callback) {
-  if (!$form) {
-    return;
-  }
+  if (!$form) return;
 
   $form.fadeOut('fast', function () {
     doneCallback = null;

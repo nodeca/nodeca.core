@@ -18,7 +18,7 @@ module.exports = function (N, apiPath) {
     if (N.config.robots) {
       env.body += N.config.robots;
 
-      if (env.body[env.body.length - 1] !== '\n') { env.body += '\n'; }
+      if (env.body[env.body.length - 1] !== '\n') env.body += '\n';
     }
   });
 

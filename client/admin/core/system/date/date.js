@@ -52,11 +52,11 @@ N.wire.once('navigate.done', function setup_time_live_update() {
           format = $el.data('format'),
           date   = $el.attr('datetime');
 
-      if (!format || !date) { return; }
+      if (!format || !date) return;
 
       var text = date_helper(date, format);
 
-      if ($el.html() === text) { return; }
+      if ($el.html() === text) return;
 
       $el.html(text);
     });

@@ -102,9 +102,7 @@ Notification.prototype = {
   constructor: Notification,
 
   show() {
-    if (this.isShown) {
-      return;
-    }
+    if (this.isShown) return;
 
     if (this.track_id) {
       tracker[this.track_id] = this;
