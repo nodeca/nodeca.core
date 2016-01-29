@@ -131,7 +131,7 @@ function loadData(options, callback) {
   var id = ++requestID;
 
   // History is enabled - try RPC navigation.
-  N.io.rpc(options.apiPath, options.params, { handleAllErrors: true }).done(function (res) {
+  N.io.rpc(options.apiPath, options.params).then(function (res) {
 
     // Page loading is terminated
     if (id !== requestID) {
@@ -158,10 +158,10 @@ function loadData(options, callback) {
       callback(state);
     });
 
-  }).fail(function (err) {
+  }).catch(function (err) {
 
-    // Page loading is terminated
-    if (id !== requestID) {
+    // Page loading is terminated or request was canceled
+    if (id !== requestID || (err instanceof N.io.CancellationError)) {
       callback(null);
       return;
     }
@@ -215,7 +215,16 @@ function loadData(options, callback) {
       return;
     }
 
-    if (err) {
+    // Checks for a non-system error which should be passed to the callback.
+    function isNormalCode(code) {
+      return (200 <= code && code <= 299) ||
+        (300 <= code && code <= 399) ||
+        code === N.io.FORBIDDEN ||
+        code === N.io.NOT_FOUND ||
+        code === N.io.CLIENT_ERROR;
+    }
+
+    if (isNormalCode(err.code)) {
       // Can't load via RPC - show error page.
       //
       // This is a generic error, e.g. forbidden / not found / client error.
@@ -240,7 +249,12 @@ function loadData(options, callback) {
 
         callback(data);
       });
+
+      return;
     }
+
+    N.wire.emit('io.error', err);
+    callback(null);
   });
 }
 
@@ -271,7 +285,16 @@ function render(data, scroll) {
       }
     })
     .catch(err => {
-      N.logger.error('%s', err);
+      if (err instanceof N.io.CancellationError) {
+        return;
+      }
+
+      if (err instanceof N.io.RPCError) {
+        N.wire.emit('io.error', err);
+        return;
+      }
+
+      N.logger.error(err);
     });
 }
 
@@ -403,22 +426,22 @@ if (window.history && window.history.pushState) {
 // params:
 // - data - (output) current page data
 //
-N.wire.on('navigate.get_page_raw', function get_page_raw(params, callback) {
+N.wire.on('navigate.get_page_raw', function get_page_raw(params) {
 
   // All needed data already loaded
   if (lastPageData.locals) {
     params.data = lastPageData.locals;
-    callback();
-    return;
+    return Promise.resolve(lastPageData.locals);
   }
 
   // We should load data from server
-  N.io.rpc(lastPageData.apiPath, lastPageData.params).done(function (data) {
+  return N.io.rpc(lastPageData.apiPath, lastPageData.params).then(data => {
     // Save response in local cache
     lastPageData.locals = data;
 
     params.data = lastPageData.locals;
-    callback();
+
+    return data;
   });
 });
 

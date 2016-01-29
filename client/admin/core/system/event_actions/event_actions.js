@@ -16,7 +16,18 @@
 function handleAction(apiPath, data) {
   N.loader.loadAssets(apiPath.split('.')[0], function () {
     if (N.wire.has(apiPath)) {
-      N.wire.emit(apiPath, data).catch(err => { N.logger.error(err); });
+      N.wire.emit(apiPath, data).catch(err => {
+        if (err instanceof N.io.CancellationError) {
+          return;
+        }
+
+        if (err instanceof N.io.RPCError) {
+          N.wire.emit('io.error', err);
+          return;
+        }
+
+        N.logger.error(err);
+      });
     } else {
       N.logger.error('Unknown client Wire channel: %s', apiPath);
     }
