@@ -1,36 +1,36 @@
 'use strict';
 
-var assert = require('assert');
-var Queue  = require('nodeca.core/lib/queue');
+const assert = require('assert');
+const Queue  = require('nodeca.core/lib/queue');
 
 describe('Queue', function () {
-  var q1, q2;
+  let q1, q2;
 
-  before(function (done) {
+
+  before(function () {
     q1 = new Queue(TEST.N.redis);
     q2 = new Queue(TEST.N.redis);
 
     q1.start();
     q2.start();
 
-    q1.on('error', function (err) {
+    q1.on('error', err => {
       if (err instanceof Queue.Error) return;
       throw err;
     });
 
-    q2.on('error', function (err) {
+    q2.on('error', err => {
       if (err instanceof Queue.Error) return;
       throw err;
     });
-
-    done();
   });
 
-  it('should correctly balance chunks for different instances', function (done) {
-    var process1Chunks = 0;
-    var process2Chunks = 0;
 
-    var worker1 = {
+  it('should correctly balance chunks for different instances', function (done) {
+    let process1Chunks = 0;
+    let process2Chunks = 0;
+
+    let worker1 = {
       name: 'test',
       chunksPerInstance: 2,
       map(callback) {
@@ -57,7 +57,7 @@ describe('Queue', function () {
       }
     };
 
-    var worker2 = {
+    let worker2 = {
       name: 'test',
       chunksPerInstance: 2,
       map(callback) {
@@ -87,13 +87,12 @@ describe('Queue', function () {
     q1.registerWorker(worker1);
     q2.registerWorker(worker2);
 
-    q2.worker('test').push(function (err) {
-      if (err) throw err;
-    });
+    q2.worker('test').push().catch(done);
   });
 
+
   it('should run `map`, `process` and `reduce` with correct data', function (done) {
-    var worker = {
+    let worker = {
       name: 'test2',
       map(callback) {
         assert.deepEqual(this.data, { taskDataTest1: 1, taskDataTest2: 2 });
@@ -119,13 +118,12 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.worker('test2').push({ taskDataTest1: 1, taskDataTest2: 2 }, function (err) {
-      if (err) throw err;
-    });
+    q1.worker('test2').push({ taskDataTest1: 1, taskDataTest2: 2 }).catch(done);
   });
 
+
   it('should remove broken chunk', function (done) {
-    var worker = {
+    let worker = {
       name: 'test3',
       retryDelay: 1, // 1 ms
       retry: 1,
@@ -150,15 +148,14 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.worker('test3').push({}, function (err) {
-      if (err) throw err;
-    });
+    q1.worker('test3').push({}).catch(done);
   });
 
-  it('should restart once errored `map`', function (done) {
-    var localCounter = 0;
 
-    var worker = {
+  it('should restart once errored `map`', function (done) {
+    let localCounter = 0;
+
+    let worker = {
       name: 'test4',
       retryDelay: 1, // 1 ms
       retry: 1,
@@ -183,15 +180,14 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.worker('test4').push({}, function (err) {
-      if (err) throw err;
-    });
+    q1.worker('test4').push({}).catch(done);
   });
 
-  it('should restart once errored `reduce`', function (done) {
-    var localCounter = 0;
 
-    var worker = {
+  it('should restart once errored `reduce`', function (done) {
+    let localCounter = 0;
+
+    let worker = {
       name: 'test5',
       retryDelay: 1, // 1 ms
       retry: 1,
@@ -217,15 +213,14 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.worker('test5').push({}, function (err) {
-      if (err) throw err;
-    });
+    q1.worker('test5').push({}).catch(done);
   });
 
-  it('should restart once errored `process`', function (done) {
-    var localCounter = 0;
 
-    var worker = {
+  it('should restart once errored `process`', function (done) {
+    let localCounter = 0;
+
+    let worker = {
       name: 'test6',
       retryDelay: 1, // 1 ms
       retry: 1,
@@ -251,15 +246,14 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.worker('test6').push({}, function (err) {
-      if (err) throw err;
-    });
+    q1.worker('test6').push({}).catch(done);
   });
 
-  it('should restart once suspended `map`', function (done) {
-    var localCounter = 0;
 
-    var worker = {
+  it('should restart once suspended `map`', function (done) {
+    let localCounter = 0;
+
+    let worker = {
       name: 'test7',
       timeout: 10,
       map(callback) {
@@ -283,15 +277,14 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.worker('test7').push({}, function (err) {
-      if (err) throw err;
-    });
+    q1.worker('test7').push({}).catch(done);
   });
 
-  it('should restart once suspended `reduce`', function (done) {
-    var localCounter = 0;
 
-    var worker = {
+  it('should restart once suspended `reduce`', function (done) {
+    let localCounter = 0;
+
+    let worker = {
       name: 'test8',
       timeout: 10,
       map(callback) {
@@ -316,15 +309,14 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.worker('test8').push({}, function (err) {
-      if (err) throw err;
-    });
+    q1.worker('test8').push({}).catch(done);
   });
 
-  it('should restart once suspended `process`', function (done) {
-    var localCounter = 0;
 
-    var worker = {
+  it('should restart once suspended `process`', function (done) {
+    let localCounter = 0;
+
+    let worker = {
       name: 'test9',
       timeout: 10,
       map(callback) {
@@ -348,15 +340,14 @@ describe('Queue', function () {
 
     q1.registerWorker(worker);
 
-    q1.worker('test9').push({}, function (err) {
-      if (err) throw err;
-    });
+    q1.worker('test9').push({}).catch(done);
   });
 
-  it('should cancel a task', function (done) {
-    var calls = 0;
 
-    var worker1 = {
+  it('should cancel a task', function (done) {
+    let calls = 0;
+
+    let worker1 = {
       name: 'test10',
       chunksPerInstance: 1,
       map(callback) {
@@ -379,15 +370,14 @@ describe('Queue', function () {
 
     q1.registerWorker(worker1);
 
-    q1.worker('test10').push(function (err) {
-      if (err) throw err;
-    });
+    q1.worker('test10').push().catch(done);
   });
 
-  it('should return task status', function (done) {
-    var calls = 0;
 
-    var worker1 = {
+  it('should return task status', function (done) {
+    let calls = 0;
+
+    let worker1 = {
       name: 'test11',
       chunksPerInstance: 1,
       map(callback) {
@@ -410,9 +400,7 @@ describe('Queue', function () {
         });
       },
       process(callback) {
-        var self = this;
-
-        this.task.worker.status(self.task.id, function (err, data) {
+        this.task.worker.status(this.task.id, (err, data) => {
           assert.ifError(err);
           assert.equal(data.worker, 'test11');
           assert.equal(data.state,  'aggregating');
@@ -421,31 +409,28 @@ describe('Queue', function () {
           assert.equal(data.chunks.errored, 0);
           assert.equal(data.chunks.done,    calls);
           assert.equal(data.chunks.active,  1);
-          // assert.equal(data.chunks.active[0],      self.id);
+          // assert.equal(data.chunks.active[0],      this.id);
 
           calls++;
-          callback(null, self.data);
+          callback(null, this.data);
         });
       }
     };
 
     q1.registerWorker(worker1);
 
-    q1.worker('test11').push(function (err) {
-      if (err) throw err;
-    });
+    q1.worker('test11').push().catch(done);
   });
 
-  it("should return null if task doesn't exist", function (done) {
+
+  it("should return null if task doesn't exist", function () {
     q1.registerWorker({ name: 'test12' });
 
-    q1.worker('test12').status('non-existent-task', function (err, data) {
-      assert.ifError(err);
+    return q1.worker('test12').status('non-existent-task').then(data => {
       assert.strictEqual(data, null);
-
-      done();
     });
   });
+
 
   it('worker instance should return correct taskID', function () {
     q1.registerWorker({ name: 'test13', taskID: data => data.foo + 'test' });
@@ -453,10 +438,10 @@ describe('Queue', function () {
     assert.strictEqual(q1.worker('test13').taskID({ foo: 'bar' }), 'bartest');
   });
 
-  describe('.postpone()', function () {
 
+  describe('.postpone()', function () {
     it('should works with 1 argument', function (done) {
-      var worker = {
+      let worker = {
         name: 'test14',
         postponeDelay: 1,
         process(cb) {
@@ -470,13 +455,12 @@ describe('Queue', function () {
 
       q1.registerWorker(worker);
 
-      q1.worker('test14').postpone(function (err) {
-        assert.ifError(err);
-      });
+      q1.worker('test14').postpone().catch(done);
     });
 
+
     it('should works with delay argument', function (done) {
-      var worker = {
+      let worker = {
         name: 'test15',
         postponeDelay: 1,
         process(cb) {
@@ -491,13 +475,12 @@ describe('Queue', function () {
 
       q1.registerWorker(worker);
 
-      q1.worker('test15').postpone(2, function (err) {
-        assert.ifError(err);
-      });
+      q1.worker('test15').postpone(2).catch(done);
     });
 
+
     it('should works with data argument', function (done) {
-      var worker = {
+      let worker = {
         name: 'test16',
         postponeDelay: 1,
         process(cb) {
@@ -512,18 +495,16 @@ describe('Queue', function () {
 
       q1.registerWorker(worker);
 
-      q1.worker('test16').postpone('foo', function (err) {
-        assert.ifError(err);
-      });
+      q1.worker('test16').postpone('foo').catch(done);
     });
   });
 
+
   describe('.setDeadline()', function () {
-
     it('task.setDeadline()', function (done) {
-      var calls = 0;
+      let calls = 0;
 
-      var worker = {
+      let worker = {
         name: 'test17',
         timeout: 1000000, // forever
         process(cb) {
@@ -546,15 +527,14 @@ describe('Queue', function () {
 
       q1.registerWorker(worker);
 
-      q1.worker('test17').push(function (err) {
-        assert.ifError(err);
-      });
+      q1.worker('test17').push().catch(done);
     });
 
-    it('chunk.setDeadline()', function (done) {
-      var calls = 0;
 
-      var worker = {
+    it('chunk.setDeadline()', function (done) {
+      let calls = 0;
+
+      let worker = {
         name: 'test18',
         timeout: 1000000, // forever
         process(cb) {
@@ -574,9 +554,7 @@ describe('Queue', function () {
 
       q1.registerWorker(worker);
 
-      q1.worker('test18').push(function (err) {
-        assert.ifError(err);
-      });
+      q1.worker('test18').push().catch(done);
     });
   });
 });
