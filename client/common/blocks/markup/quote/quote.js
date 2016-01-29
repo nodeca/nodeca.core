@@ -34,7 +34,7 @@ N.wire.once('navigate.done', function () {
     }
 
     N.io.rpc('common.content.get', { url: quote.attr('cite') })
-        .done(function (res) {
+        .then(function (res) {
 
       var $result = $(res.html);
 

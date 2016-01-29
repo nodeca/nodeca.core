@@ -75,7 +75,7 @@ N.wire.once('navigate.done:admin.core.rebuild', function rebuild_expand_links_ca
     var prev_runid = last_runid;
 
     N.io.rpc('admin.core.rebuild.expand_links_cache.start')
-      .done(function () {
+      .then(function () {
         // reset progress bar to zero,
         // and ignore all updates on the last task
         ignore_runid = Math.max(prev_runid, ignore_runid);
@@ -92,7 +92,7 @@ N.wire.once('navigate.done:admin.core.rebuild', function rebuild_expand_links_ca
     var prev_runid = last_runid;
 
     N.io.rpc('admin.core.rebuild.expand_links_cache.stop')
-      .done(function () {
+      .then(function () {
         // reset progress bar to zero,
         // and ignore all updates on the last task
         ignore_runid = Math.max(prev_runid, ignore_runid);

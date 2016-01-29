@@ -26,7 +26,7 @@ function submit() {
     }
   });
 
-  N.io.rpc('admin.core.global_settings.update', { settings: payload }).done(function () {
+  N.io.rpc('admin.core.global_settings.update', { settings: payload }).then(function () {
     settingModels.forEach(function (setting) { setting.value.markClean(); });
 
     N.wire.emit('notify', { type: 'info', message: t('saved') });

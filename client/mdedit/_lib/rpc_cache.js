@@ -148,12 +148,12 @@ RpcCache.prototype.__tick__ = function () {
 
       // Make request
       N.io.rpc(v[0], v[1], { persistent: true, handleAllErrors: true })
-        .done(res => {
+        .then(res => {
           // Update cache data and emit event
           this.__cache__[k] = res;
           this.emit('update');
         })
-        .fail(err => {
+        .catch(err => {
           // Add 404 and 401 results to cache, skip other codes
           if ([ N.io.NOT_FOUND, N.io.FORBIDDEN ].indexOf(err.code) !== -1) {
             this.__cache__[k] = null;

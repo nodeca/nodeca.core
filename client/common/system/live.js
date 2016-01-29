@@ -30,7 +30,7 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
 
     // Run RPC request only in one client - lock by unique `requestID`
     N.live.lock('token_live_update_' + requestID, 5000, function () {
-      lastRequest = N.io.rpc('common.core.token_live', {}, { persistent: true }).done(function (res) {
+      lastRequest = N.io.rpc('common.core.token_live', {}, { persistent: true }).then(function (res) {
 
         // Send new token back
         N.live.emit('local.common.core.token_live.update_result', res.token_live);
