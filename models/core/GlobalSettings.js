@@ -15,8 +15,8 @@ module.exports = function (N, collectionName) {
   });
 
 
-  N.wire.on('init:models', function emit_init_GlobalSettings(__, callback) {
-    N.wire.emit('init:models.' + collectionName, GlobalSettings, callback);
+  N.wire.on('init:models', function emit_init_GlobalSettings() {
+    return N.wire.emit('init:models.' + collectionName, GlobalSettings);
   });
 
 

@@ -89,8 +89,8 @@ module.exports = function (N, collectionName) {
     }
   ));
 
-  N.wire.on('init:models', function emit_init_MessageParams(__, callback) {
-    N.wire.emit('init:models.' + collectionName, MessageParams, callback);
+  N.wire.on('init:models', function emit_init_MessageParams() {
+    return N.wire.emit('init:models.' + collectionName, MessageParams);
   });
 
 

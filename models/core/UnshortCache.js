@@ -44,8 +44,8 @@ module.exports = function (N, collectionName) {
   };
 
 
-  N.wire.on('init:models', function emit_init_UnshortCache(__, callback) {
-    N.wire.emit('init:models.' + collectionName, UnshortCache, callback);
+  N.wire.on('init:models', function emit_init_UnshortCache() {
+    return N.wire.emit('init:models.' + collectionName, UnshortCache);
   });
 
 

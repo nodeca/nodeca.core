@@ -27,8 +27,8 @@ module.exports = function (N, collectionName) {
     query.exec((err, counter) => { callback(err, (counter || {}).value); });
   };
 
-  N.wire.on('init:models', function emit_init_Increment(__, callback) {
-    N.wire.emit('init:models.' + collectionName, Increment, callback);
+  N.wire.on('init:models', function emit_init_Increment() {
+    return N.wire.emit('init:models.' + collectionName, Increment);
   });
 
   N.wire.on('init:models.' + collectionName, function init_model_Increment(schema) {
