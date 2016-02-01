@@ -161,7 +161,7 @@ function loadData(options, callback) {
   }).catch(function (err) {
 
     // Page loading is terminated or request was canceled
-    if (id !== requestID || (err instanceof N.io.CancellationError)) {
+    if (id !== requestID || err === 'CANCELED') {
       callback(null);
       return;
     }
@@ -284,22 +284,7 @@ function render(data, scroll) {
         }, 50);
       }
     })
-    .catch(err => {
-      if (err instanceof N.io.CancellationError) {
-        return;
-      }
-
-      if (err === 'CANCELED') {
-        return;
-      }
-
-      if (err instanceof N.io.RPCError) {
-        N.wire.emit('io.error', err);
-        return;
-      }
-
-      N.logger.error(err);
-    });
+    .catch(err => N.wire.emit('err', err));
 }
 
 
