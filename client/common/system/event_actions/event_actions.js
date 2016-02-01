@@ -21,6 +21,10 @@ function handleAction(apiPath, data) {
           return;
         }
 
+        if (err === 'CANCELED') {
+          return;
+        }
+
         if (err instanceof N.io.RPCError) {
           N.wire.emit('io.error', err);
           return;
