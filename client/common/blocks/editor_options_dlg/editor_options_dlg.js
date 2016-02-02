@@ -9,29 +9,35 @@
 'use strict';
 
 
-var $dialog;
-var doneCallback;
-var options;
+let $dialog;
+let options;
+let result;
 
 
 // Init dialog
 //
-N.wire.on(module.apiPath, function show_posting_options_dlg(data, callback) {
-  doneCallback = callback;
+N.wire.on(module.apiPath, function show_posting_options_dlg(data) {
   options = data;
   $dialog = $(N.runtime.render(module.apiPath, options));
+  result = null;
 
   $('body').append($dialog);
 
-  // When dialog closes - remove it from body
-  $dialog
-    .on('hidden.bs.modal', function () {
-      $dialog.remove();
-      $dialog = null;
-      doneCallback = null;
-      options = null;
-    })
-    .modal('show');
+  return new Promise((resolve, reject) => {
+    $dialog
+      .on('hidden.bs.modal', function () {
+        // When dialog closes - remove it from body
+        $dialog.remove();
+        $dialog = null;
+        options = null;
+
+        if (result) resolve(result);
+        else reject('CANCELED');
+
+        result = null;
+      })
+      .modal('show');
+  });
 });
 
 
@@ -42,7 +48,7 @@ N.wire.on(module.apiPath + ':submit', function submit_posting_options_dlg(data) 
   options.no_emojis         = !data.fields.emojis;
   options.no_quote_collapse = !data.fields.quote_collapse;
 
-  doneCallback();
+  result = options;
 
   $dialog.modal('hide');
 });
