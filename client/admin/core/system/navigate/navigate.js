@@ -284,7 +284,7 @@ function render(data, scroll) {
         }, 50);
       }
     })
-    .catch(err => N.wire.emit('err', err));
+    .catch(err => N.wire.emit('error', err));
 }
 
 
