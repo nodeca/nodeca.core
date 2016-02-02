@@ -4,75 +4,74 @@
 //   N.wire.emit('common.blocks.microedit', {
 //     selector: '.forum-topic-title',
 //     value: 'value to edit',
-//     update: function (newValue, callback) {
-//       N.io.rpc(..., callback);
-//     }
-//   }, function () {
-//     // microedit finished
+//     update: newValue => N.io.rpc(/*params*/)
 //   });
 //
 // options:
+//
 // - selector - CSS selector of replaced element
 // - update(value, callback) - value update function
 // - value - text value
 //
 'use strict';
 
-var $form;
-var $elem;
-var doneCallback;
-var params;
+
+let $form;
+let $elem;
+let params;
+let resolve;
+let reject;
 
 
-function destroy(callback) {
-  if (!$form) return;
-
-  $form.fadeOut('fast', function () {
-    doneCallback = null;
+function destroy(err) {
+  $form.fadeOut('fast', () => {
     $form.remove();
     $form = null;
     params = null;
 
-    if (typeof callback === 'function') {
-      callback();
-    }
-
-    $elem.fadeIn('fast', function () {
+    $elem.fadeIn('fast', () => {
       $elem = null;
     });
+
+    if (!err) resolve();
+    else reject(err);
+
+    resolve = null;
+    reject = null;
   });
 }
 
 
-N.wire.once('common.blocks.microedit', function microedit_once() {
+N.wire.once(module.apiPath, function microedit_once() {
 
   // Submit handler
   //
-  N.wire.on('common.blocks.microedit:submit', function microedit_submit(data) {
-    params.update(data.fields.value, function (err) {
-      if (!err) {
-        destroy(doneCallback);
-        return;
-      }
+  N.wire.on(module.apiPath + ':submit', function microedit_submit(data) {
+    return params.update(data.fields.value)
+      .then(() => destroy())
+      .catch(err => {
+        if (typeof err === 'string') {
+          $form
+            .find('.microedit__input-container')
+            .addClass('has-error')
+            .find('.microedit__error')
+            .text(err);
 
-      $form
-        .find('.microedit__input-container')
-        .addClass('has-error')
-        .find('.microedit__error')
-        .text((typeof err === 'string') ? err : '');
-    });
+          destroy();
+        } else {
+          destroy(err);
+        }
+      });
   });
 });
 
 
-N.wire.on('common.blocks.microedit', function microedit_init(data, callback) {
+N.wire.on(module.apiPath, function microedit_init(data) {
   params = data;
-  doneCallback = callback;
-
-  $form = $(N.runtime.render('common.blocks.microedit', params));
   $elem = $(data.selector);
+  $form = $(N.runtime.render(module.apiPath, params));
 
-  var $input = $form.find('.microedit__input');
+  let $input = $form.find('.microedit__input');
 
   $input
     .blur(function (e) {
@@ -97,5 +96,10 @@ N.wire.on('common.blocks.microedit', function microedit_init(data, callback) {
     $form.fadeIn('fast', function () {
       $input.focus();
     });
+  });
+
+  return new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
   });
 });
