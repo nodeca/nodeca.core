@@ -18,7 +18,7 @@ function loadRecaptchaScript(callback) {
   var rc_url = 'https://www.google.com/recaptcha/api.js?render=explicit&onload=' + cb_name;
 
   $.getScript(rc_url)
-    .catch(function () {
+    .fail(function () {
       delete window[cb_name];
       callback(new Error('Cannot load ReCaptcha script.'));
     });
