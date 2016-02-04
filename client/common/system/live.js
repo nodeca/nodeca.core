@@ -134,6 +134,26 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
   });
 
 
+  function initFayeClient() {
+    fayeClient = new faye.Client('/io/live');
+
+    fayeClient.addExtension({
+      outgoing(message, callback) {
+        message.token = token;
+        callback(message);
+      },
+      incoming(message, callback) {
+        // If token error - request update
+        if (message.error && message.error.code === N.io.INVALID_LIVE_TOKEN) {
+          tokenUpdate();
+        }
+
+        callback(message);
+      }
+    });
+  }
+
+
   // Connect to messaging server when become master and
   // kill connection if master changed
   //
@@ -141,22 +161,7 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
     // If new master is in our tab - connect
     if (data.node_id === data.master_id) {
       if (!fayeClient) {
-        fayeClient = new faye.Client('/io/live');
-
-        fayeClient.addExtension({
-          outgoing(message, callback) {
-            message.token = token;
-            callback(message);
-          },
-          incoming(message, callback) {
-            // If token error - request update
-            if (message.error && message.error.code === N.io.INVALID_LIVE_TOKEN) {
-              tokenUpdate();
-            }
-
-            callback(message);
-          }
-        });
+        initFayeClient();
       }
       return;
     }
@@ -216,6 +221,35 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
           tokenUpdate(() => { trackedChannels[channel] = fayeSubscribe(channel); });
         });
       }
+    });
+  });
+
+
+  // Handle server instance restart signal
+  //
+  N.live.on('common.core.reconnect', function reconnect() {
+    // Only if tab contains `fayeClient` (master tab)
+    if (!fayeClient) return;
+
+    // Disconnect previous instance
+    fayeClient.disconnect();
+    fayeClient = null;
+
+    // Init new instance
+    initFayeClient();
+
+    // Subscribe again to all previously subscribed channels
+    Object.keys(trackedChannels).forEach(channel => {
+      trackedChannels[channel] = fayeSubscribe(channel);
+
+      // If token invalid - update token and try subscribe again
+      trackedChannels[channel].errback(err => {
+        if (err.message.code !== N.io.INVALID_LIVE_TOKEN) return;
+
+        // `tokenUpdate` called here at second time (first in incoming faye filter).
+        // It is needed to wait token update and retry after it
+        tokenUpdate(() => { trackedChannels[channel] = fayeSubscribe(channel); });
+      });
     });
   });
 });
