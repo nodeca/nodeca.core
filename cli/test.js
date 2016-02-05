@@ -106,6 +106,6 @@ module.exports.run = function (N, args) {
 
     yield thenify(cb => mocha.run(cb))();
 
-    N.shutdown();
+    N.wire.emit('terminate', 0);
   });
 };

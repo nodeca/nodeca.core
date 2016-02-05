@@ -46,7 +46,7 @@ module.exports.run = function (N, args) {
     if (outstandingMigrations.length === 0) {
       console.log(args.all  ? 'Already up-to-date.'
                             : 'You have no outstanding migrations');
-      N.shutdown();
+      N.wire.emit('terminate', 0);
       return;
     }
 
@@ -58,7 +58,7 @@ module.exports.run = function (N, args) {
       });
 
       console.log('\nRun `migrate` command with `--all` to apply them.');
-      N.shutdown();
+      N.wire.emit('terminate', 0);
       return;
     }
 
@@ -77,6 +77,6 @@ module.exports.run = function (N, args) {
       yield Migration.markPassed(migration.appName, migration.step);
     }
 
-    N.shutdown();
+    N.wire.emit('terminate', 0);
   });
 };
