@@ -5,7 +5,7 @@
 
 const CodeMirror = require('codemirror');
 const _          = require('lodash');
-const Bag        = require('bag.js');
+const bag        = require('bagjs');
 const RpcCache   = require('./_lib/rpc_cache')(N);
 
 
@@ -51,7 +51,7 @@ function MDEdit() {
   this.__layout__ = null;
   this.__minHeight__ = 0;
   this.__cm__ = null;
-  this.__bag__ = new Bag({ prefix: 'nodeca_editor' });
+  this.__bag__ = bag({ prefix: 'nodeca_editor' });
   this.__cache__ = new RpcCache();
 
   this.__cache__.on('update', () => N.wire.emit('mdedit:update.text'));

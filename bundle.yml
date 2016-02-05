@@ -49,7 +49,7 @@ packages:
       # stub for jade runtime
       - fs: nodeca.core/lib/system/dummy.js
       # reuse global bug.js from the loader
-      - bag.js: nodeca.core/lib/bag.js
+      - bagjs: nodeca.core/lib/bag.js
       # Used by kernel & DateFormatter
       - babelfish
 
