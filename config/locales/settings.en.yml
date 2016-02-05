@@ -5,7 +5,6 @@ i18n:
         group_names:
           core: Core
           general: General
-          email: Email
           content: Content
 
         category_names:
@@ -23,15 +22,4 @@ i18n:
           general_cookies_domain: Cookies domain
           general_cookies_domain_help: Leave empty to auto-detect. (when site use single domain)
 
-          email_transport: Transport
-
-          email_header_from: Outgoing email
-          email_header_from_help: Email address for auto-generated letters
-            (email validation, notifications, etc)
-
           content_read_marks_expire: Max time to store read marks, older content considered read (days)
-
-        setting_values:
-          email_transport:
-            sendmail: sendmail
-            dummy: dummy (only log, for debug)
