@@ -122,7 +122,7 @@ module.exports.run = function (N, args) {
 
       yield seed_run(N, app_name, seed_path);
 
-      N.wire.emit('terminate', 0);
+      return N.wire.emit('exit.shutdown');
     }
 
     // No seed name - show existing list or execute by number,
@@ -164,8 +164,7 @@ module.exports.run = function (N, args) {
       for (let i = 0; i < args.seed_numbers.length; i++) {
         if (!seed_list[args.seed_numbers[i] - 1]) {
           console.log(`Seed number ${args.seed_numbers[i]} does not exist`);
-          N.wire.emit('terminate', 1);
-          return;
+          return N.wire.emit('exit.shutdown', 1);
         }
       }
 
@@ -176,8 +175,7 @@ module.exports.run = function (N, args) {
         yield seed_run(N, seed_list[n].name, seed_list[n].seed_path);
       }
 
-      N.wire.emit('terminate', 0);
-      return;
+      return N.wire.emit('exit.shutdown');
     }
 
     //
@@ -191,6 +189,6 @@ module.exports.run = function (N, args) {
 
     console.log('\nSeeds are shown in `<APP>: <SEED_NAME>` form.');
     console.log('See `seed --help` for details');
-    N.wire.emit('terminate', 0);
+    return N.wire.emit('exit.shutdown');
   });
 };

@@ -78,6 +78,6 @@ module.exports.run = function (N, args) {
 
     console.log('\n');
 
-    N.wire.emit('terminate', 0);
+    return N.wire.emit('exit.shutdown');
   });
 };
