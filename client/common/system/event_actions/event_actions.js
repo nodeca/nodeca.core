@@ -39,6 +39,12 @@ N.wire.once('navigate.done', function () {
     };
     var apiPath = data.$this.data('onDragdrop');
 
+    // We should call `dataTransfer.files` getter before `event.preventDefault()`
+    // otherwise after next tick `dataTransfer.files` will be empty in firefox
+    if (data.event.dataTransfer && data.event.dataTransfer.files) {
+      data.files = data.event.dataTransfer.files;
+    }
+
     handleAction(apiPath, data);
     event.preventDefault();
   });
