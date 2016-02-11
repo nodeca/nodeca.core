@@ -171,18 +171,18 @@ N.wire.once('navigate.done', function () {
       $this:             $(this)
     };
 
-    var key = '';
-
-    if (event.ctrlKey)  key += 'ctrl+';
-    if (event.altKey)   key += 'alt+';
-    if (event.shiftKey) key += 'shift+';
-    if (event.metaKey)  key += 'meta+';
+    var key;
 
     if (code_to_text[event.which]) {
-      key += code_to_text[event.which];
+      key = code_to_text[event.which];
     } else {
-      key += String.fromCharCode(event.which).toLowerCase();
+      key = String.fromCharCode(event.which).toLowerCase();
     }
+
+    if (event.ctrlKey && key !== 'ctrl')   key = 'ctrl+' + key;
+    if (event.altKey && key !== 'alt')     key = 'alt+' + key;
+    if (event.shiftKey && key !== 'shift') key = 'shift+' + key;
+    if (event.metaKey && key !== 'meta')   key = 'meta+' + key;
 
     var map;
 
