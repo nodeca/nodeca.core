@@ -17,7 +17,7 @@ N.wire.on('navigate.done', function update_meta(data) {
       return ($el.attr('rel') || '').match(/^(canonical|prev|next)$/i);
     }
 
-    return ($el.attr('name') || '').match(/^(title|description|keywords)$/i) ||
+    return ($el.attr('name') || '').match(/^(title|description|keywords|robots)$/i) ||
            ($el.attr('property') || '').match(/^og:/i) ||
            ($el.attr('name') || '').match(/^twitter:/i);
   }).remove();

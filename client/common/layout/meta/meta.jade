@@ -8,6 +8,9 @@ if self.head
   if self.head.keywords
     meta(name='keywords', content=self.head.keywords)
 
+  if self.head.robots
+    meta(name='robots', content=self.head.robots)
+
   if self.head.canonical
     link(rel='canonical', href=self.head.canonical)
 
