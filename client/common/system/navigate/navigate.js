@@ -264,6 +264,8 @@ function render(data, scroll) {
     .then(() => N.wire.emit('navigate.exit:' + lastPageData.apiPath, lastPageData))
     .then(() => N.wire.emit('navigate.exit', lastPageData))
     .then(() => {
+      data.state = window.history.state;
+
       N.runtime.page_data = {};
 
       var content = $(N.runtime.render(data.view, data.locals, {
@@ -363,12 +365,13 @@ fsm.onLOAD = function (event, from, to, params) {
       return;
     }
 
+    if (same_url) {
+      window.history.replaceState(null, result.locals.head.title, options.href + options.anchor);
+    } else {
+      window.history.pushState(null, result.locals.head.title, options.href + options.anchor);
+    }
+
     render(result, true).then(() => {
-      if (same_url) {
-        window.history.replaceState(null, result.locals.head.title, options.href + options.anchor);
-      } else {
-        window.history.pushState(null, result.locals.head.title, options.href + options.anchor);
-      }
       fsm.complete();
     });
   });
@@ -388,8 +391,9 @@ fsm.onBACK_FORWARD = function () {
   }
 
   loadData(options, function (result) {
+    window.history.replaceState(window.history.state, result.locals.head.title, options.href + options.anchor);
+
     render(result, false).then(() => {
-      window.history.replaceState(null, result.locals.head.title, options.href + options.anchor);
       fsm.complete();
     });
   });
@@ -468,13 +472,15 @@ N.wire.on('navigate.reload', function navigate_reload(__, callback) {
 //                   If not set - use current href. (optional)
 //   options.title - new page title.
 //                   If not set - use current title. (optional)
+//   options.state - additional metadata to store (optional)
 //
 N.wire.on('navigate.replace', function navigate_replace(options, callback) {
   var url = options.href ? normalizeURL(options.href) : normalizeURL(location.href);
   var title = options.title || document.title;
+  var state = options.state || null;
 
-  if (document.title !== title || normalizeURL(location.href) !== url) {
-    window.history.replaceState(null, title, url);
+  if (document.title !== title || normalizeURL(location.href) !== url || !_.isEqual(state, window.history.state)) {
+    window.history.replaceState(state, title, url);
     document.title = title;
   }
 

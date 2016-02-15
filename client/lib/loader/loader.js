@@ -317,7 +317,8 @@
           url:     location.href,
           anchor:  location.hash,
           apiPath: route.meta.methods.get,
-          params:  route.params
+          params:  route.params,
+          state:   window.history.state
         };
 
         Promise.resolve()
