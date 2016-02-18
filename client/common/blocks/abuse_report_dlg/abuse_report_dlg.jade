@@ -1,0 +1,22 @@
+.modal.fade(tabindex='-1' role='dialog' aria-hidden='true')
+  .modal-dialog
+    .modal-content
+      form(data-on-submit='common.blocks.abuse_report_dlg:submit')
+        .modal-header
+          button.close(type='button' tabindex='-1' data-dismiss='modal') &times;
+          h4.modal-title=self.t('title')
+        .modal-body
+          if self.messages.length
+            .form-group
+              select.form-control(data-on-change='common.blocks.abuse_report_dlg:quick_fill' tabindex='1')
+                option(value='')=self.t('templates_help')
+                each message in self.messages
+                  - var title = message.split('\n').shift(); // first line
+                  option(value=message)=title
+
+          .form-group
+            textarea.abuse-report-dlg__message.form-control(name='message' rows='5' tabindex='2' placeholder=self.t('placeholder'))
+
+        .modal-footer
+          button.btn.btn-default(type='button' tabindex='3' data-dismiss='modal')=self.t('cancel')
+          button.btn.btn-danger(type='submit' tabindex='4')=self.t('ok')
