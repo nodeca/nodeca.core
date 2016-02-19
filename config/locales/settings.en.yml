@@ -6,6 +6,7 @@ i18n:
           core: Core
           general: General
           content: Content
+          abuse_reports: Abuse reports
 
         category_names:
           general_common: Common

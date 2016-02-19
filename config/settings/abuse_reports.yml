@@ -1,0 +1,3 @@
+setting_groups:
+  abuse_reports:
+    parent: core
