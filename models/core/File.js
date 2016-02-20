@@ -12,6 +12,7 @@ const mime      = require('mime-types').lookup;
 const stream    = require('readable-stream');
 const mongoose  = require('mongoose');
 const grid      = require('gridfs-stream');
+const pump      = require('pump');
 const ObjectId  = mongoose.Types.ObjectId;
 
 function escapeRegexp(source) {
@@ -176,16 +177,12 @@ module.exports = function (N, collectionName) {
     let options = _.assign({}, opt); // protect opt from modifications
 
     try {
-      if (!input) {
-        throw new Error('File.put: unknown source data');
-      }
+      if (!input) throw new Error('File.put: unknown source data');
 
       let _id = options._id || new ObjectId(null);
-      _id = _id.toHexString ? _id : tryParseObjectId(_id);
+      if (_id.toHexString) _id = tryParseObjectId(_id);
 
-      if (!_id) {
-        throw new Error('File.put: invalid _id passed');
-      }
+      if (!_id) throw new Error('File.put: invalid _id passed');
 
       options._id = _id;
 
@@ -218,21 +215,21 @@ module.exports = function (N, collectionName) {
     options.mode = 'w';
 
     let output = gfs.createWriteStream(options);
+    let info;
+
+    output.on('close', i => { info = i; });
 
     // Do cb call or return promise, depending on signature
     if (callback) {
-      output.once('error', callback);
-      output.once('close', info => { callback(null, info); });
-
-      input.pipe(output);
+      pump(input, output, err => callback(err, info));
       return null;
     }
 
     return new Promise(function (resolve, reject) {
-      output.once('error', reject);
-      output.once('close', info => { resolve(info); });
-
-      input.pipe(output);
+      pump(input, output, err => {
+        if (err) reject (err);
+        else resolve(info);
+      });
     });
   };
 
