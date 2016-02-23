@@ -30,7 +30,7 @@ module.exports = function (N, apiPath) {
       env.body += sitemap.files.map(file =>
         '<sitemap>\n' +
         `  <loc>${N.router.linkTo('core.gridfs', { bucket: file })}</loc>\n` +
-        '  <lastmod>${sitemap._id.getTimestamp().toISOString()}</lastmod>\n' +
+        `  <lastmod>${sitemap._id.getTimestamp().toISOString()}</lastmod>\n` +
         '</sitemap>\n').join('');
     }
 
