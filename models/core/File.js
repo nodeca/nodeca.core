@@ -270,9 +270,6 @@ module.exports = function (N, collectionName) {
     return gfs.createReadStream(options);
   };
 
-  // old alias
-  File.getStream = File.prototype.getStream = File.createReadStream;
-
 
   N.wire.on('init:models', function emit_init_File(__, callback) {
 

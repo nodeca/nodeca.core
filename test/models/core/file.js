@@ -140,13 +140,13 @@ describe('File model test', function () {
       });
     });
 
-    it('getStream()', function (done) {
+    it('createReadStream()', function (done) {
       file.put(fileName, { metadata: { origName: fileBase } }, (err, info) => {
         if (err) { done(err); return; }
 
         let chunks = [];
 
-        file.getStream(info._id)
+        file.createReadStream(info._id)
           .on('data', data => { chunks.push(data); })
           .on('end', () => {
             assert.deepEqual(Buffer.concat(chunks), fileContent);
