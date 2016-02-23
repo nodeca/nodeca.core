@@ -67,8 +67,8 @@ module.exports = function (N, collectionName) {
   ExpandUrl.statics.statuses = statuses;
 
 
-  N.wire.on('init:models', function emit_init_ExpandUrl(__, callback) {
-    N.wire.emit('init:models.' + collectionName, ExpandUrl, callback);
+  N.wire.on('init:models', function emit_init_ExpandUrl() {
+    return N.wire.emit('init:models.' + collectionName, ExpandUrl);
   });
 
 

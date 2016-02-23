@@ -73,8 +73,8 @@ module.exports = function (N, collectionName) {
   };
 
 
-  N.wire.on('init:models', function emit_init_EmbedzaCache(__, callback) {
-    N.wire.emit('init:models.' + collectionName, EmbedzaCache, callback);
+  N.wire.on('init:models', function emit_init_EmbedzaCache() {
+    return N.wire.emit('init:models.' + collectionName, EmbedzaCache);
   });
 
 

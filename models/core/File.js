@@ -162,6 +162,55 @@ module.exports = function (N, collectionName) {
    *
    * Params:
    *
+   * - opt (Object) - see schema for details. General:
+   *   - _id (ObjectId|String), optional - _id to store in db
+   *   - filename, optional - file name to store in db, `_id` if not set.
+   *     For example '535860e62490c07f0c2eabe3_xxl' for thumbnail of
+   *     '535860e62490c07f0c2eabe3' image.
+   *   - contentType
+   *   - metadata (Object), optional - file metadata
+   *     - origName (String) - original file name (used in downloads)
+   */
+  File.createWriteStream = File.prototype.createWriteStream = function (opt) {
+    let options = _.assign({}, opt); // protect opt from modifications
+
+    let _id = options._id || new ObjectId(null);
+    if (_id.toHexString) _id = tryParseObjectId(_id);
+
+    if (!_id) throw new Error('File.put: invalid _id passed');
+
+    options._id = _id;
+
+    // if filename NOT set - that's original file (in other case that's thumbnail)
+    options.filename = options.filename || options._id.toHexString();
+
+    // if no contentType - try to guess from original file name
+    if (!options.contentType) {
+      let origName = (options.metadata || {}).origName;
+
+      if (!origName) {
+        throw new Error('File.put: ContentType or metadata.origName must be set');
+      }
+
+      options.contentType = mime(origName);
+      if (!options.contentType) {
+        throw new Error(`File.put: can't guess ContentType for ${origName}`);
+      }
+    }
+
+    // This 2 lines required to properly set `contentType` field
+    options.content_type = options.contentType;
+    options.mode = 'w';
+
+    return gfs.createWriteStream(options);
+  };
+
+
+  /*
+   * put file into gridfs
+   *
+   * Params:
+   *
    * - src (Mixed) - (buffer|path|stream) with file data. Required.
    * - opt (Object) - see schema for details. General:
    *   - _id (ObjectId|String), optional - _id to store in db
@@ -173,35 +222,13 @@ module.exports = function (N, collectionName) {
    *     - origName (String) - original file name (used in downloads)
    */
   File.put = File.prototype.put = function (src, opt, callback) {
-    let input   = getStream(src);
-    let options = _.assign({}, opt); // protect opt from modifications
+    let input = getStream(src);
+    let output;
 
     try {
       if (!input) throw new Error('File.put: unknown source data');
 
-      let _id = options._id || new ObjectId(null);
-      if (_id.toHexString) _id = tryParseObjectId(_id);
-
-      if (!_id) throw new Error('File.put: invalid _id passed');
-
-      options._id = _id;
-
-      // if filename NOT set - that's original file (in other case that's thumbnail)
-      options.filename = options.filename || options._id.toHexString();
-
-      // if no contentType - try to guess from original file name
-      if (!options.contentType) {
-        let origName = (options.metadata || {}).origName;
-
-        if (!origName) {
-          throw new Error('File.put: ContentType or metadata.origName must be set');
-        }
-
-        options.contentType = mime(origName);
-        if (!options.contentType) {
-          throw new Error(`File.put: can't guess ContentType for ${origName}`);
-        }
-      }
+      output = File.createWriteStream(opt);
     } catch (err) {
       if (callback) {
         callback(err);
@@ -210,11 +237,6 @@ module.exports = function (N, collectionName) {
       return Promise.reject(err);
     }
 
-    // This 2 lines required to properly set `contentType` field
-    options.content_type = options.contentType;
-    options.mode = 'w';
-
-    let output = gfs.createWriteStream(options);
     let info;
 
     output.on('close', i => { info = i; });
@@ -241,12 +263,15 @@ module.exports = function (N, collectionName) {
   // FIXME: replace with native stream and add seek support
   // https://gist.github.com/psi-4ward/7099001
   //
-  File.getStream = File.prototype.getStream = function (name) {
+  File.createReadStream = File.prototype.createReadStream = function (name) {
     let id = name.toHexString ? name : tryParseObjectId(name);
     let options = id ? { _id: id } : { filename: name };
 
     return gfs.createReadStream(options);
   };
+
+  // old alias
+  File.getStream = File.prototype.getStream = File.createReadStream;
 
 
   N.wire.on('init:models', function emit_init_File(__, callback) {

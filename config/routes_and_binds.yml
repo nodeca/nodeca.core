@@ -21,6 +21,9 @@ router:
     common.robots:
       "/robots.txt": ~
 
+    common.sitemap:
+      "/sitemap.xml": ~
+
   bin:
     core.assets:
       "/assets/{path}":
@@ -32,4 +35,4 @@ router:
 
     core.gridfs:
       "/files/{bucket}":
-        bucket: /[0-9a-f]{24}(_[0-9a-z]+)?/
+        bucket: /.+/
