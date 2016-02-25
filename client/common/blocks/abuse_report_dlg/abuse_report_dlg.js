@@ -26,7 +26,10 @@ N.wire.once(module.apiPath, function init_handlers() {
   N.wire.on(module.apiPath + ':quick_fill', function template_select_abuse_report_dlg(data) {
     let value = data.$this.val();
 
-    if (value) $dialog.find('.abuse-report-dlg__message').val(value);
+    if (value) {
+      // Cut first line because it is title
+      $dialog.find('.abuse-report-dlg__message').val(value.split('\n').slice(1).join('\n'));
+    }
   });
 
 
