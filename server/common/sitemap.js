@@ -12,7 +12,7 @@ module.exports = function (N, apiPath) {
   });
 
   N.wire.on(apiPath, function* print_sitemap_index(env) {
-    let sitemap = yield N.models.core.SiteMap.findOne({ active: true });
+    let sitemap = yield N.models.core.SiteMap.findOne({ active: true }).sort('-_id');
 
     env.body = env.body || '';
     env.headers['Content-Type'] = 'text/xml';
