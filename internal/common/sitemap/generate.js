@@ -178,9 +178,6 @@ module.exports = function (N, apiPath) {
   N.wire.on(apiPath, function* sitemap_generate() {
     let data = {};
 
-    // get all sitemaps to remove later when task succeeds
-    let old_sitemaps = yield N.models.core.SiteMap.find();
-
     // request streams to read urls from
     yield N.wire.emit('internal:common.sitemap.collect', data);
 
@@ -197,7 +194,11 @@ module.exports = function (N, apiPath) {
       out_stream.resume();
     });
 
-    // cleanup: remove old sitemaps
+    // remove all but last 5 sitemaps
+    let old_sitemaps = yield N.models.core.SiteMap.find({
+      _id: { $lt: out_stream.sitemap._id }
+    }).sort('-_id').skip(5);
+
     yield old_sitemaps.map(sm => sm.remove());
   });
 };
