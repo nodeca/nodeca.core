@@ -26,15 +26,18 @@ module.exports = function (N) {
     }
 
     // Fetch users emails
-    let auth_links = yield N.models.users.AuthLink
-                              .find()
-                              .where('user_id').in(Object.keys(params.recipients))
-                              .where('type').equals('plain')
-                              .select('user_id email')
-                              .lean(true);
+    let users_email = yield N.models.users.User.find()
+                                .where('_id').in(Object.keys(params.recipients))
+                                .select('_id email')
+                                .lean(true);
+
+    let emails = users_email.reduce((acc, user) => {
+      acc[user._id] = user.email;
+      return acc;
+    }, {});
 
     yield _.map(params.recipients, user_info => {
-      let to = (_.find(auth_links, link => String(link.user_id) === String(user_info.user_id)) || {}).email;
+      let to = emails[user_info.user_id];
 
       if (!to) return; // continue
 
