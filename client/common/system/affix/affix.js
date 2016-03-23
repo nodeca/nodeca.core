@@ -44,9 +44,7 @@ N.wire.on('navigate.done', function affix_init() {
         $el.addClass(className);
 
         if (wireChannel && position === 'top') {
-          N.wire.emit(wireChannel, {}, function () {
-            done();
-          });
+          N.wire.emit(wireChannel, {}, () => done());
           return;
         }
 
@@ -62,9 +60,7 @@ N.wire.on('navigate.done', function affix_init() {
         $el.removeClass(className);
 
         if (wireChannel && position === 'bottom') {
-          N.wire.emit(wireChannel, {}, function () {
-            done();
-          });
+          N.wire.emit(wireChannel, {}, () => done());
           return;
         }
 
@@ -103,9 +99,6 @@ N.wire.on('navigate.done', function affix_init() {
 N.wire.on('navigate.exit', function affix_free() {
   $(window).off('resize.nd.affix');
 
-  trackers.forEach(function (steady) {
-    steady.stop();
-  });
-
+  trackers.forEach(steady => steady.stop());
   trackers = [];
 });
