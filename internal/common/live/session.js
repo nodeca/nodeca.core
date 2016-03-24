@@ -7,7 +7,7 @@
 'use strict';
 
 
-const co = require('co');
+const co = require('bluebird-co').co;
 
 
 module.exports = function (N) {

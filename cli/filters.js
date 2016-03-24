@@ -5,7 +5,7 @@
 
 
 const _  = require('lodash');
-const co = require('co');
+const co = require('bluebird-co').co;
 
 
 ////////////////////////////////////////////////////////////////////////////////

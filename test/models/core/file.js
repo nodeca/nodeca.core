@@ -4,7 +4,7 @@
 const fs       = require('fs');
 const path     = require('path');
 const assert   = require('assert');
-const co       = require('co');
+const co       = require('bluebird-co').co;
 const Mongoose = require('mongoose');
 
 const fileName    = path.join(__dirname, 'fixtures', 'lorem.jpg');

@@ -6,7 +6,7 @@
 
 const path         = require('path');
 const _            = require('lodash');
-const co           = require('co');
+const co           = require('bluebird-co').co;
 const thenify      = require('thenify');
 const Mocha        = require('mocha');
 const glob         = require('glob');

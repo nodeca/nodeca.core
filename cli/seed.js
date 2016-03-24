@@ -11,7 +11,7 @@ const fs    = require('fs');
 
 // 3rd-party
 const _     = require('lodash');
-const co    = require('co');
+const co    = require('bluebird-co').co;
 const glob  = require('glob');
 
 
