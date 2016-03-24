@@ -1,10 +1,37 @@
 /*eslint-disable no-alert, object-shorthand*/
 
-'$$ asset_body("nodeca.core/client/lib/loader/modernizr.custom.js") $$';
 '$$ asset_body("bagjs") $$';
 
 (function (window) {
   'use strict';
+
+  //////////////////////////////////////////////////////////////////////////////
+  // features testing & setup no-cookies/no-js styles
+  //
+
+  function testCookies() {
+    if (navigator.cookieEnabled) return true; // Quick test
+
+    document.cookie = 'cookietest=1';
+    var ret = document.cookie.indexOf('cookietest=') !== -1;
+    document.cookie = 'cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT';
+    return ret;
+  }
+
+  var docElement = document.documentElement,
+      className = docElement.className;
+
+  className = className.replace('no-js', '');
+  className += testCookies() ? '' : ' no-cookies';
+  className = className
+                .replace(/^\s+/, '')
+                .replace(/\s+$/, '')
+                .replace(/\s+/g, ' ');
+
+  docElement.className = className;
+
+  //////////////////////////////////////////////////////////////////////////////
+
 
   var polyfills = [
     {
@@ -146,25 +173,6 @@
     );
   }
 
-  // Initializes all loaded client modules. Once per module.
-  /*function initClientModules() {
-    var apiPath, module;
-
-    for (apiPath in clientModules) {
-      if (!has(clientModules, apiPath)) {
-        continue;
-      }
-
-      module = clientModules[apiPath];
-
-      if (module.initialized) {
-        continue;
-      }
-
-      initSingleClientModule(module);
-      module.initialized = true;
-    }
-  }*/
 
   // Really needed export.
   NodecaLoader.registerClientModule = registerClientModule;
