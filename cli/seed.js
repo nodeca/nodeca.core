@@ -102,6 +102,9 @@ module.exports.run = function (N, args) {
   return co(function* () {
     yield N.wire.emit('init:models', N);
 
+    // load N.router, it's needed to import pictures
+    yield N.wire.emit('init:bundle', N);
+
     /*eslint-disable no-console*/
 
     // If seed name exists - execute seed by name
