@@ -1,10 +1,11 @@
 @font-face {
   font-family: 'nodeca';
-  src: url('../font/nodeca.eot?58463579');
-  src: url('../font/nodeca.eot?58463579#iefix') format('embedded-opentype'),
-       url('../font/nodeca.woff?58463579') format('woff'),
-       url('../font/nodeca.ttf?58463579') format('truetype'),
-       url('../font/nodeca.svg?58463579#nodeca') format('svg');
+  src: url('../font/nodeca.eot?1806231');
+  src: url('../font/nodeca.eot?1806231#iefix') format('embedded-opentype'),
+       url('../font/nodeca.woff2?1806231') format('woff2'),
+       url('../font/nodeca.woff?1806231') format('woff'),
+       url('../font/nodeca.ttf?1806231') format('truetype'),
+       url('../font/nodeca.svg?1806231#nodeca') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'nodeca';
-    src: url('../font/nodeca.svg?58463579#nodeca') format('svg');
+    src: url('../font/nodeca.svg?1806231#nodeca') format('svg');
   }
 }
 */
@@ -35,7 +36,7 @@
   /* For safety - reset parent styles, that can break glyph codes*/
   font-variant: normal;
   text-transform: none;
-     
+ 
   /* fix buttons height, for twitter bootstrap */
   line-height: 1em;
  
@@ -45,6 +46,10 @@
  
   /* you can be more comfortable with increased icons size */
   /* font-size: 120%; */
+ 
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
  
   /* Uncomment for 3D effect */
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */

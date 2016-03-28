@@ -4,9 +4,7 @@
 
 @font-face {
   font-family: 'nodeca';
-  src: url('$$ asset_url("nodeca.core/client/lib-frontend/icons/src/font/nodeca.eot") $$');
-  src: url('$$ asset_url("nodeca.core/client/lib-frontend/icons/src/font/nodeca.eot") $$'?#iefix) format('embedded-opentype'),
-       url('$$ asset_url("nodeca.core/client/lib-frontend/icons/src/font/nodeca.woff2") $$') format('woff2'),
+  src: url('$$ asset_url("nodeca.core/client/lib-frontend/icons/src/font/nodeca.woff2") $$') format('woff2'),
        url('$$ asset_url("nodeca.core/client/lib-frontend/icons/src/font/nodeca.woff") $$') format('woff'),
        url('$$ asset_url("nodeca.core/client/lib-frontend/icons/src/font/nodeca.ttf") $$') format('truetype'),
        url('$$ asset_url("nodeca.core/client/lib-frontend/icons/src/font/nodeca.svg") $$'#nodeca) format('svg');

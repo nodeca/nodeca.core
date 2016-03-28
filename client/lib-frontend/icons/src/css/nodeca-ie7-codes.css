@@ -52,3 +52,4 @@
 .icon-emoji { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf118;&nbsp;'); }
 .icon-sliders { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf1de;&nbsp;'); }
 .icon-link { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x1f517;&nbsp;'); }
+.icon-infraction { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x1f528;&nbsp;'); }

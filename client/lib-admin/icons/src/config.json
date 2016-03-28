@@ -2,7 +2,9 @@
   "name": "nodeca",
   "css_prefix_text": "icon-",
   "css_use_suffix": false,
-  "hinting": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
   "glyphs": [
     {
       "uid": "0a3192de65a73ca1501b073ad601f87d",
