@@ -63,7 +63,7 @@ module.exports.run = function (N, args) {
       .then(() => N.wire.emit('init:server', N))
       .then(() => N.wire.emit('init:tests', N));
 
-    let mocha        = new Mocha({ timeout: 10000 });
+    let mocha        = new Mocha({ timeout: 20000 });
     let applications = N.apps;
 
     mocha.reporter('spec');
