@@ -22,6 +22,7 @@
       className = docElement.className;
 
   className = className.replace('no-js', '');
+  className += ' js';
   className += testCookies() ? '' : ' no-cookies';
   className = className
                 .replace(/^\s+/, '')
