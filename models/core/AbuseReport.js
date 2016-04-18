@@ -20,6 +20,9 @@ module.exports = function (N, collectionName) {
       // Report text
       text: String,
 
+      // Parser options
+      params_ref: Schema.ObjectId,
+
       // User _id
       from: Schema.ObjectId
     },
