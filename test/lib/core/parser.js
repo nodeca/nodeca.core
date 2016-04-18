@@ -7,7 +7,7 @@ describe('Parser', function () {
   it('should highlight code', function (done) {
     var data = {
       text: '```js\nvar a = 1;\n```',
-      options: {},
+      options: true, // enable all plugins
       attachments: []
     };
 

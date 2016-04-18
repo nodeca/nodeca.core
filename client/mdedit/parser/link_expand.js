@@ -10,10 +10,10 @@ N.wire.once('init:parser', function link_expand_plugin_init() {
         data.ast.find('msg-link[data-nd-auto]').each(function () {
           var $tag  = $(this);
           var url   = $tag.attr('href');
-          var types = data.params.options.link_to_title !== false ? [ 'inline' ] : [];
+          var types = data.params.options.link_to_title ? [ 'inline' ] : [];
 
           if (($tag.parent().prop('tagName') === 'P') && ($tag.parent().contents().length === 1)) {
-            if (data.params.options.link_to_snippet !== false) {
+            if (data.params.options.link_to_snippet) {
               types.unshift('block');
             }
           }
@@ -40,6 +40,7 @@ N.wire.once('init:parser', function link_expand_plugin_init() {
           }
         });
       });
-    }
+    },
+    true
   );
 });

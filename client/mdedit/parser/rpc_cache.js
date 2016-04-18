@@ -17,6 +17,7 @@ N.wire.once('init:parser', function rpc_cache_init() {
           data.params.rpc_cache.trackStop();
         }
       });
-    }
+    },
+    true
   );
 });
