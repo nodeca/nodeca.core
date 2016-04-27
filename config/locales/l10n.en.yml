@@ -29,3 +29,10 @@ i18n:
           past_Y:   '%e %b'
           future_d: '%H:%M'
           future_Y: '%e %b'
+
+        relativedays:
+          past_30d:    '#{days} ((day|days)):days'
+          future_30d:  '#{days} ((day|days)):days'
+          past_365d:   '#{months} ((month|months)):months'
+          future_365d: '#{months} ((month|months)):months'
+          default:     '#{years} ((year|years)):years'
