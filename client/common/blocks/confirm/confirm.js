@@ -2,6 +2,7 @@
 //
 // - data - String message or Object
 //   - message - String message
+//   - html    - String message (raw html)
 //
 // Example:
 //
