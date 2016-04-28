@@ -30,7 +30,7 @@ i18n:
           future_d: '%H:%M'
           future_Y: '%e %b'
 
-        relativedays:
+        relative_days:
           past_30d:    '#{days} ((day|days)):days'
           future_30d:  '#{days} ((day|days)):days'
           past_365d:   '#{months} ((month|months)):months'
