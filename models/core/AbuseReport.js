@@ -12,7 +12,7 @@ module.exports = function (N, collectionName) {
   let AbuseReport = new Schema({
 
       // _id of reported content
-      src_id: Schema.ObjectId,
+      src: Schema.ObjectId,
 
       // Content type (FORUM_POST, BLOG_ENTRY, ...)
       type: String,
