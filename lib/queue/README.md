@@ -37,6 +37,10 @@ Options:
  - **postponeDelay** (Number) - optional, if postpone is called without delay,
    delay is assumed to be equal to this value (in milliseconds).
  - **cron** (String) - optional, cron string ("15 \*/6 \* \* \*"), default null
+ - **noTrack** (Boolean) - By default queue tracks all scheduled tasks, to avoid
+   rerun if several servers in cluster have wrong clocks. Locks list is stored for
+   3 days. But that can take a lot of memory, if task is scheduled too often (ping
+   every second, for example). Set `noTrack` = true to disable such tracking.
  - **map** (Function) - optional, proxy taskData to single chunk by default,
    called as: `task.map(callback)`
    - **this** (Object) - current task (task data is available as `this.data`)
