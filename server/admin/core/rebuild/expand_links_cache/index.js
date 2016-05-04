@@ -5,7 +5,7 @@
 
 
 module.exports = function (N) {
-  N.wire.after('server:admin.core.rebuild', { priority: 40 }, function* expand_links_cache_widget(env) {
+  N.wire.after('server:admin.core.rebuild', { priority: 80 }, function* expand_links_cache_widget(env) {
     let data = yield N.queue.worker('expand_links_cache').status();
 
     let task_info = {};
