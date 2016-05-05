@@ -4,8 +4,8 @@
 'use strict';
 
 
-var tabex = require('tabex');
-var faye = require('faye/browser/faye-browser');
+const tabex = require('tabex');
+const faye = require('faye/browser/faye-browser');
 
 
 // Emit event for connectors & add live instance to 'N' (after init `N.runtime`)
@@ -19,7 +19,7 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
   /////////////////////////////////////////////////////////////////////////////
   // Token update request
   //
-  var lastRequest;
+  let lastRequest;
 
   N.live.on('local.common.core.token_live.update_request', function (requestID) {
 
@@ -29,8 +29,8 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
     }
 
     // Run RPC request only in one client - lock by unique `requestID`
-    N.live.lock('token_live_update_' + requestID, 5000, function () {
-      lastRequest = N.io.rpc('common.core.token_live', {}, { persistent: true }).then(function (res) {
+    N.live.lock('token_live_update_' + requestID, 5000, () => {
+      lastRequest = N.io.rpc('common.core.token_live', {}, { persistent: true }).then(res => {
 
         // Send new token back
         N.live.emit('local.common.core.token_live.update_result', res.token_live);
@@ -44,18 +44,18 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
   //
 
   // Tabex client to communicate with faye
-  var flive = tabex.client();
+  let flive = tabex.client();
   // Faye client to communicate with server
-  var fayeClient = null;
+  let fayeClient = null;
   // Channels subscribed by faye
-  var trackedChannels = {};
+  let trackedChannels = {};
   // Token to validate connection
-  var token = N.runtime.token_live;
+  let token = N.runtime.token_live;
   // Flag - waiting token update
-  var tokenUpdateStarted = false;
+  let tokenUpdateStarted = false;
   // Handlers subscribed to token update
-  var updateHandlers = [];
-  var updateTimeout = null;
+  let updateHandlers = [];
+  let updateTimeout = null;
 
 
   // Request update live token
@@ -87,7 +87,7 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
   // Handle token update result
   //
   flive.on('local.common.core.token_live.update_result', function (newToken) {
-    var handlers = updateHandlers;
+    let handlers = updateHandlers;
 
     // Update token locally
     token = newToken;
@@ -122,7 +122,7 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
 
         // `tokenUpdate` called here at second time (first in incoming faye filter).
         // It is needed to wait token update and retry after it
-        tokenUpdate(function () {
+        tokenUpdate(() => {
           fayeClient.publish(toFayeCompatible(channel), message.data);
         });
       });
@@ -139,6 +139,15 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
 
     fayeClient.addExtension({
       outgoing(message, callback) {
+        // If session is new & token does not exist, request a new one
+        if (!token) {
+          tokenUpdate(() => {
+            message.token = token;
+            callback(message);
+          });
+          return;
+        }
+
         message.token = token;
         callback(message);
       },
@@ -178,7 +187,7 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
   // Subscribe faye client to chennel and return subscription object
   //
   function fayeSubscribe(channel) {
-    return fayeClient.subscribe(toFayeCompatible(channel), function (message) {
+    return fayeClient.subscribe(toFayeCompatible(channel), message => {
       flive.emit(channel, message);
     });
   }
@@ -192,7 +201,7 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
     if (!fayeClient) return;
 
     // Filter channels by prefix `local.` and system channels (starts with `!sys.`)
-    var channels = data.channels.filter(channel =>
+    let channels = data.channels.filter(channel =>
       channel.indexOf('local.') !== 0 && channel.indexOf('!sys.') !== 0);
 
 
