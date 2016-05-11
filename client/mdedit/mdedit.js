@@ -51,7 +51,7 @@ function MDEdit() {
   this.__layout__ = null;
   this.__minHeight__ = 0;
   this.__cm__ = null;
-  this.__bag__ = bag({ prefix: 'nodeca_editor' });
+  this.__bag__ = bag({ prefix: 'nodeca' });
   this.__cache__ = new RpcCache();
 
   this.__cache__.on('update', () => N.wire.emit('mdedit:update.text'));
