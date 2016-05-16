@@ -17,9 +17,6 @@ i18n:
           general_project_name: Project name
           general_project_name_help: Used in subject line of automatic email postings.
 
-          general_session_expire_hours: Session expire time (hours)
-          general_session_expire_hours_help: Session store period since last visit.
-
           general_cookies_domain: Cookies domain
           general_cookies_domain_help: Leave empty to auto-detect. (when site use single domain)
 

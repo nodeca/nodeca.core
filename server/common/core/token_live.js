@@ -8,6 +8,9 @@
 const createToken = require('nodeca.core/lib/random_token');
 
 
+const MAX_LIVE_TOKEN_TTL = 1 * 60 * 60; // 1 hour
+
+
 module.exports = function (N, apiPath) {
   N.validate(apiPath, {});
 
@@ -41,8 +44,10 @@ module.exports = function (N, apiPath) {
     // If no token or no session - skip
     if (!env.session || !env.session.token_live) return;
 
+    let ttl = Math.min(MAX_LIVE_TOKEN_TTL, env.session_ttl);
+
     // - save token here because we couldn't know session_id earlier
     // - if same record already exists redis will only update TTL
-    yield N.redis.setexAsync('token_live:' + env.session.token_live, env.session_ttl, env.session_id);
+    yield N.redis.setexAsync('token_live:' + env.session.token_live, ttl, env.session_id);
   });
 };
