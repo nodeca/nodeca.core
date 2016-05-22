@@ -11,7 +11,7 @@ module.exports = function (N) {
 
 
   function fetchGlobalSettings() {
-    GlobalSettings.findOne().lean(true).exec().then(settings => {
+    return GlobalSettings.findOne().lean(true).exec().then(settings => {
       let result = {};
 
       // Fetch setting values written to the database, and use default values
