@@ -2,8 +2,7 @@
 
 
 const _        = require('lodash');
-const memoizee = require('memoizee');
-const thenify  = require('thenify');
+const memoize  = require('promise-memoize');
 
 
 module.exports = function (N) {
@@ -11,13 +10,8 @@ module.exports = function (N) {
   let GlobalStore;
 
 
-  function fetchGlobalSettings(callback) {
-    GlobalSettings.findOne().lean(true).exec(function (err, settings) {
-      if (err) {
-        callback(err);
-        return;
-      }
-
+  function fetchGlobalSettings() {
+    GlobalSettings.findOne().lean(true).exec().then(settings => {
       let result = {};
 
       // Fetch setting values written to the database, and use default values
@@ -31,23 +25,16 @@ module.exports = function (N) {
         }
       });
 
-      callback(null, result);
+      return result;
     });
   }
 
-  let fetchGlobalSettingsCached = thenify(memoizee(fetchGlobalSettings, {
-    // Memoizee options. Revalidate cache after each 10 sec.
-    async:     true,
-    maxAge:    10000,
-    primitive: true
-  }));
-
-  let fetchGlobalSettingsAsync = thenify(fetchGlobalSettings);
+  let fetchGlobalSettingsCached = memoize(fetchGlobalSettings, { maxAge: 10000 });
 
 
   GlobalStore = N.settings.createStore({
     get(keys, params, options) {
-      let fetch = options.skipCache ? fetchGlobalSettingsAsync : fetchGlobalSettingsCached;
+      let fetch = options.skipCache ? fetchGlobalSettings : fetchGlobalSettingsCached;
 
       return fetch().then(settings => _.pick(settings, keys));
     },
