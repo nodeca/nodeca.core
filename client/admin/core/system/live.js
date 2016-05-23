@@ -30,11 +30,15 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
 
     // Run RPC request only in one client - lock by unique `requestID`
     N.live.lock('token_live_update_' + requestID, 5000, () => {
-      lastRequest = N.io.rpc('common.core.token_live', {}, { persistent: true }).then(res => {
+      // Promise returned from `N.io.rpc` have `.cancel()` method
+      lastRequest = N.io.rpc('common.core.token_live', {}, { persistent: true });
 
-        // Send new token back
-        N.live.emit('local.common.core.token_live.update_result', res.token_live);
-      });
+      lastRequest
+        .then(res => {
+          // Send new token back
+          N.live.emit('local.common.core.token_live.update_result', res.token_live);
+        })
+        .catch(() => {}); // Suppress errors
     });
   });
 
