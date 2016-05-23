@@ -4,8 +4,7 @@
 'use strict';
 
 
-const memoizee = require('memoizee');
-const thenify  = require('thenify');
+const memoize  = require('promise-memoize');
 const Mongoose = require('mongoose');
 const Schema   = Mongoose.Schema;
 
@@ -25,69 +24,43 @@ module.exports = function (N, collectionName) {
   // find data by its hash
   MessageParams.index({ data: 'hashed' });
 
-  let setParams = memoizee(
-
-    function (data, callback) {
-      N.models.core.MessageParams.findOneAndUpdate(
-        { data },
-        { $setOnInsert: { data } },
-        { 'new': true, upsert: true },
-        function (err, found) {
-          if (err) {
-            callback(err);
-            return;
-          }
-
-          callback(null, found._id);
-        }
-      );
-    },
-    {
-      async:     true,
-      primitive: true  // params keys are calculated as toString
-    }
+  let setParams = memoize(
+    data => N.models.core.MessageParams.findOneAndUpdate(
+              { data },
+              { $setOnInsert: { data } },
+              { 'new': true, upsert: true }
+            ).then(found => found._id)
   );
 
   // Store parameter set to the database and return its id
   //
-  MessageParams.statics.setParams = thenify.withCallback(function (params, callback) {
+  MessageParams.statics.setParams = function (params) {
     params = params || {};
 
     let sorted = {};
 
     Object.keys(params).sort().forEach(k => { sorted[k] = params[k]; });
 
-    setParams(JSON.stringify(sorted), callback);
-  });
+    return setParams(JSON.stringify(sorted));
+  };
 
 
   // Get message parameters by message id
   //
-  MessageParams.statics.getParams = thenify.withCallback(memoizee(
+  MessageParams.statics.getParams = memoize(
+    id => N.models.core.MessageParams.findById(id)
+            .then(params => {
+              let data = {};
 
-    function (id, callback) {
-      N.models.core.MessageParams.findById(id, function (err, params) {
-        if (err) {
-          callback(err);
-          return;
-        }
+              try {
+                data = JSON.parse(params.data);
+              } catch (__) {
+                data = {};
+              }
 
-        let data = {};
-
-        try {
-          data = JSON.parse(params.data);
-        } catch (__) {
-          data = {};
-        }
-
-        callback(null, data);
-      });
-    },
-    {
-      async:     true,
-      primitive: true  // params keys are calculated as toString
-    }
-  ));
+              return data;
+            })
+  );
 
   N.wire.on('init:models', function emit_init_MessageParams() {
     return N.wire.emit('init:models.' + collectionName, MessageParams);
