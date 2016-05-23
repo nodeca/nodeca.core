@@ -7,7 +7,6 @@
 const path         = require('path');
 const _            = require('lodash');
 const co           = require('bluebird-co').co;
-const thenify      = require('thenify');
 const Mocha        = require('mocha');
 const glob         = require('glob');
 
@@ -99,7 +98,9 @@ module.exports.run = function (N, args) {
       }
     });
 
-    yield thenify(cb => mocha.run(cb))();
+    yield new Promise((resolve, reject) => {
+      mocha.run(err => (err ? reject(err) : resolve()));
+    });
 
     return N.wire.emit('exit.shutdown');
   });
