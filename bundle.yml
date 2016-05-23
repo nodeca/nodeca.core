@@ -41,7 +41,6 @@ packages:
       - jquery
       - knockout
       - event-wire
-      - co
       - steady # scroll tracker
       - raf.js
       - faye/browser/faye-browser
