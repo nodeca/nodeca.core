@@ -80,22 +80,15 @@ N.wire.once('init:mdedit', function () {
 
     N.MDEdit.__layout__.trigger('change');
 
-    N.parse(
-      {
-        text: N.MDEdit.text(),
-        attachments: N.MDEdit.attachments().map(function (attach) {
-          return attach.media_id;
-        }),
-        options: N.MDEdit.__options__.parseOptions,
-        rpc_cache: N.MDEdit.__cache__
-      },
-      function (err, result) {
-        if (err) {
-          // It should never happen
-          N.wire.emit('notify', { type: 'error', message: err.message });
-          return;
-        }
-
+    N.parse({
+      text: N.MDEdit.text(),
+      attachments: N.MDEdit.attachments().map(function (attach) {
+        return attach.media_id;
+      }),
+      options: N.MDEdit.__options__.parseOptions,
+      rpc_cache: N.MDEdit.__cache__
+    })
+      .then(result => {
         if (!N.MDEdit.__layout__) return;
 
         N.MDEdit.__layout__.find('.mdedit__preview').html(N.runtime.render('mdedit.preview', {
@@ -105,8 +98,9 @@ N.wire.once('init:mdedit', function () {
         }));
 
         N.MDEdit.__scrollMap__ = null;
-      }
-    );
+      })
+      // It should never happen
+      .catch(err => N.wire.emit('notify', { type: 'error', message: err.message }));
   }, 500, { maxWait: 500, leading: true }));
 
 
