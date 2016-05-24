@@ -186,11 +186,7 @@ module.exports = function (N, apiPath) {
     let s = multi.obj(data.streams);
 
     yield new Promise((resolve, reject) => {
-      pump(s, out_stream, err => {
-        if (err) reject(err);
-        else resolve();
-      });
-
+      pump(s, out_stream, err => (err ? reject(err) : resolve()));
       out_stream.resume();
     });
 
