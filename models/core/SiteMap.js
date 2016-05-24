@@ -3,6 +3,7 @@
 
 const Mongoose = require('mongoose');
 const Schema   = Mongoose.Schema;
+const Promise  = require('bluebird');
 
 
 module.exports = function (N, collectionName) {
@@ -23,8 +24,7 @@ module.exports = function (N, collectionName) {
   //
   SiteMap.pre('remove', function remove_sitemap_files(callback) {
     Promise.all(this.files.map(fileid => N.models.core.File.remove(fileid)))
-      .then(() => process.nextTick(callback.bind(null)))
-      .catch(err => process.nextTick(callback.bind(null, err)));
+      .asCallback(callback);
   });
 
 
