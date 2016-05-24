@@ -1,7 +1,6 @@
 'use strict';
 
 
-const async    = require('async');
 const Mongoose = require('mongoose');
 const Schema   = Mongoose.Schema;
 
@@ -23,9 +22,9 @@ module.exports = function (N, collectionName) {
   // Remove sitemap files
   //
   SiteMap.pre('remove', function remove_sitemap_files(callback) {
-    async.each(this.files, fileid => {
-      N.models.core.File.remove(fileid, callback);
-    }, callback);
+    Promise.all(this.files.map(fileid => N.models.core.File.remove(fileid)))
+      .then(() => process.nextTick(callback.bind(null)))
+      .catch(err => process.nextTick(callback.bind(null, err)));
   });
 
 
