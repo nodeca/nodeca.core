@@ -18,7 +18,7 @@ N.wire.once('init:parser', function inject_line_numbers_plugin_init() {
     return self.renderToken(tokens, idx, options, env, self);
   }
 
-  N.parse.addPlugin(
+  N.parser.addPlugin(
     'injectLineNumbers',
     function (parser) {
       parser.md.renderer.rules.paragraph_open = parser.md.renderer.rules.heading_open = injectLineNumbers;

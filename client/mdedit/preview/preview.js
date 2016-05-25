@@ -80,7 +80,7 @@ N.wire.once('init:mdedit', function () {
 
     N.MDEdit.__layout__.trigger('change');
 
-    N.parse({
+    N.parser.md2html({
       text: N.MDEdit.text(),
       attachments: N.MDEdit.attachments().map(function (attach) {
         return attach.media_id;

@@ -1,12 +1,13 @@
 // Init parser instance & emit event for plugins
 //
-
 'use strict';
 
-var ParserBuilder = require('nodeca.core/lib/parser/index');
 
-N.wire.once('init:assets', function (__, callback) {
-  N.parse = ParserBuilder;
+const ParserBuilder = require('nodeca.core/lib/parser/index');
 
-  N.wire.emit('init:parser', {}, callback);
+
+N.wire.once('init:assets', function () {
+  N.parser = ParserBuilder;
+
+  return N.wire.emit('init:parser', {});
 });

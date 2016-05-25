@@ -46,10 +46,10 @@ N.wire.once('init:parser', function attachment_plugin_init() {
     types: '$$ JSON.stringify(N.models.users.MediaInfo.types) $$'
   });
 
-  N.parse.addPlugin(
+  N.parser.addPlugin(
     'attachment',
     function (parser) {
-      parser.bus.on('render', function fetch_attachment_data(data, callback) {
+      parser.bus.on('md2html.render', function fetch_attachment_data(data, callback) {
         if (!data.params.rpc_cache) {
           callback();
           return;

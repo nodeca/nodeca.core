@@ -1,7 +1,7 @@
 'use strict';
 
 N.wire.once('init:parser', function heading_plugin_init() {
-  N.parse.addPlugin(
+  N.parser.addPlugin(
     'heading',
     require('nodeca.core/lib/parser/plugins/heading')(N)
   );

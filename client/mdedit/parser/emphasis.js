@@ -1,7 +1,7 @@
 'use strict';
 
 N.wire.once('init:parser', function emphasis_plugin_init() {
-  N.parse.addPlugin(
+  N.parser.addPlugin(
     'emphasis',
     require('nodeca.core/lib/parser/plugins/emphasis')(N)
   );

@@ -1,10 +1,10 @@
 'use strict';
 
 N.wire.once('init:parser', function link_expand_plugin_init() {
-  N.parse.addPlugin(
+  N.parser.addPlugin(
     'link_expand',
     function (parser) {
-      parser.bus.on('render', function expand_links(data) {
+      parser.bus.on('md2html.render', function expand_links(data) {
         if (!data.params.rpc_cache) return;
 
         data.ast.find('msg-link[data-nd-auto]').each(function () {
