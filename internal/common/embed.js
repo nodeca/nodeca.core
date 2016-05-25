@@ -18,7 +18,6 @@
 
 const Embedza = require('embedza');
 const Unshort = require('url-unshort');
-const Promise = require('bluebird');
 
 
 module.exports = function (N, apiPath) {
@@ -77,8 +76,7 @@ module.exports = function (N, apiPath) {
     let url;
 
     try {
-      url = yield Promise.fromCallback(cb =>
-        unshort[data.cacheOnly ? 'cached' : 'normal'].expand(data.url, cb));
+      url = yield unshort[data.cacheOnly ? 'cached' : 'normal'].expand(data.url);
     } catch (__) {
       // ignore connection/parse errors
     }
@@ -118,11 +116,9 @@ module.exports = function (N, apiPath) {
     let result;
 
     try {
-      result = yield Promise.fromCallback(cb =>
-        embedza[data.cacheOnly ? 'cached' : 'normal'].render(
+      result = yield embedza[data.cacheOnly ? 'cached' : 'normal'].render(
           data.canonical || data.url,
-          data.types,
-          cb));
+          data.types);
     } catch (__) {
       // If any errors happen, ignore them and leave the link as is
     }
