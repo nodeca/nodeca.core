@@ -10,7 +10,7 @@ N.wire.once('init:parser', function quote_plugin_init() {
     function quote_plugin_init(parser) {
       require('nodeca.core/lib/parser/plugins/quote')(N)(parser);
 
-      parser.bus.on('md2html.render', function render_quote(data) {
+      parser.bus.on('ast2html', function render_quote(data) {
         data.ast.find('msg-quote').each(function () {
           var $tag = $(this);
           var url  = $tag.data('nd-title');
