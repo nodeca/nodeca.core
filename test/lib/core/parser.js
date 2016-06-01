@@ -25,6 +25,35 @@ describe('Parser', function () {
     });
 
 
+    it('should render footnotes', function () {
+      let data = {
+        text: 't1[^1] t2[^1] t3^[i1]\n\n[^1]: i2\n\nt4 [^2]\n\n[^2]: i3[^textref]\n\n[^textref]: i4',
+        options: true, // enable all plugins
+        attachments: []
+      };
+
+      return TEST.N.parser.md2html(data).then(res => {
+        assert.strictEqual(
+          res.html,
+          '<p>t1<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a>' +
+          '</sup> t2<sup class="footnote-ref"><a href="#fn1" id="fnref1:1">[1]' +
+          '</a></sup> t3<sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]' +
+          '</a></sup></p>\n<p>t4 <sup class="footnote-ref"><a href="#fn3" ' +
+          'id="fnref3">[3]</a></sup></p>\n<hr class="footnotes-sep">\n<section ' +
+          'class="footnotes">\n<ol class="footnotes-list">\n<li id="fn1" ' +
+          'class="footnote-item"><p>i2 <a href="#fnref1" class="footnote-backref">' +
+          '&#x21A9;</a> <a href="#fnref1:1" class="footnote-backref">&#x21A9;</a>' +
+          '</p>\n</li>\n<li id="fn2" class="footnote-item"><p>i1 <a href="#fnref2" ' +
+          'class="footnote-backref">&#x21A9;</a></p>\n</li>\n<li id="fn3" ' +
+          'class="footnote-item"><p>i3<sup class="footnote-ref"><a href="#fn4" ' +
+          'id="fnref4">[4]</a></sup> <a href="#fnref3" class="footnote-backref">' +
+          '&#x21A9;</a></p>\n</li>\n<li id="fn4" class="footnote-item"><p>i4 <a ' +
+          'href="#fnref4" class="footnote-backref">&#x21A9;</a></p>\n</li>\n</ol>\n</section>'
+        );
+      });
+    });
+
+
     it('should calculate text length', function () {
       let data = {
         text: '### Test\n\nText test 123\n\n- a\n- b\n- c',
