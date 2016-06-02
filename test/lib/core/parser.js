@@ -55,15 +55,18 @@ describe('Parser', function () {
 
 
     it('should calculate text length', function () {
-      let data = {
-        text: '### Test\n\nText test 123\n\n- a\n- b\n- c',
-        options: true, // enable all plugins
-        attachments: []
-      };
+      let assets = [
+        [ '### Test\n\nText test 123\n\n- a\n- b\n- c', 18 ],
+        [ 'http://www.google.com', 21 ],
+        [ '> test', 0 ],
+        [ '```spoiler\n~~test~~\n```', 4 ]
+      ];
 
-      return TEST.N.parser.md2html(data).then(res => {
-        assert.strictEqual(res.text_length, 18);
-      });
+      return Promise.all(assets.map(asset =>
+        TEST.N.parser.md2html({ text: asset[0], options: true, attachments: [] }).then(res => {
+          assert.strictEqual(res.text_length, asset[1], `Broken asset: "${asset[0]}"`);
+        })
+      ));
     });
   });
 
