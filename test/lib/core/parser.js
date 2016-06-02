@@ -75,24 +75,25 @@ describe('Parser', function () {
     it('should transform md to preview', function () {
       let assets = [
         [ '| title |\n| --- |\n| text |', '<span class="icon icon-table"></span>' ],
-        [ '[test](#)', '<p><a href="#" class="link link-ext" title="" target="_blank" rel="nofollow">test</a></p>' ],
-        [ 'http://www.google.com', '<p><a href="http://www.google.com" class="link link-ext link-auto" ' +
-                                   'title="" target="_blank" rel="nofollow">www.google.com</a></p>' ],
-        [ '![](#)', '<p><span class="icon icon-picture"></span></p>' ],
+        [ '[test](#)', '<a href="#" class="link link-ext" title="" target="_blank" rel="nofollow">test</a>' ],
+        [ 'http://www.google.com', '<a href="http://www.google.com" class="link link-ext link-auto" ' +
+                                   'title="" target="_blank" rel="nofollow">www.google.com</a>' ],
+        [ '![](#)', '<span class="icon icon-picture"></span>' ],
         [ '- a\n- b', '<span class="icon icon-list-bullet"></span>' ],
         [ '1. a\n2. b', '<span class="icon icon-list-numbered"></span>' ],
         [ '```\ncode\n```', '<span class="icon icon-code"></span>' ],
-        [ '`test`', '<p>test</p>' ],
-        [ '_test_', '<p>test</p>' ],
-        [ '__test__', '<p>test</p>' ],
-        [ '~~test~~', '<p>test</p>' ],
+        [ '`test`', 'test' ],
+        [ '_test_', 'test' ],
+        [ '__test__', 'test' ],
+        [ '~~test~~', 'test' ],
         [ '### test', 'test' ],
-        [ '^test^', '<p>^test</p>' ],
-        [ '~test~', '<p>test</p>' ],
+        [ '^test^', '^test' ],
+        [ '~test~', 'test' ],
         [ '> test', '' ],
         [ '---', '' ],
-        [ 'test[^1]\n\n[^1]: foo', '<p>test</p>' ],
-        [ '```spoiler\ntest\n```', '<p>test</p>' ]
+        [ 'test[^1]\n\n[^1]: foo', 'test' ],
+        [ '```spoiler\ntest\n```', 'test' ],
+        [ 'foo\n\nbar', 'foo\nbar' ]
       ];
 
       return Promise.all(assets.map(asset =>
@@ -110,7 +111,19 @@ describe('Parser', function () {
       };
 
       return TEST.N.parser.md2preview(data).then(res => {
-        assert.strictEqual(res.preview.trim(), '<p><span class="preview-link">test</span></p>');
+        assert.strictEqual(res.preview.trim(), '<span class="preview-link">test</span>');
+      });
+    });
+
+
+    it('should limit text length', function () {
+      let data = {
+        text: '- a\n- b\n\nfoobarbaz\n\ntest test',
+        limit: 10
+      };
+
+      return TEST.N.parser.md2preview(data).then(res => {
+        assert.strictEqual(res.preview, '<span class="icon icon-list-bullet"></span>\nfoobarbaz&#x2026;');
       });
     });
   });
