@@ -55,34 +55,34 @@
 @import "bootstrap/less/responsive-utilities.less";
 
 // Add missed xxs respoisive
-.visible-xxs-block,
-.visible-xxs-inline,
-.visible-xxs-inline-block {
+.visible-xs-block,
+.visible-xs-inline,
+.visible-xs-inline-block {
   display: none !important;
 }
 
-.visible-xxs {
+.visible-xs {
   @media (max-width: (@screen-xs - 1)) {
     .responsive-visibility();
   }
 }
-.visible-xxs-block {
+.visible-xs-block {
   @media (max-width: (@screen-xs - 1)) {
     display: block !important;
   }
 }
-.visible-xxs-inline {
+.visible-xs-inline {
   @media (max-width: (@screen-xs - 1)) {
     display: inline !important;
   }
 }
-.visible-xxs-inline-block {
+.visible-xs-inline-block {
   @media (max-width: (@screen-xs - 1)) {
     display: inline-block !important;
   }
 }
 
-.hidden-xxs {
+.hidden-xs {
   @media (max-width: (@screen-xs - 1)) {
     .responsive-invisibility();
   }
