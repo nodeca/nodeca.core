@@ -41,7 +41,9 @@
 
 - preview (String) - simplified HTML
 
-## AST tags
+## AST
+
+### Tags
 
 | Tag | View |
 | --- | ---- |
@@ -63,3 +65,26 @@
 | hr | `<hr>` |
 | table | `<table class="table table-striped"><thead><tr><th>{{header}}</th></tr></thead><tbody><tr><td>{{text}}</td></tr></tbody></table>` |
 | quote | `<msg-quote data-nd-title="{{title}}">{{content}}</msg-quote>` |
+
+### AST -> preview
+
+| Tag | View |
+| --- | ---- |
+| image | `<span class="icon icon-picture"></span>` |
+| link | depends on `link2text` option: `<span class="preview-link"></span>` or same as HTML |
+| bullet list | `<span class="icon icon-list-bullet"></span>` |
+| numbered list | `<span class="icon icon-list-numbered"></span>` |
+| code block | `<span class="icon icon-code"></span>` |
+| sup | `^text` |
+| footnote | remove |
+| hr | remove |
+| table | `<span class="icon icon-table"></span>` |
+| quote | remove |
+
+### AST -> HTML
+
+| Tag | View |
+| --- | ---- |
+| code block | `<pre class="hljs"><code>{{highlighted_code}}</code></pre>` |
+| spoiler | `<div class="spoiler">...</div>` |
+| footnote | `<sup class="footnote-ref">...</sup>` + `<hr class="footnotes-sep"><section class="footnotes">...</section>` |
