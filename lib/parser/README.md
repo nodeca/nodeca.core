@@ -88,3 +88,16 @@
 | code block | `<pre class="hljs"><code>{{highlighted_code}}</code></pre>` |
 | spoiler | `<div class="spoiler">...</div>` |
 | footnote | `<sup class="footnote-ref">...</sup>` + `<hr class="footnotes-sep"><section class="footnotes">...</section>` |
+| quote | `<blockquote class="quote"><div class="quote__content">{{content}}</div></blockquote>` |
+
+
+**Attachments**:
+
+Not presented in AST, only in option `attachments`. Out in `tail` array.
+
+**Links expand:**
+
+Automatic links could be expanded to:
+
+- forum posts quotes
+- HTML snippets with [embedza](https://github.com/nodeca/embedza) (for external video players like Vimeo)
