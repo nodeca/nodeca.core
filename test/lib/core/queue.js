@@ -365,15 +365,12 @@ describe('Queue', function () {
       reduce() {
         throw new Error("reduce shouldn't be called");
       },
-      process(callback) {
+      process() {
         if (calls++ === 0) {
-          this.task.worker.cancel(this.task.id, function (err) {
-            callback();
-            done(err);
-          });
-        } else {
-          throw new Error("process shouldn't be called second time");
+          return this.task.worker.cancel(this.task.id).then(done);
         }
+
+        throw new Error("process shouldn't be called second time");
       }
     };
 
@@ -389,28 +386,16 @@ describe('Queue', function () {
     let worker1 = {
       name: 'test11',
       chunksPerInstance: 1,
-      map(callback) {
-        this.worker.status(this.id, function (err, data) {
-          assert.ifError(err);
+      map() {
+        return this.worker.status(this.id).then(data => {
           assert.equal(data.worker, 'test11');
           assert.equal(data.state,  'mapping');
 
-          callback(null, [ 1, 2, 3, 4 ]);
+          return [ 1, 2, 3, 4 ];
         });
       },
-      reduce(chunksResult, callback) {
-        this.worker.status(this.id, function (err, data) {
-          assert.ifError(err);
-          assert.equal(data.worker, 'test11');
-          assert.equal(data.state,  'reducing');
-
-          callback();
-          done();
-        });
-      },
-      process(callback) {
-        this.task.worker.status(this.task.id, (err, data) => {
-          assert.ifError(err);
+      process() {
+        return this.task.worker.status(this.task.id).then(data => {
           assert.equal(data.worker, 'test11');
           assert.equal(data.state,  'aggregating');
 
@@ -421,7 +406,15 @@ describe('Queue', function () {
           // assert.equal(data.chunks.active[0],      this.id);
 
           calls++;
-          callback(null, this.data);
+          return this.data;
+        });
+      },
+      reduce() {
+        return this.worker.status(this.id).then(data => {
+          assert.equal(data.worker, 'test11');
+          assert.equal(data.state,  'reducing');
+
+          done();
         });
       }
     };
@@ -449,7 +442,7 @@ describe('Queue', function () {
 
 
   describe('.postpone()', function () {
-    it('should works with 1 argument', function (done) {
+    it('should work with 1 argument', function (done) {
       let worker = {
         name: 'test14',
         postponeDelay: 1,
@@ -468,7 +461,7 @@ describe('Queue', function () {
     });
 
 
-    it('should works with delay argument', function (done) {
+    it('should work with delay argument', function (done) {
       let worker = {
         name: 'test15',
         postponeDelay: 1,
@@ -488,7 +481,7 @@ describe('Queue', function () {
     });
 
 
-    it('should works with data argument', function (done) {
+    it('should work with data argument', function (done) {
       let worker = {
         name: 'test16',
         postponeDelay: 1,

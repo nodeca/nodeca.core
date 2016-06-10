@@ -40,18 +40,13 @@ Options:
  - **track** (Number) - default 3600000ms (1hr). Time to remember scheduled
    tasks from cron to avoid rerun if several servers in cluster have wrong clocks. Don't set too high for very frequent tasks, because it can occupy a lot of memory.
  - **map** (Function) - optional, proxy taskData to single chunk by default,
-   called as: `task.map(callback)`
+   called as: `task.map()`
    - **this** (Object) - current task (task data is available as `this.data`)
-   - **callback** (Function) - called as: `function (err, chunksData)`
-     - **chunksData** (Array) - array of chunks data
- - **process** (Function) - called as: `chunk.process(callback)`
+ - **process** (Function) - called as: `chunk.process()`
    - **this** (Object) - current chunk (chunk data is available as `this.data`)
-   - **callback** (Function) - called as: `function (err, result)`
- - **reduce** (Function) - optional, only call `callback` by default,
-   called as: `task.reduce(chunksResult, callback)`
+ - **reduce** (Function) - optional, called as: `task.reduce(chunksResult)`
    - **this** (Object) - current task
    - **chunksResult** (Array) - array of chunks results
-   - **callback** (Function) - called as: `function (err)`
 
 We use classic map/reduce approach to run tasks. Each task is mapped to chunks,
 chunks are executed in parallel on all available queue nodes, then collected data
@@ -132,23 +127,25 @@ an error has occured.
 Get worker by name. Returns `null` if worker not exists.
 
 
-### .worker(name).push([taskData,] callback)
+### .worker(name).push([taskData])
 
 Create new task and run it immediately.
 
  - **taskData** (Object) - optional, the task params
- - **callback** (Function) - called as: `function (err, task_id)`
+
+Returns a Promise resolved with task id.
 
 If worker has custom `.taskID()`, then duplicated tasks will be ignored silently.
 
-### .worker(name).postpone([taskData, delay,] callback)
+### .worker(name).postpone([taskData, delay])
 
 Create new task and postpone execution to given delay.
 
  - **taskData** (Object) - optional, the task params, default: `null`
  - **delay** (Number) - optional, delay execution for the given amount of time,
    default: `worker.postponeDelay`
- - **callback** (Function) - called as: `function (err, task_id)`
+
+Returns a Promise resolved with task id.
 
 If worker has custom `.taskID()`, then
 
@@ -161,26 +158,27 @@ signature based on argument type (if it's a number, it's a delay). Thus,
 if you wish to supply a numeric `taskData`, you *must* also specify `delay`.
 
 
-### .worker(name).status([taskID,] callback)
+### .worker(name).status([taskID])
 
 Get information about task status.
 
  - **taskID** (String) - optional, task ID returned from `push` or `postpone`
    functions, result of `.taskID()` by default
- - **callback** (Function) - called as `function (err, info)`
-   - **info** (Object | Null) - task info if task exists, null otherwise
-     - **worker** (String) - worker name
-     - **state**  (String) - one of "mapping", "aggregating", "reducing" or
-       "postponed"
-     - **chunks** (Object) - chunk counts by state (optional, only present
-       if task is in "aggregating" state)
-       - **pending** - count of pending chunks
-       - **active**  - count of active chunks
-       - **done**    - count of completed chunks
-       - **errored** - count of failed chunks
+
+Returns a Promise resolved with task info if task exists, null otherwise. Task info format:
+
+  - **worker** (String) - worker name
+  - **state**  (String) - one of "mapping", "aggregating", "reducing" or
+    "postponed"
+  - **chunks** (Object) - chunk counts by state (optional, only present
+    if task is in "aggregating" state)
+    - **pending** - count of pending chunks
+    - **active**  - count of active chunks
+    - **done**    - count of completed chunks
+    - **errored** - count of failed chunks
 
 
-### .worker(name).cancel([taskID,] callback)
+### .worker(name).cancel([taskID])
 
 Cancel the task and remove it from queue. Chunks that started execution
 will continue, but their results will be discarded and no new chunks
@@ -188,7 +186,6 @@ will be processed.
 
  - **taskID** (String) - optional, task ID returned from `push` or `postpone`
    functions, result of `.taskID()` by default
- - **callback** (Function) - called as: `function (err)`
 
 
 ### .worker(name).taskID([taskData])
@@ -199,7 +196,7 @@ all tasks to be unique, and reject duplicating ones. So, you can customize
 you can return constant to allow only single task instance to run.
 
 
-### chunk.setDeadline([delay, callback])
+### chunk.setDeadline([delay])
 
 All chunks have a limited time to finish (timeout). If not complete, those will
 be considered as failed. But sometime you may need to extend default deadline.
