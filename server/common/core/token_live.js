@@ -5,7 +5,7 @@
 'use strict';
 
 
-const createToken = require('nodeca.core/lib/random_token');
+const createToken = require('nodeca.core/lib/app/random_token');
 
 
 const MAX_LIVE_TOKEN_TTL = 1 * 60 * 60; // 1 hour
