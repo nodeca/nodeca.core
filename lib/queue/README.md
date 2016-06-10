@@ -15,7 +15,7 @@ the most of projects. Advantage of this package is the ease of use.
 
 ### new Queue(redis, prefix)
 
- - **redis** (RedisClient) - redis client instance
+ - **redis** (String) - redis url
  - **prefix** (String) - optional. Redis keys prefix, "queue:" by default
 
 

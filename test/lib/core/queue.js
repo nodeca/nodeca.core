@@ -7,22 +7,31 @@ describe('Queue', function () {
   let q1, q2;
 
 
-  before(function () {
-    q1 = new Queue(TEST.N.redis);
-    q2 = new Queue(TEST.N.redis);
+  before(function (callback) {
+    q1 = new Queue(TEST.N.config.database.redis);
 
     q1.start();
-    q2.start();
 
     q1.on('error', err => {
       if (err instanceof Queue.Error) return;
       throw err;
     });
 
+    q1.on('connect', callback);
+  });
+
+
+  before(function (callback) {
+    q2 = new Queue(TEST.N.config.database.redis);
+
+    q2.start();
+
     q2.on('error', err => {
       if (err instanceof Queue.Error) return;
       throw err;
     });
+
+    q2.on('connect', callback);
   });
 
 
