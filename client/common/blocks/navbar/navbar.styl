@@ -4,6 +4,10 @@
 .navbar
   box-shadow 0 1px 3px rgba(0, 0, 0, 0.05)
 
+.navbar-brand
+  text-transform uppercase
+  margin-right 2rem
+
 .navbar__level-up
   display inline-block
   position relative
@@ -12,27 +16,39 @@
   height 50px
   line-height 50px
   vertical-align middle
-  color grayLight
+  color $gray-light
   &:hover
   &:focus
     text-decoration none
 
-.navbar-nav > li > a:after
+.navbar-nav > .nav-item
+  position relative
+
+  // override bootstrap default margin
+  & + .nav-item
+    margin-left 2rem
+
+.navbar-nav > .nav-item > a:after
 .navbar__level-up:after
   position absolute
   left 0
   right 0
   bottom 0
-  height 2px
+  height 0.125rem
   content ''
-  background-color grayLighter
+  background-color lighten($brand-primary, 27%)
   opacity 0
   transition opacity .3s ease
 
-.navbar-nav > li.active > a:after
-.navbar-nav > li:hover > a:after
+.navbar-nav > .nav-item.active > a:after
+.navbar-nav > .nav-item:hover > a:after
 .navbar__level-up:hover:after
   opacity 1
+
+.navbar-nav > .nav-item
+  font-size $font-size-sm
+  line-height 1.5rem
+
 
 //
 // Alternative navigation. Shown when `navbar__m-secondary` modifier added
@@ -46,7 +62,6 @@
   left 0
   right 0
   top -60px
-  background-color #eee
   opacity 0
   transition opacity .5s ease, top 0s ease .5s
 

@@ -10,7 +10,7 @@ N.wire.on('navigate.done', function navbar_menu_change_active(target) {
   var targetPath = target.apiPath.split('.'), items, active;
 
   var menus = $('.sidebar-menu');
-  menus.addClass('hidden');
+  menus.addClass('hidden-xs-up');
 
   items = menus.find('[data-api-path]');
   items.removeClass('_active');
@@ -27,7 +27,7 @@ N.wire.on('navigate.done', function navbar_menu_change_active(target) {
     return index;
   });
 
-  $(active).closest('.sidebar-menu').removeClass('hidden');
+  $(active).closest('.sidebar-menu').removeClass('hidden-xs-up');
 
   // if autoselection not disabled - add highlighting class
   if ($(active).data('autoselect') !== 0) {

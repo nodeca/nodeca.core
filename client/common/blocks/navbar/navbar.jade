@@ -13,34 +13,31 @@
 -   return result.sort(compare);
 - }
 
-nav.navbar.navbar-default.navbar-fixed-top
+nav.navbar.navbar-dark.navbar-fixed-top.bg-primary
   .navbar-primary.layout__container.container-fluid
     .navbar-header
-      button.navbar-toggle(
+      button.navbar-toggler.hidden-md-up(
         data-toggle='collapse',
         data-target='.navbar-collapse',
         type='button'
-      )
-        span.icon-bar
-        span.icon-bar
-        span.icon-bar
+      ) &#9776;
 
       a.navbar-brand(href="/") Nodeca
 
-    .navbar-collapse.collapse
+    .navbar-collapse.collapse.navbar-toggleable-sm
       ul.nav.navbar-nav
         each item in sortedItems(self.runtime.navbar)
           - var info = item.info;
-          li(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
-            a(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
+          li.nav-item(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
+            a.nav-link(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
 
-        li: a(href='https://github.com/nodeca/nodeca', target='_blank') Github
+        li.nav-item
+          a.nav-link(href='https://github.com/nodeca/nodeca', target='_blank') Github
 
-      //-
-      form.navbar-form.navbar-left.hidden-sm
-        input.form-control(type='text', placeholder='Search')
+      ul.nav.navbar-nav.pull-xs-right
+        li.nav-item
+          a.nav-link.icon.icon-search(href='#', alt=self.t('search'))
 
-      ul.nav.navbar-nav.navbar-right
         //- NOTE: This block is located in `nodeca.users`
         != self.partial('@common.blocks.navbar_auth')
 

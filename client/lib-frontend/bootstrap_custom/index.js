@@ -1,17 +1,28 @@
 'use strict';
 
+// dependency for bootstrap tooltips
+// (it actually requires window.Tether)
+//
+window.Tether = require('tether');
 
-require('bootstrap/js/affix');
-// require('bootstrap/js/alert');
-// require('bootstrap/js/button');
-// require('bootstrap/js/carousel');
-require('bootstrap/js/collapse');
-require('bootstrap/js/dropdown');
-require('bootstrap/js/modal');
-// require('bootstrap/js/scrollspy');
-require('bootstrap/js/tab');
-require('bootstrap/js/tooltip');
-require('bootstrap/js/transition');
+// require compiled bootstrap file because we have
+// no access to source files in npm package, see:
+// https://github.com/twbs/bootstrap/issues/18934
+//
+require('bootstrap/dist/js/bootstrap.js');
+
+/*
+//require('bootstrap/js/src/alert');
+//require('bootstrap/js/src/button');
+//require('bootstrap/js/src/carousel');
+require('bootstrap/js/src/collapse');
+require('bootstrap/js/src/dropdown');
+require('bootstrap/js/src/modal');
+//require('bootstrap/js/src/scrollspy');
+require('bootstrap/js/src/tab');
+//require('bootstrap/js/src/tooltip');
+require('bootstrap/js/src/util');
 
 // Popover must go AFTER tooltip
-require('bootstrap/js/popover');
+//require('bootstrap/js/src/popover');
+*/

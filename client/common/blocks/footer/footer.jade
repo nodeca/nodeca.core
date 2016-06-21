@@ -1,5 +1,7 @@
 footer.page-footer
-  ul.page-footer-nav.clearfix
+  .page-footer-nav__brand.pull-xs-left: a(href='#') Nodeca
+
+  ul.page-footer-nav.pull-xs-left
     li.page-footer-nav__item: a(href='#') About
     li.page-footer-nav__item: a(href='#') Contacts
     li.page-footer-nav__item: a(href='#') Terms
@@ -15,7 +17,7 @@ footer.page-footer
               data-on-click='common.set_language',
               data-locale=locale)= self.t('language.' + locale)
 
-  p.page-footer__copyright
+  p.page-footer__copyright.pull-xs-right
     | Powered by 
     a(href='#') Nodeca
     | , social platform by 

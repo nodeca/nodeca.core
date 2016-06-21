@@ -30,9 +30,9 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
   body
     //-._affix(data-affix={ top: 500, class: 'layout-scroll-top__active' })
     != self.partial('@common.blocks.navbar', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
-    .layout__container.container-fluid
-      != self.content
+    != self.content
 
+    .layout__container.container-fluid
       != self.partial('@common.blocks.footer', { locales: self.enabled_locales })
 
       .nojs
