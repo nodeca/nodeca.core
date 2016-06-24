@@ -3,10 +3,13 @@
 
 .navbar
   box-shadow 0 1px 3px rgba(0, 0, 0, 0.05)
+  // We use .container-fluid inside, it has padding already
+  padding-left 0
+  padding-right 0
 
 .navbar-brand
   text-transform uppercase
-  margin-right 2rem
+  margin-right $spacer * 4
 
 .navbar__level-up
   display inline-block
@@ -22,18 +25,21 @@
     text-decoration none
 
 .navbar-nav > .nav-item
+  //font-size $font-size-sm
   position relative
 
   // override bootstrap default margin
   & + .nav-item
-    margin-left 2rem
+    margin-left $spacer * 2
+
 
 .navbar-nav > .nav-item > a:after
 .navbar__level-up:after
   position absolute
-  left 0
-  right 0
-  bottom 0
+  left -($spacer)
+  right -($spacer)
+  bottom -($navbar-padding-y)
+  //bottom -.5rem
   height 0.125rem
   content ''
   background-color lighten($brand-primary, 27%)
@@ -44,11 +50,6 @@
 .navbar-nav > .nav-item:hover > a:after
 .navbar__level-up:hover:after
   opacity 1
-
-.navbar-nav > .nav-item
-  font-size $font-size-sm
-  line-height 1.5rem
-
 
 //
 // Alternative navigation. Shown when `navbar__m-secondary` modifier added

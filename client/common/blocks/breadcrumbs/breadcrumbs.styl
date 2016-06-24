@@ -1,26 +1,33 @@
 @import "nodeca.core/client/common/_variables"
 
-.breadcrumbs-line
-  height 2rem
-  background-color $gray-lightest
-  margin-bottom 1rem
+.breadcrumbs-container
+  font-size $font-size-xs
+  height $breadcrumbs-height
+  line-height $breadcrumbs-height
+  background-color $breadcrumbs-bg
+  margin-bottom 1.5rem
+
+.breadcrumbs-controls
+  display inline-block
+  overflow hidden
+
+  .btn
+    margin-right .3em
 
 .breadcrumbs
-  margin 0 0 1rem
+  margin 0
   max-width 100%
   white-space nowrap
   overflow hidden
-  font-size $font-size-xs
   list-style none
   padding 0
-  line-height 2rem
   display inline-block
 
 .breadcrumbs__item
   display inline-block
   &:before
     content '/'
-    color $body-color-secondary
+    color $breadcrumbs-color
     margin 0 .6em 0 .5em
 
   &:first-child:before
@@ -29,11 +36,13 @@
 
   &:last-child:after
     content '/'
-    color $body-color-secondary
+    color $breadcrumbs-color
     margin 0 .6em 0 .5em
 
 .breadcrumbs__link
-  color $body-color-secondary
+  color $breadcrumbs-color
+  text-decoration none
+  line-height $breadcrumbs-height
 
 // Collapse list midle elements on narrow screens
 //
