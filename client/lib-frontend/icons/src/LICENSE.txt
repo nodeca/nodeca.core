@@ -19,15 +19,6 @@ Font license info
    Homepage:  http://www.entypo.com
 
 
-## Brandico
-
-   (C) 2012 by Vitaly Puzrin
-
-   Author:    Crowdsourced, for Fontello project
-   License:   SIL (http://scripts.sil.org/OFL)
-   Homepage:  
-
-
 ## Typicons
 
    (c) Stephen Hutchings 2012
@@ -35,5 +26,14 @@ Font license info
    Author:    Stephen Hutchings
    License:   SIL (http://scripts.sil.org/OFL)
    Homepage:  http://typicons.com/
+
+
+## Brandico
+
+   (C) 2012 by Vitaly Puzrin
+
+   Author:    Crowdsourced, for Fontello project
+   License:   SIL (http://scripts.sil.org/OFL)
+   Homepage:  
 
 

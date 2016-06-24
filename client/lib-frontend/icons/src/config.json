@@ -329,6 +329,36 @@
       "css": "yandex",
       "code": 59413,
       "src": "brandico"
+    },
+    {
+      "uid": "d10920db2e79c997c5e783279291970c",
+      "css": "dropdown",
+      "code": 59277,
+      "src": "entypo"
+    },
+    {
+      "uid": "25fc99a30fecc4021fdcae5fff5ba9ac",
+      "css": "views",
+      "code": 59146,
+      "src": "entypo"
+    },
+    {
+      "uid": "922ab2cb66943a83de969990289ef1dc",
+      "css": "threads",
+      "code": 59190,
+      "src": "entypo"
+    },
+    {
+      "uid": "1189604bf305b6b03a74685ce60e6632",
+      "css": "posts",
+      "code": 128196,
+      "src": "entypo"
+    },
+    {
+      "uid": "c60f50a1729165e3752fa27a16325208",
+      "css": "replies",
+      "code": 57349,
+      "src": "typicons"
     }
   ]
 }

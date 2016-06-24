@@ -9,7 +9,11 @@
 .icon-check:before { content: '\2713'; } /* '✓' */
 .icon-track-muted:before { content: '\2716'; } /* '✖' */
 .icon-reply-for:before { content: '\27a6'; } /* '➦' */
+.icon-replies:before { content: '\e005'; } /* '' */
 .icon-more:before { content: '\e4b0'; } /* '' */
+.icon-views:before { content: '\e70a'; } /* '' */
+.icon-threads:before { content: '\e736'; } /* '' */
+.icon-dropdown:before { content: '\e78d'; } /* '' */
 .icon-search:before { content: '\e800'; } /* '' */
 .icon-level-up:before { content: '\e801'; } /* '' */
 .icon-attach:before { content: '\e802'; } /* '' */
@@ -53,5 +57,6 @@
 .icon-vote-down:before { content: '\e82e'; } /* '' */
 .icon-emoji:before { content: '\f118'; } /* '' */
 .icon-sliders:before { content: '\f1de'; } /* '' */
+.icon-posts:before { content: '📄'; } /* '\1f4c4' */
 .icon-link:before { content: '🔗'; } /* '\1f517' */
 .icon-infraction:before { content: '🔨'; } /* '\1f528' */
