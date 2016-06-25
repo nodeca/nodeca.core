@@ -1,9 +1,15 @@
 @import "nodeca.core/client/common/_variables"
 
+.btn + .btn
+  margin-left .5em
+
 .btn-square
   padding-left 0 !important
   padding-right 0 !important
-  width 2.6em
+  min-width 2.6em
+
+.dropdown-toggle.btn-square:after
+  margin-left 0
 
 .dropdown-toggle.icon:after
   border none

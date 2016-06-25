@@ -8,14 +8,22 @@ footer.page-footer
     li.page-footer-nav__item: a(href='#') Help
 
     li.page-footer-nav__item.dropup
-      a.dropdown-toggle(href='#',data-toggle='dropdown') Language
-        span.caret
-      ul.dropdown-menu
+      - var menu_rnd_id = 'rnd' + String(Math.random()).slice(2, 10)
+
+      a.dropdown-toggle(
+        href='#'
+        id=menu_rnd_id
+        aria-haspopup='true'
+        aria-expanded='false'
+        data-toggle='dropdown'
+      ) Language
+
+      .dropdown-menu.dropdown-menu-left(aria-labelledby=menu_rnd_id)
         each locale in self.locales
-          li
-            a(href='#',
-              data-on-click='common.set_language',
-              data-locale=locale)= self.t('language.' + locale)
+          button.dropdown-item(
+            data-on-click='common.set_language'
+            data-locale=locale
+          )= self.t('language.' + locale)
 
   p.page-footer__copyright.pull-xs-right
     | Powered by 
