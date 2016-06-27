@@ -11,8 +11,8 @@
   display inline-block
   overflow hidden
 
-  .btn
-    margin-right .3em
+  .btn + .btn
+    margin-left .3rem
 
 .breadcrumbs
   margin 0
@@ -57,8 +57,3 @@
     display inline-block
     &:before
       content '/ ... /'
-
-// Add space between breadcrumbs buttons
-//
-.breadcrumbs .btn
-  margin-right .25rem

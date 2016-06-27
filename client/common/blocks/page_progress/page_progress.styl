@@ -2,45 +2,40 @@
 
 
 .page-progress
-  padding 0
-  margin 0
-  display inline-block
+  margin-left -.5rem
 
-.page-progress__item
-  display inline-block
-  vertical-align middle
+.page-progress__item + .page-progress__item
+  margin-left 0 !important
 
 .page-progress__button-first
 .page-progress__button-last
-  display block
-  position relative
-  padding 0 10px
-  height 50px
-  line-height 50px
-  color grayDark
-  &:hover
-  &:focus
-    text-decoration none
+.page-progress__info
+  padding-left .5rem
+  padding-right .5rem
 
 .page-progress__info
-  display block
-  position relative
-  font-size 12px
-  padding 15px 0
-  height 50px
-  color grayDark
-  &:hover
-  &:focus
-    text-decoration none
+  min-width 6rem
 
+.page-progress__label
+  text-align center
+
+.page-progress__label-total
+  color darken($navbar-dark-color, 30%)
+  &:before
+    content '/'
+    margin-left .2em
+    margin-right .2em
 
 .page-progress__bar
-  width 100%
-  background-color grayLighter
+  position absolute
+  bottom .25rem
+  left .25rem
+  right .25rem
+  background-color darken($navbar-dark-color, 30%)
 
 .page-progress__bar-fill
-  background-color grayDark
-  height 2px
+  background-color darken($navbar-dark-color, 10%)
+  height .0625rem
   transition width .3s
 
 
@@ -51,28 +46,12 @@
 //
 // Highlight on hover
 //
-.page-progress__button-first
-.page-progress__button-last
-.page-progress__info
+a.page-progress__button-first
+a.page-progress__button-last
+a.page-progress__info
   &:after
-    position absolute
-    left 0
-    right 0
-    bottom 0
-    height 2px
-    content ''
-    background-color grayLighter
-    opacity 0
-    transition opacity .3s
-
-.page-progress__item:hover
-  .page-progress__button-first
-  .page-progress__button-last
-  .page-progress__info
-    &:after
-      opacity 1
-
-.page-progress__item.no-hover:hover
-  .page-progress__info
-    &:after
-      opacity 0
+    left 0 !important
+    right 0 !important
+    // Override bootstrap caret
+    margin-left 0
+    border none

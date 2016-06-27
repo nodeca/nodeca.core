@@ -11,20 +11,7 @@
   text-transform uppercase
   margin-right $spacer * 4
 
-.navbar__level-up
-  display inline-block
-  position relative
-  padding 0 10px
-  margin-left -10px
-  height 50px
-  line-height 50px
-  vertical-align middle
-  color $gray-light
-  &:hover
-  &:focus
-    text-decoration none
-
-.navbar-nav > .nav-item
+.navbar-nav .nav-item
   //font-size $font-size-sm
   position relative
 
@@ -39,7 +26,6 @@
   left -($spacer)
   right -($spacer)
   bottom -($navbar-padding-y)
-  //bottom -.5rem
   height 0.125rem
   content ''
   background-color lighten($brand-primary, 27%)
@@ -51,6 +37,16 @@
 .navbar__level-up:hover:after
   opacity 1
 
+.navbar__level-up
+  position relative
+  padding-left .4rem
+  padding-right .6rem
+  color $navbar-dark-color
+  &:hover
+    color $navbar-dark-color
+  &:after
+    left 0
+    right 0
 //
 // Alternative navigation. Shown when `navbar__m-secondary` modifier added
 //
@@ -62,13 +58,22 @@
   position absolute;
   left 0
   right 0
-  top -60px
+  top -($nav-panel-height)
   opacity 0
   transition opacity .5s ease, top 0s ease .5s
+  // Repeat container paddings, because those are lost after
+  // absolute positioning.
+  padding-top 0.75rem
+  padding-bottom 0.75rem
 
-  .page-actions
-    margin-top 8px
-    margin-bottom 8px
+.visible-nav-alt
+  display none
+
+.navbar-alt
+  .visible-nav-alt
+    display inline-block
+  .hidden-nav-alt
+    display none
 
 .navbar__m-secondary
   .navbar-collapse
@@ -80,8 +85,6 @@
     top 0px
     transition opacity .5s ease
 
-
 .navbar-alt__title
+  padding .425rem 1rem .425rem 0
   shortable()
-  font-size 18px
-  padding 12px 5px
