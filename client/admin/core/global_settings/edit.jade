@@ -15,7 +15,7 @@
         legend(data-bind="text: $root.categoryNames[$data]")
         // ko foreach: $root.categorySettings[$data]
         .form-group
-          label.control-label.col-md-3(data-bind="text: localizedName, attr: { 'for': id }")
+          label.form-control-label.col-md-3(data-bind="text: localizedName, attr: { 'for': id }")
           .controls.col-md-4
             // ko if: 'string' === type
             input.form-control(type="text", data-bind="value: value, valueUpdate: 'keyup', attr: { id: id }")
@@ -40,7 +40,7 @@
             // /ko
 
             // ko if: localizedHelp
-            span.help-block(data-bind="text: localizedHelp")
+            small.text-muted(data-bind="text: localizedHelp")
             // /ko
         // /ko
 

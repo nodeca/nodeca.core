@@ -53,11 +53,10 @@ N.wire.once(module.apiPath, function microedit_once() {
         if (typeof err === 'string') {
           $form
             .find('.microedit__input-container')
-            .addClass('has-error')
+            .addClass('has-danger')
             .find('.microedit__error')
             .text(err);
 
-          destroy();
         } else {
           destroy(err);
         }
