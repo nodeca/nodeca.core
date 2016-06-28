@@ -6,15 +6,11 @@
     = ' '
     small(data-bind='visible: started, text: (current() / total() * 100 || 0).toFixed(2) + "%"')
 
-  .progress
-    .progress-bar(
-      data-bind='style: { width: (current() / total() * 100).toFixed(4) + "%" }, visible: current() && total() && current() !== total()'
-      style='display: none'
-    )
-    .progress-bar(
-      data-bind='visible: current() && total() && current() === total()'
-      style='display: none; width: 100%'
-    )= self.t('complete')
+  progress.progress(
+    value=0
+    max=100
+    data-bind='value: (current() / total() * 100) || 0'
+  )
 
   div
     button.btn.btn-secondary(
