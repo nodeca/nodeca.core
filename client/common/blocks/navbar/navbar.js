@@ -40,3 +40,31 @@ N.wire.on('navigate.to', function navbar_menu_minimize() {
   // $('.navbar .navbar-collapse').collapse('hide');
   $('.navbar .navbar-collapse').removeClass('in');
 });
+
+
+// If secondary navbar is shown, copy a header from there to the primary
+// navbar. Used in topics and sections to replace brand with progress bar
+// for example.
+//
+N.wire.after('navigate.done:*', function navbar_replace_header() {
+  let alt_header = $('#navbar-progress-source');
+
+  if (alt_header.length) {
+    $('.navbar-progress')
+      .empty()
+      .append(alt_header.html());
+
+    $('.navbar').addClass('navbar__m-progress');
+  }
+});
+
+
+// Show primary navbar and primary navbar header, empty the rest
+//
+N.wire.after('navigate.exit', function navbar_restore_primary_navigation() {
+  $('.navbar-alt').empty();
+  $('.navbar-progress').empty();
+
+  $('.navbar').removeClass('navbar__m-secondary');
+  $('.navbar').removeClass('navbar__m-progress');
+});

@@ -48,7 +48,7 @@
     left 0
     right 0
 //
-// Alternative navigation. Shown when `navbar__m-secondary` modifier added
+// Alternate navigation. Shown when `navbar__m-secondary` modifier is added
 //
 .navbar-primary
   opacity 1
@@ -88,3 +88,17 @@
 .navbar-alt__title
   padding .425rem 1rem .425rem 0
   shortable()
+
+//
+// Alternate header (progress bar instead of a brand).
+// Shown when `navbar__m-progress` modifier is added
+//
+.navbar-progress
+  display none
+
+.navbar__m-progress
+  .navbar-brand
+    display none
+
+  .navbar-progress
+    display block
