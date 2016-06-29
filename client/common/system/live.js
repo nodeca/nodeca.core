@@ -5,7 +5,7 @@
 
 
 const tabex = require('tabex');
-const faye = require('faye/browser/faye-browser');
+const faye  = require('faye/src/faye_browser');
 
 
 // Emit event for connectors & add live instance to 'N' (after init `N.runtime`)

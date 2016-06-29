@@ -43,7 +43,7 @@ packages:
       - event-wire
       - steady # scroll tracker
       - raf.js
-      - faye/browser/faye-browser
+      - faye/src/faye_browser.js
       - tabex
       # stub for jade runtime
       - fs: nodeca.core/lib/system/dummy.js

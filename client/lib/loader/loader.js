@@ -5,6 +5,9 @@
 (function (window) {
   'use strict';
 
+  // Needed because we can't enable only `global` in browserify. Used by Faye.
+  window.global = window.global || window;
+
   //////////////////////////////////////////////////////////////////////////////
   // features testing & setup no-cookies/no-js styles
   //
