@@ -24,8 +24,8 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage')
         '!{self.apiPath.split(".").shift()}'
       );
 
-    if self.inject_header
-      != self.inject_header
+    if self.inject_headers
+      != self.inject_headers.join('\n')
 
   body
     //-._affix(data-affix={ top: 500, class: 'layout-scroll-top__active' })
