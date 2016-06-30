@@ -29,10 +29,6 @@ router:
       "/assets/{path}":
         path: /.+/
 
-    core.static:
-      "/{file}":
-        file: /favicon.ico|snippet.png/
-
     core.gridfs:
       "/files/{bucket}":
         bucket: /.+/
