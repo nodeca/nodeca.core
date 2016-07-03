@@ -169,22 +169,22 @@
       "src": "fontawesome"
     },
     {
+      "uid": "c64623255a4a7c72436b199b05296c4f",
+      "css": "vote-up",
+      "code": 59399,
+      "src": "fontelico"
+    },
+    {
+      "uid": "53ed8570225581269cd7eff5795e8bea",
+      "css": "vote-down",
+      "code": 59404,
+      "src": "fontelico"
+    },
+    {
       "uid": "1d2a6c3d9236b88b0f185c7c4530fa52",
       "css": "report",
       "code": 59396,
       "src": "entypo"
-    },
-    {
-      "uid": "5e2ab018e3044337bcef5f7e94098ea1",
-      "css": "vote-up",
-      "code": 59437,
-      "src": "fontawesome"
-    },
-    {
-      "uid": "ddcd918b502642705838815d40aea9e3",
-      "css": "vote-down",
-      "code": 59438,
-      "src": "fontawesome"
     },
     {
       "uid": "2f5ef6f6b7aaebc56458ab4e865beff5",
@@ -265,10 +265,10 @@
       "src": "fontawesome"
     },
     {
-      "uid": "d870630ff8f81e6de3958ecaeac532f2",
+      "uid": "c311c48d79488965b0fab7f9cd12b6b5",
       "css": "level-up",
-      "code": 59393,
-      "src": "fontawesome"
+      "code": 59229,
+      "src": "entypo"
     },
     {
       "uid": "63b3012c8cbe3654ba5bea598235aa3a",
@@ -359,6 +359,24 @@
       "css": "replies",
       "code": 57349,
       "src": "typicons"
+    },
+    {
+      "uid": "bf882b30900da12fca090d9796bc3030",
+      "css": "mail",
+      "code": 59406,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "0f6a2573a7b6df911ed199bb63717e27",
+      "css": "github",
+      "code": 59407,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "7e4164950ffa4990961958b2d6318658",
+      "css": "info",
+      "code": 59141,
+      "src": "entypo"
     }
   ]
 }
