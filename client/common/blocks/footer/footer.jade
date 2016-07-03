@@ -1,16 +1,18 @@
-footer.page-footer
-  .page-footer-nav__brand.pull-xs-left: a(href='#') Nodeca
-
+footer.page-footer.clearfix
   ul.page-footer-nav.pull-xs-left
-    li.page-footer-nav__item: a(href='#') About
-    li.page-footer-nav__item: a(href='#') Contacts
-    li.page-footer-nav__item: a(href='#') Terms
-    li.page-footer-nav__item: a(href='#') Help
+    li.page-footer-nav__item
+      a.page-footer-nav__item-link(href='#') About
+    li.page-footer-nav__item
+      a.page-footer-nav__item-link(href='#') Contacts
+    li.page-footer-nav__item
+      a.page-footer-nav__item-link(href='#') Terms
+    li.page-footer-nav__item
+      a.page-footer-nav__item-link(href='#') Help
 
     li.page-footer-nav__item.dropup
       - var menu_rnd_id = 'rnd' + String(Math.random()).slice(2, 10)
 
-      a.dropdown-toggle(
+      a.page-footer-nav__item-link.dropdown-toggle(
         href='#'
         id=menu_rnd_id
         aria-haspopup='true'
@@ -25,8 +27,8 @@ footer.page-footer
             data-locale=locale
           )= self.t('language.' + locale)
 
-  p.page-footer__copyright.pull-xs-right
-    | Powered by 
-    a(href='#') Nodeca
-    | , social platform by 
-    a(href='#') RC Design
+    li.page-footer-nav__item.icon.icon-github.icon-space-after
+      a.page-footer-nav__item-link(
+        href='https://github.com/nodeca'
+        target='_blank'
+      ) Github

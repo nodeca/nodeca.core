@@ -4,35 +4,22 @@
 // Page footer styles
 //
 .page-footer
-  margin 2.5rem 0
+  margin 2.5rem 0 0
   line-height 1.25rem
   border-top 1px solid $gray-lighter
-  padding-top 1rem
 
 .page-footer-nav
-  margin 0 0 0.5rem 0
+  margin 0.5rem 0
   padding 0
+  line-height 2rem
 
 .page-footer-nav__item
-  font-size $font-size-xs
+  font-size $font-size-sm
   margin-right 2em
   display inline-block
   position relative
   float left
-
-  & > .dropdown-toggle > .caret
-    opacity .3
-
-.page-footer-nav__brand
-  text-transform uppercase
-  font-size $font-size-lg
-  margin-right 2em
-
-  a
-    color $body-color-secondary
-    opacity .7
-
-.page-footer__copyright
-  font-size $font-size-xs
+.page-footer-nav__item-link
   color $body-color-secondary
-  opacity .7
+  &:hover
+    text-decoration none
