@@ -26,40 +26,44 @@ ul.pagination
   //- first page always displayed, except when current == 1.
   //- (then we skip first half of paginator)
   if current > 1
-    li: a(href=self.link_to(route, params)) 1
+    li.page-item
+      a.page-link(href=self.link_to(route, params)) 1
 
   //- left ellipsis displayed, if > 1 pages exists between first one
   //- and left head of "surrounding" pages
   if current > PAGES_INTERVAL + 2
-    li: span …
+    li.page-item: span.page-link …
 
   //- left surrounding pages displayed if current page > 2
   - for (var i=PAGES_INTERVAL; i > 0; i--) {
       if current > i + 1
         - params.page = current - i
-        li: a(href=self.link_to(route, params))= params.page
+        li.page-item
+          a.page-link(href=self.link_to(route, params))= params.page
   - }
 
   // current page always dispayed
-  li.active: span= current
+  li.page-item.active: span.page-link= current
 
   //- right surrounding pages displayed if current page < (bottom-1)
   - for (var i=1 ; i <= PAGES_INTERVAL; i++) {
       if max - current > i
         - params.page = current + i
-        li: a(href=self.link_to(route, params))= params.page
+        li.page-item
+          a.page-link(href=self.link_to(route, params))= params.page
   - }
 
   //- right ellipsis displayed, if > 1 pages exists between right
   //- tail of "surrounding" pages and the last one.
   if (max - current) > (PAGES_INTERVAL + 1)
-    li: span …
+    li.page-item: span.page-link …
 
   //- last page always displayed, except it's current one
   //- (then we skip last half of paginator)
   if max - current !== 0
     - params.page = max
-    li: a(href=self.link_to(route, params))= params.page
+    li.page-item
+      a.page-link(href=self.link_to(route, params))= params.page
 
 //- restore page
 - params.page = _page
