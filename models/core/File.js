@@ -283,7 +283,9 @@ module.exports = function (N, collectionName) {
       }
     };
 
-    let conn = mongoose.createConnection(N.config.database.mongo, options);
+    let mongoPath = N.config.database.mongo_files || N.config.database.mongo;
+
+    let conn = mongoose.createConnection(mongoPath, options);
 
     conn.once('open', function () {
       gfs = grid(conn.db, mongoose.mongo);
