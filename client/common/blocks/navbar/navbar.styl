@@ -19,6 +19,12 @@
   & + .nav-item
     margin-left $spacer * 2
 
+.navbar-toggler
+  color $navbar-dark-color
+
+  &:focus
+    color $navbar-dark-hover-color
+
 
 .navbar-nav > .nav-item > a:after
 .navbar__level-up:after
@@ -31,6 +37,36 @@
   background-color lighten($brand-primary, 27%)
   opacity 0
   transition opacity .3s ease
+
+@media (max-width: screenSm)
+  // align toggler to the right without using float
+  .navbar-header
+    text-align right
+
+  // make default navbar links display block at chosen breakpoint, copied from
+  // https://github.com/twbs/bootstrap/issues/17532#issuecomment-220604022
+  .navbar-collapse
+    .navbar-nav .nav-item
+      float none
+
+    .navbar-brand
+    .navbar-nav .nav-item
+      display block
+
+    .navbar-nav .nav-item + .nav-item
+      margin-left 0
+
+    .dropdown-menu
+      position relative
+      float none
+
+    // reset underline position
+    .navbar-nav > .nav-item > a:after
+    .navbar__level-up:after
+      left 0
+      right 0
+      bottom 0
+
 
 .navbar-nav > .nav-item.active > a:after
 .navbar-nav > .nav-item:hover > a:after
