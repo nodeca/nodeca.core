@@ -38,7 +38,10 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
           // Send new token back
           N.live.emit('local.common.core.token_live.update_result', res.token_live);
         })
-        .catch(() => {}); // Suppress errors
+        .catch(err => {
+          if (err.code === N.io.EWRONGVER) N.wire.emit('io.version_mismatch');
+          // Suppress other errors
+        });
     });
   });
 
