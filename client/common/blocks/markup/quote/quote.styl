@@ -4,25 +4,35 @@
 
 
 .quote
-  font-size 14px
-  background-color #f8f8f8
-  border-radius 4px
+  background-color lighten($body-bg-secondary, 50%)
+  border-radius .125rem
+  //border-left .1875rem solid $decorator-color
+  //border-left .1875rem solid lighten($body-color, 80%)
+  border-left .25rem solid lighten($body-color-secondary, 60%)
+  padding: 1rem
+  margin-left .5rem
 
 .quote__title
-  margin-top -5px
-  margin-right -10px
-  padding 5px 0
+  font-size $font-size-sm
+  margin-top -.5rem
+  margin-right -.5px
+  padding .5rem 0
+
+.quote__author
+  font-style normal
 
 .quote__author-avatar
-  width 16px
-  height 16px
-  margin 0px 3px
+  width 18px
+  height 18px
+  margin-right .375rem
   border-radius 2px
 
 .quote__controls
-  margin-top -3px
+  margin-top -.1875rem
+  margin-right -.375rem
   .btn
     background-color transparent
+    margin-left 0
 
 .quote__collapse
   display none
@@ -47,3 +57,6 @@
     display none
   & > .quote__ref-local
     display inline-block
+
+.quote__content > p:last-child
+    margin-bottom 0
