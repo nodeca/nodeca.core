@@ -16,6 +16,7 @@ require('codemirror/mode/markdown/markdown');
 const TEXT_MARGIN = 5;
 const TOOLBAR = '$$ JSON.stringify(N.config.mdedit) $$';
 const EMOJIS = '$$ JSON.stringify(N.config.parser.emojis) $$';
+const DRAFTS_EXPIRE = 7 * 24 * 60 * 60; // 7 days
 
 
 // Compile toolbar config
@@ -64,9 +65,23 @@ function MDEdit() {
 //
 // - parseOptions (Object) - optional, object with plugins config like
 //   `{ images: true, links: true, attachments: false }`, default `{}`
-// - text (String) - optional, text, default empty string
-// - attachments (Array) - optional, attachments, default empty array
+// - text (String) - optional, text, default empty string. Can be overwritten by draft
+// - attachments (Array) - optional, attachments, default empty array. Can be overwritten by draft
 // - toolbar (String) - optional, name of toolbar config, default `default`
+// - draftKey (String) - optional, unique key to store draft, don't use drafts by default
+// - draftCustomFields (Object) - optional, custom fields to store in draft:
+//   ```
+//   {
+//     // Could be a selector
+//     '.topic-create__title': 'input',
+//
+//     // Or get/set function
+//     to: value => {
+//       if (!value) /* return value; */
+//       /* set value */
+//     }
+//   }
+//   ```
 //
 // returns jQuery object
 //
@@ -86,6 +101,7 @@ MDEdit.prototype.show = function (options) {
   this.__options__ = _.clone(options);
   this.__options__.toolbar = compileToolbarConfig(this.__options__.toolbar || 'default');
   this.__options__.parseOptions = this.__options__.parseOptions || {};
+  this.__options__.draftCustomFields = this.__options__.draftCustomFields || {};
 
   $('body').append(this.__layout__);
 
@@ -162,18 +178,97 @@ MDEdit.prototype.show = function (options) {
     });
   });
 
+
+  // Load draft if needed
+  //
+  if (this.__options__.draftKey) {
+    this.__bag__.get('mdedit_' + this.__options__.draftKey, (__, res) => {
+      let draft = res || {};
+
+      // Load custom fields
+      Object.keys(this.__options__.draftCustomFields).forEach(fieldName => {
+        if (!draft[fieldName]) return; // continue
+
+        let fieldType = this.__options__.draftCustomFields[fieldName];
+
+        if (fieldType === 'input') {
+          $(fieldName).val(draft[fieldName]);
+        } else {
+          fieldType(draft[fieldName]);
+        }
+      });
+
+      // Load text
+      this.text(draft.text || options.text || '');
+
+      // Check and load attachments
+      if (draft.attachments && draft.attachments.length) {
+        let checkParams = { media_ids: _.map(draft.attachments, 'media_id') };
+
+        N.io.rpc('common.attachments_check', checkParams).then(res => {
+          let attachments = draft.attachments.filter(attach => res.media_ids.indexOf(attach.media_id) !== -1);
+
+          this.attachments(attachments || []);
+        });
+      } else {
+        this.attachments(options.attachments || []);
+      }
+    });
+
+  } else {
+    // If we don't use drafts
+    this.text(options.text || '');
+    this.attachments(options.attachments || []);
+  }
+
+
+  // Save draft on change
+  //
+  if (this.__options__.draftKey) {
+    this.__layout__.on('change.nd.mdedit', () => {
+      let draft = {
+        text: this.text(),
+        attachments: this.attachments()
+      };
+
+      // Store custom fields
+      Object.keys(this.__options__.draftCustomFields).forEach(fieldName => {
+        let fieldType = this.__options__.draftCustomFields[fieldName];
+
+        if (fieldType === 'input') {
+          draft[fieldName] = $(fieldName).val();
+        } else {
+          draft[fieldName] = fieldType();
+        }
+      });
+
+      this.__bag__.set('mdedit_' + this.__options__.draftKey, draft, DRAFTS_EXPIRE)
+        .catch(() => {}); // Suppress storage errors
+    });
+  }
+
+
   return this.__layout__;
 };
 
 
 // Hide editor
 //
-MDEdit.prototype.hide = function () {
+// - options (Object)
+//   - removeDraft (Boolean) - optional, remove draft after hide, default `false`
+//
+MDEdit.prototype.hide = function (options) {
   let $layout = this.__layout__;
 
   if (!$layout) return;
 
   $(window).off('resize.nd.mdedit');
+
+  // Remove draft if needed
+  if ((options || {}).removeDraft && this.__options__.draftKey) {
+    this.__bag__.remove('mdedit_' + this.__options__.draftKey)
+      .catch(() => {}); // Suppress storage errors
+  }
 
   setTimeout(() => {
     $layout.trigger('hide');
