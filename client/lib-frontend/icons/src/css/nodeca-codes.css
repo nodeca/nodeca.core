@@ -53,7 +53,7 @@
 .icon-picture:before { content: '\e824'; } /* '' */
 .icon-comment:before { content: '\e825'; } /* '' */
 .icon-pin:before { content: '\e826'; } /* '' */
-.icon-deleted:before { content: '\e828'; } /* '' */
+.icon-x:before { content: '\e828'; } /* '' */
 .icon-bookmark:before { content: '\e829'; } /* '' */
 .icon-bookmark-empty:before { content: '\e82a'; } /* '' */
 .icon-track-normal:before { content: '\e82b'; } /* '' */
