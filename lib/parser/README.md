@@ -8,7 +8,6 @@
 
 - text (String) - text in markdown
 - imports (Array) - list of urls user has access to (optional, rebuild mode)
-- image_info (Object) - image sizes and attachment attributes (optional, rebuild mode)
 - user_info (Object) - for permission checks (needed if `imports` is not present)
 - attachments (Array) - list of attachment ids
 - options (Object) - object with plugins config
@@ -20,7 +19,6 @@
 
 - html (String) - displayed HTML
 - text (String) - text for search index
-- image_info (Object) - image sizes and attachment attributes
 - imports (Array) - list of urls used to create this post
 - import_users (Array) - list of users needed to display this post
 - tail (Array)

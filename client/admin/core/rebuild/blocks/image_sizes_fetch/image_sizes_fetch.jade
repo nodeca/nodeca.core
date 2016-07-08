@@ -1,0 +1,25 @@
+- self.add_raw_data('image_sizes_fetch_task', self.task_info);
+
+#rebuild-image-sizes-fetch-task.rebuild-widget
+  h4
+    = self.t('title')
+    = ' '
+    small(data-bind='visible: started, text: (current() / total() * 100 || 0).toFixed(2) + "%"')
+
+  progress.progress(
+    value=0
+    max=100
+    data-bind='value: (current() / total() * 100) || 0'
+  )
+
+  div
+    button.btn.btn-secondary(
+      data-on-click='admin.core.rebuild.blocks.image_sizes_fetch.start'
+      data-bind='visible: !started()'
+    )= self.t('start')
+
+    button.btn.btn-danger(
+      data-on-click='admin.core.rebuild.blocks.image_sizes_fetch.stop'
+      data-bind='visible: started'
+      style='display: none'
+    )= self.t('stop')
