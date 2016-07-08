@@ -1,42 +1,38 @@
+// Keep track of all urls used in posts/messages/etc.,
+// needed in case we add a new rule for embedza and want to re-fill all caches
+//
+
 'use strict';
 
 
-var Mongoose = require('mongoose');
-var Schema   = Mongoose.Schema;
+const Mongoose = require('mongoose');
+const Schema   = Mongoose.Schema;
 
 
 module.exports = function (N, collectionName) {
 
-  var statuses = {
+  let statuses = {
     PENDING:     1,
     SUCCESS:     2,
     ERROR_RETRY: 3, // errors that we can recover from by retrying (TIMEOUT, etc.)
     ERROR_FATAL: 4  // errors that we can't recover from (401, 403, 404)
   };
 
-  var ExpandUrl = new Schema({
-    //
-    // Filled when links are written to this collection
-    //
-
+  let UrlTracker = new Schema({
     url:     String,
-
-    // is it autolink or not? (don't run embedza for regular links)
-    is_auto: Boolean,
 
     // random number from 0-1, used to split urls into chunks without using
     // expensive count() requests
     rand:    Number,
-
-    //
-    // Filled when link contents are fetched from remote server
-    //
 
     // status (see above)
     status:  Number,
 
     // text of the error message (if any)
     error:   String,
+
+    // http status (e.g. 403) or system code (e.g. 'ETIMEDOUT')
+    error_code: Schema.Types.Mixed,
 
     // true if url-unshort expanded this url
     uses_unshort: Boolean,
@@ -53,26 +49,26 @@ module.exports = function (N, collectionName) {
 
   // used to avoid writing same url to the collection;
   // note: it *MUST* be hashed, otherwise it'll trigger "key too large to index" error
-  ExpandUrl.index({ url: 'hashed' });
+  UrlTracker.index({ url: 'hashed' });
 
   // used to fetch url chunks
-  ExpandUrl.index({ rand: 1 });
+  UrlTracker.index({ rand: 1 });
 
   // used to retry errored urls (change ERROR status with PENDING)
-  ExpandUrl.index({ status: 1 });
+  UrlTracker.index({ status: 1 });
 
 
   // Export statuses
   //
-  ExpandUrl.statics.statuses = statuses;
+  UrlTracker.statics.statuses = statuses;
 
 
-  N.wire.on('init:models', function emit_init_ExpandUrl() {
-    return N.wire.emit('init:models.' + collectionName, ExpandUrl);
+  N.wire.on('init:models', function emit_init_UrlTracker() {
+    return N.wire.emit('init:models.' + collectionName, UrlTracker);
   });
 
 
-  N.wire.on('init:models.' + collectionName, function init_model_ExpandUrl(schema) {
+  N.wire.on('init:models.' + collectionName, function init_model_UrlTracker(schema) {
     N.models[collectionName] = Mongoose.model(collectionName, schema);
   });
 };

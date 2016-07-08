@@ -2,9 +2,9 @@
 //
 // Data:
 //
-// - url   (String)   - link to content
-// - types ([String]) - suitable format list, in priority order ('block', 'inline')
-// - cacheOnly (Boolean) - use cache only
+// - url       (String)   - link to content
+// - types     ([String]) - suitable format list, in priority order ('block', 'inline')
+// - cacheOnly (Boolean)  - use cache only
 //
 // Out:
 //
@@ -21,6 +21,7 @@ const Unshort = require('url-unshort');
 
 
 module.exports = function (N, apiPath) {
+  const tracker_data_key = Symbol('tracker_data');
 
   // Init url-unshort instance
   //
@@ -73,12 +74,16 @@ module.exports = function (N, apiPath) {
   // Expand shortened links
   //
   N.wire.on(apiPath, function* expand_short_links(data) {
+    let tracker_data = data[tracker_data_key] = data[tracker_data_key] || {};
+
     let url;
 
     try {
       url = yield unshort[data.cacheOnly ? 'cached' : 'normal'].expand(data.url);
-    } catch (__) {
-      // ignore connection/parse errors
+      tracker_data.unshort_used = !!url;
+    } catch (err) {
+      // In case of connection/parse errors leave link as is
+      tracker_data.unshort_error = err;
     }
 
     if (url) {
@@ -113,14 +118,19 @@ module.exports = function (N, apiPath) {
   N.wire.on(apiPath, function* embed_ext(data) {
     if (data.html) return;
 
+    let tracker_data = data[tracker_data_key] = data[tracker_data_key] || {};
+
     let result;
 
     try {
       result = yield embedza[data.cacheOnly ? 'cached' : 'normal'].render(
           data.canonical || data.url,
           data.types);
-    } catch (__) {
-      // If any errors happen, ignore them and leave the link as is
+
+      tracker_data.embedza_used = !!result;
+    } catch (err) {
+      // If any errors happen, leave the link as is
+      tracker_data.embedza_error = err;
     }
 
     // If no result is returned, leave the link as is
@@ -129,5 +139,44 @@ module.exports = function (N, apiPath) {
       data.type  = result.type;
       data.local = false;
     }
+  });
+
+
+  // Keep track of this url
+  //
+  N.wire.on(apiPath, function* track_url(data) {
+    let tracker_data = data[tracker_data_key] || {};
+    let update_data = { $set: {}, $unset: {} };
+
+    let err = tracker_data.unshort_error || tracker_data.embedza_error;
+
+    if (err) {
+      let is_fatal = err.code === 'EHTTP' &&
+                     [ 401, 403, 404 ].indexOf(err.status) !== -1;
+
+      update_data.$set.status         = N.models.core.UrlTracker.statuses[is_fatal ? 'ERROR_FATAL' : 'ERROR_RETRY'];
+      update_data.$set.error          = err.message;
+      update_data.$set.error_code     = err.status || err.code;
+      update_data.$unset.uses_unshort = true;
+      update_data.$unset.uses_embedza = true;
+
+    } else if (tracker_data.unshort_used || tracker_data.embedza_used) {
+      update_data.$set.status       = N.models.core.UrlTracker.statuses.SUCCESS;
+      update_data.$set.uses_unshort = !!tracker_data.unshort_used;
+      update_data.$set.uses_embedza = !!tracker_data.embedza_used;
+      update_data.$unset.error      = true;
+      update_data.$unset.error_code = true;
+
+    } else {
+      // neither unshort nor embedza returned results,
+      // so we don't need to update tracker that's already created by a parser
+      return;
+    }
+
+    yield N.models.core.UrlTracker.update(
+      { url: data.url },
+      update_data,
+      { upsert: false }
+    );
   });
 };
