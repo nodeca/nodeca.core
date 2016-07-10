@@ -42,13 +42,16 @@
   margin: 0;
 }
 
+// Seems that's not needed anymore. If need to rollback,
+// check dialog message send in FF - nick input should not break bottom margin.
+
 // This styles required to properly allign hint text
 // Just copied from .form-control class
-.tt-hint {
+/*.tt-hint {
   height: $input-height;
   padding: $input-padding-y $input-padding-x;
   font-size: $font-size-base;
   line-height: $line-height-base;
   vertical-align: middle;
   border: $input-btn-border-width solid $input-border-color;
-}
+}*/
