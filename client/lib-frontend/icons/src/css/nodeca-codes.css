@@ -13,6 +13,7 @@
 .icon-more:before { content: '\e4b0'; } /* '' */
 .icon-info:before { content: '\e705'; } /* '' */
 .icon-views:before { content: '\e70a'; } /* '' */
+.icon-ignore:before { content: '\e70b'; } /* '' */
 .icon-threads:before { content: '\e736'; } /* '' */
 .icon-level-up:before { content: '\e75d'; } /* '' */
 .icon-dropdown:before { content: '\e78d'; } /* '' */
