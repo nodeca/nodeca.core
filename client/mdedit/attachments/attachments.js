@@ -68,10 +68,10 @@ N.wire.once('init:mdedit', function () {
       case 'drop':
         $layout.removeClass('mdedit__m-active');
 
-        if (data.event.dataTransfer && data.event.dataTransfer.files && data.event.dataTransfer.files.length) {
+        if (data.files && data.files.length) {
 
           uploaderData = {
-            files: data.event.dataTransfer.files,
+            files: data.files,
             url: N.router.linkTo('users.media.upload'),
             config: 'users.uploader_config',
             uploaded: null
