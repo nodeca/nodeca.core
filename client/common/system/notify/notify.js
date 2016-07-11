@@ -116,8 +116,6 @@ Notification.prototype = {
   },
 
   hide() {
-    var self = this, timeout;
-
     if (!this.isShown) {
       return;
     }
@@ -127,17 +125,7 @@ Notification.prototype = {
     }
 
     this.isShown = false;
-    this.$element.removeClass('in');
-
-    timeout = setTimeout(function () {
-      self.$element.off($.support.transition.end);
-      self.$element.detach();
-    }, 500);
-
-    this.$element.one($.support.transition.end, function () {
-      clearTimeout(timeout);
-      self.$element.detach();
-    });
+    this.$element.alert('close');
   }
 };
 
