@@ -1,19 +1,20 @@
 - var mTypes = '$$ JSON.stringify(N.models.users.MediaInfo.types) $$'
 each attachment in self.attachments
-  li.mdedit-attachments__item: a.mdedit-attachments__item-link(
-    href='#'
-    data-media-id=attachment.media_id
-    data-type=attachment.type
-    data-file-name=attachment.file_name
-    data-on-click='mdedit.attachments:insert'
-  )
-    - var mType = attachment.type & ~mTypes.MASK_DELETED
+  li.mdedit-attachments__item
+    a.mdedit-attachments__item-link(
+      href='#'
+      data-media-id=attachment.media_id
+      data-type=attachment.type
+      data-file-name=attachment.file_name
+      data-on-click='mdedit.attachments:insert'
+    )
+      - var mType = attachment.type & ~mTypes.MASK_DELETED
 
-    if mType === mTypes.IMAGE
-      - var imageUrl = N.router.linkTo('core.gridfs', { bucket: attachment.media_id + '_sm' });
-      img.mdedit-attachments__item-image(src=imageUrl)
-    else if mType === mTypes.BINARY
-      .mdedit-attachments__item-content=attachment.file_name
+      if mType === mTypes.IMAGE
+        - var imageUrl = N.router.linkTo('core.gridfs', { bucket: attachment.media_id + '_sm' });
+        img.mdedit-attachments__item-image(src=imageUrl)
+      else if mType === mTypes.BINARY
+        .mdedit-attachments__item-content=attachment.file_name
 
     button.mdedit-attachments__item-remove.btn.btn-secondary.btn-xs.icon.icon-cancel(
       data-media-id=attachment.media_id
