@@ -371,6 +371,10 @@ N.wire.on('mdedit:init', function initResize() {
 // Done handler
 //
 N.wire.on('mdedit.submit', function done_click() {
+  if (N.MDEdit.__layout__.find('.mdedit__submit').hasClass('disabled')) {
+    return;
+  }
+
   let event = new $.Event('submit');
 
   N.MDEdit.__layout__.trigger(event);
