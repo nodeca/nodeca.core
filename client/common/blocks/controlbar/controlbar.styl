@@ -39,7 +39,7 @@
     transition transform 0.2s linear
 
   // Hide controlbar on narrow screens
-  @media only screen and (max-height: screenXs - 1)
+  @media only screen and (max-height: $grid-breakpoints.sm - 1)
     &.controlbar__m-scroll-down .controlbar__floater
       transform translateY(-100%)
 
