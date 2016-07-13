@@ -2,9 +2,9 @@
 
 
 .ping-ticker
-  margin-top 2rem
-  width 10px
-  height 10px
+  display inline-block
+  width .5rem
+  height .5rem
   background-color #888
   opacity .2
 
@@ -12,11 +12,15 @@
   transition opacity 1s ease
   opacity 1
 
-.dashboard-offline-mode
-  .btn-secondary
+.dashboard-offline-toggle
+  .btn
+    margin-left 0
+
+.dashboard-offline-toggle__on
+  display none
+
+.dashboard-offline-toggle__m-offline
+  .dashboard-offline-toggle__on
+    display inline-block
+  .dashboard-offline-toggle__off
     display none
-  &.dashboard-offline-mode__m-offline
-    .btn-secondary
-      display inline-block
-    .btn-danger
-      display none

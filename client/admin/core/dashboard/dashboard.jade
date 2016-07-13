@@ -6,8 +6,16 @@
 
     h1= self.head.title
 
-    .dashboard-offline-mode(class=self.offline_mode ? 'dashboard-offline-mode__m-offline' : '')
-      button.btn.btn-secondary(data-on-click='admin.core.dashboard:turn_online')= self.t('turn_online')
-      button.btn.btn-danger(data-on-click='admin.core.dashboard:turn_offline')= self.t('turn_offline')
+    p
+      span.ping-ticker
+      |  heartbeat
 
-    .ping-ticker
+    p.dashboard-offline-toggle(
+      class=self.offline_mode ? 'dashboard-offline-toggle__m-offline' : ''
+    )
+      button.dashboard-offline-toggle__on.btn.btn-sm.btn-secondary(
+        data-on-click='admin.core.dashboard:turn_online'
+      )= self.t('turn_online')
+      button.dashboard-offline-toggle__off.btn.btn-sm.btn-danger(
+        data-on-click='admin.core.dashboard:turn_offline'
+      )= self.t('turn_offline')

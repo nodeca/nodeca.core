@@ -25,7 +25,7 @@ N.wire.once('navigate.done:' + module.apiPath, function dashboard_init() {
   //
   N.wire.on(module.apiPath + ':turn_online', function dashboard_turn_online() {
     return N.io.rpc('admin.core.offline_mode_switch', { offline: false })
-      .then(() => $('.dashboard-offline-mode').removeClass('dashboard-offline-mode__m-offline'));
+      .then(() => $('.dashboard-offline-toggle').removeClass('dashboard-offline-toggle__m-offline'));
   });
 
 
@@ -40,6 +40,6 @@ N.wire.once('navigate.done:' + module.apiPath, function dashboard_init() {
   //
   N.wire.on(module.apiPath + ':turn_offline', function dashboard_turn_offline() {
     return N.io.rpc('admin.core.offline_mode_switch', { offline: true })
-      .then(() => $('.dashboard-offline-mode').addClass('dashboard-offline-mode__m-offline'));
+      .then(() => $('.dashboard-offline-toggle').addClass('dashboard-offline-toggle__m-offline'));
   });
 });

@@ -1,5 +1,5 @@
 doctype html
-html.no-js(itemscope, itemtype='http://schema.org/WebPage', class=self.offline_mode ? 'offline-mode' : '')
+html.no-js(itemscope, itemtype='http://schema.org/WebPage', class=self.offline_mode ? 'site-offline' : '')
   head
     //- http://validator.w3.org  recommendation
     meta(charset='UTF-8')
@@ -40,6 +40,9 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage', class=self.offline_m
 
       .nocookies
         .alert.alert-danger= self.t('nocookies')
+
+      .site-offline-msg.text-xs-center
+        .alert.alert-danger= self.t('offline')
 
       .debug
         .layout__container.container-fluid
