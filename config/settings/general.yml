@@ -5,15 +5,29 @@ setting_groups:
 
 setting_schemas:
   global:
-    general_project_name:
+    general_offline_mode:
       priority: 10
+      group_key: general
+      category_key: general_common
+      type: boolean
+      default: true
+
+    general_project_name:
+      priority: 20
       group_key: general
       category_key: general_common
       type: string
       default: Nodeca
 
     general_cookies_domain:
-      priority: 20
+      priority: 30
       group_key: general
       category_key: general_common
       type: string
+
+^test:
+  setting_schemas:
+    global:
+      # override default value of offline mode for testing
+      general_offline_mode:
+        default: false

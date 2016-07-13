@@ -6,4 +6,8 @@
 
     h1= self.head.title
 
+    .dashboard-offline-mode(class=self.offline_mode ? 'dashboard-offline-mode__m-offline' : '')
+      button.btn.btn-secondary(data-on-click='admin.core.dashboard:turn_online')= self.t('turn_online')
+      button.btn.btn-danger(data-on-click='admin.core.dashboard:turn_offline')= self.t('turn_offline')
+
     .ping-ticker

@@ -1,0 +1,4 @@
+en-US:
+  turn_offline: Turn server offline
+  turn_online: Turn server online
+  turn_offline_confirm: Are you sure you wish to turn server offline?

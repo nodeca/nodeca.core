@@ -2,6 +2,7 @@
 
 
 .ping-ticker
+  margin-top 2rem
   width 10px
   height 10px
   background-color #888
@@ -10,3 +11,12 @@
 .ping-ticker.active
   transition opacity 1s ease
   opacity 1
+
+.dashboard-offline-mode
+  .btn-secondary
+    display none
+  &.dashboard-offline-mode__m-offline
+    .btn-secondary
+      display inline-block
+    .btn-danger
+      display none
