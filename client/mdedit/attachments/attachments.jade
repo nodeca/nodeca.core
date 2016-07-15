@@ -16,7 +16,7 @@ each attachment in self.attachments
       else if mType === mTypes.BINARY
         .mdedit-attachments__item-content=attachment.file_name
 
-    button.mdedit-attachments__item-remove.btn.btn-secondary.btn-xs.icon.icon-cancel(
+    button.mdedit-attachments__item-remove.btn.btn-secondary.btn-xs.btn-square.icon.icon-x(
       data-media-id=attachment.media_id
       data-on-click='mdedit.attachments:remove'
     )
