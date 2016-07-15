@@ -17,15 +17,15 @@
 //- submenu (Object)
 mixin _create_submenus(submenu, localizationPrefix)
   - var menu = sortedItems(submenu);
-  ul.dropdown-menu
+  .dropdown-menu
     each item in menu
       - var info = item.info;
       if (item.submenu)
-        li.dropdown-submenu
-          a(href=self.link_to(info.to), tabindex='-1')= self.t(localizationPrefix + item.name)
+        .dropdown-submenu
+          a.dropdown-item(href=self.link_to(info.to), tabindex='-1')= self.t(localizationPrefix + item.name)
           +_create_submenus(info.submenu, localizationPrefix + item.name + '.')
       else
-        li: a(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
+        a.dropdown-item(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
 
 
 nav.navbar.navbar-default.navbar-fixed-top.bg-faded

@@ -8,8 +8,12 @@
 
     ul.nav.nav-pills
       each tabName, tabIndex in self.tabs
-        li(class=(0 === tabIndex ? 'active' : ''))
-          a(href="#tab_#{tabName}", data-toggle="tab")= self.t('@admin.core.group_names.' + tabName)
+        li.nav-item
+          a.nav-link(
+            href="#tab_#{tabName}"
+            data-toggle="tab"
+            class=(0 === tabIndex ? 'active' : '')
+          )= self.t('@admin.core.group_names.' + tabName)
 
     .tab-content
       each tabName, tabIndex in self.tabs

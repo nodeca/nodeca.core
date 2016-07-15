@@ -15,8 +15,8 @@
 
 each rootItem in sortedItems(self.runtime.navbar)
   if rootItem.info.submenu
-    ul.sidebar-menu.nav.hidden-xs-up
+    ul.sidebar-menu.nav.nav-pills.nav-stacked.hidden-xs-up
       each item in sortedItems(rootItem.info.submenu)
         - var info = item.info;
-        li.sidebar-menu__item(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
-          a.sidebar-menu__link(href=self.link_to(info.to))= self.t(localizationPrefix + rootItem.name + '.' + item.name)
+        li.sidebar-menu__item.nav-item(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
+          a.sidebar-menu__link.nav-link(href=self.link_to(info.to))= self.t(localizationPrefix + rootItem.name + '.' + item.name)
