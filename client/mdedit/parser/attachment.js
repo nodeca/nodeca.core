@@ -40,14 +40,10 @@ function get_attachments(data, ids) {
 
 
 N.wire.once('init:parser', function attachment_plugin_init() {
-  var sizes = '$$ JSON.stringify(N.config.users.uploads.resize) $$';
-
-  var plugin = require('nodeca.core/lib/parser/plugins/attachment')(N, {
-    types: '$$ JSON.stringify(N.models.users.MediaInfo.types) $$'
-  });
+  const sizes = '$$ JSON.stringify(N.config.users.uploads.resize) $$';
 
   N.parser.addPlugin(
-    'attachment',
+    'attachment:fetch_attachment_info',
     function (parser) {
       parser.bus.on('ast2html', function fetch_attachment_data(data, callback) {
         if (!data.params.rpc_cache) {
@@ -134,9 +130,13 @@ N.wire.once('init:parser', function attachment_plugin_init() {
 
         callback();
       });
-
-
-      plugin(parser);
     }
+  );
+
+  N.parser.addPlugin(
+    'attachment',
+    require('nodeca.core/lib/parser/plugins/attachment')(N, {
+      types: '$$ JSON.stringify(N.models.users.MediaInfo.types) $$'
+    })
   );
 });

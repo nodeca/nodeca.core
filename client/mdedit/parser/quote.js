@@ -7,9 +7,12 @@
 N.wire.once('init:parser', function quote_plugin_init() {
   N.parser.addPlugin(
     'quote',
-    function quote_plugin_init(parser) {
-      require('nodeca.core/lib/parser/plugins/quote')(N)(parser);
+    require('nodeca.core/lib/parser/plugins/quote')(N)
+  );
 
+  N.parser.addPlugin(
+    'quote:fetch_quote_info',
+    function quote_plugin_init(parser) {
       parser.bus.on('ast2html', function render_quote(data) {
         data.ast.find('msg-quote').each(function () {
           var $tag = $(this);
