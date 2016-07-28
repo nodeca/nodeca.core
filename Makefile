@@ -1,5 +1,3 @@
-PATH        := ../../node_modules/.bin:${PATH}
-
 NPM_PACKAGE := $(shell node -e 'process.stdout.write(require("./package.json").name)')
 NPM_VERSION := $(shell node -e 'process.stdout.write(require("./package.json").version)')
 
@@ -8,7 +6,6 @@ TMP_PATH    := /tmp/${NPM_PACKAGE}-$(shell date +%s)
 REMOTE_NAME ?= origin
 REMOTE_REPO ?= $(shell git config --get remote.${REMOTE_NAME}.url)
 
-CURR_HEAD   := $(firstword $(shell git show-ref --hash HEAD | sed 's/^\(.\{6\}\).*$$/\1/') master)
 GITHUB_PROJ := nodeca/${NPM_PACKAGE}
 
 
@@ -16,7 +13,6 @@ help:
 	echo "make help       - Print this help"
 	echo "make lint       - Lint sources with JSHint"
 	echo "make test       - Lint sources and run all tests"
-	echo "make publish    - Set new version tag and publish npm package"
 	echo "make todo       - Find and list all TODOs"
 
 
@@ -24,18 +20,15 @@ lint:
 	cd ../.. && NODECA_APP_PATH=./node_modules/${NPM_PACKAGE} $(MAKE) lint
 
 
-test: lint
+test:
 	cd ../.. && NODECA_APP=${NPM_PACKAGE} $(MAKE) test
 
 
 test-ci:
-	rm -rf ${TMP_PATH}
 	git clone git://github.com/nodeca/nodeca.git ${TMP_PATH}
-	mkdir -p ${TMP_PATH}/node_modules
-	cp -r . ${TMP_PATH}/node_modules/${NPM_PACKAGE}
 	cd ${TMP_PATH} && $(MAKE) deps-ci
-	cd ${TMP_PATH} && npm install
-	cd ${TMP_PATH} && NODECA_APP_PATH=./node_modules/${NPM_PACKAGE} $(MAKE) lint
+	cd ${TMP_PATH} && rm -rf ${TMP_PATH}/nodeca_modules/${NPM_PACKAGE}
+	cp -r . ${TMP_PATH}/nodeca_modules/${NPM_PACKAGE}
 	cd ${TMP_PATH} && NODECA_APP=${NPM_PACKAGE} $(MAKE) test
 	rm -rf ${TMP_PATH}
 
