@@ -559,4 +559,19 @@ describe('Queue', function () {
       q1.worker('test18').push().catch(done);
     });
   });
+
+
+  it('should delete tasks for removed workers', function (done) {
+    // Set startup time like a long time ago
+    q1.__startup_time__ = 1000;
+
+    // Create fake old worker record to awake garbage collector
+    TEST.N.redis.zadd('queue:workers', 3000, 'test19', function (err) {
+      if (err) {
+        done(err);
+      }
+    });
+
+    setTimeout(done, 1000); // check interval + max drift
+  });
 });
