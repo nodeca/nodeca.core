@@ -19,6 +19,7 @@
 .icon-collapse-alt:before { content: '\e80b'; } /* '' */
 .icon-comment:before { content: '\e80c'; } /* '' */
 .icon-menu:before { content: '\e80d'; } /* '' */
+.icon-dropdown-local:before { content: '\e80e'; } /* '' */
 .icon-github:before { content: '\e80f'; } /* '' */
 .icon-plus:before { content: '\e810'; } /* '' */
 .icon-vkontakte:before { content: '\e811'; } /* '' */
