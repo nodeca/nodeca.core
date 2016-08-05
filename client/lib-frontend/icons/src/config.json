@@ -623,6 +623,18 @@
       "search": [
         "turn_up_arrow"
       ]
+    },
+    {
+      "uid": "884cfc3e6e2d456dd2a2ca0dbb9e6337",
+      "css": "chevron-big-left",
+      "code": 59237,
+      "src": "entypo"
+    },
+    {
+      "uid": "004882ab2d5c418c5b2060e80596279b",
+      "css": "chevron-big-right",
+      "code": 59238,
+      "src": "entypo"
     }
   ]
 }
