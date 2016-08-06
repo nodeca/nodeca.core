@@ -36,7 +36,7 @@
     content ' '
     width 100%
     height 1px
-    background-color darken($editor-bg, 20%)
+    background-color $editor-bg - 20%
     position absolute
     top 9px
   &:after
@@ -101,7 +101,7 @@
   height 67px
   line-height 67px
   border-radius 2px
-  background-color lighten($editor-bg, 70%)
+  background-color $editor-bg + 70%
   padding 0 .375rem
   text-align center
   shortable()
@@ -138,7 +138,7 @@
 
 .mdedit__toolbar
   padding .375rem
-  border-bottom 1px solid lighten($input-border-color, 70%)
+  border-bottom 1px solid ($input-border-color + 70%)
   overflow-x auto
   white-space nowrap
 
@@ -166,7 +166,7 @@
 .mdedit-toolbar__sep
   width 1px
   height 1.2em
-  background lighten($input-border-color, 70%)
+  background $input-border-color + 70%
   cursor auto
   margin 0 .4em
 

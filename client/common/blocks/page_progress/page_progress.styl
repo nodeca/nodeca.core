@@ -20,7 +20,7 @@
   text-align center
 
 .page-progress__label-total
-  color darken($navbar-dark-color, 30%)
+  color $navbar-dark-color - 30%
   &:before
     content '/'
     margin-left .2em
@@ -31,10 +31,10 @@
   bottom .25rem
   left .25rem
   right .25rem
-  background-color darken($navbar-dark-color, 30%)
+  background-color $navbar-dark-color - 30%
 
 .page-progress__bar-fill
-  background-color darken($navbar-dark-color, 10%)
+  background-color $navbar-dark-color - 10%
   height .0625rem
   transition width .3s
 
