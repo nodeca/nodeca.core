@@ -30,6 +30,21 @@ i18n:
           future_d: '%H:%M'
           future_Y: '%e %b'
 
+        relative_full:
+          default:  '%=B %Y'
+          now:      'Right now'
+          # (now|past|future)+ [ _(60s|60m|24h|d|1d|30d|365d) ]
+          past_60s: '#{seconds} ((second|seconds)):seconds ago'
+          past_60m: '#{minutes} ((minute|minutes)):minutes ago'
+          past_24h: '#{hours} ((hour|hours)):hours ago'
+          # past_d:   '%H:%M'
+          # past_1d:  'Вчера'
+          past_7d:  '#{days} ((day|days)):days ago'
+          #past_M:   '%d %B'
+          past_Y:   '%e %B'
+          future_d: '%H:%M'
+          future_Y: '%e %B'
+
         relative_days:
           past_30d:    '#{days} ((day|days)):days'
           future_30d:  '#{days} ((day|days)):days'
