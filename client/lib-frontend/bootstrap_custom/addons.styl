@@ -31,3 +31,18 @@
   display inline-block
   line-height 1.3em
   margin-top .5em
+
+.nav-tabs
+  border-bottom unset !important
+
+  .nav-link
+    border none !important
+    border-radius 0 !important
+    padding .5em .5em !important
+    border-bottom 3px solid transparent !important
+
+    &.active
+      border-bottom 3px solid $brand-primary !important
+
+  .nav-item + .nav-item
+    margin-left .7em !important
