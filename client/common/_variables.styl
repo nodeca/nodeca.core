@@ -47,6 +47,12 @@ shortable()
   overflow hidden
   text-overflow ellipsis
 
+fix-bottom()
+  & > p:last-child
+  & > ul:last-child
+  & > ol:last-child
+    margin-bottom 0rem
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // For the old design (soon to be removed)
