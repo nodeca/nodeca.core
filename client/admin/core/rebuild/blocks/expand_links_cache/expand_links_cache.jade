@@ -1,7 +1,7 @@
 - self.add_raw_data('expand_links_cache_task', self.task_info);
 
 #rebuild-expand-links-cache-task.rebuild-widget
-  h4
+  .rebuild-widget__title
     = self.t('title')
     = ' '
     small(data-bind='visible: started, text: (current() / total() * 100 || 0).toFixed(2) + "%"')

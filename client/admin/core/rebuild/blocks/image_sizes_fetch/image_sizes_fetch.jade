@@ -1,7 +1,7 @@
 - self.add_raw_data('image_sizes_fetch_task', self.task_info);
 
 #rebuild-image-sizes-fetch-task.rebuild-widget
-  h4
+  .rebuild-widget__title
     = self.t('title')
     = ' '
     small(data-bind='visible: started, text: (current() / total() * 100 || 0).toFixed(2) + "%"')
