@@ -3,10 +3,12 @@
 .emoji-autocomplete
   position absolute
   z-index 100
-  background #ffffff
+  background $dropdown-bg
   display none
-  border 1px solid grayLighter
+  border 1px solid $dropdown-border-color
+  box-shadow $dropdown-box-shadow
   border-radius 4px
+  overflow hidden
 
   &.emoji-autocomplete__m-visible
     display block
@@ -17,18 +19,16 @@
   margin 0
 
 .emoji-autocomplete-item
-  font-size 16px
-  padding 0 5px
-  height 1.5em
-  line-height 1.5em
-  border-radius 4px
-  background none
-  color gray
+  padding .25rem .5rem
+  color $dropdown-link-color
   transition .2s ease
 
-  &.emoji-autocomplete-item__m-selected, &:hover
-    color grayDark
-    background-color grayLightest
+  &.emoji-autocomplete-item__m-selected
+    color $dropdown-link-hover-color
+    background-color $dropdown-link-hover-bg
+  &:hover
+    color $dropdown-link-hover-color
+    background-color $dropdown-link-hover-bg
 
 .emoji-autocomplete-item__link
   color inherit
