@@ -3,7 +3,7 @@
 #rebuild-expand-links-cache-task.rebuild-widget
   .rebuild-widget__title
     = self.t('title')
-    = ' '
+    | 
     small(data-bind='visible: started, text: (current() / total() * 100 || 0).toFixed(2) + "%"')
 
   progress.progress(
