@@ -1,4 +1,4 @@
-//@import "nodeca.core/client/common/_variables"
+@import "nodeca.core/client/common/_variables"
 
 .btn + .btn
   margin-left .4rem
@@ -31,3 +31,21 @@
   display inline-block
   line-height 1.3em
   margin-top .5em
+
+// Additional tabs style
+.nav-tabs-underlined
+  .nav-item
+    display inline
+
+  .nav-item + .nav-item
+    margin-left .7em
+
+  .nav-link
+    padding .5em .5em
+    border-bottom 3px solid transparent
+
+    &.active
+      border-bottom 3px solid $brand-primary
+
+  .nav-link + .nav-link
+    margin-left .7em

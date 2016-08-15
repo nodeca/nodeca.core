@@ -4,7 +4,8 @@
   .main
     != self.partial('@admin.core.blocks.breadcrumbs')
 
-    h1= self.head.title
+    .page-head
+      h1.page-head__title= self.head.title
 
     - self.add_raw_data('setting_schemas', self.setting_schemas);
     - self.add_raw_data('setting_values',  self.setting_values);

@@ -4,9 +4,10 @@
   .main
     != self.partial('@admin.core.blocks.breadcrumbs')
 
-    h1= self.head.title
+    .page-head
+      h1.page-head__title= self.head.title
 
-    ul.nav.nav-pills
+    ul.nav.nav-tabs-underlined
       each tabName, tabIndex in self.tabs
         li.nav-item
           a.nav-link(

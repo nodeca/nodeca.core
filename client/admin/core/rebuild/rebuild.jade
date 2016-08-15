@@ -4,7 +4,8 @@
   .main
     != self.partial('@admin.core.blocks.breadcrumbs')
 
-    h1 #{self.head.title}
+    .page-head
+      h1.page-head__title= self.head.title
 
     each block in self.blocks
       != self.partial('@admin.core.rebuild.blocks.' + block.name, block)
