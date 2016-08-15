@@ -7,7 +7,7 @@
     .page-head
       h1.page-head__title= self.head.title
 
-    ul.nav.nav-tabs-underlined
+    ul.nav.nav-tabs-underlined.m-b-1
       each tabName, tabIndex in self.tabs
         li.nav-item
           a.nav-link(
@@ -19,18 +19,13 @@
     .tab-content
       each tabName, tabIndex in self.tabs
         .tab-pane(id="tab_#{tabName}", class=(0 === tabIndex ? 'active' : ''))
-          table.table.table-striped.table-hover.global-settings__table
+          table.table.table-striped.table-hover
             each group in self.groups[tabName]
               tr
                 td
-                  h3.global-settings__group-title
-                    a(href=self.link_to('admin.core.global_settings.edit', { group: group.name }))
-                      = self.t('@admin.core.group_names.' + group.name)
+                  a(href=self.link_to('admin.core.global_settings.edit', { group: group.name }))
+                    = self.t('@admin.core.group_names.' + group.name)
+                  |  
+                  small.text-muted
                     |  
-                    small
-                      |  
-                      = self.t('settings_count', group.settingsCount)
-
-                    //-if self.t.exists('@admin.core.group_names.' + group.name + '_help')
-                      p
-                        small= self.t('@admin.core.group_names.' + group.name + '_help')
+                    = self.t('settings_count', group.settingsCount)
