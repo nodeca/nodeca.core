@@ -32,17 +32,14 @@
   line-height 1.3em
   margin-top .5em
 
-.nav-tabs
-  border-bottom unset !important
-
+// Additional tabs style
+.nav-tabs-underlined
   .nav-link
-    border none !important
-    border-radius 0 !important
-    padding .5em .5em !important
-    border-bottom 3px solid transparent !important
+    padding .5em .5em
+    border-bottom 3px solid transparent
 
     &.active
-      border-bottom 3px solid $brand-primary !important
+      border-bottom 3px solid $brand-primary
 
-  .nav-item + .nav-item
-    margin-left .7em !important
+  .nav-link + .nav-link
+    margin-left .7em
