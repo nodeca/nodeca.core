@@ -8,7 +8,7 @@
         .modal-body
           if self.messages.length
             .form-group
-              select.form-control(data-on-change='common.blocks.abuse_report_dlg:quick_fill' tabindex='1')
+              select.form-control.custom-select(data-on-change='common.blocks.abuse_report_dlg:quick_fill' tabindex='1')
                 option(value='')=self.t('templates_help')
                 each message in self.messages
                   - var title = message.split('\n').shift(); // first line
