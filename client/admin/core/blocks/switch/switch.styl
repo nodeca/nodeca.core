@@ -35,7 +35,7 @@
       width 50%
       height 100%
 
-      background-color red + 50%
+      background-color $brand-danger + 50%
       background-image linear-gradient(top, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0))
       box-shadow inset 0 1px 1px rgba(255, 255, 255, 0.5), inset 0 0 1px rgba(0, 0, 0, 0.5)
 
@@ -47,7 +47,7 @@
       content attr(data-yes)
       left 0
 
-      color grayLighter
+      color $gray-light
       text-shadow 0 1px 0 white
 
     &:after
@@ -58,7 +58,7 @@
       content attr(data-no)
       right 0
 
-      color red
+      color $brand-danger
       text-shadow 0 1px 0 rgba(255, 255, 255, 0.5)
 
   input
@@ -72,10 +72,10 @@
     &:checked ~ label
       > i
         left 0
-        background-color green + 40%
+        background-color $brand-success + 40%
       &:before
-        color green - 30%
+        color $brand-success - 30%
         text-shadow 0 1px 0 rgba(255, 255, 255, 0.5)
       &:after
-        color grayLighter
+        color $gray-light
         text-shadow 0 1px 0 white

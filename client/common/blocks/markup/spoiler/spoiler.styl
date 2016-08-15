@@ -3,24 +3,24 @@
 @import "nodeca.core/client/common/_variables"
 
 .spoiler
-  border-left 4px solid grayLighter
-  margin-bottom (baseLineHeight/2)
+  border-left .125rem solid ($body-color-secondary + 55%)
+  margin-bottom 1rem
 
 .spoiler__title
   cursor pointer
-  background-color #F8F8F8
-  font-size 12px
+  background-color $body-bg-secondary + 50%
+  font-size $font-size-sm
   font-weight bold
-  padding 5px 10px
+  padding .5rem 1rem
 
 .spoiler__inner
   overflow hidden
 
 .spoiler__content
   transition margin 0.3s ease
-  padding 5px 10px 0 10px
+  padding 1rem 1rem 0
   margin-top -100%
-  margin-bottom -10px
+  margin-bottom -.5rem
 
 // writing explicit paths to the content here, because
 // ".spoiler__m-open .spoiler__content" selector would match

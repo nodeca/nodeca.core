@@ -6,15 +6,14 @@
   position fixed
   top 70px
   width 180px
-  padding 10px 0
-  margin 0
-  list-style none
-  background-color #f8f8f8
+  padding .5rem 0
   border-radius 4px
+  background-color $gray-lightest
 
-a.sidebar-menu__link
-  color gray
+  .nav-link
+    display block
+    padding .5rem 1rem
+    color $gray
 
-.sidebar-menu__item._active .sidebar-menu__link
-.sidebar-menu__item._active .sidebar-menu__link:hover
-  background-color grayLightest - 5%
+  .nav-item._active
+    background-color $gray-lighter
