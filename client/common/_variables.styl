@@ -35,9 +35,13 @@ $decorator-color      = #e3edf6
 $navbar-dark-color        = rgba(248,248,248,1)
 $navbar-dark-hover-color  = rgba(248,248,248,0.75)
 
-$link-color = $brand-primary
+$link-color           = $brand-primary
 
 $editor-bg            = #eee;
+
+
+$grid-breakpoints = { xs: 0, sm: 544px, md: 768px, lg: 992px, xl: 1200px }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Helpers
@@ -52,22 +56,3 @@ fix-bottom()
   & > ul:last-child
   & > ol:last-child
     margin-bottom 0rem
-
-
-////////////////////////////////////////////////////////////////////////////////
-// For the old design (soon to be removed)
-
-// Font stacks
-// http://www.xiper.net/collect/html-and-css-tricks/typographics/safe-fonts-part3.html
-// http://www.ampsoft.net/webdesign-l/WindowsMacFonts.html
-// http://cssfontstack.com/
-
-sansFontFamily  = "Helvetica Neue", "Helvetica CY", Arial, sans-serif;
-sansWideFontFamily  = Verdana, "Geneva CY", "DejaVu Sans", sans-serif;
-serifFontFamily = Georgia, "Times New Roman", "Times CY", serif;
-monoFontFamily  = Monaco, Consolas, "Lucida Console", monospace;
-
-linkColor       = #679
-linkColorHover  = #036
-
-$grid-breakpoints = { xs: 0, sm: 544px, md: 768px, lg: 992px, xl: 1200px }
