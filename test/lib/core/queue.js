@@ -1,7 +1,16 @@
 'use strict';
 
+
 const assert = require('assert');
 const Queue  = require('nodeca.core/lib/queue');
+
+
+function delay(ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
+
 
 describe('Queue', function () {
   let q1, q2;
@@ -42,10 +51,10 @@ describe('Queue', function () {
     let worker1 = {
       name: 'test',
       chunksPerInstance: 2,
-      map(callback) {
-        callback(null, [ 1, 2, 3 ]);
+      map() {
+        return Promise.resolve([ 1, 2, 3 ]);
       },
-      reduce(chunksResult, callback) {
+      reduce() {
 
         if (process1Chunks > process2Chunks) {
           assert.equal(process1Chunks, 2);
@@ -56,23 +65,21 @@ describe('Queue', function () {
         }
 
         done();
-
-        callback();
       },
-      process(callback) {
+      process() {
         process1Chunks++;
 
-        setTimeout(callback, 1000); // check interval + max drift
+        return delay(1000); // check interval + max drift
       }
     };
 
     let worker2 = {
       name: 'test',
       chunksPerInstance: 2,
-      map(callback) {
-        callback(null, [ 1, 2, 3 ]);
+      map() {
+        return Promise.resolve([ 1, 2, 3 ]);
       },
-      reduce(chunksResult, callback) {
+      reduce() {
 
         if (process1Chunks > process2Chunks) {
           assert.equal(process1Chunks, 2);
@@ -83,13 +90,11 @@ describe('Queue', function () {
         }
 
         done();
-
-        callback();
       },
-      process(callback) {
+      process() {
         process2Chunks++;
 
-        setTimeout(callback, 1000); // check interval + max drift
+        return delay(1000); // check interval + max drift
       }
     };
 
@@ -103,25 +108,26 @@ describe('Queue', function () {
   it('should run `map`, `process` and `reduce` with correct data', function (done) {
     let worker = {
       name: 'test2',
-      map(callback) {
+      map() {
         assert.deepEqual(this.data, { taskDataTest1: 1, taskDataTest2: 2 });
-        callback(null, [
+
+        return Promise.resolve([
           { chunkDataTest1: 1, chunkDataTest2: 2 },
           { chunkDataTest1: 1, chunkDataTest2: 2 },
           { chunkDataTest1: 1, chunkDataTest2: 2 }
         ]);
       },
-      process(callback) {
+      process() {
         assert.deepEqual(this.data, { chunkDataTest1: 1, chunkDataTest2: 2 });
-        callback(null, { reduceDataTest1: 1, reduceDataTest2: 2 });
+
+        return Promise.resolve({ reduceDataTest1: 1, reduceDataTest2: 2 });
       },
-      reduce(chunksResult, callback) {
-        chunksResult.forEach(function (data) {
+      reduce(chunksResult) {
+        chunksResult.forEach(data => {
           assert.deepEqual(data, { reduceDataTest1: 1, reduceDataTest2: 2 });
         });
 
         done();
-        callback();
       }
     };
 
@@ -136,22 +142,20 @@ describe('Queue', function () {
       name: 'test3',
       retryDelay: 1, // 1 ms
       retry: 1,
-      map(callback) {
-        callback(null, [ 1, 2, 3 ]);
+      map() {
+        return Promise.resolve([ 1, 2, 3 ]);
       },
-      process(callback) {
+      process() {
         if (this.data === 2) {
-          callback('test err');
-          return;
+          return Promise.reject('test err');
         }
 
-        callback(null, this.data);
+        return Promise.resolve(this.data);
       },
-      reduce(chunksResult, callback) {
+      reduce(chunksResult) {
         assert.deepEqual(chunksResult.sort(), [ 1, 3 ]);
 
         done();
-        callback();
       }
     };
 
@@ -168,22 +172,20 @@ describe('Queue', function () {
       name: 'test4',
       retryDelay: 1, // 1 ms
       retry: 1,
-      map(callback) {
+      map() {
         if (localCounter === 0) {
-          callback('test err');
           localCounter++;
-          return;
+          return Promise.reject('test err');
         }
-        callback(null, [ 1 ]);
+        return Promise.resolve([ 1 ]);
       },
-      process(callback) {
-        callback(null, this.data);
+      process() {
+        return Promise.resolve(this.data);
       },
-      reduce(chunksResult, callback) {
+      reduce(chunksResult) {
         assert.deepEqual(chunksResult, [ 1 ]);
 
         done();
-        callback();
       }
     };
 
@@ -200,23 +202,21 @@ describe('Queue', function () {
       name: 'test5',
       retryDelay: 1, // 1 ms
       retry: 1,
-      map(callback) {
-        callback(null, [ 1 ]);
+      map() {
+        return Promise.resolve([ 1 ]);
       },
-      process(callback) {
-        callback(null, this.data);
+      process() {
+        return Promise.resolve(this.data);
       },
-      reduce(chunksResult, callback) {
+      reduce(chunksResult) {
         if (localCounter === 0) {
-          callback('test err');
           localCounter++;
-          return;
+          return Promise.reject('test err');
         }
 
         assert.deepEqual(chunksResult, [ 1 ]);
 
         done();
-        callback();
       }
     };
 
@@ -233,23 +233,21 @@ describe('Queue', function () {
       name: 'test6',
       retryDelay: 1, // 1 ms
       retry: 1,
-      map(callback) {
-        callback(null, [ 1 ]);
+      map() {
+        return Promise.resolve([ 1 ]);
       },
-      process(callback) {
+      process() {
         if (localCounter === 0) {
-          callback('test err');
           localCounter++;
-          return;
+          return Promise.reject('test err');
         }
 
-        callback(null, this.data);
+        return Promise.resolve(this.data);
       },
-      reduce(chunksResult, callback) {
+      reduce(chunksResult) {
         assert.deepEqual(chunksResult, [ 1 ]);
 
         done();
-        callback();
       }
     };
 
@@ -265,22 +263,20 @@ describe('Queue', function () {
     let worker = {
       name: 'test7',
       timeout: 10,
-      map(callback) {
+      map() {
         if (localCounter === 0) {
           localCounter++;
-          // nothing to do
-          return;
+          return delay(100000);
         }
-        callback(null, [ 1 ]);
+        return Promise.resolve([ 1 ]);
       },
-      process(callback) {
-        callback(null, this.data);
+      process() {
+        return Promise.resolve(this.data);
       },
-      reduce(chunksResult, callback) {
+      reduce(chunksResult) {
         assert.deepEqual(chunksResult, [ 1 ]);
 
         done();
-        callback();
       }
     };
 
@@ -296,23 +292,21 @@ describe('Queue', function () {
     let worker = {
       name: 'test8',
       timeout: 10,
-      map(callback) {
-        callback(null, [ 1 ]);
+      map() {
+        return Promise.resolve([ 1 ]);
       },
-      process(callback) {
-        callback(null, this.data);
+      process() {
+        return Promise.resolve(this.data);
       },
-      reduce(chunksResult, callback) {
+      reduce(chunksResult) {
         if (localCounter === 0) {
           localCounter++;
-          // nothing to do
-          return;
+          return delay(100000);
         }
 
         assert.deepEqual(chunksResult, [ 1 ]);
 
         done();
-        callback();
       }
     };
 
@@ -328,22 +322,20 @@ describe('Queue', function () {
     let worker = {
       name: 'test9',
       timeout: 10,
-      map(callback) {
-        callback(null, [ 1 ]);
+      map() {
+        return Promise.resolve([ 1 ]);
       },
-      process(callback) {
+      process() {
         if (localCounter === 0) {
           localCounter++;
-          // nothing to do
-          return;
+          return delay(100000);
         }
-        callback(null, this.data);
+        return Promise.resolve(this.data);
       },
-      reduce(chunksResult, callback) {
+      reduce(chunksResult) {
         assert.deepEqual(chunksResult, [ 1 ]);
 
         done();
-        callback();
       }
     };
 
@@ -359,8 +351,8 @@ describe('Queue', function () {
     let worker1 = {
       name: 'test10',
       chunksPerInstance: 1,
-      map(callback) {
-        callback(null, [ 1, 2, 3 ]);
+      map() {
+        return Promise.resolve([ 1, 2, 3 ]);
       },
       reduce() {
         throw new Error("reduce shouldn't be called");
@@ -446,11 +438,8 @@ describe('Queue', function () {
       let worker = {
         name: 'test14',
         postponeDelay: 1,
-        process(cb) {
-          cb();
-        },
-        reduce(__, cb) {
-          cb();
+        process() {},
+        reduce() {
           done();
         }
       };
@@ -465,12 +454,11 @@ describe('Queue', function () {
       let worker = {
         name: 'test15',
         postponeDelay: 1,
-        process(cb) {
-          cb(null, this.data);
+        process() {
+          return Promise.resolve(this.data);
         },
-        reduce(res, cb) {
+        reduce(res) {
           assert.deepEqual(res, [ null ]);
-          cb();
           done();
         }
       };
@@ -485,12 +473,11 @@ describe('Queue', function () {
       let worker = {
         name: 'test16',
         postponeDelay: 1,
-        process(cb) {
-          cb(null, this.data);
+        process() {
+          return Promise.resolve(this.data);
         },
-        reduce(res, cb) {
+        reduce(res) {
           assert.deepEqual(res, [ 'foo' ]);
-          cb();
           done();
         }
       };
@@ -509,20 +496,17 @@ describe('Queue', function () {
       let worker = {
         name: 'test17',
         timeout: 1000000, // forever
-        process(cb) {
-          cb();
-        },
-        map(cb) {
+        process() {},
+        map() {
           if (calls === 0) {
             calls++;
             this.setDeadline(10);
-            return;
+            return delay(100000);
           }
 
-          cb(null, [ 1 ]);
+          return Promise.resolve([ 1 ]);
         },
-        reduce(__, cb) {
-          cb();
+        reduce() {
           done();
         }
       };
@@ -539,17 +523,16 @@ describe('Queue', function () {
       let worker = {
         name: 'test18',
         timeout: 1000000, // forever
-        process(cb) {
+        process() {
           if (calls === 0) {
             calls++;
             this.setDeadline(10);
-            return;
+            return delay(100000);
           }
 
-          cb();
+          return Promise.resolve();
         },
-        reduce(__, cb) {
-          cb();
+        reduce() {
           done();
         }
       };
