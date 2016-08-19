@@ -26,6 +26,7 @@
   display inline-block
 
 .breadcrumbs__item
+  color $breadcrumbs-color
   display inline-block
   &:before
     content '/'
@@ -40,6 +41,10 @@
     content '/'
     color $breadcrumbs-color
     margin 0 .6em 0 .5em
+
+.breadcrumbs__m-nolink
+  &:last-child:after
+    content unset
 
 .breadcrumbs__link
   color $breadcrumbs-color
