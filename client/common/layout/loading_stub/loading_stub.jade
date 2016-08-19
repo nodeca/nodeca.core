@@ -1,4 +1,6 @@
 article#content
+  != self.partial('@common.blocks.navbar.logo_apps')
+
   .breadcrumbs-container
   .layout__container.container-fluid
     .loading-stub= self.t('loading')

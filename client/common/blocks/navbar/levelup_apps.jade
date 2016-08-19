@@ -1,0 +1,23 @@
+nav.navbar.navbar-dark.navbar-fixed-top.bg-primary
+  .navbar-primary.layout__container.container-fluid
+    .navbar-header
+      ul.nav.navbar-nav
+        li.nav-item
+          a.navbar__level-up.nav-link.icon.icon-level-up(href=self.level_up)
+
+      button.icon.icon-menu.navbar-toggler.hidden-md-up(
+        data-toggle='collapse',
+        data-target='.navbar-collapse',
+        type='button'
+      )
+
+    .navbar-collapse.collapse.navbar-toggleable-sm
+      ul.nav.navbar-nav.pull-md-left
+        != self.partial('@common.blocks.navbar.blocks.apps')
+
+      ul.nav.navbar-nav.pull-md-right
+        li.nav-item
+          a.nav-link.icon.icon-search(href='#')
+
+        //- NOTE: This block is located in `nodeca.users`
+        != self.partial('@common.blocks.navbar_auth')

@@ -1,0 +1,22 @@
+nav.navbar.navbar-dark.navbar-fixed-top.bg-primary
+  .navbar-alt.layout__container.container-fluid
+    .navbar-header
+      ul.nav.navbar-nav
+        li.nav-item
+          a.navbar__level-up.nav-link.icon.icon-level-up(href=self.level_up)
+
+      != self.partial('@common.blocks.navbar.blocks.progress', self.progress)
+
+      button.icon.icon-menu.navbar-toggler.hidden-md-up(
+        data-toggle='collapse',
+        data-target='.navbar-collapse',
+        type='button'
+      )
+
+    .navbar-collapse.collapse.navbar-toggleable-sm
+      ul.nav.navbar-nav.pull-md-left
+        .navbar-alt__title= self.title
+
+      if self.toolbar
+        ul.nav.navbar-nav.pull-md-right
+          != self.partial('@' + self.toolbar)

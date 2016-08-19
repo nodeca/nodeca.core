@@ -1,0 +1,18 @@
+-
+  var localizationPrefix = '@common.menus.navbar.';
+
+  function compare(a, b) { return (a.info.priority || 100) - (b.info.priority || 100); }
+
+  function sortedItems(items) {
+    var result = [];
+    Object.keys(items).forEach(function (name) {
+      if (!items[name]) { return; }
+      result.push({ name: name, info: items[name] });
+    });
+    return result.sort(compare);
+  }
+
+each item in sortedItems(self.runtime.navbar)
+  - var info = item.info;
+  li.nav-item(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
+    a.nav-link(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
