@@ -83,20 +83,17 @@
 // Alternate navigation. Shown when `navbar__m-secondary` modifier is added
 //
 .navbar-primary
-  opacity 1
-  transition opacity .5s ease
+  .navbar-inner
+    opacity 1
+    transition opacity .3s linear
 
 .navbar-alt
-  position absolute;
-  left 0
-  right 0
   top -($nav-panel-height)
-  opacity 0
-  transition opacity .5s ease, top 0s ease .5s
-  // Repeat container paddings, because those are lost after
-  // absolute positioning.
-  padding-top 0.75rem
-  padding-bottom 0.75rem
+  background-color transparent !important
+  transition top .001s linear .3s
+  .navbar-inner
+    opacity 0
+    transition opacity .3s linear
 
 .visible-nav-alt
   display none
@@ -110,12 +107,13 @@
 .navbar__m-secondary
   .navbar-collapse
     display none  // hide expanded menu
-  .navbar-primary
+  &.navbar-primary .navbar-inner
     opacity 0
-  .navbar-alt
-    opacity 1
+  &.navbar-alt
     top 0px
-    transition opacity .5s ease
+    transition top .001s linear
+    .navbar-inner
+      opacity 1
 
 .navbar-alt__title
   padding .425rem 1rem .425rem 0
