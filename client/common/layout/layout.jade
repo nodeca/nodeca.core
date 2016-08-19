@@ -29,7 +29,6 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage', class=self.offline_m
 
   body
     //-._affix(data-affix={ top: 500, class: 'layout-scroll-top__active' })
-    != self.partial('@common.blocks.navbar', { is_member: self.runtime.is_member, user_name: self.runtime.user_name, settings: self.settings })
     != self.content
 
     .layout__container.container-fluid
