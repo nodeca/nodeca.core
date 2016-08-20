@@ -5,7 +5,7 @@ nav.navbar-primary.navbar.navbar-dark.navbar-fixed-top.bg-primary
         li.nav-item
           a.navbar__level-up.nav-link.icon.icon-level-up(href=self.level_up)
 
-      != self.partial('@common.blocks.navbar.blocks.progress', self.progress)
+      != self.partial('@common.blocks.navbar.blocks.page_progress', self.progress)
 
       button.icon.icon-menu.navbar-toggler.hidden-md-up(
         data-toggle='collapse',
