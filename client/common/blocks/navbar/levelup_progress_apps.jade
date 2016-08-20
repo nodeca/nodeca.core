@@ -7,17 +7,17 @@ nav.navbar-primary.navbar.navbar-dark.navbar-fixed-top.bg-primary
 
       != self.partial('@common.blocks.navbar.blocks.page_progress', self.progress)
 
-      button.icon.icon-menu.navbar-toggler.hidden-md-up(
+      button.icon.icon-menu.navbar-toggler(
         data-toggle='collapse',
         data-target='.navbar-collapse',
         type='button'
       )
 
-    .navbar-collapse.collapse.navbar-toggleable-sm
-      ul.nav.navbar-nav.pull-md-left
+    .navbar-collapse.collapse.navbar-toggleable
+      ul.nav.navbar-nav.pull-xs-left
         != self.partial('@common.blocks.navbar.blocks.apps')
 
-      ul.nav.navbar-nav.pull-md-right
+      ul.nav.navbar-nav.pull-xs-right
         li.nav-item
           a.nav-link.icon.icon-search(href='#')
 

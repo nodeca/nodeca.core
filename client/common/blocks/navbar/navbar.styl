@@ -25,7 +25,6 @@
   &:focus
     color $navbar-dark-hover-color
 
-
 .navbar-nav > .nav-item > a:after
 .navbar__level-up:after
   position absolute
@@ -38,7 +37,26 @@
   opacity 0
   transition opacity .3s ease
 
-@media (max-width: $grid-breakpoints.md - 1)
+
+$grid-float-breakpoint = 600px
+
+@media (min-width: $grid-float-breakpoint)
+  .navbar-toggler
+    display none
+  .navbar-toggleable
+    display block !important
+
+@media (max-width: $grid-float-breakpoint - 1)
+  .navbar-toggleable
+    .navbar-nav .nav-item
+      float none
+      margin-left 0
+    .navbar-nav
+      float none !important
+
+  .navbar-toggler
+    display inline-block
+
   // align toggler to the right without using float
   .navbar-header
     text-align right
