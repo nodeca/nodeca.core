@@ -35,18 +35,25 @@ ul.nav.navbar-nav.page-progress(
     a.nav-link.page-progress__button-first.icon.icon-to-top(href=self.link_top)
 
   li.nav-item.page-progress__item.dropdown
-    a.nav-link.page-progress__info.dropdown-toggle(
-      href='#'
-      data-toggle='dropdown'
-    )
-      .page-progress__label
-        span.page-progress__label-current= current || 0
-        span.page-progress__label-total= total
-      .page-progress__bar
-        .page-progress__bar-fill(style="width: " + (current / total * 100).toFixed(2) + "%")
-
     if self.on_jump
+      a.nav-link.page-progress__info.dropdown-toggle(
+        href='#'
+        data-toggle='dropdown'
+      )
+        .page-progress__label
+          span.page-progress__label-current= current || 0
+          span.page-progress__label-total= total
+        .page-progress__bar
+          .page-progress__bar-fill(style="width: " + (current / total * 100).toFixed(2) + "%")
+
       +_page_progress_dropdown_menu(self.on_jump)
+    else
+      span.nav-link.page-progress__info
+        .page-progress__label
+          span.page-progress__label-current= current || 0
+          span.page-progress__label-total= total
+        .page-progress__bar
+          .page-progress__bar-fill(style="width: " + (current / total * 100).toFixed(2) + "%")
 
   li.nav-item.page-progress__item
     a.nav-link.page-progress__button-last.icon.icon-to-bottom(href=self.link_bottom)

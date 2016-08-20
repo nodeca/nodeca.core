@@ -1,17 +1,16 @@
 @import "nodeca.core/client/common/_variables"
 
 
-.page-progress
-  margin-left -.5rem
-
 .page-progress__item + .page-progress__item
   margin-left 0 !important
 
 .page-progress__button-first
 .page-progress__button-last
-.page-progress__info
   padding-left .5rem
   padding-right .5rem
+  position relative // For hover underline
+.page-progress__button-last
+  margin-right 1.5rem
 
 .page-progress__info
   min-width 6rem
@@ -29,8 +28,8 @@
 .page-progress__bar
   position absolute
   bottom .25rem
-  left .25rem
-  right .25rem
+  left 0
+  right 0
   background-color $navbar-dark-color - 30%
 
 .page-progress__bar-fill
