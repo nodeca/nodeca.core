@@ -5,12 +5,15 @@
   margin-left 0 !important
 
 .page-progress__button-first
-.page-progress__button-last
-  padding-left .5rem
-  padding-right .5rem
   position relative // For hover underline
+  padding-left .8rem
+  padding-right .5rem
+
 .page-progress__button-last
-  margin-right 1.5rem
+  position relative // For hover underline
+  padding-left .5rem
+  padding-right .8rem
+  margin-right 1.2rem
 
 .page-progress__info
   min-width 6rem
@@ -40,17 +43,24 @@
 
 .page-progress__menu
   min-width 150px
-  padding 7px 10px
+  padding .5rem .7rem .7rem
 
 //
 // Highlight on hover
 //
-a.page-progress__button-first
-a.page-progress__button-last
-a.page-progress__info
+.page-progress__button-first
+.page-progress__button-last
+.page-progress__info
   &:after
     left 0 !important
     right 0 !important
     // Override bootstrap caret
     margin-left 0
     border none
+
+.page-progress__button-first
+  &:after
+    left .3rem !important
+.page-progress__button-last
+  &:after
+    right .3rem !important

@@ -71,13 +71,16 @@
 
 .navbar__level-up
   position relative
-  margin-right 1.5rem
+  padding-left .8rem
+  padding-right .8rem
+  margin-left -.8rem
+  margin-right .7rem // -.7rem + 2 rem - .5rem
   color $navbar-dark-color
   &:hover
     color $navbar-dark-color
   &:after
-    left 0
-    right 0
+    left 0 !important
+    right 0 !important
 //
 // Alternate navigation. Shown when `navbar__m-secondary` modifier is added
 //
