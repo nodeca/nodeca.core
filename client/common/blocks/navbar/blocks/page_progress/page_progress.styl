@@ -8,12 +8,20 @@
   position relative // For hover underline
   padding-left .8rem
   padding-right .5rem
+  transition color .3s ease
 
 .page-progress__button-last
   position relative // For hover underline
   padding-left .5rem
   padding-right .8rem
   margin-right 1.2rem
+  transition color .3s ease
+
+.content-top .page-progress__button-first,
+.content-bottom .page-progress__button-last,
+.page-progress__m-disabled
+  color $navbar-dark-color - 30% !important
+  cursor default
 
 .page-progress__info
   min-width 6rem

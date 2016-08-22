@@ -32,7 +32,10 @@ ul.nav.navbar-nav.page-progress(
   data-topic=self.topic_hid
 )
   li.nav-item.page-progress__item
-    a.nav-link.page-progress__button-first.icon.icon-to-top(href=self.link_top)
+    a.nav-link.page-progress__button-first.icon.icon-to-top(
+      href=self.link_top
+      data-on-click='common.blocks.navbar.blocks.page_progress:nav_to_top'
+    )
 
   li.nav-item.page-progress__item.dropdown
     if self.on_jump
@@ -56,4 +59,7 @@ ul.nav.navbar-nav.page-progress(
           .page-progress__bar-fill(style="width: " + (current / total * 100).toFixed(2) + "%")
 
   li.nav-item.page-progress__item
-    a.nav-link.page-progress__button-last.icon.icon-to-bottom(href=self.link_bottom)
+    a.nav-link.page-progress__button-last.icon.icon-to-bottom(
+      href=self.link_bottom
+      data-on-click='common.blocks.navbar.blocks.page_progress:nav_to_bottom'
+    )
