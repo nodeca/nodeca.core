@@ -44,15 +44,31 @@ N.wire.on(module.apiPath + ':update', function update_progress(data) {
 
   // Hide upward arrow if:
   //  - user sees the top of the page
+  //  - AND current position is at the top (e.g. 1/42)
   //
   // Hide downward arrow if:
-  //  - user sees the bottom of the page (e.g. 39/42 and 3 last posts are all visible)
   //  - user is positioned at the last post (e.g. 42/42)
   //
-  if (current >= total) {
-    $('.page-progress__button-last').addClass('page-progress__m-disabled');
+  // OR:
+  //  - user is positioned within 10 posts at the bottom (e.g.392/42)
+  //  - AND user sees the bottom of the page (e.g. 39/42 and 3 last posts are all visible)
+  //
+  if (current <= 1) {
+    $('.page-progress').addClass('page-progress__m-position-start');
   } else {
-    $('.page-progress__button-last').removeClass('page-progress__m-disabled');
+    $('.page-progress').removeClass('page-progress__m-position-start');
+  }
+
+  if (current >= total) {
+    $('.page-progress').addClass('page-progress__m-position-end');
+  } else {
+    $('.page-progress').removeClass('page-progress__m-position-end');
+  }
+
+  if (current >= total - 10) {
+    $('.page-progress').addClass('page-progress__m-position-near-end');
+  } else {
+    $('.page-progress').removeClass('page-progress__m-position-near-end');
   }
 });
 
