@@ -33,12 +33,26 @@ function add_tracker($element, position, params) {
   let steadyMin = new Steady({
     throttle,
     handler(values, done) {
+      // Steady has an inverted axis for bottom, where 0 means user sees
+      // bottom boundary and positive value means further up.
+      //
+      // So we check direction each time, add bottom class when we would remove
+      // top and vice versa.
+      //
       if (params.class_above) {
-        $element.removeClass(params.class_above);
+        if (position === 'top') {
+          $element.removeClass(params.class_above);
+        } else {
+          $element.addClass(params.class_above);
+        }
       }
 
       if (params.class_below) {
-        $element.addClass(params.class_below);
+        if (position === 'bottom') {
+          $element.removeClass(params.class_below);
+        } else {
+          $element.addClass(params.class_below);
+        }
       }
 
       if (position === 'bottom' && params.wire_above) {
@@ -60,12 +74,26 @@ function add_tracker($element, position, params) {
   var steadyMax = new Steady({
     throttle,
     handler(values, done) {
+      // Steady has an inverted axis for bottom, where 0 means user sees
+      // bottom boundary and positive value means further up.
+      //
+      // So we check direction each time, add bottom class when we would remove
+      // top and vice versa.
+      //
       if (params.class_above) {
-        $element.addClass(params.class_above);
+        if (position === 'top') {
+          $element.addClass(params.class_above);
+        } else {
+          $element.removeClass(params.class_above);
+        }
       }
 
       if (params.class_below) {
-        $element.removeClass(params.class_below);
+        if (position === 'bottom') {
+          $element.addClass(params.class_below);
+        } else {
+          $element.removeClass(params.class_below);
+        }
       }
 
       if (position === 'top' && params.wire_above) {
