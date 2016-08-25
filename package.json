@@ -1,8 +1,23 @@
 {
-  "name"            : "nodeca.core",
-  "description"     : "Core nodeca app",
-  "version"         : "0.0.1",
-  "keywords"        : ["nodeca", "core"],
-  "license"         : "MIT",
-  "repository"      : "nodeca/nodeca.core"
+  "name": "nodeca.core",
+  "description": "Core nodeca app",
+  "version": "0.0.1",
+  "keywords": [
+    "nodeca",
+    "core"
+  ],
+  "license": "MIT",
+  "repository": "nodeca/nodeca.core",
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
+  }
 }
