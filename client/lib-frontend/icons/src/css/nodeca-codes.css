@@ -14,6 +14,7 @@
 .icon-download:before { content: '\e805'; } /* '' */
 .icon-x:before { content: '\e806'; } /* '' */
 .icon-report:before { content: '\e807'; } /* '' */
+.icon-loading-placeholder:before { content: '\e809'; } /* '' */
 .icon-expand-alt:before { content: '\e80a'; } /* '' */
 .icon-collapse-alt:before { content: '\e80b'; } /* '' */
 .icon-comment:before { content: '\e80c'; } /* '' */

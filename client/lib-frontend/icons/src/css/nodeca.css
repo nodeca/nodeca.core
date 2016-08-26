@@ -2,12 +2,12 @@
 
  @font-face {
   font-family: 'nodeca';
-  src: url('../font/nodeca.eot?71246285');
-  src: url('../font/nodeca.eot?71246285#iefix') format('embedded-opentype'),
-       url('../font/nodeca.woff2?71246285') format('woff2'),
-       url('../font/nodeca.woff?71246285') format('woff'),
-       url('../font/nodeca.ttf?71246285') format('truetype'),
-       url('../font/nodeca.svg?71246285#nodeca') format('svg');
+  src: url('../font/nodeca.eot?43136717');
+  src: url('../font/nodeca.eot?43136717#iefix') format('embedded-opentype'),
+       url('../font/nodeca.woff2?43136717') format('woff2'),
+       url('../font/nodeca.woff?43136717') format('woff'),
+       url('../font/nodeca.ttf?43136717') format('truetype'),
+       url('../font/nodeca.svg?43136717#nodeca') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -17,7 +17,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'nodeca';
-    src: url('../font/nodeca.svg?71246285#nodeca') format('svg');
+    src: url('../font/nodeca.svg?43136717#nodeca') format('svg');
   }
 }
 */
@@ -70,6 +70,7 @@
 .icon-download:before { content: '\e805'; } /* '' */
 .icon-x:before { content: '\e806'; } /* '' */
 .icon-report:before { content: '\e807'; } /* '' */
+.icon-loading-placeholder:before { content: '\e809'; } /* '' */
 .icon-expand-alt:before { content: '\e80a'; } /* '' */
 .icon-collapse-alt:before { content: '\e80b'; } /* '' */
 .icon-comment:before { content: '\e80c'; } /* '' */
