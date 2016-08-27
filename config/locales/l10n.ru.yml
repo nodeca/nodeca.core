@@ -34,8 +34,8 @@ i18n:
           default:  '%=B %Y'
           now:      'Сейчас'
           # (now|past|future)+ [ _(60s|60m|24h|d|1d|30d|365d) ]
-          past_60s: '#{seconds} ((секунда|секунды|секунд)):seconds назад'
-          past_60m: '#{minutes} ((минута|минуты|минут)):minutes назад'
+          past_60s: '#{seconds} ((секунду|секунды|секунд)):seconds назад'
+          past_60m: '#{minutes} ((минуту|минуты|минут)):minutes назад'
           past_24h: '#{hours} ((час|часа|часов)):hours назад'
           # past_d:   '%H:%M'
           # past_1d:  'Вчера'
