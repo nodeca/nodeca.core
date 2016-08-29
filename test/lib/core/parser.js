@@ -75,9 +75,9 @@ describe('Parser', function () {
     it('should transform md to preview', function () {
       let assets = [
         [ '| title |\n| --- |\n| text |', '<span class="icon icon-table"></span>' ],
-        [ '[test](#)', '<a href="#" class="link link-ext" title="" target="_blank" rel="nofollow">test</a>' ],
+        [ '[test](#)', '<a href="#" class="link link-ext" title="" target="_blank" rel="nofollow noopener">test</a>' ],
         [ 'http://www.google.com', '<a href="http://www.google.com" class="link link-ext link-auto" ' +
-                                   'title="" target="_blank" rel="nofollow">www.google.com</a>' ],
+                                   'title="" target="_blank" rel="nofollow noopener">www.google.com</a>' ],
         [ '![](#)', '<span class="icon icon-picture"></span>' ],
         [ '- a\n- b', '<span class="icon icon-list-bullet"></span>' ],
         [ '1. a\n2. b', '<span class="icon icon-list-numbered"></span>' ],
