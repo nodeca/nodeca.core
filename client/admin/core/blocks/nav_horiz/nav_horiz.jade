@@ -29,7 +29,7 @@ mixin _create_submenus(submenu, localizationPrefix)
 
 
 nav.navbar.navbar-light.navbar-fixed-top.bg-faded
-  ul.navbar__hovered.nav.navbar-nav
+  ul.navbar__hovered.nav.navbar-nav.container-fluid
     each item in sortedItems(self.runtime.navbar)
       - var info = item.info;
       if (info.submenu)
