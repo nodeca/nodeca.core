@@ -7,5 +7,5 @@
     #recaptcha_div
 
   // ko if: message
-  small(data-bind='text: message, css: hasError() ? "text-danger" : "text-muted"')
+  small.form-text(data-bind='text: message, css: hasError() ? "text-danger" : "text-muted"')
   // /ko
