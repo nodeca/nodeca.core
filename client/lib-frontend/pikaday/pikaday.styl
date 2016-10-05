@@ -1,1 +1,26 @@
 @import "pikaday/css/pikaday.css"
+
+//
+// Make month and year look like buttons
+//
+
+@import "nodeca.core/client/common/_variables"
+
+.pika-label
+  padding $btn-padding-y-sm $btn-padding-x-sm
+  font-size $font-size-sm
+  border-radius $btn-border-radius-sm
+  color $btn-secondary-color
+  background-color $btn-secondary-bg
+  border $input-btn-border-width solid $btn-secondary-border
+
+  &:hover, &:focus
+    background-color darken($btn-secondary-bg, 10%)
+    border-color darken($btn-secondary-border, 12%)
+
+  &:active:hover, &:active:focus
+    background-color darken($btn-secondary-bg, 17%)
+    border-color darken($btn-secondary-border, 25%)
+
+.pika-label + .pika-label
+  margin-left .4rem
