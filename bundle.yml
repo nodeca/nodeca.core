@@ -45,6 +45,9 @@ packages:
       - raf.js
       - faye/src/faye_browser.js
       - tabex
+      # template helpers
+      - pug-runtime
+      - jade/lib/runtime
       # stub for jade runtime
       - fs: nodeca.core/lib/system/dummy.js
       # reuse global bug.js from the loader
