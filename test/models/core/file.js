@@ -1,11 +1,11 @@
 'use strict';
 
 
-const fs       = require('fs');
-const path     = require('path');
 const assert   = require('assert');
-const co       = require('bluebird-co').co;
+const Promise  = require('bluebird');
+const fs       = require('fs');
 const Mongoose = require('mongoose');
+const path     = require('path');
 
 const fileName    = path.join(__dirname, 'fixtures', 'lorem.jpg');
 const fileBase    = path.basename(fileName);
@@ -160,7 +160,7 @@ describe('File model test', function () {
 
   describe('promises', function () {
 
-    it('put(file) + remove()', co.wrap(function* () {
+    it('put(file) + remove()', Promise.coroutine(function* () {
       let info = yield file.put(fileName, { metadata: { origName: fileBase } });
 
       let i = yield file.getInfo(info._id);
@@ -172,7 +172,7 @@ describe('File model test', function () {
       yield file.remove(info._id);
     }));
 
-    it('put(file) + remove(all)', co.wrap(function* () {
+    it('put(file) + remove(all)', Promise.coroutine(function* () {
       let origId = new Mongoose.Types.ObjectId();
 
       // Put file
@@ -205,7 +205,7 @@ describe('File model test', function () {
       assert.equal(i, null);
     }));
 
-    it('put(stream)', co.wrap(function* () {
+    it('put(stream)', Promise.coroutine(function* () {
       let stream = fs.createReadStream(fileName);
 
       let info = yield file.put(stream, { metadata: { origName: fileBase } });
@@ -219,7 +219,7 @@ describe('File model test', function () {
       yield file.remove(info._id);
     }));
 
-    it('put(buffer)', co.wrap(function* () {
+    it('put(buffer)', Promise.coroutine(function* () {
       let info = yield file.put(fileContent, { metadata: { origName: fileBase } });
 
       let i = yield file.getInfo(info._id);

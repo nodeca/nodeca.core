@@ -7,12 +7,12 @@
 'use strict';
 
 
-const co = require('bluebird-co').co;
+const Promise = require('bluebird');
 
 
 module.exports = function (N) {
   N.wire.before('internal.live.*', { priority: -100 }, function add_session_loader(data) {
-    data.getSession = co.wrap(function* () {
+    data.getSession = Promise.coroutine(function* () {
       // If session already loaded - skip
       if (data.__session__ || data.__session__ === null) {
         return data.__session__;

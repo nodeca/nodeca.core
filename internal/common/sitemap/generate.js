@@ -3,6 +3,7 @@
 'use strict';
 
 const _        = require('lodash');
+const Promise  = require('bluebird');
 const eos      = require('end-of-stream');
 const multi    = require('multistream');
 const pump     = require('pump');
@@ -195,6 +196,6 @@ module.exports = function (N, apiPath) {
       _id: { $lt: out_stream.sitemap._id }
     }).sort('-_id').skip(5);
 
-    yield old_sitemaps.map(sm => sm.remove());
+    yield Promise.map(old_sitemaps, sm => sm.remove());
   });
 };

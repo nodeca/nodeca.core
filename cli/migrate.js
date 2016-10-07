@@ -4,7 +4,7 @@
 'use strict';
 
 
-const co = require('bluebird-co').co;
+const Promise = require('bluebird');
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -27,54 +27,52 @@ module.exports.commandLineArguments = [
   }
 ];
 
-module.exports.run = function (N, args) {
+module.exports.run = Promise.coroutine(function* (N, args) {
 
-  return co(function* () {
-    N.wire.skip('init:models', 'migrations_check');
+  N.wire.skip('init:models', 'migrations_check');
 
-    yield N.wire.emit('init:models', N);
+  yield N.wire.emit('init:models', N);
 
-    /*eslint-disable no-console*/
+  /*eslint-disable no-console*/
 
-    let Migration = N.models.Migration;
+  let Migration = N.models.Migration;
 
-    // fetch used migrations from db
-    let currentMigrations = yield Migration.getLastState();
+  // fetch used migrations from db
+  let currentMigrations = yield Migration.getLastState();
 
-    let outstandingMigrations = Migration.checkMigrations(N, currentMigrations);
+  let outstandingMigrations = Migration.checkMigrations(N, currentMigrations);
 
-    if (outstandingMigrations.length === 0) {
-      console.log(args.all  ? 'Already up-to-date.'
-                            : 'You have no outstanding migrations');
-      return N.wire.emit('exit.shutdown');
-    }
-
-    if (!args.all) {
-      console.log(`You have ${outstandingMigrations.length} outstanding migration(s):\n`);
-
-      outstandingMigrations.forEach(function (migration) {
-        console.log(`  ${migration.appName}:${migration.step}`);
-      });
-
-      console.log('\nRun `migrate` command with `--all` to apply them.');
-      return N.wire.emit('exit.shutdown');
-    }
-
-    console.log(`Applying ${outstandingMigrations.length} outstanding migration(s):\n`);
-
-    for (let i = 0; i < outstandingMigrations.length; i++) {
-      let migration = outstandingMigrations[i];
-
-      process.stdout.write(`  ${migration.appName}:${migration.step} ... `);
-
-      yield require(migration.filename).up(N);
-
-      console.log('OK');
-
-          // All ok. Write step to db
-      yield Migration.markPassed(migration.appName, migration.step);
-    }
-
+  if (outstandingMigrations.length === 0) {
+    console.log(args.all  ? 'Already up-to-date.'
+                          : 'You have no outstanding migrations');
     return N.wire.emit('exit.shutdown');
-  });
-};
+  }
+
+  if (!args.all) {
+    console.log(`You have ${outstandingMigrations.length} outstanding migration(s):\n`);
+
+    outstandingMigrations.forEach(function (migration) {
+      console.log(`  ${migration.appName}:${migration.step}`);
+    });
+
+    console.log('\nRun `migrate` command with `--all` to apply them.');
+    return N.wire.emit('exit.shutdown');
+  }
+
+  console.log(`Applying ${outstandingMigrations.length} outstanding migration(s):\n`);
+
+  for (let i = 0; i < outstandingMigrations.length; i++) {
+    let migration = outstandingMigrations[i];
+
+    process.stdout.write(`  ${migration.appName}:${migration.step} ... `);
+
+    yield require(migration.filename).up(N);
+
+    console.log('OK');
+
+        // All ok. Write step to db
+    yield Migration.markPassed(migration.appName, migration.step);
+  }
+
+  yield N.wire.emit('exit.shutdown');
+});

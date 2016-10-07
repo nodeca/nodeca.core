@@ -11,8 +11,8 @@
 'use strict';
 
 
-const _      = require('lodash');
-const render = require('nodeca.core/lib/system/render/common');
+const Promise = require('bluebird');
+const render  = require('nodeca.core/lib/system/render/common');
 
 
 module.exports = function (N) {
@@ -36,7 +36,7 @@ module.exports = function (N) {
       return acc;
     }, {});
 
-    yield _.map(params.recipients, user_info => {
+    yield Promise.map(params.recipients, user_info => {
       let to = emails[user_info.user_id];
 
       if (!to) return; // continue
