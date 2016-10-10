@@ -11,14 +11,14 @@
       each tabName, tabIndex in self.tabs
         li.nav-item
           a.nav-link(
-            href="#tab_#{tabName}"
+            href="#tab_" + tabName
             data-toggle="tab"
             class=(0 === tabIndex ? 'active' : '')
           )= self.t('@admin.core.group_names.' + tabName)
 
     .tab-content
       each tabName, tabIndex in self.tabs
-        .tab-pane(id="tab_#{tabName}", class=(0 === tabIndex ? 'active' : ''))
+        .tab-pane(id="tab_" + tabName, class=(0 === tabIndex ? 'active' : ''))
           table.table.table-striped.table-hover
             each group in self.groups[tabName]
               tr

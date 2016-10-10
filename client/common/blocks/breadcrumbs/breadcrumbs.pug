@@ -15,8 +15,8 @@ mixin breadcrumb_step(tail)
     li.breadcrumbs__item= item.text
   if tail.length > 1
     //- next sublevel
-    mixin breadcrumb_step(tail.slice(1))
+    +breadcrumb_step(tail.slice(1))
 
 
 ul.breadcrumbs(itemprop='breadcrumb', itemscope, itemtype='http://schema.org/Breadcrumb')
-  mixin breadcrumb_step(self.breadcrumbs)
+  +breadcrumb_step(self.breadcrumbs)
