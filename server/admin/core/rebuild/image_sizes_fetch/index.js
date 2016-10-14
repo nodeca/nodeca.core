@@ -6,14 +6,14 @@
 
 module.exports = function (N) {
   N.wire.after('server:admin.core.rebuild', { priority: 90 }, function* image_sizes_fetch_widget(env) {
-    let data = yield N.queue.worker('image_sizes_fetch').status();
-
+    let task = yield N.queue.getTask('image_sizes_fetch');
     let task_info = {};
 
-    if (data && data.state === 'aggregating') {
-      task_info.current = data.chunks.done + data.chunks.errored;
-      task_info.total   = data.chunks.done + data.chunks.errored +
-                          data.chunks.active + data.chunks.pending;
+    if (task && task.state !== 'finished') {
+      task_info = {
+        current: task.progress,
+        total:   task.total
+      };
     }
 
     env.res.blocks.push({ name: 'image_sizes_fetch', task_info });
