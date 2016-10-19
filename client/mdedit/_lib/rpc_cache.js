@@ -110,6 +110,9 @@ RpcCache.prototype.trackStart = function () {
 // Stop new tracker
 //
 RpcCache.prototype.trackStop = function () {
+  // If `trackStop()` called without `trackStart()` - skip
+  if (!this.__trackedUpdate__) return;
+
   let tracked = this.__tracked__;
 
   // Remove requests if not added in tracker
