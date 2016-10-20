@@ -16,7 +16,7 @@ N.wire.once('init:parser', function quote_plugin_init() {
       parser.bus.on('ast2html', function render_quote(data) {
         data.ast.find('msg-quote').each(function () {
           var $tag = $(this);
-          var url  = $tag.data('nd-title');
+          var url  = String($tag.data('nd-title'));
 
           if (!N.router.match(url)) return;
 
