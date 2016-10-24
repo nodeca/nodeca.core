@@ -5,17 +5,17 @@ nav.navbar-primary.navbar.navbar-dark.navbar-fixed-top.bg-primary
         li.nav-item
           a.navbar__level-up.nav-link.icon.icon-level-up(href=self.level_up)
 
-      button.icon.icon-menu.navbar-toggler(
+      button.icon.icon-menu.navbar-toggler.hidden-sm-up(
         data-toggle='collapse',
         data-target='.navbar-collapse',
         type='button'
       )
 
-    .navbar-collapse.collapse.navbar-toggleable
-      ul.nav.navbar-nav.float-xs-left
+    .navbar-collapse.collapse.navbar-toggleable-xs
+      ul.nav.navbar-nav.float-sm-left
         != self.partial('@common.blocks.navbar.blocks.apps')
 
-      ul.nav.navbar-nav.float-xs-right
+      ul.nav.navbar-nav.float-sm-right
         li.nav-item
           a.nav-link.icon.icon-search(href='#')
 
