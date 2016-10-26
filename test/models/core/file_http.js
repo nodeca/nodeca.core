@@ -33,7 +33,7 @@ describe('File (GridFS) http requests test', function () {
   it('HEAD', function (done) {
     request
       .head(router.linkTo('core.gridfs', { bucket: info._id }))
-      .expect(200, new Buffer(0))
+      .expect(200, {})
       .expect('Content-Type', 'image/jpeg')
       .end(done);
   });
