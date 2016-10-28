@@ -43,7 +43,7 @@ packages:
       - event-wire
       - steady # scroll tracker
       - raf.js
-      - faye/src/faye_browser.js
+      - faye/src/faye_browser
       - tabex
       # template helpers
       - pug-runtime
