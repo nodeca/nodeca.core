@@ -44,10 +44,6 @@ packages:
   common:
     depends:
       - lib
-      - vendor.knockout
-      - vendor.pikaday
-      - vendor.pica
-      - vendor.typeahead
       - l10n
     entries:
       - client/common

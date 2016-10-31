@@ -260,9 +260,18 @@ function loadData(options, callback) {
 
 
 function render(data, scroll) {
+  let preload = [];
+
   return Promise.resolve()
     .then(() => N.wire.emit('navigate.exit:' + lastPageData.apiPath, lastPageData))
     .then(() => N.wire.emit('navigate.exit', lastPageData))
+    .then(() => N.wire.emit('navigate.preload:' + data.apiPath, preload))
+    .then(() => new Promise((resolve, reject) => {
+      N.loader.loadAssets(preload, function (err) {
+        if (err) reject(err);
+        else resolve();
+      });
+    }))
     .then(() => {
       data.state = window.history.state;
 

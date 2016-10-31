@@ -79,6 +79,17 @@
     return value;
   }
 
+  // Remove duplicates from an array preserving the order of the elements
+  function uniq(array) {
+    var result = [];
+
+    forEach(array, function (item) {
+      if (result.indexOf() === -1) result.push(item);
+    });
+
+    return result;
+  }
+
   function has(obj, prop) {
     return Object.prototype.hasOwnProperty.call(obj, prop);
   }
@@ -192,21 +203,35 @@
   // Load a package with all of its associated assets and dependencies.
   // `preload` parameter is an optional array of URLs which are needed to load
   // before the given package.
-  function loadAssets(pkgName, preload, callback) {
+  function loadAssets(pkgNames, preload, callback) {
     var resources = [];
     var scheduled = {};
+    var loadQueue = [];
 
     if (isFunction(preload)) {
       callback = preload;
       preload  = null;
     }
 
-    if (!assets[pkgName]) {
-      callback(new Error('We dont know such package (' + pkgName + ')'));
+    pkgNames = Array.isArray(pkgNames) ? pkgNames : [ pkgNames ];
+
+    if (!pkgNames.length) {
+      callback();
       return;
     }
 
-    forEach(assets[pkgName].packagesQueue.slice(0).reverse(), function (dependency) {
+    for (var i = 0; i < pkgNames.length; i++) {
+      if (!assets[pkgNames[i]]) {
+        callback(new Error('We dont know such package (' + pkgNames[i] + ')'));
+        return;
+      }
+
+      loadQueue = loadQueue.concat(assets[pkgNames[i]].packagesQueue.slice(0).reverse());
+    }
+
+    loadQueue = uniq(loadQueue);
+
+    forEach(loadQueue, function (dependency) {
       var alreadyLoaded, pkgDist = assets[dependency];
 
       if (pkgDist.css.length) {
@@ -333,7 +358,18 @@
           state:   window.history.state
         };
 
+        var preload = [];
+
         Promise.resolve()
+        .then(function () { return N.wire.emit('navigate.preload:' + route.meta.methods.get, preload); })
+        .then(function () {
+          return new Promise(function (resolve, reject) {
+            loadAssets(preload, function (err) {
+              if (err) reject(err);
+              else resolve();
+            });
+          });
+        })
         .then(function () { return N.wire.emit('navigate.done', page_env); })
         .then(function () { return N.wire.emit('navigate.done:' + route.meta.methods.get, page_env); })
         .then(function () { NodecaLoader.booted = true; })
