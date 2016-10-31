@@ -15,6 +15,18 @@ bundles:
   mdedit:
     - mdedit
 
+  vendor.knockout:
+    - vendor.knockout
+
+  vendor.pikaday:
+    - vendor.pikaday
+
+  vendor.pica:
+    - vendor.pica
+
+  vendor.typeahead:
+    - vendor.typeahead
+
 packages:
 
   admin:
@@ -22,6 +34,9 @@ packages:
       - lib
       - l10n
       - lib-admin
+      - vendor.pikaday
+      - vendor.knockout
+      - vendor.typeahead
     entries:
       - client/admin
       - server/admin
@@ -29,6 +44,10 @@ packages:
   common:
     depends:
       - lib
+      - vendor.knockout
+      - vendor.pikaday
+      - vendor.pica
+      - vendor.typeahead
       - l10n
     entries:
       - client/common
@@ -39,7 +58,6 @@ packages:
       # shared
       - lodash
       - jquery
-      - knockout
       - event-wire
       - steady # scroll tracker
       - raf.js
@@ -56,6 +74,26 @@ packages:
       - babelfish
 
     entries: client/lib
+
+  vendor.knockout:
+    vendor:
+      - knockout
+
+  vendor.pikaday:
+    vendor:
+      - pikaday
+
+    entries: client/vendor/pikaday
+
+  vendor.pica:
+    vendor:
+      - pica
+
+  vendor.typeahead:
+    vendor:
+      - typeahead.js/dist/bloodhound.js
+
+    entries: client/vendor/typeahead
 
   lib-admin:
     entries: client/lib-admin
