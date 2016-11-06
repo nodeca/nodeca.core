@@ -1,6 +1,13 @@
-// Single-document collection storing global settings.
+// File store for user attachments: images with tumbnails & other files.
+// Supports image with thumbnails removal in single call.
 //
-
+// DB settings shouls be in:
+//
+// - N.config.database.mongo_files  (if you need separate db)
+// - N.config.database.mongo        (fallback to main db)
+//
+// Web server located in autoload/hooks/server_bin/gridfs.js
+//
 
 'use strict';
 
@@ -10,6 +17,7 @@ const fs        = require('fs');
 const mime      = require('mime-types').lookup;
 
 const stream    = require('readable-stream');
+const Promise   = require('bluebird');
 const mongoose  = require('mongoose');
 const grid      = require('gridfs-stream');
 const pump      = require('pump');
@@ -96,12 +104,11 @@ module.exports = function (N, collectionName) {
    *
    * - name (String) - `_id` {32 hex} or `filename`
    */
-  File.getInfo = File.prototype.getInfo = function (name, callback) {
+  File.getInfo = File.prototype.getInfo = function (name) {
     let id = name.toHexString ? name : tryParseObjectId(name);
     let condition = id ? { _id: id } : { filename: name };
 
-    // Promise if callback not passed
-    return gfs.files.findOne(condition, callback);
+    return gfs.files.findOne(condition).then(result => result);
   };
 
   /*
@@ -112,48 +119,18 @@ module.exports = function (N, collectionName) {
    * - name (ObjectId|String) - `_id` of root file or `filename` for preview
    * - all (Boolean) - true: delete all related files too
    */
-  File.remove = File.prototype.remove = function (name, all, callback) {
-    if (_.isFunction(all)) {
-      callback = all;
-      all = false;
-    }
-
+  File.remove = File.prototype.remove = function (name, all) {
     let id = name.toHexString ? name : tryParseObjectId(name);
-
-    if (callback) {
-      // remove by `_id`
-      if (id) {
-        // if `all` flag is set - find files by `filename` pattern and remove all
-        if (all) {
-          gfs.files.find({ filename: new RegExp('^' + escapeRegexp(String(name))) }).toArray(function (err, files) {
-            if (err) {
-              callback(err);
-              return null;
-            }
-
-            gfs.remove({ filename: _.map(files, 'filename') }, callback);
-          });
-        } else {
-          gfs.remove({ _id: id }, callback);
-        }
-      } else {
-        // remove by `filename`
-        gfs.remove({ filename: name }, callback);
-      }
-      return null;
-    }
 
     // The same as above, but via promise
     if (id) {
       if (all) {
         return gfs.files.find({ filename: new RegExp('^' + escapeRegexp(String(name))) }).toArray()
-                  .then(function (files) {
-                    return gfs.remove({ filename: _.map(files, 'filename') });
-                  });
+                  .then(files => gfs.remove({ filename: _.map(files, 'filename') }));
       }
-      return gfs.remove({ _id: id });
+      return gfs.remove({ _id: id }).then(result => result);
     }
-    return gfs.remove({ filename: name });
+    return gfs.remove({ filename: name }).then(result => result);
   };
 
 
@@ -221,7 +198,7 @@ module.exports = function (N, collectionName) {
    *   - metadata (Object), optional - file metadata
    *     - origName (String) - original file name (used in downloads)
    */
-  File.put = File.prototype.put = function (src, opt, callback) {
+  File.put = File.prototype.put = function (src, opt) {
     let input = getStream(src);
     let output;
 
@@ -230,22 +207,12 @@ module.exports = function (N, collectionName) {
 
       output = File.createWriteStream(opt);
     } catch (err) {
-      if (callback) {
-        callback(err);
-        return null;
-      }
       return Promise.reject(err);
     }
 
     let info;
 
     output.on('close', i => { info = i; });
-
-    // Do cb call or return promise, depending on signature
-    if (callback) {
-      pump(input, output, err => callback(err, info));
-      return null;
-    }
 
     return new Promise(function (resolve, reject) {
       pump(input, output, err => {

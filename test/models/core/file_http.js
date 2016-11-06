@@ -1,27 +1,25 @@
 'use strict';
 
 
-const fs      = require('fs');
-const path    = require('path');
+const fs          = require('fs');
+const path        = require('path');
+const Promise     = require('bluebird');
 
-const request   = require('supertest')('');
+const request     = require('supertest')('');
 
 const fileName    = path.join(__dirname, 'fixtures', 'lorem.jpg');
 const fileBase    = path.basename(fileName);
 const fileContent = fs.readFileSync(fileName);
 
-const file    = TEST.N.models.core.File;
-const router  = TEST.N.router;
+const file        = TEST.N.models.core.File;
+const router      = TEST.N.router;
 
 describe('File (GridFS) http requests test', function () {
   let info;
 
-  before(function (done) {
-    file.put(fileName, { metadata: { origName: fileBase } }, (err, fileInfo) => {
-      info = fileInfo;
-      done(err);
-    });
-  });
+  before(Promise.coroutine(function* () {
+    info = yield file.put(fileName, { metadata: { origName: fileBase } });
+  }));
 
   it('GET', function (done) {
     request
@@ -54,7 +52,7 @@ describe('File (GridFS) http requests test', function () {
       .end(done);
   });
 
-  after(function (done) {
-    file.remove(info._id, done);
-  });
+  after(Promise.coroutine(function* () {
+    yield file.remove(info._id);
+  }));
 });
