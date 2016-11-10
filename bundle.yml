@@ -18,6 +18,9 @@ bundles:
   vendor.knockout:
     - vendor.knockout
 
+  vendor.leaflet:
+    - vendor.leaflet
+
   vendor.pikaday:
     - vendor.pikaday
 
@@ -74,6 +77,12 @@ packages:
   vendor.knockout:
     vendor:
       - knockout
+
+  vendor.leaflet:
+    vendor:
+      - leaflet
+
+    entries: client/vendor/leaflet
 
   vendor.pikaday:
     vendor:
