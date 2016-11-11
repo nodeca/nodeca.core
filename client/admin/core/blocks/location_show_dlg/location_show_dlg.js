@@ -35,8 +35,8 @@ N.wire.before(module.apiPath, function location_show_dlg(data) {
 
 // Load dependencies
 //
-N.wire.before(module.apiPath, function load_deps(__, callback) {
-  N.loader.loadAssets('vendor.leaflet', callback);
+N.wire.before(module.apiPath, function load_deps() {
+  return N.loader.loadAssets('vendor.leaflet');
 });
 
 

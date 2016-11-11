@@ -14,7 +14,7 @@
 // data - event payload
 //
 function handleAction(apiPath, data) {
-  N.loader.loadAssets(apiPath.split('.')[0], function () {
+  N.loader.loadAssets(apiPath.split('.')[0]).then(function () {
     if (N.wire.has(apiPath)) {
       N.wire.emit(apiPath, data)
         .catch(err => N.wire.emit('error', err));
