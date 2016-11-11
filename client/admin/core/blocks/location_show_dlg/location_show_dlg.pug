@@ -1,0 +1,9 @@
+.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type='button', tabindex='-1', data-dismiss='modal') &times;
+        h4.modal-title= self.t('title')
+      .modal-body
+        .location-show-dlg__map-container
+          .location-show-dlg__map
