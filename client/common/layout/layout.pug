@@ -19,9 +19,19 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage', class=self.offline_m
 
     script(type="text/javascript").
       !{self.asset_body('nodeca.core/client/lib/loader/loader.js')}
+
+      var shims = [];
+
+      if (!window.requestAnimationFrame || !window.cancelAnimationFrame)
+        shims.push('$$ JSON.stringify(asset_url("raf.js")) $$');
+
+      if (!((window.HTMLCanvasElement || {}).prototype || {}).toBlob)
+        shims.push('$$ JSON.stringify(asset_url("blueimp-canvas-to-blob")) $$');
+
       NodecaLoader.loadAssets.init(
         !{JSON.stringify(self.head.assets)},
-        '!{self.apiPath.split(".").shift()}'
+        '!{self.apiPath.split(".").shift()}',
+        shims
       );
 
     if self.inject_headers

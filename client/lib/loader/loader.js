@@ -1,5 +1,6 @@
 /*eslint-disable no-alert, object-shorthand*/
 
+'$$ asset_body("lie/dist/lie.polyfill") $$';
 '$$ asset_body("bagjs") $$';
 
 (function (window) {
@@ -35,22 +36,6 @@
   docElement.className = className;
 
   //////////////////////////////////////////////////////////////////////////////
-
-
-  var polyfills = [
-    {
-      path: '$$ JSON.stringify(asset_url("raf.js")) $$',
-      needed: !window.requestAnimationFrame || !window.cancelAnimationFrame
-    },
-    {
-      path: '$$ JSON.stringify(asset_url("blueimp-canvas-to-blob")) $$',
-      needed: !((window.HTMLCanvasElement || {}).prototype || {}).toBlob
-    },
-    {
-      path: '$$ JSON.stringify(asset_url("lie/dist/lie.polyfill")) $$',
-      needed: !window.Promise
-    }
-  ];
 
   var NodecaLoader = window.NodecaLoader = { booted: false };
   var alert = window.alert;
@@ -306,14 +291,8 @@
 
 
   // Loads all necessary shims and libraries and assets for given package.
-  loadAssets.init = function init(assetsMap, pkgName) {
-    var shims = polyfills
-                  .filter(function (p) {
-                    return p.needed;
-                  })
-                  .map(function (p) {
-                    return p.path;
-                  });
+  loadAssets.init = function init(assetsMap, pkgName, shims) {
+    shims = shims || [];
 
     // Set internal assets map.
     assets = assetsMap;
