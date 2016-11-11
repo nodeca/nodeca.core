@@ -138,7 +138,7 @@ MDEdit.prototype.show = function (options) {
   this.attachments(options.attachments || []);
 
   // Get editor height from localstore
-  this.__bag__.get('height', (__, height) => {
+  this.__bag__.get('height').catch(() => 0).then(height => {
 
     if (height) {
       // If no prevoius editor - set `bottom` for animation
