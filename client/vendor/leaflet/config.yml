@@ -10,3 +10,5 @@ type:
     - "*.jade"
     - "*.pug"
   widget_js: "*.js"
+  bin:
+    - "images/*.png"
