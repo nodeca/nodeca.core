@@ -13,10 +13,9 @@ N.wire.on(module.apiPath, function location_show_dlg(data) {
   //
   // Create dialog
   //
-  let params = {
-    latitude:  data.$this.data('latitude'),
-    longitude: data.$this.data('longitude')
-  };
+  let latitude  = data.$this.data('latitude');
+  let longitude = data.$this.data('longitude');
+  let params    = { latitude, longitude };
 
   $dialog = $(N.runtime.render(module.apiPath, params));
   $('body').append($dialog);
@@ -33,7 +32,30 @@ N.wire.on(module.apiPath, function location_show_dlg(data) {
     // rare case when user opens dialog, then closes, and opens it again quickly
     if (map) map.remove();
 
-    map = leaflet.map($('.location-show-dlg__map')[0]).setView([ 20, 0 ], 2);
+    map = leaflet.map($('.location-show-dlg__map')[0]);
+
+    if (latitude && longitude) {
+      map.setView([ latitude, longitude ], 10);
+
+      // copied from leaflet.Icon.Default.prototype.options with icon urls replaced
+      let icon = leaflet.icon({
+        iconUrl:       '$$ JSON.stringify(asset_url("nodeca.core/client/vendor/leaflet/images/marker-icon.png")) $$',
+        iconRetinaUrl: '$$ JSON.stringify(asset_url("nodeca.core/client/vendor/leaflet/images/marker-icon-2x.png")) $$',
+        shadowUrl:     '$$ JSON.stringify(asset_url("nodeca.core/client/vendor/leaflet/images/marker-shadow.png")) $$',
+        iconSize:      [ 25, 41 ],
+        iconAnchor:    [ 12, 41 ],
+        popupAnchor:   [ 1, -34 ],
+        tooltipAnchor: [ 16, -28 ],
+        shadowSize:    [ 41, 41 ]
+      });
+
+      leaflet.marker([], { icon })
+             .setLatLng({ lat: latitude, lng: longitude })
+             .addTo(map);
+    } else {
+      // no coordinates, show the entire map
+      map.setView([ 20, 0 ], 1);
+    }
   });
 
   //
