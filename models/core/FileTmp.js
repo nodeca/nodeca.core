@@ -1,12 +1,13 @@
-// File store for user attachments: images with tumbnails & other files.
-// Supports image with thumbnails removal in single call.
+// File store for temporary (or frequently modified) files.
+// Needed to optimize defragmentation. Unlike main File store, image
+// thumbnail names are not supported here (not needed)
 //
 // DB settings shouls be in:
 //
-// - N.config.database.mongo_files  (if you need separate db)
-// - N.config.database.mongo        (fallback to main db)
+// - N.config.database.mongo_files_tmp  (if you need separate db)
+// - N.config.database.mongo            (fallback to main db)
 //
-// Web server located in autoload/hooks/server_bin/gridfs.js
+// Web server located in autoload/hooks/server_bin/gridfs_tmp.js
 //
 
 'use strict';
@@ -23,9 +24,6 @@ const grid      = require('gridfs-stream');
 const pump      = require('pump');
 const ObjectId  = mongoose.Types.ObjectId;
 
-function escapeRegexp(source) {
-  return String(source).replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
-}
 
 function tryParseObjectId(string) {
   try {
@@ -63,18 +61,6 @@ module.exports = function (N, collectionName) {
   let gfs;
 
   /*
-   * There are 2 type of files:
-   *
-   * - original files (http://mysite.com/files/0acd8213789h4e38a9e67b23)
-   * - thumbnails     (http://mysite.com/files/0acd8213789h4e38a9e67b23_small)
-   *
-   * Original files are fetched by _id and have `filename` empty.
-   * Thumbnails are fetched by `filename`, that contains from
-   * 'original_id' + '_' + 'preview size'.
-   *
-   * That's optimal for possible migration to other KV storages. Also that
-   * simplifies delete for multiple previews at once.
-   *
    * See full db structures here http://docs.mongodb.org/manual/reference/gridfs/
    *
    * Schema:
@@ -85,7 +71,7 @@ module.exports = function (N, collectionName) {
    *   uploadDate
    *   md5
    *
-   *   filename     (optional) XXX or XXX_size
+   *   filename     (optional)
    *   contentType
    *   aliases      ???
    *   metadata:
@@ -117,17 +103,12 @@ module.exports = function (N, collectionName) {
    * Params:
    *
    * - name (ObjectId|String) - `_id` of root file or `filename` for preview
-   * - all (Boolean) - true: delete all related files too
    */
-  File.remove = File.prototype.remove = function (name, all) {
+  File.remove = File.prototype.remove = function (name) {
     let id = name.toHexString ? name : tryParseObjectId(name);
 
     // The same as above, but via promise
     if (id) {
-      if (all) {
-        return gfs.files.find({ filename: new RegExp('^' + escapeRegexp(String(name))) }).toArray()
-                  .then(files => gfs.remove({ filename: _.map(files, 'filename') }));
-      }
       return gfs.remove({ _id: id }).then(result => result);
     }
     return gfs.remove({ filename: name }).then(result => result);
@@ -250,7 +231,7 @@ module.exports = function (N, collectionName) {
       }
     };
 
-    let mongoPath = N.config.database.mongo_files || N.config.database.mongo;
+    let mongoPath = N.config.database.mongo_files_tmp || N.config.database.mongo;
 
     let conn = mongoose.createConnection(mongoPath, options);
 

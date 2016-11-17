@@ -23,7 +23,7 @@ module.exports = function (N, collectionName) {
   // Remove sitemap files
   //
   SiteMap.pre('remove', function remove_sitemap_files(callback) {
-    Promise.all(this.files.map(fileid => N.models.core.File.remove(fileid)))
+    Promise.all(this.files.map(fileid => N.models.core.FileTmp.remove(fileid)))
       .asCallback(callback);
   });
 

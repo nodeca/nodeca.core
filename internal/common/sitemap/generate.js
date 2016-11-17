@@ -102,7 +102,7 @@ module.exports = function (N, apiPath) {
       callback(null, pumpify.obj(
         SiteMapFile(),
         zlib.createGzip(),
-        N.models.core.File.createWriteStream({
+        N.models.core.FileTmp.createWriteStream({
           filename,
           contentType: 'application/x-gzip'
         })
