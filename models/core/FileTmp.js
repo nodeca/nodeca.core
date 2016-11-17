@@ -13,7 +13,6 @@
 'use strict';
 
 
-const _         = require('lodash');
 const fs        = require('fs');
 const mime      = require('mime-types').lookup;
 
@@ -37,7 +36,7 @@ function tryParseObjectId(string) {
 //
 function getStream(src) {
 
-  if (_.isString(src)) {
+  if (typeof src === 'string') {
     // file name passed
     return fs.createReadStream(src);
 

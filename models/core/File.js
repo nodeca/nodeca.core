@@ -12,7 +12,6 @@
 'use strict';
 
 
-const _         = require('lodash');
 const fs        = require('fs');
 const mime      = require('mime-types').lookup;
 
@@ -39,7 +38,7 @@ function tryParseObjectId(string) {
 //
 function getStream(src) {
 
-  if (_.isString(src)) {
+  if (typeof src === 'string') {
     // file name passed
     return fs.createReadStream(src);
 
@@ -126,7 +125,13 @@ module.exports = function (N, collectionName) {
     if (id) {
       if (all) {
         return gfs.files.find({ filename: new RegExp('^' + escapeRegexp(String(name))) }).toArray()
-                  .then(files => gfs.remove({ filename: _.map(files, 'filename') }));
+                  .then(files => {
+                    if (!files.length) return;
+
+                    let names = files.map(file => file.filename);
+
+                    return gfs.remove({ filename: names });
+                  });
       }
       return gfs.remove({ _id: id }).then(result => result);
     }

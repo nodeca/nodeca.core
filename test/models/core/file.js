@@ -80,6 +80,18 @@ describe('File model test', function () {
   }));
 
 
+  it('remove for not existing file', Promise.coroutine(function* () {
+    yield file.remove('012345678901234567890123'); // by _id
+    yield file.remove('not_existing_file.txt');
+  }));
+
+
+  it('remove(all) for not existing file', Promise.coroutine(function* () {
+    yield file.remove('012345678901234567890123', true); // by _id
+    yield file.remove('not_existing_file.txt', true);
+  }));
+
+
   it('put(stream)', Promise.coroutine(function* () {
     let stream = fs.createReadStream(fileName);
 
