@@ -80,7 +80,7 @@ N.wire.on(module.apiPath, function location_show_dlg(data) {
         // so we need to reset internal size cache to actual size
         map.invalidateSize();
 
-        leaflet.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a> contributors'
         }).addTo(map);
       });
