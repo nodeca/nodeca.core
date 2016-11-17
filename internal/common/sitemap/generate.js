@@ -5,7 +5,6 @@
 const _        = require('lodash');
 const Promise  = require('bluebird');
 const eos      = require('end-of-stream');
-const multi    = require('multistream');
 const pump     = require('pump');
 const pumpify  = require('pumpify');
 const through2 = require('through2');
@@ -86,40 +85,36 @@ module.exports = function (N, apiPath) {
   }
 
 
-  function create_new_file(file_no, sitemap, callback) {
-    let filename = `sitemap-${sitemap._id}-${_.padStart(file_no, 3, '0')}.xml.gz`;
-
-    sitemap.files = sitemap.files.concat([ filename ]);
-
+  function create_new_file(filename, callback) {
     N.logger.info('Writing sitemap file: ' + filename);
 
-    sitemap.save(err => {
-      if (err) {
-        callback(err);
-        return;
-      }
-
-      callback(null, pumpify.obj(
-        SiteMapFile(),
-        zlib.createGzip(),
-        N.models.core.FileTmp.createWriteStream({
-          filename,
-          contentType: 'application/x-gzip'
-        })
-      ));
-    });
+    N.models.core.FileTmp.remove(filename)
+      .then(() => {
+        callback(null, pumpify.obj(
+          SiteMapFile(),
+          zlib.createGzip(),
+          N.models.core.FileTmp.createWriteStream({
+            filename,
+            contentType: 'application/x-gzip'
+          })
+        ));
+      }, err => callback(err));
   }
 
 
-  function SiteMapStream() {
+  function SiteMapStream(name, files) {
     return through2({ writableObjectMode: true }, function write(chunk, encoding, callback) {
-      if (!this.sitemap) {
+      if (!this.initialized) {
         // initialization
-        this.url_count = 0;
-        this.file_no   = 0;
-        this.sitemap   = new N.models.core.SiteMap();
+        this.url_count   = 0;
+        this.file_no     = 0;
+        this.initialized = true;
 
-        create_new_file(++this.file_no, this.sitemap, (err, stream) => {
+        let filename = `sitemap-${name}-${_.padStart(++this.file_no, 3, '0')}.xml.gz`;
+
+        files.push(filename);
+
+        create_new_file(filename, (err, stream) => {
           if (err) {
             callback(err);
             return;
@@ -143,7 +138,12 @@ module.exports = function (N, apiPath) {
           }
 
           this.url_count = 0;
-          create_new_file(++this.file_no, this.sitemap, (err, stream) => {
+
+          let filename = `sitemap-${name}-${_.padStart(++this.file_no, 3, '0')}.xml.gz`;
+
+          files.push(filename);
+
+          create_new_file(filename, (err, stream) => {
             if (err) {
               callback(err);
               return;
@@ -163,15 +163,7 @@ module.exports = function (N, apiPath) {
     }, function finish(callback) {
       this.stream.end();
 
-      eos(this.stream, err => {
-        if (err) {
-          callback(err);
-          return;
-        }
-
-        this.sitemap.active = true;
-        this.sitemap.save(callback);
-      });
+      eos(this.stream, callback);
     });
   }
 
@@ -182,20 +174,15 @@ module.exports = function (N, apiPath) {
     // request streams to read urls from
     yield N.wire.emit('internal:common.sitemap.collect', data);
 
-    let out_stream = SiteMapStream();
+    let files = [];
 
-    let s = multi.obj(data.streams);
+    yield Promise.map(data.streams, stream_info => new Promise((resolve, reject) => {
+      let out_stream = SiteMapStream(stream_info.name, files);
 
-    yield new Promise((resolve, reject) => {
-      pump(s, out_stream, err => (err ? reject(err) : resolve()));
+      pump(stream_info.stream, out_stream, err => (err ? reject(err) : resolve()));
       out_stream.resume();
-    });
+    }));
 
-    // remove all but last 5 sitemaps
-    let old_sitemaps = yield N.models.core.SiteMap.find({
-      _id: { $lt: out_stream.sitemap._id }
-    }).sort('-_id').skip(5);
-
-    yield Promise.map(old_sitemaps, sm => sm.remove());
+    yield N.redis.setAsync('sitemap', JSON.stringify({ files, date: Date.now() }));
   });
 };
