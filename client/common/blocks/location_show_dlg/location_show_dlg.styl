@@ -1,3 +1,5 @@
+@import "nodeca.core/client/common/_variables"
+
 // maintain aspect ratio of 4:3 for the map, see
 // https://stackoverflow.com/questions/1495407/maintain-the-aspect-ratio-of-a-div-with-css
 //
@@ -16,3 +18,8 @@
   bottom 0
   left 0
   right 0
+
+
+@media (max-width: $grid-breakpoints.sm - 1)
+  .location-show-dlg__map-container
+    padding-bottom 100%
