@@ -28,17 +28,17 @@ module.exports = function (N, apiPath) {
   function unshortCreate(cacheOnly) {
     let instance = new Unshort({
       cache: {
-        get: N.models.core.UnshortCache.get.bind(N.models.core.UnshortCache),
-        set: N.models.core.UnshortCache.set.bind(N.models.core.UnshortCache)
+        get: key => N.models.core.UnshortCache.get(key),
+        set: (key, val) => N.models.core.UnshortCache.set(key, val)
       }
     });
 
     // If we should read data only from cache - overwrite `request` method by stub
     if (cacheOnly) {
-      instance.request = (options, callback) => {
-        // return 503 status code because it's guaranteed not to be cached
-        callback(null, { statusCode: 503, headers: {} }, '');
-      };
+      // return 503 status code because it's guaranteed not to be cached
+      instance.request = () => Promise.reject({
+        statusCode: 503
+      });
     }
 
     return instance;

@@ -22,25 +22,15 @@ module.exports = function (N, collectionName) {
   UnshortCache.index({ key: 'hashed' });
 
 
-  UnshortCache.statics.get = function (key, callback) {
-    this.findOne({ key }).lean(true).exec(function (err, result) {
-      if (err) {
-        callback(err);
-        return;
-      }
-
-      if (!result) {
-        callback();
-        return;
-      }
-
-      callback(null, result.value);
-    });
+  UnshortCache.statics.get = function (key) {
+    /* eslint-disable no-undefined */
+    return this.findOne({ key }).lean(true)
+      .then(result => (result ? result.value : undefined));
   };
 
 
-  UnshortCache.statics.set = function (key, value, callback) {
-    this.update({ key }, { value }, { upsert: true }, callback);
+  UnshortCache.statics.set = function (key, value) {
+    return this.update({ key }, { value }, { upsert: true });
   };
 
 
