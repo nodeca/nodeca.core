@@ -68,18 +68,23 @@ module.exports = function (N, collectionName) {
     );
 
     let result = [];
+    let locations_to_resolve = [];
 
     for (let lonlat of locations) {
       let location = resolved[hash(lonlat, locale)];
 
       if (!location) {
-        yield N.redis.saddAsync(
-          fast ? 'geo:location:fast' : 'geo:location',
-          lonlat[0] + ':' + lonlat[1] + ':' + locale
-        );
+        locations_to_resolve.push(lonlat[0] + ':' + lonlat[1] + ':' + locale);
       }
 
       result.push(location && location.name ? location.name : '');
+    }
+
+    if (locations_to_resolve.length) {
+      yield N.redis.rpushAsync.apply(N.redis,
+        [ fast ? 'geo:location:fast' : 'geo:location' ].concat(locations_to_resolve));
+
+      N.queue.geo_location_resolve().run();
     }
 
     return result;
