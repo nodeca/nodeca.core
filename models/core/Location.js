@@ -24,7 +24,10 @@ module.exports = function (N, collectionName) {
 
     // provider used to resolve this name, 'nominatim' or 'overpass',
     // null if name is not resolved
-    provider:      String
+    provider:      String,
+
+    // distance in km if match is not exact
+    distance:      Number
   }, {
     versionKey: false
   });
