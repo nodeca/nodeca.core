@@ -64,6 +64,7 @@
 .icon-threads:before { content: '\e849'; } /* '' */
 .icon-arrow-subsections:before { content: '\e84a'; } /* '' */
 .icon-emoji:before { content: '\f118'; } /* '' */
+.icon-my-location:before { content: '\f124'; } /* '' */
 .icon-sliders:before { content: '\f1de'; } /* '' */
 .icon-link:before { content: '🔗'; } /* '\1f517' */
 .icon-infraction:before { content: '🔨'; } /* '\1f528' */
