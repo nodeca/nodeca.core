@@ -152,11 +152,11 @@ module.exports = function (N, apiPath) {
 
     if (err) {
       let is_fatal = err.code === 'EHTTP' &&
-                     [ 401, 403, 404 ].indexOf(err.status) !== -1;
+                     [ 401, 403, 404 ].indexOf(err.statusCode) !== -1;
 
       update_data.$set.status         = N.models.core.UrlTracker.statuses[is_fatal ? 'ERROR_FATAL' : 'ERROR_RETRY'];
       update_data.$set.error          = err.message;
-      update_data.$set.error_code     = err.status || err.code;
+      update_data.$set.error_code     = err.statusCode || err.code;
       update_data.$unset.uses_unshort = true;
       update_data.$unset.uses_embedza = true;
 
