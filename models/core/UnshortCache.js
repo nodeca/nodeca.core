@@ -9,7 +9,9 @@ module.exports = function (N, collectionName) {
 
   var UnshortCache = new Schema({
     key: String,
-    value: Schema.Types.Mixed
+
+    // expanded url (String) or Null
+    value: String
   }, {
     versionKey: false
   });

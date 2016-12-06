@@ -52,8 +52,8 @@ module.exports = function (N, apiPath) {
   function embedzaCreate(cacheOnly) {
     let instance = new Embedza({
       cache: {
-        get: N.models.core.EmbedzaCache.get.bind(N.models.core.EmbedzaCache),
-        set: N.models.core.EmbedzaCache.set.bind(N.models.core.EmbedzaCache)
+        get: key => N.models.core.EmbedzaCache.get(key),
+        set: (key, val) => N.models.core.EmbedzaCache.set(key, val)
       },
       enabledProviders: N.config.embed.enabled
     });

@@ -9,7 +9,9 @@ module.exports = function (N, collectionName) {
 
   var EmbedzaCache = new Schema({
     key: String,
-    value: Schema.Types.Mixed
+
+    // JSON-stringified object, see embedza docs for details
+    value: String
   }, {
     versionKey: false
   });
@@ -22,15 +24,10 @@ module.exports = function (N, collectionName) {
   EmbedzaCache.index({ key: 'hashed' });
 
 
-  EmbedzaCache.statics.get = function (key, callback) {
+  EmbedzaCache.statics.get = function (key) {
     // Get image dimensions cache from redis instead of mongodb
     if (key.indexOf('image#') === 0) {
-      N.redis.get('embedza:' + key, function (err, cache) {
-        if (err) {
-          callback(err);
-          return;
-        }
-
+      return N.redis.getAsync('embedza:' + key).then(cache => {
         if (cache) {
           try {
             cache = JSON.parse(cache);
@@ -39,37 +36,32 @@ module.exports = function (N, collectionName) {
           }
         }
 
-        callback(null, cache);
+        return cache;
       });
-
-      return;
     }
 
-    this.findOne({ key }).lean(true).exec(function (err, result) {
-      if (err) {
-        callback(err);
-        return;
+    return this.findOne({ key }).lean(true).then(cache => {
+      if (cache) {
+        try {
+          cache = JSON.parse(cache.value);
+        } catch (__) {
+          cache = null;
+        }
       }
 
-      if (!result) {
-        callback();
-        return;
-      }
-
-      callback(null, result.value);
+      return cache;
     });
   };
 
 
-  EmbedzaCache.statics.set = function (key, value, callback) {
+  EmbedzaCache.statics.set = function (key, value) {
     // Store image dimensions cache in redis instead of mongodb
     if (key.indexOf('image#') === 0) {
       // Will expire after one hour
-      N.redis.setex('embedza:' + key, 60 * 60, JSON.stringify(value), callback);
-      return;
+      return N.redis.setexAsync('embedza:' + key, 60 * 60, JSON.stringify(value));
     }
 
-    this.update({ key }, { value }, { upsert: true }, callback);
+    return this.update({ key }, { value: JSON.stringify(value) }, { upsert: true });
   };
 
 
