@@ -28,6 +28,10 @@ module.exports = function (N, collectionName) {
     // status (see above)
     status:  Number,
 
+    // total amount of requests initiated to fetch this image
+    // (initial request + retries)
+    retries:    Number,
+
     // text of the error message (if any)
     error:   String,
 

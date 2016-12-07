@@ -146,7 +146,7 @@ module.exports = function (N, apiPath) {
   //
   N.wire.on(apiPath, function* track_url(data) {
     let tracker_data = data[tracker_data_key] || {};
-    let update_data = { $set: {}, $unset: {} };
+    let update_data = { $set: {}, $unset: {}, $inc: { retries: 1 } };
 
     let err = tracker_data.unshort_error || tracker_data.embedza_error;
 

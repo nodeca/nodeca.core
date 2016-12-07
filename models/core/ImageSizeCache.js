@@ -20,6 +20,10 @@ module.exports = function (N, collectionName) {
     // status (see above)
     status:     Number,
 
+    // total amount of requests initiated to fetch this image
+    // (initial request + retries)
+    retries:    Number,
+
     // random number from 0-1, used to split urls into chunks without using
     // expensive count() requests
     rand:       Number,
