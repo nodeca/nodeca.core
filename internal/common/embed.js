@@ -151,8 +151,13 @@ module.exports = function (N, apiPath) {
     let err = tracker_data.unshort_error || tracker_data.embedza_error;
 
     if (err) {
-      let is_fatal = err.code === 'EHTTP' &&
-                     [ 401, 403, 404 ].indexOf(err.statusCode) !== -1;
+      // retry all errors except:
+      //  - 5xx - server-side errors
+      //  - 429 - rate limit
+      //  - 408 - request timeout
+      //  - EINVAL - bad urls like http://1234
+      let is_fatal = err.statusCode && !String(+err.statusCode).match(/^(5..|429|408)$/) ||
+                     err.code === 'EINVAL';
 
       update_data.$set.status         = N.models.core.UrlTracker.statuses[is_fatal ? 'ERROR_FATAL' : 'ERROR_RETRY'];
       update_data.$set.error          = err.message;
