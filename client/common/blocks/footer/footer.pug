@@ -1,13 +1,23 @@
+-
+  var localizationPrefix = '@common.menus.footer.';
+
+  function compare(a, b) { return (a.info.priority || 100) - (b.info.priority || 100); }
+
+  function sortedItems(items) {
+    var result = [];
+    Object.keys(items).forEach(function (name) {
+      if (!items[name]) { return; }
+      result.push({ name: name, info: items[name] });
+    });
+    return result.sort(compare);
+  }
+
 footer.page-footer.clearfix
   ul.page-footer-nav.float-xs-left
-    li.page-footer-nav__item
-      a.page-footer-nav__item-link(href='#') About
-    li.page-footer-nav__item
-      a.page-footer-nav__item-link(href='#') Contacts
-    li.page-footer-nav__item
-      a.page-footer-nav__item-link(href='#') Terms
-    li.page-footer-nav__item
-      a.page-footer-nav__item-link(href='#') Help
+    each item in sortedItems(self.runtime.footer || {})
+      - var info = item.info;
+      li.page-footer-nav__item
+        a.page-footer-nav__item-link(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
 
     li.page-footer-nav__item.dropup
       - var menu_rnd_id = 'rnd' + String(Math.random()).slice(2, 10)
