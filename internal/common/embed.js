@@ -16,12 +16,19 @@
 'use strict';
 
 
-const Embedza = require('embedza');
-const Unshort = require('url-unshort');
+const _           = require('lodash');
+const Embedza     = require('embedza');
+const Unshort     = require('url-unshort');
+const embedza_pkg = require('embedza/package.json');
+const unshort_pkg = require('url-unshort/package.json');
 
 
 module.exports = function (N, apiPath) {
   const tracker_data_key = Symbol('tracker_data');
+
+  let rootUrl = _.get(N.config, 'bind.default.mount', 'http://localhost') + '/';
+  let userAgentEmbedza = `${embedza_pkg.name}/${embedza_pkg.version} (Nodeca; +${rootUrl})`;
+  let userAgentUnshort = `${unshort_pkg.name}/${embedza_pkg.version} (Nodeca; +${rootUrl})`;
 
   // Init url-unshort instance
   //
@@ -30,6 +37,11 @@ module.exports = function (N, apiPath) {
       cache: {
         get: key => N.models.core.UnshortCache.get(key),
         set: (key, val) => N.models.core.UnshortCache.set(key, val)
+      },
+      request: {
+        headers: {
+          'user-agent': userAgentUnshort
+        }
       }
     });
 
@@ -55,7 +67,12 @@ module.exports = function (N, apiPath) {
         get: key => N.models.core.EmbedzaCache.get(key),
         set: (key, val) => N.models.core.EmbedzaCache.set(key, val)
       },
-      enabledProviders: N.config.embed.enabled
+      enabledProviders: N.config.embed.enabled,
+      request: {
+        headers: {
+          'user-agent': userAgentEmbedza
+        }
+      }
     });
 
     // If we should read data only from cache - overwrite `request` method by stub
