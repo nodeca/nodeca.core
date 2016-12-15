@@ -532,3 +532,27 @@ N.wire.once('navigate.done', { priority: 999 }, function navigate_click_handler(
     event.preventDefault();
   });
 });
+
+
+// Insert new content into the current page
+//
+//   options.$        - content to insert
+//   options.$before  - insert before this element
+//   options.$after   - insert after this element
+//   options.$replace - replace this element
+//
+// Only one of `$before`, `$after` and `$replace` options should be present.
+//
+N.wire.after('navigate.update', { priority: 999 }, function navigate_update(options) {
+  if (options.$replace) {
+    options.$replace.replaceWith(options.$);
+
+  } else if (options.$before) {
+    options.$before.before(options.$);
+
+  } else if (options.$after) {
+    options.$after.after(options.$);
+  }
+
+  return N.wire.emit('navigate.update.done', options);
+});

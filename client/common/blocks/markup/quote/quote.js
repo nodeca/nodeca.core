@@ -36,20 +36,25 @@ N.wire.once('navigate.done', function () {
     N.io.rpc('common.content.get', { url: quote.attr('cite') })
         .then(function (res) {
 
-      var $result = $(res.html);
+      var $content = $('<div class="quote__content"></div>');
 
-      N.wire.emit('navigate.update', { $: $result, locals: res }, function () {
-        quote.addClass('quote__m-expanded');
-        quote.attr('data-short-content', quote_content.html());
-        quote_content.empty().append($result);
+      $content.html(res.html);
 
-        var new_height = quote_content.height();
+      quote.addClass('quote__m-expanded');
+      quote.attr('data-short-content', quote_content.html());
+
+      return N.wire.emit('navigate.update', {
+        $: $content,
+        locals: res,
+        $replace: quote_content
+      }, function () {
+        var new_height = $content.height();
 
         quote_content
           .stop()
           .css({ height: old_height })
           .animate({ height: new_height }, 'fast', function () {
-            quote_content.css({ height: '' });
+            $content.css({ height: '' });
           });
       });
     });
