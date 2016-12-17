@@ -5,6 +5,7 @@
 .icon-track-muted:before { content: '\2716'; } /* '✖' */
 .icon-info:before { content: '\e705'; } /* '' */
 .icon-location:before { content: '\e724'; } /* '' */
+.icon-login:before { content: '\e740'; } /* '' */
 .icon-chevron-big-left:before { content: '\e765'; } /* '' */
 .icon-chevron-big-right:before { content: '\e766'; } /* '' */
 .icon-search:before { content: '\e800'; } /* '' */

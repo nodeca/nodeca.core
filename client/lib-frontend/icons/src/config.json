@@ -661,6 +661,12 @@
       "css": "my-location",
       "code": 61732,
       "src": "fontawesome"
+    },
+    {
+      "uid": "3a00327e61b997b58518bd43ed83c3df",
+      "css": "login",
+      "code": 59200,
+      "src": "fontawesome"
     }
   ]
 }
