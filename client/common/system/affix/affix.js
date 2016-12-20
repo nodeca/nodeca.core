@@ -137,7 +137,7 @@ function add_tracker($element, position, params) {
 
 // Initialize trackers for elements with class '_affix'
 //
-N.wire.on('navigate.done', function affix_init() {
+N.wire.after('navigate.done:*', function affix_init() {
   $('._affix').each(function (idx, el) {
     let $el = $(el);
 
