@@ -38,5 +38,5 @@ N.wire.on('navigate.to', function navbar_menu_minimize() {
   // - animation not needed
   // - avoid nasty effect on full menu
   // $('.navbar .navbar-collapse').collapse('hide');
-  $('.navbar .navbar-collapse').removeClass('in');
+  $('.navbar .navbar-collapse').removeClass('show');
 });
