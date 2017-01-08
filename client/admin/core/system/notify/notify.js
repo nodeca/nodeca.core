@@ -111,7 +111,7 @@ Notification.prototype = {
     this.isShown = true;
     this.$element
       .appendTo(this.$container)
-      .addClass('in')
+      .addClass('show')
       .focus();
   },
 
