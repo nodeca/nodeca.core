@@ -1,14 +1,13 @@
-nav.navbar-alt.navbar.navbar-dark.navbar-fixed-top.bg-primary
-  .navbar-inner.layout__container.container-fluid
-    ul.nav.navbar-nav
+nav.navbar-alt.navbar.navbar-inverse.bg-primary.fixed-top.navbar-untoggleable
+  .navbar-inner.container.layout__container.container-fluid
+    ul.navbar-nav
       li.nav-item
         a.navbar__level-up.nav-link.icon.icon-level-up(href=self.level_up)
 
     != self.partial('@common.blocks.navbar.blocks.page_progress', self.progress)
 
-    if self.toolbar
-      ul.nav.navbar-nav.float-xs-right
-        != self.partial('@' + self.toolbar)
-
-    .navbar-alt__title.navbar-collapse.collapse.navbar-toggleable-xs
+    .navbar-alt__title.navbar-text.hidden-xs-down
       = self.title
+
+    if self.toolbar
+      != self.partial('@' + self.toolbar)

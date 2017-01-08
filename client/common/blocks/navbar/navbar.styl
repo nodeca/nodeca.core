@@ -7,76 +7,71 @@
   padding-left 0
   padding-right 0
 
-.navbar-brand
-  text-transform uppercase
-  margin-right $spacer * 4
+.navbar-inner
+  width 100%
+  padding-left ($grid-gutter-width / 2) !important
+  padding-right ($grid-gutter-width / 2) !important
 
-.navbar-nav .nav-item
-  //font-size $font-size-sm
-  position relative
-
-  // override bootstrap default margin
-  & + .nav-item
-    margin-left $spacer * 2
+.navbar-nav .nav-link
+  padding-top .425rem
+  padding-bottom .425rem
 
 .navbar-toggler
-  color $navbar-dark-color
+  background-image none !important
+  border-color transparent !important;
+  padding .5rem
+  margin-right -.5rem
 
-  &:focus
-    color $navbar-dark-hover-color
+.navbar .page-actions
+  margin-left auto
 
-.navbar-nav > .nav-item > a:after
-.navbar__level-up:after
-  position absolute
-  left -($spacer)
-  right -($spacer)
-  bottom -($navbar-padding-y)
-  height 0.125rem
-  content ''
-  background-color $brand-primary + 27%
-  opacity 0
-  transition opacity .3s ease
+.navbar__right
+  margin-left auto
+  margin-right -.5rem
+
+.navbar-brand
+  text-transform uppercase
+  margin-right $spacer * 2
+
+.navbar-nav .nav-item
+  // override bootstrap default margin
+  & + .nav-item
+    margin-left $spacer * 1
+
+.navbar-untoggleable
+  flex-direction row
+  flex-wrap nowrap
+  display flex
+  .navbar-nav
+    flex-direction row;
+    .nav-link
+      padding-right .5rem
+      padding-left .5rem
+  > .container
+    display flex
+    flex-wrap nowrap
+    align-items center
 
 
 @media (max-width: $grid-breakpoints.sm - 1)
-  // align toggler to the right without using float
-  .navbar-header
-    text-align right
-
-  // but still keep left align in brand to hide shifted text
-  .navbar-brand
-    text-align left
-
   .navbar-collapse
     // reset spacing between items
     .navbar-nav .nav-item
       margin-left 0
 
-    // reset underline position
-    .navbar-nav > .nav-item > a:after
-    .navbar__level-up:after
-      left 0
-      right 0
-      bottom 0
+  .navbar__right
+    margin-right 0
 
-
-.navbar-nav > .nav-item.active > a:after
-.navbar-nav > .nav-item:hover > a:after
-.navbar__level-up:hover:after
-  opacity 1
 
 .navbar__level-up
   position relative
-  padding-left .8rem
-  padding-right .8rem
+  padding-left .8rem !important
+  padding-right .8rem !important
   margin-left -.8rem
   margin-right .7rem // -.7rem + 2 rem - .5rem
   color $navbar-dark-color
   &:hover
     color $navbar-dark-color
-  &:after
-    left 0 !important
-    right 0 !important
 //
 // Alternate navigation. Shown when `navbar__m-secondary` modifier is added
 //

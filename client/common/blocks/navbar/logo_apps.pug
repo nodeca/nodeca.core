@@ -1,19 +1,18 @@
-nav.navbar-primary.navbar.navbar-dark.navbar-fixed-top.bg-primary
-  .navbar-inner.layout__container.container-fluid
-    .navbar-header
-      a.navbar-brand(href="/") Nodeca
+nav.navbar-primary.navbar.navbar-inverse.bg-primary.fixed-top.navbar-toggleable
+  .navbar-inner.container.container-fluid.layout__container
+    a.navbar-brand(href="/") Nodeca
 
-      button.icon.icon-menu.navbar-toggler.hidden-sm-up(
-        data-toggle='collapse',
-        data-target='.navbar-collapse',
-        type='button'
-      )
+    button.navbar-toggler.navbar-toggler-right.icon.icon-menu(
+      data-toggle='collapse',
+      data-target='.navbar-collapse',
+      type='button'
+    )
 
-    .navbar-collapse.collapse.navbar-toggleable-xs
-      ul.nav.navbar-nav.float-sm-left
+    .navbar-collapse.collapse
+      ul.navbar-nav
         != self.partial('@common.blocks.navbar.blocks.apps')
 
-      ul.nav.navbar-nav.float-sm-right
+      ul.navbar-nav.navbar__right
         li.nav-item
           a.nav-link.icon.icon-search(href='#')
 

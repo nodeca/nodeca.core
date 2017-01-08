@@ -25,7 +25,7 @@ mixin _page_progress_dropdown_menu(jump_path)
 //- ensure that current is in [1..total] range, except for 0/0
 - current = total > 0 ? Math.max(1, Math.min(current, total)) : 0;
 
-ul.nav.navbar-nav.page-progress(
+ul.navbar-nav.page-progress(
   data-current=current
   data-total=total
   data-section=self.section_hid
@@ -43,7 +43,7 @@ ul.nav.navbar-nav.page-progress(
         href='#'
         data-toggle='dropdown'
       )
-        .page-progress__label
+        span.page-progress__label
           span.page-progress__label-current= current || 0
           span.page-progress__label-total= total
         .page-progress__bar
