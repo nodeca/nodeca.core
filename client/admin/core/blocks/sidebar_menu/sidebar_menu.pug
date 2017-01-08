@@ -15,7 +15,7 @@
 
 each rootItem in sortedItems(self.runtime.navbar)
   if rootItem.info.submenu
-    ul.sidebar-menu.nav.hidden-xs-up
+    ul.sidebar-menu.nav.flex-column.hidden-xs-up
       each item in sortedItems(rootItem.info.submenu)
         - var info = item.info;
         li.nav-item(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
