@@ -13,7 +13,7 @@
   }
 
 footer.page-footer.clearfix
-  ul.page-footer-nav.float-xs-left
+  ul.page-footer-nav
     each item in sortedItems(self.runtime.footer || {})
       - var info = item.info;
       li.page-footer-nav__item
