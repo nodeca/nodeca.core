@@ -72,6 +72,13 @@ N.wire.on(module.apiPath, function microedit_init(data) {
 
   let $input = $form.find('.microedit__input');
 
+  // hack, move cursor to end of text
+  $input.focus(function() {
+    setTimeout(() => {
+      this.selectionStart = this.selectionEnd = 10000;
+    }, 0);
+  });
+
   $input
     .blur(function (e) {
       if (e.relatedTarget === $form.find('.btn-primary').get(0)) {

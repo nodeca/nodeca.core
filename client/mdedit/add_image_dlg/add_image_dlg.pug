@@ -1,9 +1,9 @@
 .modal.fade(tabindex='-1' role='dialog' aria-hidden='true')
-  form.modal-dialog(onsubmit="return false")
+  form.modal-dialog(onsubmit="return false" role='document')
     .modal-content
       .modal-header
-        button.close(type='button' tabindex='-1' data-dismiss='modal') &times;
         h4.modal-title= self.t('title')
+        button.close(type='button' tabindex='-1' data-dismiss='modal') &times;
       .modal-body
         input.add-image-dialog__input.form-control(
           type='text'

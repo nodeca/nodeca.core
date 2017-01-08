@@ -1,23 +1,23 @@
 .modal.fade(tabindex='-1' role='dialog' aria-hidden='true')
-  .modal-dialog
+  .modal-dialog(role='document')
     .modal-content
       form(data-on-submit='common.blocks.editor_options_dlg:submit')
         .modal-header
-          button.close(type='button' tabindex='-1' data-dismiss='modal') &times;
           h4.modal-title= self.t('title')
+          button.close(type='button' tabindex='-1' data-dismiss='modal') &times;
         .modal-body
-          .checkbox
-            label
-              input(type='checkbox' tabindex='1' checked=!self.no_mlinks name='mlinks')
-              = self.t('medialinks')
-          .checkbox
-            label
-              input(type='checkbox' tabindex='2' checked=!self.no_emojis name='emojis')
-              = self.t('emojis')
-          .checkbox
-            label
-              input(type='checkbox' tabindex='3' checked=!self.no_quote_collapse name='quote_collapse')
-              = self.t('quote_collapse')
+          .form-check
+            label.form-check-label
+              input.form-check-input(type='checkbox' tabindex='1' checked=!self.no_mlinks name='mlinks')
+              = ' ' + self.t('medialinks')
+          .form-check
+            label.form-check-label
+              input.form-check-input(type='checkbox' tabindex='2' checked=!self.no_emojis name='emojis')
+              = ' ' + self.t('emojis')
+          .form-check
+            label.form-check-label
+              input.form-check-input(type='checkbox' tabindex='3' checked=!self.no_quote_collapse name='quote_collapse')
+              = ' ' + self.t('quote_collapse')
 
         .modal-footer
             button.btn.btn-secondary(type='button' tabindex='4' data-dismiss='modal')= self.t('cancel')

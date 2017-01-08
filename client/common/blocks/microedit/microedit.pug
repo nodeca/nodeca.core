@@ -1,5 +1,7 @@
-form.microedit.form-inline(data-on-submit='common.blocks.microedit:submit')
-  button.btn.btn-primary.float-right(type='submit' tabindex='2')=self.t('ok')
+form.microedit(data-on-submit='common.blocks.microedit:submit')
   .microedit__input-container
-    input.microedit__input.form-control(type='text' name='value' value=self.value tabindex='1')
+    .input-group
+      input.microedit__input.form-control(type='text' name='value' value=self.value tabindex='1')
+      span.input-group-btn
+        button.btn.btn-primary(type='submit' tabindex='2')=self.t('ok')
     small.microedit__error.text-danger
