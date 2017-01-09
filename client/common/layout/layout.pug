@@ -44,10 +44,10 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage', class=self.offline_m
     .layout__container.container-fluid
       != self.partial('@common.blocks.footer', { locales: self.enabled_locales })
 
-      .nojs
+      .nojs-alert.js-hide
         .alert.alert-danger= self.t('nojs')
 
-      .nocookies
+      .nocookies-alert
         .alert.alert-danger= self.t('nocookies')
 
       .site-offline-msg.text-center

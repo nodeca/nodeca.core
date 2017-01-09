@@ -27,10 +27,10 @@ html.no-js
     .container-fluid
       != self.content
 
-    .nojs
+    .nojs-alert.js-hide
       .alert.alert-danger #{self.t('nojs')}
 
-    .nocookies
+    .nocookies-alert
       .alert.alert-danger #{self.t('nocookies')}
 
 
