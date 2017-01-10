@@ -103,15 +103,15 @@ module.exports = function (N, collectionName) {
    *
    * - name (ObjectId|String) - `_id` of root file or `filename` for preview
    */
-  File.remove = File.prototype.remove = function (name) {
+  File.remove = File.prototype.remove = Promise.coroutine(function* (name) {
     let id = name.toHexString ? name : tryParseObjectId(name);
 
     // The same as above, but via promise
     if (id) {
-      return gfs.remove({ _id: id }).then(result => result);
+      return yield gfs.remove({ _id: id }).then(result => result);
     }
-    return gfs.remove({ filename: name }).then(result => result);
-  };
+    return yield gfs.remove({ filename: name }).then(result => result);
+  });
 
 
   /*
@@ -178,29 +178,19 @@ module.exports = function (N, collectionName) {
    *   - metadata (Object), optional - file metadata
    *     - origName (String) - original file name (used in downloads)
    */
-  File.put = File.prototype.put = function (src, opt) {
+  File.put = File.prototype.put = Promise.coroutine(function* (src, opt) {
     let input = getStream(src);
-    let output;
 
-    try {
-      if (!input) throw new Error('File.put: unknown source data');
+    if (!input) throw new Error('File.put: unknown source data');
 
-      output = File.createWriteStream(opt);
-    } catch (err) {
-      return Promise.reject(err);
-    }
-
+    let output = File.createWriteStream(opt);
     let info;
 
     output.on('close', i => { info = i; });
 
-    return new Promise(function (resolve, reject) {
-      pump(input, output, err => {
-        if (err) reject (err);
-        else resolve(info);
-      });
-    });
-  };
+    yield Promise.fromCallback(cb => pump(input, output, cb));
+    return info;
+  });
 
 
   /*
