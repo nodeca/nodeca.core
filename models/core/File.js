@@ -236,6 +236,7 @@ module.exports = function (N, collectionName) {
 
     // connect to database
     let options = {
+      promiseLibrary: Promise,
       server: {
         socketOptions: { keepAlive: 1 }
       },
