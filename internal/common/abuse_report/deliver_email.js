@@ -11,6 +11,7 @@
 'use strict';
 
 
+const _       = require('lodash');
 const Promise = require('bluebird');
 const render  = require('nodeca.core/lib/system/render/common');
 
@@ -21,7 +22,9 @@ module.exports = function (N) {
   //
   N.wire.on('internal:common.abuse_report.deliver', function* send_via_email(params) {
     if (!params.email_templates) {
-      N.logger.warn(`Abuse report (${params.report.type}): email templates not specified`);
+      let type_name = _.invert(_.get(N, 'shared.content_type', {}))[params.report.type];
+
+      N.logger.warn(`Abuse report (${type_name}): email templates not specified`);
       return;
     }
 
@@ -36,7 +39,7 @@ module.exports = function (N) {
       return acc;
     }, {});
 
-    yield Promise.map(params.recipients, user_info => {
+    yield Promise.map(_.values(params.recipients), user_info => {
       let to = emails[user_info.user_id];
 
       if (!to) return; // continue

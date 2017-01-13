@@ -14,8 +14,8 @@ module.exports = function (N, collectionName) {
       // _id of reported content
       src: Schema.ObjectId,
 
-      // Content type (FORUM_POST, BLOG_ENTRY, ...)
-      type: String,
+      // N.shared.content_type (FORUM_POST, BLOG_ENTRY, ...)
+      type: Number,
 
       // Report text
       text: String,
