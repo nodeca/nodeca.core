@@ -2,12 +2,12 @@
 
  @font-face {
   font-family: 'nodeca';
-  src: url('../font/nodeca.eot?87042512');
-  src: url('../font/nodeca.eot?87042512#iefix') format('embedded-opentype'),
-       url('../font/nodeca.woff2?87042512') format('woff2'),
-       url('../font/nodeca.woff?87042512') format('woff'),
-       url('../font/nodeca.ttf?87042512') format('truetype'),
-       url('../font/nodeca.svg?87042512#nodeca') format('svg');
+  src: url('../font/nodeca.eot?12304914');
+  src: url('../font/nodeca.eot?12304914#iefix') format('embedded-opentype'),
+       url('../font/nodeca.woff2?12304914') format('woff2'),
+       url('../font/nodeca.woff?12304914') format('woff'),
+       url('../font/nodeca.ttf?12304914') format('truetype'),
+       url('../font/nodeca.svg?12304914#nodeca') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -17,7 +17,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'nodeca';
-    src: url('../font/nodeca.svg?87042512#nodeca') format('svg');
+    src: url('../font/nodeca.svg?12304914#nodeca') format('svg');
   }
 }
 */
@@ -61,7 +61,6 @@
 .icon-track-muted:before { content: '\2716'; } /* '✖' */
 .icon-info:before { content: '\e705'; } /* '' */
 .icon-location:before { content: '\e724'; } /* '' */
-.icon-login:before { content: '\e740'; } /* '' */
 .icon-chevron-big-left:before { content: '\e765'; } /* '' */
 .icon-chevron-big-right:before { content: '\e766'; } /* '' */
 .icon-search:before { content: '\e800'; } /* '' */
@@ -72,11 +71,11 @@
 .icon-download:before { content: '\e805'; } /* '' */
 .icon-x:before { content: '\e806'; } /* '' */
 .icon-report:before { content: '\e807'; } /* '' */
+.icon-login:before { content: '\e808'; } /* '' */
 .icon-loading-placeholder:before { content: '\e809'; } /* '' */
 .icon-expand-alt:before { content: '\e80a'; } /* '' */
 .icon-collapse-alt:before { content: '\e80b'; } /* '' */
 .icon-comment:before { content: '\e80c'; } /* '' */
-.icon-menu:before { content: '\e80d'; } /* '' */
 .icon-dropdown-local:before { content: '\e80e'; } /* '' */
 .icon-github:before { content: '\e80f'; } /* '' */
 .icon-plus:before { content: '\e810'; } /* '' */
@@ -109,6 +108,8 @@
 .icon-track-normal:before { content: '\e82b'; } /* '' */
 .icon-track-watching:before { content: '\e82c'; } /* '' */
 .icon-to-bottom:before { content: '\e82d'; } /* '' */
+.icon-menu:before { content: '\e82e'; } /* '' */
+.icon-preview:before { content: '\e82f'; } /* '' */
 .icon-posts:before { content: '\e83f'; } /* '' */
 .icon-replies:before { content: '\e840'; } /* '' */
 .icon-reply:before { content: '\e841'; } /* '' */
