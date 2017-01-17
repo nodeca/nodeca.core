@@ -21,5 +21,22 @@
     .mdedit__preview.markup
 
   .mdedit-footer
-    button.mdedit__submit.btn.btn-primary(data-on-click='mdedit.submit' tabindex=3)=self.t('submit')
-    button.btn.btn-link(data-on-click='mdedit.cancel' tabindex=4)=self.t('cancel')
+    button.mdedit-btn__submit.btn.btn-primary(
+      data-on-click='mdedit.submit'
+      tabindex=3
+    )= self.t('submit')
+
+    button.mdedit-btn__preview.float-right.btn.btn-link(
+      data-on-click='mdedit.preview'
+      tabindex=5
+    )= self.t('preview')
+
+    button.mdedit-btn__cancel.btn.btn-link.hidden-xs-down(
+      data-on-click='mdedit.cancel'
+      tabindex=4
+    )= self.t('cancel')
+    button.mdedit-btn__cancel.btn.btn-link.hidden-sm-up.icon.icon-x(
+      data-on-click='mdedit.cancel'
+      tabindex=4
+      title=self.t('cancel')
+    )
