@@ -395,6 +395,15 @@ N.wire.on('event.keypress.escape', () => N.MDEdit.hide());
 N.wire.on('mdedit.cancel', () => N.MDEdit.hide());
 
 
+// Toggle preview on small screens
+//
+N.wire.on('mdedit.preview', () => {
+  N.MDEdit.__layout__.toggleClass('mdedit__m-preview_mode');
+  N.MDEdit.__layout__.find('.mdedit-btn__preview')
+    .toggleClass('btn-link btn-outline-success');
+});
+
+
 // Collapse/expand editor
 //
 N.wire.on('mdedit.collapse', function collapse() {

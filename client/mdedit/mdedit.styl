@@ -118,9 +118,6 @@
   .quote__author-avatar
     background-color $decorator-color
 
-  @media (max-width: $grid-breakpoints.md - 1)
-    display none
-
 .mdedit.mdedit__m-no-attachments
   .mdedit-attachments
     display none
@@ -200,5 +197,30 @@
   transition none
 
 
+// Compensate visual distance between filled and link-like buttons
 .mdedit-btn__cancel
   margin-left 1.4rem !important
+
+
+//
+// Responsiveness
+//
+.mdedit-btn__preview
+  display none
+
+@media (max-width: $grid-breakpoints.md - 1)
+  // Hide preview by default on narrow screen
+  .mdedit__preview
+    display none
+    border 1px dashed rgba(0, 0, 0, .3)
+  .mdedit-btn__preview
+    display inline-block
+
+  // Show if preview mode activated
+  .mdedit__m-preview_mode
+    .mdedit__preview
+      display block
+      margin 0
+    .mdedit__editor
+    .mdedit-attachments
+      display none
