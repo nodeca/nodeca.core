@@ -214,10 +214,18 @@ module.exports = function (N, collectionName) {
     let options = {
       promiseLibrary: Promise,
       server: {
-        socketOptions: { keepAlive: 1 }
+        poolSize: 50,
+        socketOptions: {
+          connectTimeoutMS: 30000,
+          keepAlive: 1
+        }
       },
       replset: {
-        socketOptions: { keepAlive: 1 }
+        poolSize: 50,
+        socketOptions: {
+          connectTimeoutMS: 30000,
+          keepAlive: 1
+        }
       }
     };
 
