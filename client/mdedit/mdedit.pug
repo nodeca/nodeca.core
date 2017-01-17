@@ -26,10 +26,15 @@
       tabindex=3
     )= self.t('submit')
 
-    button.mdedit-btn__preview.float-right.btn.btn-link(
+    button.mdedit-btn__preview.float-right.btn.btn-link.hidden-xs-down(
       data-on-click='mdedit.preview'
       tabindex=5
     )= self.t('preview')
+    button.mdedit-btn__preview.float-right.btn.btn-link.hidden-sm-up.icon.icon-preview(
+      data-on-click='mdedit.preview'
+      tabindex=5
+      title=self.t('preview')
+    )
 
     button.mdedit-btn__cancel.btn.btn-link.hidden-xs-down(
       data-on-click='mdedit.cancel'
