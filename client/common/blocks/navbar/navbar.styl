@@ -12,13 +12,17 @@
   padding-left ($grid-gutter-width / 2) !important
   padding-right ($grid-gutter-width / 2) !important
 
+// TODO: remove after fixes in bootstrap
 .navbar-nav .nav-link
   padding-top .425rem
   padding-bottom .425rem
 
-.navbar-toggler
-  background-image none !important
-  border-color transparent !important;
+
+// Override toggler style
+.navbar-inverse .navbar-toggler
+  background-image none
+  border-color transparent
+  color $navbar-inverse-color
   padding .5rem
   margin-right -.5rem
 
@@ -64,14 +68,11 @@
 
 
 .navbar__level-up
-  position relative
   padding-left .8rem !important
   padding-right .8rem !important
   margin-left -.8rem
   margin-right .7rem // -.7rem + 2 rem - .5rem
-  color $navbar-dark-color
-  &:hover
-    color $navbar-dark-color
+
 //
 // Alternate navigation. Shown when `navbar__m-secondary` modifier is added
 //
@@ -113,7 +114,7 @@
   shortable()
 
 .navbar-alt .btn
-  opacity .7
+  opacity .5
 
 
 //

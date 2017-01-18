@@ -5,23 +5,23 @@
   margin-left 0 !important
 
 .page-progress__button-first
-  position relative // For hover underline
   padding-left .8rem !important
   padding-right .5rem !important
-  transition color .3s ease
+  //transition color .3s ease
 
 .page-progress__button-last
-  position relative // For hover underline
   padding-left .5rem !important
   padding-right .8rem !important
   margin-right 1.2rem
-  transition color .3s ease
+  //transition color .3s ease
 
 .content-top .page-progress__m-position-start .page-progress__button-first,
 .content-bottom .page-progress__m-position-near-end .page-progress__button-last,
 .page-progress__m-position-end .page-progress__button-last
-  color $navbar-dark-color - 30% !important
+  opacity .4
   cursor default
+  &:hover
+    color $navbar-inverse-color
 
 .page-progress__info
   min-width 6rem
@@ -31,8 +31,10 @@
   width 100%
   text-align center
 
+.page-progress__label-current
+  color $navbar-inverse-hover-color
+
 .page-progress__label-total
-  color $navbar-dark-color - 30%
   &:before
     content '/'
     margin-left .2em
@@ -43,10 +45,10 @@
   bottom .25rem
   left 0
   right 0
-  background-color $navbar-dark-color - 30%
+  background-color $navbar-inverse-color
 
 .page-progress__bar-fill
-  background-color $navbar-dark-color - 10%
+  background-color $navbar-inverse-hover-color
   height .0625rem
   transition width .3s
 

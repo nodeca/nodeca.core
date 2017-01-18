@@ -11,11 +11,8 @@ $brand-danger:                   #de5e5d;
 $body-color:                     #2b2b2b;
 $body-color-secondary:           #c6cbd1;
 
-// override navbar item color, so they are always white (default is gray)
-$navbar-dark-color:              rgba(248,248,248,1);
-$navbar-dark-hover-color:        rgba(248,248,248,1);
-$navbar-dark-active-color:       rgba(248,248,248,1);
-$navbar-dark-disabled-color:     rgba(248,248,248,.25);
+// override navbar item color
+$navbar-inverse-active-color:    rgba(#fff, .75);
 
 // override buttons so they use primary color
 $btn-secondary-color:            $brand-primary;
