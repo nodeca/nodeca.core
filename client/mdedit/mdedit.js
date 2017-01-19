@@ -182,7 +182,7 @@ MDEdit.prototype.show = function (options) {
   // Load draft if needed
   //
   if (this.__options__.draftKey) {
-    this.__bag__.get('mdedit_' + this.__options__.draftKey, (__, res) => {
+    this.__bag__.get('mdedit_' + this.__options__.draftKey).then(res => {
       let draft = res || {};
 
       // Load custom fields
@@ -213,7 +213,7 @@ MDEdit.prototype.show = function (options) {
       } else {
         this.attachments(options.attachments || []);
       }
-    });
+    }).catch(() => {}); // Suppress storage errors
 
   } else {
     // If we don't use drafts
