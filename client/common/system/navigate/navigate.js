@@ -306,7 +306,7 @@ fsm.onIDLE = function () {
 
 fsm.onLOAD = function (event, from, to, params) {
   var options = parseOptions(params),
-      same_url = (options.href === (location.protocol + '//' + location.host + location.pathname));
+      same_url = (options.href === (location.protocol + '//' + location.host + location.pathname + location.search));
 
   // If errors while parsing
   if (!options) {
