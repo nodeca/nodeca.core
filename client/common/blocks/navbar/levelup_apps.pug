@@ -16,7 +16,7 @@ nav.navbar-primary.navbar.navbar-inverse.bg-primary.fixed-top.navbar-toggleable
 
       ul.navbar-nav.navbar__right
         li.nav-item
-          a.nav-link.icon.icon-search(href='#')
+          a.nav-link.icon.icon-search(href=self.link_to('search.general'))
 
         //- NOTE: This block is located in `nodeca.users`
         != self.partial('@common.blocks.navbar_auth')
