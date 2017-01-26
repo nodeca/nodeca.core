@@ -13,14 +13,19 @@ body
   // jitter on change between short and long pages.
   overflow-y scroll
 
+  display flex
+  flex-direction column
+
 .layout__container
   max-width $page-max-width
+  width 100%
 
 .layout__container.space-top
   margin-top 2rem
 
 #content
   margin-bottom 1rem
+  flex 1 1 100%
 
 // Debug output block at page bottom
 //
