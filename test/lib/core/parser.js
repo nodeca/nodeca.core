@@ -42,13 +42,13 @@ describe('Parser', function () {
           'id="fnref3">[3]</a></sup></p>\n<hr class="footnotes-sep">\n<section ' +
           'class="footnotes">\n<ol class="footnotes-list">\n<li id="fn1" ' +
           'class="footnote-item"><p>i2 <a href="#fnref1" class="footnote-backref">' +
-          '&#x21A9;</a> <a href="#fnref1:1" class="footnote-backref">&#x21A9;</a>' +
+          '↩</a> <a href="#fnref1:1" class="footnote-backref">↩</a>' +
           '</p>\n</li>\n<li id="fn2" class="footnote-item"><p>i1 <a href="#fnref2" ' +
-          'class="footnote-backref">&#x21A9;</a></p>\n</li>\n<li id="fn3" ' +
+          'class="footnote-backref">↩</a></p>\n</li>\n<li id="fn3" ' +
           'class="footnote-item"><p>i3<sup class="footnote-ref"><a href="#fn4" ' +
           'id="fnref4">[4]</a></sup> <a href="#fnref3" class="footnote-backref">' +
-          '&#x21A9;</a></p>\n</li>\n<li id="fn4" class="footnote-item"><p>i4 <a ' +
-          'href="#fnref4" class="footnote-backref">&#x21A9;</a></p>\n</li>\n</ol>\n</section>'
+          '↩</a></p>\n</li>\n<li id="fn4" class="footnote-item"><p>i4 <a ' +
+          'href="#fnref4" class="footnote-backref">↩</a></p>\n</li>\n</ol>\n</section>'
         );
       });
     });
@@ -123,7 +123,7 @@ describe('Parser', function () {
       };
 
       return TEST.N.parser.md2preview(data).then(res => {
-        assert.strictEqual(res.preview, '<span class="icon icon-list-bullet"></span>\nfoobarbaz&#x2026;');
+        assert.strictEqual(res.preview, '<span class="icon icon-list-bullet"></span>\nfoobarbaz…');
       });
     });
   });
