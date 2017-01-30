@@ -21,35 +21,31 @@ describe('FileTmp (GridFS) http requests test', function () {
     info = yield file.put(fileName, { metadata: { origName: fileBase } });
   }));
 
-  it('GET', function (done) {
-    request
+  it('GET', function () {
+    return request
       .get(router.linkTo('core.gridfs_tmp', { bucket: info._id }))
-      .expect(fileContent)
-      .end(done);
+      .expect(fileContent);
   });
 
-  it('HEAD', function (done) {
-    request
+  it('HEAD', function () {
+    return request
       .head(router.linkTo('core.gridfs_tmp', { bucket: info._id }))
       .expect(200, {})
-      .expect('Content-Type', 'image/jpeg')
-      .end(done);
+      .expect('Content-Type', 'image/jpeg');
   });
 
-  it('GET with ETag', function (done) {
-    request
+  it('GET with ETag', function () {
+    return request
       .get(router.linkTo('core.gridfs_tmp', { bucket: info._id }))
       .set('If-None-Match', info.md5)
-      .expect(304, {})
-      .end(done);
+      .expect(304, {});
   });
 
-  it('GET with If-Modified-Since', function (done) {
-    request
+  it('GET with If-Modified-Since', function () {
+    return request
       .get(router.linkTo('core.gridfs_tmp', { bucket: info._id }))
       .set('If-Modified-Since', info.uploadDate.toString())
-      .expect(304, {})
-      .end(done);
+      .expect(304, {});
   });
 
   after(Promise.coroutine(function* () {
