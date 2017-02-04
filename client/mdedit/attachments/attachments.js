@@ -72,7 +72,7 @@ N.wire.once('init:mdedit', function () {
 
           uploaderData = {
             files: data.files,
-            url: N.router.linkTo('users.media.upload'),
+            rpc: [ 'users.media.upload' ],
             config: 'users.uploader_config',
             uploaded: null
           };
