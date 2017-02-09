@@ -28,7 +28,7 @@ module.exports = function (N, apiPath) {
 
   let rootUrl = _.get(N.config, 'bind.default.mount', 'http://localhost') + '/';
   let userAgentEmbedza = `${embedza_pkg.name}/${embedza_pkg.version} (Nodeca; +${rootUrl})`;
-  let userAgentUnshort = `${unshort_pkg.name}/${embedza_pkg.version} (Nodeca; +${rootUrl})`;
+  let userAgentUnshort = `${unshort_pkg.name}/${unshort_pkg.version} (Nodeca; +${rootUrl})`;
 
   // Init url-unshort instance
   //
@@ -55,8 +55,6 @@ module.exports = function (N, apiPath) {
 
     return instance;
   }
-
-  let unshort = { normal: unshortCreate(false), cached: unshortCreate(true) };
 
 
   // Init embedza instance
@@ -85,12 +83,15 @@ module.exports = function (N, apiPath) {
     return instance;
   }
 
+  let unshort = { normal: unshortCreate(false), cached: unshortCreate(true) };
   let embedza = { normal: embedzaCreate(false), cached: embedzaCreate(true) };
+
+  N.wire.emit('init:embed', { unshort, embedza });
 
 
   // Expand shortened links
   //
-  N.wire.on(apiPath, function* expand_short_links(data) {
+  N.wire.before(apiPath, function* expand_short_links(data) {
     let tracker_data = data[tracker_data_key] = data[tracker_data_key] || {};
 
     let url;
@@ -161,7 +162,7 @@ module.exports = function (N, apiPath) {
 
   // Keep track of this url
   //
-  N.wire.on(apiPath, function* track_url(data) {
+  N.wire.after(apiPath, { priority: 100 }, function* track_url(data) {
     let tracker_data = data[tracker_data_key] || {};
     let update_data = { $set: {}, $unset: {}, $inc: { retries: 1 } };
 
