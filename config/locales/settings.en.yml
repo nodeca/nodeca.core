@@ -23,3 +23,6 @@ i18n:
 
           content_read_marks_expire: Max time to store read marks, older content considered read (days)
           content_filter_urls: Filter urls
+          content_filter_urls_help: |
+            One pattern per line. If pattern will be found in posted URL,
+            link will be banned (replaced with warning text).
