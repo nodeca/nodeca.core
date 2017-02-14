@@ -40,6 +40,10 @@
             select.form-control(multiple, size="10", data-bind="options: valueOptions, optionsText: 'title', optionsValue: 'value', selectedOptions: value, attr: { id: id }")
             // /ko
 
+            // ko if: 'multiline' === type
+            textarea.form-control(data-bind="value: value, valueUpdate: 'keyup', attr: { id: id }")
+            // /ko
+
             // ko if: localizedHelp
             small.form-text.text-muted(data-bind="text: localizedHelp")
             // /ko

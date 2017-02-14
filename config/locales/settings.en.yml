@@ -22,3 +22,4 @@ i18n:
           general_cookies_domain_help: Leave empty to auto-detect. (when site use single domain)
 
           content_read_marks_expire: Max time to store read marks, older content considered read (days)
+          content_filter_urls: Filter urls

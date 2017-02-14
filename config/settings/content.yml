@@ -10,3 +10,9 @@ setting_schemas:
       category_key: content_common
       type: number
       default: 30 # 30 days
+
+    content_filter_urls:
+      priority: 20
+      group_key: content
+      category_key: content_common
+      type: multiline
