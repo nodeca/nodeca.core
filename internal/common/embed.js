@@ -21,6 +21,7 @@ const Embedza     = require('embedza');
 const Unshort     = require('url-unshort');
 const embedza_pkg = require('embedza/package.json');
 const unshort_pkg = require('url-unshort/package.json');
+const memoize     = require('promise-memoize');
 
 
 module.exports = function (N, apiPath) {
@@ -156,6 +157,36 @@ module.exports = function (N, apiPath) {
       data.html  = result.html;
       data.type  = result.type;
       data.local = false;
+    }
+  });
+
+
+  // Replace banned links with placeholder
+  //
+  const get_banned_links_re = memoize(function () {
+
+    return N.settings.getStore('global')
+               .get('content_filter_urls')
+               .then(patterns =>
+                  patterns.value.trim().length ?
+                  new RegExp(
+                    patterns.value.split(/\s+/)
+                                  .map(_.escapeRegExp)
+                                  .join('|'),
+                  'i') :
+                  null
+               );
+
+  }, { maxAge: 60000 });
+
+
+  N.wire.after(apiPath, function* filter_links(data) {
+    let url = data.canonical || data.url;
+
+    let banned_links = yield get_banned_links_re();
+
+    if (banned_links && banned_links.test(url)) {
+      data.html = '<span class="link link-banned">banned link</span>';
     }
   });
 
