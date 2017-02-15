@@ -186,7 +186,7 @@ module.exports = function (N, apiPath) {
     let banned_links = yield get_banned_links_re();
 
     if (banned_links && banned_links.test(url)) {
-      data.html = '<span class="link link-banned">banned link</span>';
+      data.html = '<span class="link-banned">banned link</span>';
     }
   });
 
