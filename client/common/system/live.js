@@ -11,9 +11,13 @@ const faye  = require('faye/src/faye_browser');
 // Emit event for connectors & add live instance to 'N' (after init `N.runtime`)
 //
 N.wire.once('navigate.done', { priority: -900 }, function live_init() {
+  // Admin panel and user pages are in different scripts but
+  // can bee opened in the same time. Need separate namespaces
+  // to avoid collisions on server connections.
+  let namespace =  (module.apiPath.split('.', 1)[0] === 'admin') ? 'admin' : 'frontend';
 
   // Init client for `N.live`
-  N.live = tabex.client();
+  N.live = tabex.client({ namespace });
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -51,7 +55,7 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
   //
 
   // Tabex client to communicate with faye
-  let flive = tabex.client();
+  let flive = tabex.client({ namespace });
   // Faye client to communicate with server
   let fayeClient = null;
   // Channels subscribed by faye
