@@ -166,16 +166,17 @@ module.exports = function (N, apiPath) {
   const get_banned_links_re = memoize(function () {
 
     return N.settings.getStore('global')
-               .get('content_filter_urls')
-               .then(patterns =>
-                  patterns.value.trim().length ?
-                  new RegExp(
-                    patterns.value.split(/\s+/)
-                                  .map(_.escapeRegExp)
-                                  .join('|'),
-                  'i') :
-                  null
-               );
+                .get('content_filter_urls')
+                .then(patterns => {
+                  if (patterns.value.trim().length) {
+                    return new RegExp(
+                      patterns.value.split(/\s+/)
+                                    .map(_.escapeRegExp)
+                                    .join('|'),
+                      'i');
+                  }
+                  return null;
+                });
 
   }, { maxAge: 60000 });
 
