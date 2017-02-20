@@ -1,0 +1,18 @@
+setting_groups:
+  core_display:
+    parent: core
+
+
+setting_schemas:
+  global:
+    topics_per_page:
+      type: number
+      group_key: core_display
+      category_key: forum
+      default: 30
+
+    posts_per_page:
+      type: number
+      group_key: core_display
+      category_key: topic
+      default: 25

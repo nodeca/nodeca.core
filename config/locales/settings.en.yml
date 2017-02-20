@@ -6,6 +6,7 @@ i18n:
           core: Core
           general: General
           content: Content
+          core_display: Display
           abuse_reports: Abuse reports
 
         category_names:
@@ -26,3 +27,6 @@ i18n:
           content_filter_urls_help: |
             One pattern per line. If pattern will be found in posted URL,
             link will be banned (replaced with warning text).
+
+          topics_per_page: Topics per page
+          posts_per_page: Posts per page
