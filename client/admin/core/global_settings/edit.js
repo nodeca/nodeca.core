@@ -29,7 +29,7 @@ function submit() {
   N.io.rpc('admin.core.global_settings.update', { settings: payload }).then(() => {
     settingModels.forEach(function (setting) { setting.value.markClean(); });
 
-    return N.wire.emit('notify', { type: 'info', message: t('saved') });
+    return N.wire.emit('notify.info', t('saved'));
   }).catch(err => N.wire.emit('error', err));
 }
 

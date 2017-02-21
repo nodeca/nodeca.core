@@ -12,12 +12,20 @@
  *   - closeable       - show close element, if set
  *   - deduplicate     - skip the same messages, if set
  *   - type            - message style 'error' (default), 'info'
+ *
+ * Sugar methods:
+ *
+ * 'notify.info' -> ('notify', { type: info })
+ *
  */
 
 'use strict';
 
 
-var DEFAULT_TYPE = 'error';
+const _ = require('lodash');
+
+
+const DEFAULT_TYPE = 'error';
 
 
 var DEFAULT_OPTIONS = {
@@ -42,13 +50,15 @@ var DEFAULT_OPTIONS = {
 // key - message text
 var tracker = {};
 
-function Notification(options) {
-  if (!options) {
-    options = {};
-  } else if (typeof options === 'string') {
-    options = { message: options };
-  }
 
+function wrapOptions(options) {
+  if (!options) return {};
+  if (typeof options === 'string') return { message: options };
+  return options;
+}
+
+
+function Notification(options) {
   if (options.deduplicate) {
     this.track_id = options.message.toString();
     var previous = tracker[this.track_id];
@@ -130,7 +140,13 @@ Notification.prototype = {
 };
 
 
+/*eslint-disable no-new*/
+
 N.wire.on('notify', function notification(options) {
-  /*eslint-disable no-new*/
-  new Notification(options);
+  new Notification(wrapOptions(options));
+});
+
+
+N.wire.on('notify.info', function notification(options) {
+  N.wire.emit('notify', _.assign({ type: 'info' }, wrapOptions(options)));
 });

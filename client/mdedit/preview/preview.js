@@ -100,7 +100,7 @@ N.wire.once('init:mdedit', function () {
         N.MDEdit.__scrollMap__ = null;
       })
       // It should never happen
-      .catch(err => N.wire.emit('notify', { type: 'error', message: err.message }));
+      .catch(err => N.wire.emit('notify', err.message));
   }, 500, { maxWait: 500, leading: true }));
 
 
