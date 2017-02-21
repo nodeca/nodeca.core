@@ -25,6 +25,8 @@
   z-index 9999
   // for narrow screens
   margin 0 1rem
+  width 100%
+  max-width 300px
 
 // generic notice styles & animation
 //
@@ -38,7 +40,8 @@
 
   margin-bottom .5rem
 
-  max-width 300px
+  //max-width 300px
+  //width 100%
   max-height (alert_notice_max_height=200px)
   overflow auto
   text-shadow none
@@ -86,3 +89,14 @@
   color $brand-primary - 10%
   a
     color $brand-primary - 10%
+
+
+.notifications-container
+  position fixed
+  top 0
+  width 100%
+  z-index 9999
+  .notifications
+    position absolute
+    top 63px
+    margin 0

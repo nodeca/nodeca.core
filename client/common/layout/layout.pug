@@ -38,7 +38,13 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage', class=self.offline_m
       != self.inject_headers.join('\n')
 
   body
-    //-._affix(data-affix={ top: 500, class: 'layout-scroll-top__active' })
+    //- Needed to align notifications over working layout
+    .notifications-container
+      .layout__container.container-fluid
+        //- Keep padding for position: absolute
+        div(style='position:relative')
+          .notifications
+
     != self.content
 
     .layout__container.container-fluid
