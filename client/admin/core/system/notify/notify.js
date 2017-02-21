@@ -3,7 +3,7 @@
  *
  * Parameters:
  *
- *   options (String) - show text in `error` style
+ *   options (String) - show text in default (`error`) style
  *
  *   options (Object)
  *
@@ -22,9 +22,6 @@
 'use strict';
 
 
-const _ = require('lodash');
-
-
 const DEFAULT_TYPE = 'error';
 
 
@@ -32,112 +29,85 @@ var DEFAULT_OPTIONS = {
   info: {
     closable: false,
     autohide: 5000,
-    css:      'info'
-  },
-  warning: {
-    closable: false,
-    autohide: 5000,
-    css:      'warning'
+    style:    'info'
   },
   error: {
     closable: false,
     autohide: 10000,
-    css:      'danger'
+    style:    'danger'
   }
 };
 
 // track notices for deduplication
 // key - message text
-var tracker = {};
+let tracker = {};
 
 
 function wrapOptions(options) {
   if (!options) return {};
   if (typeof options === 'string') return { message: options };
-  return options;
+  return $.extend({}, options);
 }
 
 
 function Notification(options) {
+  let type = options.type || DEFAULT_TYPE;
+
+  options = $.extend({}, DEFAULT_OPTIONS[type], options);
+
   if (options.deduplicate) {
-    this.track_id = options.message.toString();
-    var previous = tracker[this.track_id];
+    this.track_id = JSON.stringify(options);
+
+    let previous = tracker[this.track_id];
+
     if (previous) {
       // restart timeout
       clearTimeout(previous.timeout);
-      previous.timeout = setTimeout($.proxy(previous.hide, previous), previous.options.autohide);
+
+      previous.timeout = setTimeout(() => {
+        previous.$element.alert('close');
+      }, options.autohide);
+
       return;
     }
   }
 
-  var type = options.type || DEFAULT_TYPE;
-
-  options = $.extend({}, DEFAULT_OPTIONS[type], options);
-
-  this.options = options;
-  this.isShown  = false;
-  this.$element = $('<div class="alert alert-' + (DEFAULT_OPTIONS[type] || {}).css + ' fade" />');
+  this.$element = $(N.runtime.render(module.apiPath, {
+    message: options.message || '',
+    style: (DEFAULT_OPTIONS[type] || {}).style
+  }));
 
   // get container, where to insert notice
   if (options.container) {
     this.$container  = $(options.container);
   } else {
-    // Lasily create default container if not exists
+    // Lazily create default container if not exists
     this.$container = $('.notifications');
     if (this.$container.length === 0) {
       this.$container = $('<div class="notifications" />').appendTo('body');
     }
   }
 
-  // add close button
-  if (options.closable) {
-    $('<button type="button" class="close">&times;</button>')
-      .click($.proxy(this.hide, this))
-      .appendTo(this.$element);
-  }
-
-  // add message and inject element into the target container
-  this.$element.append(options.message || '');
-
-  // show notification
-  this.show();
+  this.$element.on('closed.bs.alert', () => {
+    if (this.timeout)  clearTimeout(this.timeout);
+    if (this.track_id) delete tracker[this.track_id];
+  });
 
   if (options.autohide) {
-    this.timeout = setTimeout($.proxy(this.hide, this), options.autohide);
+    this.timeout = setTimeout(() => {
+      this.$element.alert('close');
+    }, options.autohide);
   }
+
+  // Show
+  if (this.track_id) tracker[this.track_id] = this;
+
+  this.$element
+    .appendTo(this.$container)
+    .addClass('show')
+    // init closer
+    .alert();
 }
-
-
-Notification.prototype = {
-  constructor: Notification,
-
-  show() {
-    if (this.isShown) return;
-
-    if (this.track_id) {
-      tracker[this.track_id] = this;
-    }
-
-    this.isShown = true;
-    this.$element
-      .appendTo(this.$container)
-      .addClass('show')
-      .focus();
-  },
-
-  hide() {
-    if (!this.isShown) {
-      return;
-    }
-
-    if (this.track_id) {
-      delete tracker[this.track_id];
-    }
-
-    this.isShown = false;
-    this.$element.alert('close');
-  }
-};
 
 
 /*eslint-disable no-new*/
@@ -148,5 +118,5 @@ N.wire.on('notify', function notification(options) {
 
 
 N.wire.on('notify.info', function notification(options) {
-  N.wire.emit('notify', _.assign({ type: 'info' }, wrapOptions(options)));
+  N.wire.emit('notify', $.extend({ type: 'info' }, wrapOptions(options)));
 });

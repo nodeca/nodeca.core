@@ -1,3 +1,5 @@
+@import "../../_variables"
+
 // appearance animation
 //
 @keyframes notification
@@ -18,34 +20,69 @@
 //
 .notifications
   position fixed
-  right 10px
-  top 10px
+  right 0rem
+  top 1rem
   z-index 9999
+  // for narrow screens
+  margin 0 1rem
 
-  // generic notice styles & animation
-  //
-  & > .alert
-    position: relative;
-    margin 5px 0px
+// generic notice styles & animation
+//
+.notification
+  position: relative;
 
-    max-width 300px
-    max-height (alert_notice_max_height=200px)
-    overflow auto
-    text-shadow none
+  padding .75rem 1.25rem
+  border-radius 3px
+  border-left 3px solid transparent
+  box-shadow 0px 2px 8px #a0a0a0
 
-    transition all .5s linear
+  margin-bottom .5rem
 
-    // OFF state
-    &.fade
-      opacity 0
-      // height animation hack
-      max-height 0
-      overflow hidden
+  max-width 300px
+  max-height (alert_notice_max_height=200px)
+  overflow auto
+  text-shadow none
 
-      // ON state
-      &.show
-        opacity .95
-        animation notification .75s linear
-        // just return original value, if we use fade
-        overflow auto
-        max-height alert_notice_max_height
+  transition all .5s linear
+
+  a
+    font-weight bold
+    text-decoration underline
+
+  .close
+    position relative
+    padding .25rem .75rem
+    top -.25rem
+    right -.75rem
+    margin -0.15rem -0.25rem -0.25rem -0.75rem
+    opacity .2
+    font-size 1rem
+
+  // OFF state
+  &.fade
+    opacity 0
+    // height animation hack
+    max-height 0
+    overflow hidden
+
+    // ON state
+    &.show
+      opacity 1
+      animation notification .75s linear
+      // just return original value, if we use fade
+      overflow auto
+      max-height alert_notice_max_height
+
+.notification-danger
+  background-color $brand-danger
+  border-left-color $brand-danger
+  color white
+  a
+    color white
+
+.notification-info
+  background-color white
+  border-left-color $brand-primary
+  color $brand-primary - 10%
+  a
+    color $brand-primary - 10%
