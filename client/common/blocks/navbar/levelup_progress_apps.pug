@@ -1,7 +1,7 @@
 nav.navbar-primary.navbar.navbar-inverse.bg-primary.fixed-top.navbar-toggleable
   .navbar-inner.container.layout__container.container-fluid
     .navbar-untoggleable
-      ul.navbar-nav
+      ul.navbar-nav.navbar__m-hide-on-search
         li.nav-item
           a.navbar__level-up.nav-link.icon.icon-level-up(href=self.level_up)
 
@@ -14,12 +14,11 @@ nav.navbar-primary.navbar.navbar-inverse.bg-primary.fixed-top.navbar-toggleable
       )
 
     .navbar-collapse.collapse.navbar-toggleable-xs
-      ul.navbar-nav
+      ul.navbar-nav.navbar__m-hide-on-search
         != self.partial('@common.blocks.navbar.blocks.apps')
 
       ul.navbar-nav.navbar__right
-        li.nav-item
-          a.nav-link.icon.icon-search(href=self.link_to('search.general'))
+        != self.partial('@common.blocks.navbar.search')
 
         //- NOTE: This block is located in `nodeca.users`
         != self.partial('@common.blocks.navbar_auth')
