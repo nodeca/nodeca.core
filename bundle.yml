@@ -96,7 +96,7 @@ packages:
 
   vendor.typeahead:
     vendor:
-      - typeahead.js/dist/bloodhound.js
+      - corejs-typeahead/dist/bloodhound.js
 
     entries: client/vendor/typeahead
 
