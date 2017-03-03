@@ -6,7 +6,5 @@ type:
     - "*.styl"
     - "*.scss"
   widget_i18n: i18n/*.yml
-  widget_view:
-    - "*.jade"
-    - "*.pug"
+  widget_view: "*.pug"
   widget_js: "*.js"

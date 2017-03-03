@@ -2,6 +2,4 @@ recursive: true
 public: false
 type:
   widget_i18n: i18n/*.yml
-  widget_view:
-    - "*.jade"
-    - "*.pug"
+  widget_view: "*.pug"
