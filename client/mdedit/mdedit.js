@@ -45,15 +45,17 @@ let compileToolbarConfig = _.memoize(function (name) {
 // Editor init
 //
 function MDEdit() {
-  this.emojis = EMOJIS;
-  this.commands = {};
-  this.__attachments__ = [];
-  this.__options__ = null;
-  this.__layout__ = null;
-  this.__minHeight__ = 0;
-  this.__cm__ = null;
-  this.__bag__ = bag({ prefix: 'nodeca' });
-  this.__cache__ = new RpcCache();
+  this.emojis           = EMOJIS;
+  this.commands         = {};
+  this.__attachments__  = [];
+  this.__options__      = null;
+  this.__layout__       = null;
+  this.__minHeight__    = 0;
+  this.__cm__           = null;
+  this.__bag__          = bag({ prefix: 'nodeca' });
+  this.__cache__        = new RpcCache();
+  this.__state_changed__  = false;
+  this.__state_monitor__  = null; // setInterval() result
 
   this.__cache__.on('update', () => N.wire.emit('mdedit:update.text'));
 }
@@ -99,6 +101,7 @@ MDEdit.prototype.show = function (options) {
 
   this.__layout__ = $(N.runtime.render('mdedit'));
   this.__options__ = _.clone(options);
+
   this.__options__.toolbar = compileToolbarConfig(this.__options__.toolbar || 'default');
   this.__options__.parseOptions = this.__options__.parseOptions || {};
   this.__options__.draftCustomFields = this.__options__.draftCustomFields || {};
@@ -181,72 +184,22 @@ MDEdit.prototype.show = function (options) {
 
   // Load draft if needed
   //
-  if (this.__options__.draftKey) {
-    this.__bag__.get('mdedit_' + this.__options__.draftKey).then(res => {
-      let draft = res || {};
+  this.text(options.text || '');
+  this.attachments(options.attachments || []);
 
-      // Load custom fields
-      Object.keys(this.__options__.draftCustomFields).forEach(fieldName => {
-        if (!draft[fieldName]) return; // continue
+  const markStateChanged = () => { this.__state_changed__ = true; };
 
-        let fieldType = this.__options__.draftCustomFields[fieldName];
+  this.__state_load__()
+    .then(() => {
+      // Setup update handlers
+      this.__layout__.on('change.nd.mdedit', markStateChanged);
+      this.__cm__.on('cursorActivity', markStateChanged);
+      this.__cm__.on('scroll', markStateChanged);
 
-        if (fieldType === 'input') {
-          $(fieldName).val(draft[fieldName]);
-        } else {
-          fieldType(draft[fieldName]);
-        }
-      });
-
-      // Load text
-      this.text(draft.text || options.text || '');
-
-      // Check and load attachments
-      if (draft.attachments && draft.attachments.length) {
-        let checkParams = { media_ids: _.map(draft.attachments, 'media_id') };
-
-        N.io.rpc('common.attachments_check', checkParams).then(res => {
-          let attachments = draft.attachments.filter(attach => res.media_ids.indexOf(attach.media_id) !== -1);
-
-          this.attachments(attachments || []);
-        });
-      } else {
-        this.attachments(options.attachments || []);
-      }
-    }).catch(() => {}); // Suppress storage errors
-
-  } else {
-    // If we don't use drafts
-    this.text(options.text || '');
-    this.attachments(options.attachments || []);
-  }
-
-
-  // Save draft on change
-  //
-  if (this.__options__.draftKey) {
-    this.__layout__.on('change.nd.mdedit', () => {
-      let draft = {
-        text: this.text(),
-        attachments: this.attachments()
-      };
-
-      // Store custom fields
-      Object.keys(this.__options__.draftCustomFields).forEach(fieldName => {
-        let fieldType = this.__options__.draftCustomFields[fieldName];
-
-        if (fieldType === 'input') {
-          draft[fieldName] = $(fieldName).val();
-        } else {
-          draft[fieldName] = fieldType();
-        }
-      });
-
-      this.__bag__.set('mdedit_' + this.__options__.draftKey, draft, DRAFTS_EXPIRE)
-        .catch(() => {}); // Suppress storage errors
+      this.__state_monitor__ = setInterval(() => {
+        if (this.__state_changed__) this.__state_save__();
+      }, 2000);
     });
-  }
-
 
   return this.__layout__;
 };
@@ -264,9 +217,11 @@ MDEdit.prototype.hide = function (options) {
 
   $(window).off('resize.nd.mdedit');
 
+  clearInterval(this.__state_monitor__);
+
   // Remove draft if needed
   if ((options || {}).removeDraft && this.__options__.draftKey) {
-    this.__bag__.remove('mdedit_' + this.__options__.draftKey)
+    this.__bag__.remove(`mdedit_${this.__options__.draftKey}`)
       .catch(() => {}); // Suppress storage errors
   }
 
@@ -281,10 +236,104 @@ MDEdit.prototype.hide = function (options) {
 };
 
 
+// Save editor state (as "draft")
+// - fields
+// - cursor & scroll prosition
+//
+MDEdit.prototype.__state_save__ = function () {
+  return Promise.resolve().then(() => {
+    if (!this.__state_changed__) return;
+
+    this.__state_changed__ = false;
+
+    if (!this.__options__.draftKey) return Promise.resolve();
+    if (!this.__layout__) return;
+
+    let cm         = this.__cm__;
+
+    let draft = {
+      text:         this.text(),
+      attachments:  this.attachments(),
+      cursor:       cm.getCursor(),
+      scrollTop:    cm.getScrollInfo().top
+    };
+
+    // Collect custom fields
+    Object.keys(this.__options__.draftCustomFields).forEach(fieldName => {
+      let fieldType = this.__options__.draftCustomFields[fieldName];
+
+      if (fieldType === 'input') draft[fieldName] = $(fieldName).val();
+      else draft[fieldName] = fieldType();
+    });
+
+    return this.__bag__.set(`mdedit_${this.__options__.draftKey}`, draft, DRAFTS_EXPIRE)
+      .catch(() => {}); // Suppress storage errors
+  });
+};
+
+
+// Load previously stored editor state
+//
+MDEdit.prototype.__state_load__ = function () {
+  return Promise.resolve().then(() => {
+    if (!this.__options__.draftKey) return;
+    if (!this.__layout__) return;
+
+    this.__state_changed__ = false;
+
+    return this.__bag__.get(`mdedit_${this.__options__.draftKey}`)
+      .then(draft => {
+        if (!draft) return;
+
+        // Load custom fields
+        Object.keys(this.__options__.draftCustomFields).forEach(fieldName => {
+          if (!draft[fieldName]) return; // continue
+
+          let fieldType = this.__options__.draftCustomFields[fieldName];
+
+          if (fieldType === 'input') {
+            $(fieldName).val(draft[fieldName]);
+          } else {
+            fieldType(draft[fieldName]);
+          }
+        });
+
+        //
+        // Load text, cursor & scroll
+        //
+        if (draft.text) this.text(draft.text);
+        if (draft.cursor) this.__cm__.setCursor(draft.cursor);
+        if (draft.scrollTop) this.__cm__.scrollTo(draft.scrollTop);
+
+        return draft;
+      })
+      .catch(() => {}) // Suppress storage errors
+      .then(draft => {
+        if (!draft) return;
+        //
+        // Check and load attachments
+        //
+        let attachmentsExist = draft.attachments && draft.attachments.length;
+
+        if (!attachmentsExist) return;
+
+        let checkParams = { media_ids: _.map(draft.attachments, 'media_id') };
+
+        return N.io.rpc('common.attachments_check', checkParams)
+          .then(res => {
+            let attachments = draft.attachments.filter(attach => res.media_ids.indexOf(attach.media_id) !== -1);
+            this.attachments(attachments || []);
+          });
+      })
+      .catch(() => {}); // Suppress RPC errors
+  });
+};
+
+
 // Get/set text
 //
 MDEdit.prototype.text = function (text) {
-  if (!text) return this.__cm__.getValue();
+  if (typeof text === 'undefined') return this.__cm__.getValue();
 
   this.__cm__.setValue(text);
   this.__cm__.setCursor(this.__cm__.lineCount(), 0);
