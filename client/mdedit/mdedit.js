@@ -192,7 +192,11 @@ MDEdit.prototype.show = function (options) {
   this.__state_load__()
     .then(() => {
       // Setup update handlers
-      this.__layout__.on('change.nd.mdedit', markStateChanged);
+      this.__layout__.on(
+        'change.nd.mdedit input.nd.mdedit',
+        '.mdedit-header input',
+        markStateChanged
+      );
       this.__cm__.on('cursorActivity', markStateChanged);
       this.__cm__.on('scroll', markStateChanged);
 
