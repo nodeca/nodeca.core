@@ -6,14 +6,23 @@
 let shown = false;
 
 
-N.wire.on('io.version_mismatch', function show_reload_dlg() {
+N.wire.on('io.version_mismatch', function show_reload_dlg(hash) {
+  // If our version is fresh - do nothings
+  if (N.runtime.assets_hash === hash) return;
+
   // Check dialog already shown. Needed because could be called from two places:
   //
   // - RPC
-  // - live
+  // - live token update
+  // - live broadcasts from another tabs
   //
   if (shown) return;
   shown = true;
+
+  // Broadcast error to other tabs
+  // Note, we should wait async end, but dialog animation will
+  // pause enougth for us. Keep code simple.
+  if (N.live) N.live.emit('local.io.version_mismatch', hash);
 
 
   let $dialog = $(N.runtime.render(module.apiPath));
@@ -34,4 +43,14 @@ N.wire.on('io.version_mismatch', function show_reload_dlg() {
   setTimeout(function () {
     window.location.reload();
   }, 5000);
+});
+
+
+N.wire.once('navigate.done', function version_check_init() {
+  // Install cross-tab reload listener
+  if (!N.live) return;
+
+  N.live.on('local.io.version_mismatch', function version_check(hash) {
+    N.wire.emit('io.version_mismatch', hash);
+  });
 });
