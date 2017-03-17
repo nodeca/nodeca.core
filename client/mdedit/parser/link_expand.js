@@ -15,7 +15,14 @@ N.wire.once('init:parser', function link_expand_plugin_init() {
 
           if (is_auto && ($tag.parent().prop('tagName') === 'P') && ($tag.parent().contents().length === 1)) {
             if (data.params.options.link_to_snippet) {
-              types.unshift('block');
+              // links inside blockquotes should only be expanded as inline,
+              // here's an example where it matters:
+              //
+              // > http://dev.rcopen.com/forum/f1/topic234
+              //
+              if ($tag.closest('msg-quote').length === 0) {
+                types.unshift('block');
+              }
             }
           }
 
