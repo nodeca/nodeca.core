@@ -22,26 +22,26 @@ var fsm = StateMachine.create({
 
   events: [
     // back/forward buttons
-    { name: 'stateChange',   from: 'IDLE',                  to: 'BACK_FORWARD' },
+    { name: 'historyNav',    from: 'LOAD_PREPARE',          to: 'BACK_FORWARD_LOAD' },
     // link click
-    { name: 'link',          from: 'IDLE',                  to: 'LOAD' },
+    { name: 'link',          from: 'LOAD_PREPARE',          to: 'LOAD' },
     // fake event to remove status check
-    { name: 'terminate',     from: 'IDLE',                  to: 'IDLE' },
+    { name: 'terminate',     from: 'IDLE',                  to: 'LOAD_PREPARE' },
 
     // page data is in cache
-    { name: 'complete',      from: 'BACK_FORWARD',          to: 'IDLE' },
+    { name: 'complete',      from: 'BACK_FORWARD_LOAD',     to: 'IDLE' },
     // page loading complete
     { name: 'complete',      from: 'LOAD',                  to: 'IDLE' },
 
     // terminate page loading by back/forward buttons
-    { name: 'stateChange',   from: 'LOAD',                  to: 'BACK_FORWARD' },
+    { name: 'terminate',     from: 'BACK_FORWARD_LOAD',     to: 'LOAD_PREPARE' },
     // terminate page loading on error or if page is same
-    { name: 'terminate',     from: 'LOAD',                  to: 'IDLE' },
+    { name: 'terminate',     from: 'LOAD',                  to: 'LOAD_PREPARE' },
 
     // handle pop history state on anchor change
     { name: 'changeHash',    from: 'LOAD',                  to: 'HASH_CHANGE' },
     // anchor change complete
-    { name: 'stateChange',   from: 'HASH_CHANGE',           to: 'IDLE' }
+    { name: 'historyNav',    from: 'HASH_CHANGE',           to: 'IDLE' }
   ]
 });
 
@@ -135,7 +135,7 @@ function loadData(options, callback) {
 
     // Page loading is terminated
     if (id !== requestID) {
-      callback(null);
+      // loadData doesn't execute callback if request is aborted
       return;
     }
 
@@ -304,6 +304,15 @@ fsm.onIDLE = function () {
   }
 };
 
+// LOAD_PREPARE is an intermediate event created because
+// LOAD->LOAD state change does not run onLOAD callback
+fsm.onLOAD_PREPARE = function () {
+  if (navigateCallback) {
+    navigateCallback();
+    navigateCallback = null;
+  }
+};
+
 fsm.onLOAD = function (event, from, to, params) {
   var options = parseOptions(params),
       same_url = (options.href === (location.protocol + '//' + location.host + location.pathname + location.search));
@@ -355,11 +364,6 @@ fsm.onLOAD = function (event, from, to, params) {
   }
 
   loadData(options, function (result) {
-    // Loading terminated
-    if (result === null || !fsm.is('LOAD')) {
-      return;
-    }
-
     // Redirect url
     if (typeof result === 'string') {
 
@@ -381,10 +385,7 @@ fsm.onLOAD = function (event, from, to, params) {
   });
 };
 
-fsm.onBACK_FORWARD = function () {
-  // stateChange terminate `LOAD` state, also remove old callback
-  navigateCallback = null;
-
+fsm.onBACK_FORWARD_LOAD = function () {
   var options = parseOptions(document.location);
 
   // It's an external link or 404 error if route is not matched. So perform
@@ -408,8 +409,11 @@ fsm.onBACK_FORWARD = function () {
 // statechange handler
 
 if (window.history && window.history.pushState) {
+  // called on back/forward buttons and go() js method call
+  // TODO: check if this works correctly if we're changing url for popups
   window.addEventListener('popstate', function () {
-    fsm.stateChange();
+    fsm.terminate();
+    fsm.historyNav();
   });
 }
 
