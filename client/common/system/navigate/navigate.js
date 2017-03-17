@@ -350,11 +350,13 @@ fsm.onLOAD = function (event, from, to, params) {
 
   // Stop here if base URL (all except anchor) haven't changed.
 
-  if (same_url && !options.force) {
+  if ((same_url && !options.force) &&
+      // `location.hash = ''` ads # at the end,
+      // we should avoid such case: /foo#bar => /foo
+      !(location.hash && !options.anchor)) {
 
     // Update anchor if it's changed.
     if (location.hash !== options.anchor) {
-
       fsm.changeHash();
       location.hash = options.anchor;
       return;
