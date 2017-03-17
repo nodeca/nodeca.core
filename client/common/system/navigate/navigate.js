@@ -40,6 +40,8 @@ var fsm = StateMachine.create({
 
     // handle pop history state on anchor change
     { name: 'changeHash',    from: 'LOAD',                  to: 'HASH_CHANGE' },
+    // dummy placeholder, because we always send `terminate` + `historyNav` on popstate
+    { name: 'terminate',     from: 'HASH_CHANGE',           to: 'HASH_CHANGE' },
     // anchor change complete
     { name: 'historyNav',    from: 'HASH_CHANGE',           to: 'IDLE' }
   ]
