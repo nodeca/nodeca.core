@@ -358,12 +358,13 @@ fsm.onLOAD = function (event, from, to, params) {
     // Update anchor if it's changed.
     if (location.hash !== options.anchor) {
       fsm.changeHash();
+      // that will cause `popstate` event
       location.hash = options.anchor;
       return;
     }
 
-
-    fsm.terminate();
+    // Nothing changed - finish to IDLE state
+    fsm.complete();
     return;
   }
 
