@@ -1,7 +1,7 @@
 'use strict';
 
 
-var _ = require('lodash');
+const _ = require('lodash');
 
 
 N.wire.once('init:mdedit', function () {
@@ -13,18 +13,18 @@ N.wire.once('init:mdedit', function () {
   // Build offsets for each line
   //
   function buildScrollMap() {
-    var $preview = N.MDEdit.__layout__.find('.mdedit__preview'),
-      offset = $preview.offset().top - $preview.scrollTop(),
-      mappedLinesNumbers = [],
-      lineHeightMap = [],
-      scrollMap = [],
-      lineCount = 0,
-      pos = 0,
-      line, $el, lh, i, a, b;
+    let $preview = N.MDEdit.__layout__.find('.mdedit__preview'),
+        offset = $preview.offset().top - $preview.scrollTop(),
+        mappedLinesNumbers = [],
+        lineHeightMap = [],
+        scrollMap = [],
+        lineCount = 0,
+        pos = 0,
+        line, $el, lh, i, a, b;
 
     // Calculate wrapped lines count and fill map real->wrapped
     lh = parseInt(N.MDEdit.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);
-    N.MDEdit.__cm__.eachLine(function (lineHandle) {
+    N.MDEdit.__cm__.eachLine(lineHandle => {
       lineHeightMap.push(lineCount);
       lineCount += lineHandle.height / lh;
     });
@@ -107,9 +107,9 @@ N.wire.once('init:mdedit', function () {
   // Init scroll listeners to synchronize position between editor and preview
   //
   N.wire.on('mdedit:init', function initSyncScroll() {
-    var $preview = N.MDEdit.__layout__.find('.mdedit__preview');
-    var $editor = N.MDEdit.__layout__.find('.CodeMirror-scroll');
-    var editorScroll, previewScroll;
+    let $preview = N.MDEdit.__layout__.find('.mdedit__preview');
+    let $editor = N.MDEdit.__layout__.find('.CodeMirror-scroll');
+    let editorScroll, previewScroll;
 
     // When user resize window - remove outdated scroll map
     $(window).on('resize.nd.mdedit', function () {
@@ -124,10 +124,10 @@ N.wire.once('init:mdedit', function () {
       }
 
       // Get top visible editor line number
-      var lh = parseInt(N.MDEdit.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);
-      var line = Math.round(N.MDEdit.__cm__.getScrollInfo().top / lh);
+      let lh = parseInt(N.MDEdit.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);
+      let line = Math.round(N.MDEdit.__cm__.getScrollInfo().top / lh);
       // Get preview offset
-      var posTo = N.MDEdit.__scrollMap__[line];
+      let posTo = N.MDEdit.__scrollMap__[line];
 
       // Remove scroll handler for preview when scroll it programmatically
       $preview.off('scroll.nd.mdedit');
@@ -148,16 +148,16 @@ N.wire.once('init:mdedit', function () {
         buildScrollMap();
       }
 
-      var scrollTop = $preview.scrollTop();
-      var line;
+      let scrollTop = $preview.scrollTop();
+      let line;
 
       // Get editor line number by preview offset
       for (line = 0; line < N.MDEdit.__scrollMap__.length; line++) {
         if (N.MDEdit.__scrollMap__[line] >= scrollTop) break;
       }
 
-      var lh = parseInt(N.MDEdit.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);
-      var posTo = line * lh;
+      let lh = parseInt(N.MDEdit.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);
+      let posTo = line * lh;
 
       // Remove scroll handler for editor when scroll it programmatically
       $editor.off('scroll.nd.mdedit');

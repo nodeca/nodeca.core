@@ -7,9 +7,9 @@
 N.wire.once('navigate.done', function () {
 
   $(document).on('click', '.quote__expand', function () {
-    var quote         = $(this).closest('.quote');
-    var quote_content = quote.children('.quote__content');
-    var old_height    = quote_content.height();
+    let quote         = $(this).closest('.quote');
+    let quote_content = quote.children('.quote__content');
+    let old_height    = quote_content.height();
 
     if (quote.attr('data-full-content')) {
       // we previously expanded this post, so get it from cache
@@ -21,7 +21,7 @@ N.wire.once('navigate.done', function () {
       quote.attr('data-short-content', quote_content.html());
       quote_content.html(quote.attr('data-full-content'));
 
-      var new_height = quote_content.height();
+      let new_height = quote_content.height();
 
       quote_content
         .stop()
@@ -33,10 +33,9 @@ N.wire.once('navigate.done', function () {
       return;
     }
 
-    N.io.rpc('common.content.get', { url: quote.attr('cite') })
-        .then(function (res) {
+    N.io.rpc('common.content.get', { url: quote.attr('cite') }).then(res => {
 
-      var $content = $('<div class="quote__content"></div>');
+      let $content = $('<div class="quote__content"></div>');
 
       $content.html(res.html);
 
@@ -47,8 +46,8 @@ N.wire.once('navigate.done', function () {
         $: $content,
         locals: res,
         $replace: quote_content
-      }, function () {
-        var new_height = $content.height();
+      }).then(() => {
+        let new_height = $content.height();
 
         quote_content
           .stop()
@@ -61,15 +60,15 @@ N.wire.once('navigate.done', function () {
   });
 
   $(document).on('click', '.quote__collapse', function () {
-    var quote         = $(this).closest('.quote');
-    var quote_content = quote.children('.quote__content');
-    var old_height    = quote_content.height();
+    let quote         = $(this).closest('.quote');
+    let quote_content = quote.children('.quote__content');
+    let old_height    = quote_content.height();
 
     quote.removeClass('quote__m-expanded');
     quote.attr('data-full-content', quote_content.html());
     quote_content.html(quote.attr('data-short-content'));
 
-    var new_height = quote_content.height();
+    let new_height = quote_content.height();
 
     quote_content
       .stop()
@@ -85,7 +84,7 @@ N.wire.once('navigate.done', function () {
 //
 N.wire.on([ 'navigate.done', 'navigate.update' ], function translate_titles(data) {
   (data.$ || $(document)).find('.quote__controls [data-i18n-title]').each(function () {
-    var $tag = $(this);
+    let $tag = $(this);
 
     $tag.attr('title', N.runtime.t('common.blocks.markup.quote.' + $tag.attr('data-i18n-title')));
     $tag.removeAttr('data-i18n-title');
@@ -96,7 +95,7 @@ N.wire.on([ 'navigate.done', 'navigate.update' ], function translate_titles(data
 // Replace user nick name (in case it's changed and we didn't rebuild posts yet)
 //
 N.wire.on([ 'navigate.done', 'navigate.update' ], function replace_nick(data) {
-  var users;
+  let users;
 
   if (data.locals) {
     // page generated on client-side, so we have all the locals
@@ -109,8 +108,8 @@ N.wire.on([ 'navigate.done', 'navigate.update' ], function replace_nick(data) {
   if (!users) return;
 
   (data.$ || $(document)).find('.quote__author-name[data-user-id]').each(function () {
-    var $tag = $(this);
-    var user_id = $tag.attr('data-user-id');
+    let $tag = $(this);
+    let user_id = $tag.attr('data-user-id');
 
     if (users[user_id]) {
       $tag.text(users[user_id].nick);

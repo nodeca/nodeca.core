@@ -11,24 +11,23 @@ module.exports = function (N, collectionName) {
 
   let AbuseReport = new Schema({
 
-      // _id of reported content
-      src: Schema.ObjectId,
+    // _id of reported content
+    src: Schema.ObjectId,
 
-      // N.shared.content_type (FORUM_POST, BLOG_ENTRY, ...)
-      type: Number,
+    // N.shared.content_type (FORUM_POST, BLOG_ENTRY, ...)
+    type: Number,
 
-      // Report text
-      text: String,
+    // Report text
+    text: String,
 
-      // Parser options
-      params_ref: Schema.ObjectId,
+    // Parser options
+    params_ref: Schema.ObjectId,
 
-      // User _id
-      from: Schema.ObjectId
-    },
-    {
-      versionKey: false
-    });
+    // User _id
+    from: Schema.ObjectId
+  }, {
+    versionKey: false
+  });
 
 
   N.wire.on('init:models', function emit_init_AbuseReport() {
