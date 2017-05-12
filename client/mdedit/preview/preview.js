@@ -23,10 +23,10 @@ N.wire.once('init:mdedit', function () {
         line, $el, lh, i, a, b;
 
     // Calculate wrapped lines count and fill map real->wrapped
-    lh = parseInt(N.MDEdit.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);
+    lh = N.MDEdit.__cm__.defaultTextHeight();
     N.MDEdit.__cm__.eachLine(lineHandle => {
       lineHeightMap.push(lineCount);
-      lineCount += lineHandle.height / lh;
+      lineCount += Math.round(lineHandle.height / lh);
     });
 
     // Init `scrollMap` array
@@ -124,7 +124,7 @@ N.wire.once('init:mdedit', function () {
       }
 
       // Get top visible editor line number
-      let lh = parseInt(N.MDEdit.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);
+      let lh = N.MDEdit.__cm__.defaultTextHeight();
       let line = Math.round(N.MDEdit.__cm__.getScrollInfo().top / lh);
       // Get preview offset
       let posTo = N.MDEdit.__scrollMap__[line];
@@ -156,7 +156,7 @@ N.wire.once('init:mdedit', function () {
         if (N.MDEdit.__scrollMap__[line] >= scrollTop) break;
       }
 
-      let lh = parseInt(N.MDEdit.__layout__.find('.CodeMirror-code > pre:first').css('lineHeight'), 10);
+      let lh = N.MDEdit.__cm__.defaultTextHeight();
       let posTo = line * lh;
 
       // Remove scroll handler for editor when scroll it programmatically
