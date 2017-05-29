@@ -1,11 +1,11 @@
 //- NOTE: ReCaptcha markup is hidden by default.
 //- You must control it's visibility manually via Knockout bindings.
 
-.form-group.recaptcha-control(data-bind='visible: visible, css: { "has-danger": hasError() }' style="display: none")
+.form-group.recaptcha-control(data-bind='visible: visible, css: { "has-danger": error }' style="display: none")
   label(for="recaptcha_response_field")= self.t('captcha')
   .recaptcha-container
     #recaptcha_div
 
-  // ko if: message
-  small.form-text(data-bind='text: message, css: hasError() ? "text-danger" : "text-muted"')
+  // ko if: error
+  .form-control-feedback(data-bind='text: error')
   // /ko
