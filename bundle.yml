@@ -15,6 +15,9 @@ bundles:
   mdedit:
     - mdedit
 
+  vendor.diff:
+    - vendor.diff
+
   vendor.knockout:
     - vendor.knockout
 
@@ -70,6 +73,10 @@ packages:
       - babelfish
 
     entries: client/lib
+
+  vendor.diff:
+    vendor:
+      - diff
 
   vendor.knockout:
     vendor:
