@@ -1,0 +1,23 @@
+.diff-line
+  padding 0 0.2rem
+  margin 0
+
+  // stop whitespace collapse (if user inserts a bunch
+  // of spaces, they should be visible in diff)
+  white-space pre-wrap
+
+  // set min-height to make empty lines visible
+  line-height 1.5
+  min-height 1.5em
+
+.diff-line-ins
+.diff-line ins
+  background-color #dbffdb
+
+.diff-line-del
+.diff-line del
+  background-color #f4bcae
+
+.diff-line ins
+.diff-line del
+  text-decoration none

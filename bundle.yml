@@ -77,6 +77,9 @@ packages:
   vendor.diff:
     vendor:
       - diff
+      - nodeca.core/client/vendor/diff/diff
+
+    entries: client/vendor/diff
 
   vendor.knockout:
     vendor:
