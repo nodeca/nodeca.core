@@ -13,6 +13,7 @@
 
 const _       = require('lodash');
 const Promise = require('bluebird');
+const encode  = require('emailjs-mime-codec').mimeWordEncode;
 const render  = require('nodeca.core/lib/system/render/common');
 
 
@@ -20,7 +21,7 @@ module.exports = function (N) {
 
   // Send abuse report via email
   //
-  N.wire.on('internal:common.abuse_report.deliver', function* send_via_email(params) {
+  N.wire.on('internal:common.abuse_report.deliver', async function send_via_email(params) {
     if (!params.email_templates) {
       let type_name = _.invert(_.get(N, 'shared.content_type', {}))[params.report.type];
 
@@ -29,7 +30,7 @@ module.exports = function (N) {
     }
 
     // Fetch users emails
-    let users_email = yield N.models.users.User.find()
+    let users_email = await N.models.users.User.find()
                                 .where('_id').in(Object.keys(params.recipients))
                                 .select('_id email')
                                 .lean(true);
@@ -39,7 +40,7 @@ module.exports = function (N) {
       return acc;
     }, {});
 
-    yield Promise.map(_.values(params.recipients), user_info => {
+    await Promise.map(_.values(params.recipients), async user_info => {
       let to = emails[user_info.user_id];
 
       if (!to) return; // continue
@@ -51,10 +52,15 @@ module.exports = function (N) {
       helpers.t.exists = phrase => N.i18n.hasPhrase(locale, phrase);
       helpers.link_to = (name, params) => N.router.linkTo(name, params) || '#';
 
+      // fetch nick separately because user_info doesn't contain it
+      let { nick } = await N.models.users.User.findById(params.locals.author.user_id);
+
+      let from = `"${encode(nick)} @ ${encode(params.locals.project_name)}" <${N.config.email.from}>`;
+
       let subject = render(N, params.email_templates.subject, params.locals, helpers);
       let body = render(N, params.email_templates.body, params.locals, helpers);
 
-      return N.mailer.send({ to, subject, html: body })
+      return N.mailer.send({ from, to, subject, html: body })
         .catch(err => {
           // don't return an error here
           N.logger.error('Cannot send email to %s: %s', to, err.message || err);
