@@ -1,5 +1,12 @@
 blockquote(cite=self.href || false).quote
-  if self.title || self.href
+  //-
+  //- Render quote header in those cases:
+  //- 1. link to source (href + user)
+  //- 2. link to source, user deleted (href only)
+  //- 3. link to user profile (user only)
+  //- 4. user-supplied title (title only)
+  //-
+  if self.title || self.href || self.user
     footer.quote__title
       if self.title
         = self.title
