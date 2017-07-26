@@ -3,5 +3,4 @@ inherit: false
 type:
   js:
     - "!npm:raf.js"
-    - "!npm:blueimp-canvas-to-blob"
     - "!npm:lie/dist/lie.polyfill"

@@ -25,9 +25,6 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage', class=self.offline_m
       if (!window.requestAnimationFrame || !window.cancelAnimationFrame)
         shims.push('$$ JSON.stringify(asset_url("raf.js")) $$');
 
-      if (!((window.HTMLCanvasElement || {}).prototype || {}).toBlob)
-        shims.push('$$ JSON.stringify(asset_url("blueimp-canvas-to-blob")) $$');
-
       NodecaLoader.loadAssets.init(
         !{JSON.stringify(self.head.assets)},
         '!{self.apiPath.split(".").shift()}',
