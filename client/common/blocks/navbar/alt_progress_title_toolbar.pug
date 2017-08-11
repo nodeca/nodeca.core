@@ -1,0 +1,9 @@
+nav.navbar-alt.navbar.navbar-inverse.bg-primary.fixed-top.navbar-untoggleable
+  .navbar-inner.container.layout__container.container-fluid
+    != self.partial('@common.blocks.navbar.blocks.page_progress', self.progress)
+
+    .navbar-alt__title.navbar-text.hidden-xs-down
+      = self.title
+
+    if self.toolbar
+      != self.partial('@' + self.toolbar)
