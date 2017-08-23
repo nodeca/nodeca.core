@@ -28,7 +28,7 @@ mixin _create_submenus(submenu, localizationPrefix)
         a.dropdown-item(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
 
 
-nav.navbar.navbar-light.bg-faded.fixed-top.navbar-toggleable
+nav.navbar.navbar-light.bg-light.fixed-top.navbar-expand
   ul.navbar__hovered.nav.navbar-nav
     each item in sortedItems(self.runtime.navbar)
       - var info = item.info;

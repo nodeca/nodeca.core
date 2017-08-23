@@ -1,4 +1,4 @@
-nav.navbar-primary.navbar.navbar-inverse.bg-primary.fixed-top.navbar-toggleable
+nav.navbar-primary.navbar.navbar-dark.bg-primary.fixed-top.navbar-expand-sm
   .navbar-inner.container.layout__container.container-fluid
     .navbar-untoggleable
       ul.navbar-nav.navbar__m-hide-on-search
@@ -7,13 +7,13 @@ nav.navbar-primary.navbar.navbar-inverse.bg-primary.fixed-top.navbar-toggleable
 
       != self.partial('@common.blocks.navbar.blocks.page_progress', self.progress)
 
-      button.navbar-toggler.navbar-toggler-right.icon.icon-menu(
-        data-toggle='collapse',
-        data-target='.navbar-collapse',
-        type='button'
-      )
+    button.navbar-toggler.navbar-toggler-right.icon.icon-menu(
+      data-toggle='collapse',
+      data-target='.navbar-collapse',
+      type='button'
+    )
 
-    .navbar-collapse.collapse.navbar-toggleable-xs
+    .navbar-collapse.collapse
       ul.navbar-nav.navbar__m-hide-on-search
         != self.partial('@common.blocks.navbar.blocks.apps')
 

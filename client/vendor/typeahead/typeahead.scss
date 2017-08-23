@@ -1,4 +1,5 @@
 // Core variables and mixins
+@import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
 //@import "var_override.less";    // Modify this for custom colors, font-sizes, etc
 @import "bootstrap/scss/mixins";
@@ -47,11 +48,11 @@
 
 // This styles required to properly allign hint text
 // Just copied from .form-control class
-/*.tt-hint {
-  height: $input-height;
-  padding: $input-padding-y $input-padding-x;
-  font-size: $font-size-base;
-  line-height: $line-height-base;
-  vertical-align: middle;
-  border: $input-btn-border-width solid $input-border-color;
-}*/
+//.tt-hint {
+//  height: $input-height;
+//  padding: $input-btn-padding-y $input-btn-padding-x;
+//  font-size: $font-size-base;
+//  line-height: $line-height-base;
+//  vertical-align: middle;
+//  border: $input-btn-border-width solid $input-border-color;
+//}

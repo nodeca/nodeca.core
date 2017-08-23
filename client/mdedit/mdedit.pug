@@ -26,21 +26,21 @@
       tabindex=3
     )= self.t('submit')
 
-    button.mdedit-btn__preview.float-right.btn.btn-link.hidden-xs-down(
+    button.mdedit-btn__preview.float-right.btn.btn-link.d-none.d-sm-inline-block(
       data-on-click='mdedit.preview'
       tabindex=5
     )= self.t('preview')
-    button.mdedit-btn__preview.float-right.btn.btn-link.hidden-sm-up.icon.icon-preview(
+    button.mdedit-btn__preview.float-right.btn.btn-link.d-sm-none.icon.icon-preview(
       data-on-click='mdedit.preview'
       tabindex=5
       title=self.t('preview')
     )
 
-    button.mdedit-btn__cancel.btn.btn-link.hidden-xs-down(
+    button.mdedit-btn__cancel.btn.btn-link.d-none.d-sm-inline-block(
       data-on-click='mdedit.cancel'
       tabindex=4
     )= self.t('cancel')
-    button.mdedit-btn__cancel.btn.btn-link.hidden-sm-up.icon.icon-x(
+    button.mdedit-btn__cancel.btn.btn-link.d-sm-none.icon.icon-x(
       data-on-click='mdedit.cancel'
       tabindex=4
       title=self.t('cancel')

@@ -5,6 +5,10 @@
 //
 window.Tether = require('tether');
 
+// dependency for bootstrap dropdown
+//
+window.Popper = require('popper.js');
+
 // require compiled bootstrap file because we have
 // no access to source files in npm package, see:
 // https://github.com/twbs/bootstrap/issues/18934

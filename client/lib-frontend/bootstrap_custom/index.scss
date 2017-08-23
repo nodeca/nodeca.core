@@ -1,17 +1,10 @@
-// Core variables and mixins
-@import "bootstrap/scss/custom";
-
 // Modify this file to use custom colors, font-sizes, etc
 @import "var_override";
 
+@import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
-
-// Reset and dependencies
-@import "bootstrap/scss/normalize";
 //@import "bootstrap/scss/print";
-
-// Core CSS
 @import "bootstrap/scss/reboot";
 @import "bootstrap/scss/type";
 @import "bootstrap/scss/images";
@@ -20,8 +13,6 @@
 @import "bootstrap/scss/tables";
 @import "bootstrap/scss/forms";
 @import "bootstrap/scss/buttons";
-
-// Components
 @import "bootstrap/scss/transitions";
 @import "bootstrap/scss/dropdown";
 @import "bootstrap/scss/button-group";
@@ -38,21 +29,31 @@
 @import "bootstrap/scss/progress";
 //@import "bootstrap/scss/media";
 @import "bootstrap/scss/list-group";
-@import "bootstrap/scss/responsive-embed";
 @import "bootstrap/scss/close";
-
-// Components w/ JavaScript
 @import "bootstrap/scss/modal";
-//@import "bootstrap/scss/tooltip";
+@import "bootstrap/scss/tooltip";
 @import "bootstrap/scss/popover";
-//@import "bootstrap/scss/carousel";
-
-// Utility classes
+@import "bootstrap/scss/carousel";
 @import "bootstrap/scss/utilities";
 
 // add xs-sized button
+$input-btn-padding-x-xs:     .4rem;
+$input-btn-padding-y-xs:     .2rem;
+$input-btn-border-radius-xs: .15rem;
+$line-height-xs:             1.25;
+$font-size-xs:               .75rem !default;
+
 .btn-xs {
-  @include button-size($btn-padding-y-xs, $btn-padding-x-xs, $font-size-xs, $btn-border-radius-xs);
+  @include button-size($input-btn-padding-y-xs, $input-btn-padding-x-xs, $font-size-xs, $line-height-xs, $input-btn-border-radius-xs);
+}
+
+// override secondary button color (bootstrap button text colors are either white or black)
+.btn-secondary {
+  color: theme-color("primary");
+
+  &:hover {
+    color: theme-color("primary");
+  }
 }
 
 // modify the color of btn-outline-secondary
