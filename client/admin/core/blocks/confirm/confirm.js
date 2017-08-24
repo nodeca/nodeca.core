@@ -48,7 +48,7 @@ N.wire.on(module.apiPath, function confirm(data) {
   return new Promise((resolve, reject) => {
     $dialog
       .on('shown.bs.modal', function () {
-        $dialog.find('.btn-secondary').focus();
+        $dialog.find('.btn-light').focus();
       })
       .on('hidden.bs.modal', function () {
         $dialog.remove();

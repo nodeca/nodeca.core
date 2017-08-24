@@ -31,7 +31,7 @@ N.wire.on('io.version_mismatch', function show_reload_dlg(hash) {
 
   $dialog
     .on('shown.bs.modal', () => {
-      $dialog.find('.btn-secondary').focus();
+      $dialog.find('.btn-primary').focus();
     })
     .on('hidden.bs.modal', () => {
       // Reload page when dialog closes
