@@ -7,7 +7,10 @@ nav.navbar-alt.navbar.navbar-dark.bg-primary.fixed-top.navbar-untoggleable
     != self.partial('@common.blocks.navbar.blocks.page_progress', self.progress)
 
     .navbar-alt__title.navbar-text.d-none.d-sm-inline-block
-      = self.title
+      if self.title
+        = self.title
+      else if self.title_html
+        != self.title_html
 
     if self.toolbar
       != self.partial('@' + self.toolbar)
