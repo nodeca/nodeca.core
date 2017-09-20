@@ -118,6 +118,15 @@
   opacity .5
 
 
+// Fix for dropdown positioning in alt navbar inside toolbars
+// (in forum, blogs, dialogs); bootstrap requires .navbar-nav class which
+// which don't always have, https://github.com/twbs/bootstrap/issues/23479
+//
+.navbar-alt .page-actions .dropdown-menu-right
+  right 0
+  left auto
+
+
 //
 // Alternate header (progress bar instead of a brand).
 // Shown when `navbar__m-progress` modifier is added
