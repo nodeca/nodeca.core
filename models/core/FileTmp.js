@@ -17,10 +17,9 @@ const fs        = require('fs');
 const mime      = require('mime-types').lookup;
 
 const stream    = require('readable-stream');
-const Promise   = require('bluebird');
 const mongoose  = require('mongoose');
 const grid      = require('gridfs-stream');
-const pump      = require('pump');
+const pump      = require('util').promisify(require('pump'));
 const ObjectId  = mongoose.Types.ObjectId;
 
 
@@ -103,15 +102,15 @@ module.exports = function (N, collectionName) {
    *
    * - name (ObjectId|String) - `_id` of root file or `filename` for preview
    */
-  File.remove = File.prototype.remove = Promise.coroutine(function* (name) {
+  File.remove = File.prototype.remove = async function (name) {
     let id = name.toHexString ? name : tryParseObjectId(name);
 
     // The same as above, but via promise
     if (id) {
-      return yield gfs.remove({ _id: id }).then(result => result);
+      return await gfs.remove({ _id: id }).then(result => result);
     }
-    return yield gfs.remove({ filename: name }).then(result => result);
-  });
+    return await gfs.remove({ filename: name }).then(result => result);
+  };
 
 
   /*
@@ -178,7 +177,7 @@ module.exports = function (N, collectionName) {
    *   - metadata (Object), optional - file metadata
    *     - origName (String) - original file name (used in downloads)
    */
-  File.put = File.prototype.put = Promise.coroutine(function* (src, opt) {
+  File.put = File.prototype.put = async function (src, opt) {
     let input = getStream(src);
 
     if (!input) throw new Error('File.put: unknown source data');
@@ -188,9 +187,9 @@ module.exports = function (N, collectionName) {
 
     output.on('close', i => { info = i; });
 
-    yield Promise.fromCallback(cb => pump(input, output, cb));
+    await pump(input, output);
     return info;
-  });
+  };
 
 
   /*
@@ -212,7 +211,7 @@ module.exports = function (N, collectionName) {
 
     // connect to database
     let options = {
-      promiseLibrary: Promise,
+      promiseLibrary: require('bluebird'),
       server: {
         poolSize: 10,
         socketOptions: {
