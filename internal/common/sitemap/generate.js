@@ -168,21 +168,21 @@ module.exports = function (N, apiPath) {
   }
 
 
-  N.wire.on(apiPath, function* sitemap_generate() {
+  N.wire.on(apiPath, async function sitemap_generate() {
     let data = {};
 
     // request streams to read urls from
-    yield N.wire.emit('internal:common.sitemap.collect', data);
+    await N.wire.emit('internal:common.sitemap.collect', data);
 
     let files = [];
 
-    yield Promise.map(data.streams, stream_info => new Promise((resolve, reject) => {
+    await Promise.map(data.streams, stream_info => new Promise((resolve, reject) => {
       let out_stream = SiteMapStream(stream_info.name, files);
 
       pump(stream_info.stream, out_stream, err => (err ? reject(err) : resolve()));
       out_stream.resume();
     }));
 
-    yield N.redis.setAsync('sitemap', JSON.stringify({ files, date: Date.now() }));
+    await N.redis.setAsync('sitemap', JSON.stringify({ files, date: Date.now() }));
   });
 };

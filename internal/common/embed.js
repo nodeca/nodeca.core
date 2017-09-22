@@ -92,13 +92,13 @@ module.exports = function (N, apiPath) {
 
   // Expand shortened links
   //
-  N.wire.before(apiPath, function* expand_short_links(data) {
+  N.wire.before(apiPath, async function expand_short_links(data) {
     let tracker_data = data[tracker_data_key] = data[tracker_data_key] || {};
 
     let url;
 
     try {
-      url = yield unshort[data.cacheOnly ? 'cached' : 'normal'].expand(data.url);
+      url = await unshort[data.cacheOnly ? 'cached' : 'normal'].expand(data.url);
       tracker_data.unshort_used = !!url;
     } catch (err) {
       // In case of connection/parse errors leave link as is
@@ -113,14 +113,14 @@ module.exports = function (N, apiPath) {
 
   // Process link as local
   //
-  N.wire.on(apiPath, function* embed_local(data) {
+  N.wire.on(apiPath, async function embed_local(data) {
     if (data.html) return;
 
     for (let i = 0; i < data.types.length; i++) {
       let type = data.types[i];
       let subcall_data = { url: data.canonical || data.url, type };
 
-      yield N.wire.emit('internal:common.embed.local', subcall_data);
+      await N.wire.emit('internal:common.embed.local', subcall_data);
 
       if (subcall_data.html) {
         data.html  = subcall_data.html;
@@ -134,7 +134,7 @@ module.exports = function (N, apiPath) {
 
   // Process external link
   //
-  N.wire.on(apiPath, function* embed_ext(data) {
+  N.wire.on(apiPath, async function embed_ext(data) {
     if (data.html) return;
 
     let tracker_data = data[tracker_data_key] = data[tracker_data_key] || {};
@@ -142,7 +142,7 @@ module.exports = function (N, apiPath) {
     let result;
 
     try {
-      result = yield embedza[data.cacheOnly ? 'cached' : 'normal'].render(
+      result = await embedza[data.cacheOnly ? 'cached' : 'normal'].render(
           data.canonical || data.url,
           data.types);
 
@@ -181,10 +181,10 @@ module.exports = function (N, apiPath) {
   }, { maxAge: 60000 });
 
 
-  N.wire.after(apiPath, function* filter_links(data) {
+  N.wire.after(apiPath, async function filter_links(data) {
     let url = data.canonical || data.url;
 
-    let banned_links = yield get_banned_links_re();
+    let banned_links = await get_banned_links_re();
 
     if (banned_links && banned_links.test(url)) {
       data.html = '<span class="link-banned">banned link</span>';
@@ -194,7 +194,7 @@ module.exports = function (N, apiPath) {
 
   // Keep track of this url
   //
-  N.wire.after(apiPath, { priority: 100 }, function* track_url(data) {
+  N.wire.after(apiPath, { priority: 100 }, async function track_url(data) {
     let tracker_data = data[tracker_data_key] || {};
     let update_data = { $set: {}, $unset: {}, $inc: { retries: 1 } };
 
@@ -228,7 +228,7 @@ module.exports = function (N, apiPath) {
       return;
     }
 
-    yield N.models.core.UrlTracker.update(
+    await N.models.core.UrlTracker.update(
       { url: data.url },
       update_data,
       { upsert: false }

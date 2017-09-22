@@ -1,10 +1,6 @@
 // Show / run migrations
 //
-
 'use strict';
-
-
-const Promise = require('bluebird');
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -27,18 +23,18 @@ module.exports.commandLineArguments = [
   }
 ];
 
-module.exports.run = Promise.coroutine(function* (N, args) {
+module.exports.run = async function (N, args) {
 
   N.wire.skip('init:models', 'migrations_check');
 
-  yield N.wire.emit('init:models', N);
+  await N.wire.emit('init:models', N);
 
   /*eslint-disable no-console*/
 
   let Migration = N.models.Migration;
 
   // fetch used migrations from db
-  let currentMigrations = yield Migration.getLastState();
+  let currentMigrations = await Migration.getLastState();
 
   let outstandingMigrations = Migration.checkMigrations(N, currentMigrations);
 
@@ -66,13 +62,13 @@ module.exports.run = Promise.coroutine(function* (N, args) {
 
     process.stdout.write(`  ${migration.appName}:${migration.step} ... `);
 
-    yield require(migration.filename).up(N);
+    await require(migration.filename).up(N);
 
     console.log('OK');
 
         // All ok. Write step to db
-    yield Migration.markPassed(migration.appName, migration.step);
+    await Migration.markPassed(migration.appName, migration.step);
   }
 
-  yield N.wire.emit('exit.shutdown');
-});
+  await N.wire.emit('exit.shutdown');
+};

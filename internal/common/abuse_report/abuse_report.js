@@ -30,14 +30,14 @@ module.exports = function (N, apiPath) {
 
   // Save report
   //
-  N.wire.before(apiPath, function* save_report(params) {
-    yield params.report.save();
+  N.wire.before(apiPath, async function save_report(params) {
+    await params.report.save();
   });
 
 
   // Deliver
   //
-  N.wire.after(apiPath, function* deliver(params) {
-    yield N.wire.emit('internal:common.abuse_report.deliver', params);
+  N.wire.after(apiPath, async function deliver(params) {
+    await N.wire.emit('internal:common.abuse_report.deliver', params);
   });
 };
