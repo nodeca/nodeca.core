@@ -2,7 +2,6 @@
 
 
 const _        = require('lodash');
-const Promise  = require('bluebird');
 const Mongoose = require('mongoose');
 const Schema   = Mongoose.Schema;
 
@@ -60,11 +59,11 @@ module.exports = function (N, collectionName) {
    *
    * Returns [ String ], location name for every coordinate pair requested.
    */
-  Location.statics.info = Promise.coroutine(function* getLocationName(locations, locale, fast) {
+  Location.statics.info = async function getLocationName(locations, locale, fast) {
     let location_hashes = locations.map(lonlat => hash(lonlat, locale));
 
     let resolved = _.keyBy(
-      yield N.models.core.Location.find({
+      await N.models.core.Location.find({
         hash: { $in: location_hashes }
       }).select('name hash').lean(true),
       'hash'
@@ -84,14 +83,14 @@ module.exports = function (N, collectionName) {
     }
 
     if (locations_to_resolve.length) {
-      yield N.redis.rpushAsync.apply(N.redis,
+      await N.redis.rpushAsync.apply(N.redis,
         [ fast ? 'geo:location:fast' : 'geo:location' ].concat(locations_to_resolve));
 
       N.queue.geo_location_resolve().run();
     }
 
     return result;
-  });
+  };
 
 
   N.wire.on('init:models', function emit_init_Location(__, callback) {
