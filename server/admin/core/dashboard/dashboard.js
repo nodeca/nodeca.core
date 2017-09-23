@@ -12,7 +12,7 @@ module.exports = function (N, apiPath) {
 
   // Fill offline mod value
   //
-  N.wire.after(apiPath, function* fill_offline_mode_setting(env) {
-    env.res.offline_mode = yield env.extras.settings.fetch('general_offline_mode');
+  N.wire.after(apiPath, async function fill_offline_mode_setting(env) {
+    env.res.offline_mode = await env.extras.settings.fetch('general_offline_mode');
   });
 };

@@ -10,7 +10,7 @@ module.exports = function (N, apiPath) {
   });
 
 
-  N.wire.on(apiPath, function* global_settings_update(env) {
+  N.wire.on(apiPath, async function global_settings_update(env) {
     let settings = {};
 
     _.forEach(env.params.settings, (value, name) => {
@@ -18,7 +18,7 @@ module.exports = function (N, apiPath) {
     });
 
     try {
-      yield N.settings.getStore('global').set(settings, {});
+      await N.settings.getStore('global').set(settings, {});
     } catch (err) {
       throw { code: N.io.BAD_REQUEST, message: String(err) };
     }

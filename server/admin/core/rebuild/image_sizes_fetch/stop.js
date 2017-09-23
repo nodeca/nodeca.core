@@ -7,7 +7,7 @@
 module.exports = function (N, apiPath) {
   N.validate(apiPath, {});
 
-  N.wire.on(apiPath, function* image_sizes_fetch_stop() {
-    yield N.queue.cancel('image_sizes_fetch');
+  N.wire.on(apiPath, async function image_sizes_fetch_stop() {
+    await N.queue.cancel('image_sizes_fetch');
   });
 };

@@ -3,7 +3,6 @@
 
 const fs          = require('fs');
 const path        = require('path');
-const Promise     = require('bluebird');
 
 const request     = require('supertest')('');
 
@@ -17,9 +16,9 @@ const router      = TEST.N.router;
 describe('FileTmp (GridFS) http requests test', function () {
   let info;
 
-  before(Promise.coroutine(function* () {
-    info = yield file.put(fileName, { metadata: { origName: fileBase } });
-  }));
+  before(async function () {
+    info = await file.put(fileName, { metadata: { origName: fileBase } });
+  });
 
   it('GET', function () {
     return request
@@ -48,7 +47,7 @@ describe('FileTmp (GridFS) http requests test', function () {
       .expect(304, {});
   });
 
-  after(Promise.coroutine(function* () {
-    yield file.remove(info._id);
-  }));
+  after(async function () {
+    await file.remove(info._id);
+  });
 });

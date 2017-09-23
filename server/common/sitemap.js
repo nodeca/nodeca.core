@@ -11,8 +11,8 @@ module.exports = function (N, apiPath) {
     env.body += 'Sitemap: ' + N.router.linkTo('common.sitemap') + '\n';
   });
 
-  N.wire.on(apiPath, function* print_sitemap_index(env) {
-    let sitemap_data = yield N.redis.getAsync('sitemap');
+  N.wire.on(apiPath, async function print_sitemap_index(env) {
+    let sitemap_data = await N.redis.getAsync('sitemap');
     let content;
 
     if (sitemap_data) {

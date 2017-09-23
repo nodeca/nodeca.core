@@ -2,7 +2,6 @@
 
 
 const assert   = require('assert');
-const Promise  = require('bluebird');
 const fs       = require('fs');
 const Mongoose = require('mongoose');
 const path     = require('path');
@@ -16,12 +15,12 @@ const file = TEST.N.models.core.File;
 
 describe('File model test', function () {
 
-  it('createReadStream()', Promise.coroutine(function* () {
-    let info = yield file.put(fileName, { metadata: { origName: fileBase } });
+  it('createReadStream()', async function () {
+    let info = await file.put(fileName, { metadata: { origName: fileBase } });
 
     let chunks = [];
 
-    yield new Promise(resolve => {
+    await new Promise(resolve => {
       file.createReadStream(info._id)
         .on('data', data => { chunks.push(data); })
         .on('end', () => resolve());
@@ -29,93 +28,93 @@ describe('File model test', function () {
 
     assert.deepEqual(Buffer.concat(chunks), fileContent);
 
-    yield file.remove(info._id);
-  }));
+    await file.remove(info._id);
+  });
 
 
-  it('put(file) + remove()', Promise.coroutine(function* () {
-    let info = yield file.put(fileName, { metadata: { origName: fileBase } });
+  it('put(file) + remove()', async function () {
+    let info = await file.put(fileName, { metadata: { origName: fileBase } });
 
-    let i = yield file.getInfo(info._id);
+    let i = await file.getInfo(info._id);
 
     assert.equal(i.contentType, 'image/jpeg');
     assert.equal(i.metadata.origName, 'lorem.jpg');
     assert.equal(i.filename, info._id.toHexString());
 
-    yield file.remove(info._id);
-  }));
+    await file.remove(info._id);
+  });
 
 
-  it('put(file) + remove(all)', Promise.coroutine(function* () {
+  it('put(file) + remove(all)', async function () {
     let origId = new Mongoose.Types.ObjectId();
 
     // Put file
-    let f1Info = yield file.put(fileName, { _id: origId, metadata: { origName: fileBase } });
+    let f1Info = await file.put(fileName, { _id: origId, metadata: { origName: fileBase } });
 
     // Put file's preview
-    let f2Info = yield file.put(fileName, { filename: origId + '_sm', metadata: { origName: fileBase } });
+    let f2Info = await file.put(fileName, { filename: origId + '_sm', metadata: { origName: fileBase } });
 
     // Check file exists
-    let i = yield file.getInfo(f1Info._id);
+    let i = await file.getInfo(f1Info._id);
 
     assert.equal(i.contentType, 'image/jpeg');
 
     // Check preview exists
-    i = yield file.getInfo(f2Info._id);
+    i = await file.getInfo(f2Info._id);
 
     assert.equal(i.contentType, 'image/jpeg');
 
     // Remove file + preview
-    yield file.remove(f1Info._id, true);
+    await file.remove(f1Info._id, true);
 
     // Check file not exists
-    i = yield file.getInfo(f1Info._id);
+    i = await file.getInfo(f1Info._id);
 
     assert.equal(i, null);
 
     // Check preview not exists
-    i = yield file.getInfo(f2Info._id);
+    i = await file.getInfo(f2Info._id);
 
     assert.equal(i, null);
-  }));
+  });
 
 
-  it('remove for not existing file', Promise.coroutine(function* () {
-    yield file.remove('012345678901234567890123'); // by _id
-    yield file.remove('not_existing_file.txt');
-  }));
+  it('remove for not existing file', async function () {
+    await file.remove('012345678901234567890123'); // by _id
+    await file.remove('not_existing_file.txt');
+  });
 
 
-  it('remove(all) for not existing file', Promise.coroutine(function* () {
-    yield file.remove('012345678901234567890123', true); // by _id
-    yield file.remove('not_existing_file.txt', true);
-  }));
+  it('remove(all) for not existing file', async function () {
+    await file.remove('012345678901234567890123', true); // by _id
+    await file.remove('not_existing_file.txt', true);
+  });
 
 
-  it('put(stream)', Promise.coroutine(function* () {
+  it('put(stream)', async function () {
     let stream = fs.createReadStream(fileName);
 
-    let info = yield file.put(stream, { metadata: { origName: fileBase } });
+    let info = await file.put(stream, { metadata: { origName: fileBase } });
 
-    let i = yield file.getInfo(info._id);
-
-    assert.equal(i.contentType, 'image/jpeg');
-    assert.equal(i.metadata.origName, 'lorem.jpg');
-    assert.equal(i.filename, info._id.toHexString());
-
-    yield file.remove(info._id);
-  }));
-
-
-  it('put(buffer)', Promise.coroutine(function* () {
-    let info = yield file.put(fileContent, { metadata: { origName: fileBase } });
-
-    let i = yield file.getInfo(info._id);
+    let i = await file.getInfo(info._id);
 
     assert.equal(i.contentType, 'image/jpeg');
     assert.equal(i.metadata.origName, 'lorem.jpg');
     assert.equal(i.filename, info._id.toHexString());
 
-    yield file.remove(info._id);
-  }));
+    await file.remove(info._id);
+  });
+
+
+  it('put(buffer)', async function () {
+    let info = await file.put(fileContent, { metadata: { origName: fileBase } });
+
+    let i = await file.getInfo(info._id);
+
+    assert.equal(i.contentType, 'image/jpeg');
+    assert.equal(i.metadata.origName, 'lorem.jpg');
+    assert.equal(i.filename, info._id.toHexString());
+
+    await file.remove(info._id);
+  });
 });

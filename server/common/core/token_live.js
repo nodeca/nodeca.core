@@ -40,7 +40,7 @@ module.exports = function (N, apiPath) {
 
   // Save token or update TLL
   //
-  N.wire.after('server_chain:*', { priority: 90, ensure: true }, function* token_live_save(env) {
+  N.wire.after('server_chain:*', { priority: 90, ensure: true }, async function token_live_save(env) {
     // If no token or no session - skip
     if (!env.session || !env.session.token_live) return;
 
@@ -48,6 +48,6 @@ module.exports = function (N, apiPath) {
 
     // - save token here because we couldn't know session_id earlier
     // - if same record already exists redis will only update TTL
-    yield N.redis.setexAsync('token_live:' + env.session.token_live, ttl, env.session_id);
+    await N.redis.setexAsync('token_live:' + env.session.token_live, ttl, env.session_id);
   });
 };

@@ -29,7 +29,7 @@ module.exports = function (N, apiPath) {
   });
 
 
-  N.wire.on(apiPath, function* embed(env) {
+  N.wire.on(apiPath, async function embed(env) {
     if (!env.user_info.is_member) throw N.io.FORBIDDEN;
 
     let data = {
@@ -37,14 +37,14 @@ module.exports = function (N, apiPath) {
       types: env.params.types
     };
 
-    yield N.wire.emit('internal:common.embed', data);
+    await N.wire.emit('internal:common.embed', data);
 
     // Check permissions for local links
     //
     if (data.local) {
       let access_env = { params: { url: env.params.url, user_info: env.user_info } };
 
-      yield N.wire.emit('internal:common.access', access_env);
+      await N.wire.emit('internal:common.access', access_env);
 
       if (!access_env.data.access_read) return;
     }

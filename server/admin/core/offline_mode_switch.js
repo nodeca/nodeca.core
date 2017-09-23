@@ -7,8 +7,8 @@ module.exports = function (N, apiPath) {
   });
 
 
-  N.wire.on(apiPath, function* switch_mode(env) {
-    yield N.settings.getStore('global').set(
+  N.wire.on(apiPath, async function switch_mode(env) {
+    await N.settings.getStore('global').set(
       { general_offline_mode: { value: env.params.offline } }
     );
   });

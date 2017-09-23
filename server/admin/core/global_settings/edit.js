@@ -23,7 +23,7 @@ module.exports = function (N, apiPath) {
   });
 
 
-  N.wire.before(apiPath, function* prepare_setting_schemas(env) {
+  N.wire.before(apiPath, async function prepare_setting_schemas(env) {
     let config = N.config.setting_schemas.global;
     let keys = _.keys(config);
 
@@ -45,14 +45,14 @@ module.exports = function (N, apiPath) {
       schema = _.clone(schema); // Keep original schema untouched.
 
       // Replace the function with computed values.
-      schema.values = yield schema.values();
+      schema.values = await schema.values();
 
       env.res.setting_schemas[name] = schema;
     }
   });
 
 
-  N.wire.on(apiPath, function* global_settings_edit(env) {
+  N.wire.on(apiPath, async function global_settings_edit(env) {
     let parentGroup = N.config.setting_groups[env.params.group].parent;
 
     env.res.head.title = env.t('title', {
@@ -60,7 +60,7 @@ module.exports = function (N, apiPath) {
       group: env.t('@admin.core.group_names.' + env.params.group)
     });
 
-    let settings = yield N.settings.getStore('global').get(
+    let settings = await N.settings.getStore('global').get(
       _.keys(env.res.setting_schemas),
       {},
       { skipCache: true }
