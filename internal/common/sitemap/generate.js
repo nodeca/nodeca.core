@@ -3,7 +3,6 @@
 'use strict';
 
 const _        = require('lodash');
-const Promise  = require('bluebird');
 const eos      = require('end-of-stream');
 const pump     = require('pump');
 const pumpify  = require('pumpify');
@@ -176,12 +175,12 @@ module.exports = function (N, apiPath) {
 
     let files = [];
 
-    await Promise.map(data.streams, stream_info => new Promise((resolve, reject) => {
+    await Promise.all(data.streams.map(stream_info => new Promise((resolve, reject) => {
       let out_stream = SiteMapStream(stream_info.name, files);
 
       pump(stream_info.stream, out_stream, err => (err ? reject(err) : resolve()));
       out_stream.resume();
-    }));
+    })));
 
     await N.redis.setAsync('sitemap', JSON.stringify({ files, date: Date.now() }));
   });

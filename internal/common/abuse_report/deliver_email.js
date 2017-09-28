@@ -12,7 +12,6 @@
 
 
 const _       = require('lodash');
-const Promise = require('bluebird');
 const encode  = require('emailjs-mime-codec').mimeWordEncode;
 const render  = require('nodeca.core/lib/system/render/common');
 
@@ -40,7 +39,7 @@ module.exports = function (N) {
       return acc;
     }, {});
 
-    await Promise.map(_.values(params.recipients), async user_info => {
+    await Promise.all(_.values(params.recipients).map(async user_info => {
       let to = emails[user_info.user_id];
 
       if (!to) return; // continue
@@ -65,6 +64,6 @@ module.exports = function (N) {
           // don't return an error here
           N.logger.error('Cannot send email to %s: %s', to, err.message || err);
         });
-    });
+    }));
   });
 };
