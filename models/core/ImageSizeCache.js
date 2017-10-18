@@ -24,10 +24,6 @@ module.exports = function (N, collectionName) {
     // (initial request + retries)
     retries:    Number,
 
-    // random number from 0-1, used to split urls into chunks without using
-    // expensive count() requests
-    rand:       Number,
-
     // text of the error message (if any)
     error:      String,
 
@@ -54,10 +50,8 @@ module.exports = function (N, collectionName) {
   // note: it *MUST* be hashed, otherwise it'll trigger "key too large to index" error
   ImageSizeCache.index({ url: 'hashed' });
 
-  // used to fetch url chunks
-  ImageSizeCache.index({ rand: 1 });
-
-  // used to retry errored urls
+  // - get urls by status
+  // - retry errored urls (change ERROR status with PENDING)
   ImageSizeCache.index({ status: 1 });
 
 
