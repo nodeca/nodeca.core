@@ -2,18 +2,28 @@
 
 
 const assert     = require('assert');
-const simplesmtp = require('simplesmtp');
+const SMTPServer = require('smtp-server').SMTPServer;
 
 
 describe('Mailer', function () {
   let smtp;
+  let on_message;
 
 
   before(function (done) {
-    smtp = simplesmtp.createServer({ disableDNSValidation: true });
+    smtp = new SMTPServer({
+      authOptional: true,
+      onData(stream, session, callback) {
+        let data = '';
+        stream.setEncoding('utf8');
 
-    smtp.on('startData', connection => { connection.body = ''; });
-    smtp.on('data', (connection, chunk) => { connection.body += chunk; });
+        stream.on('data', d => { data += d; });
+        stream.on('end', () => {
+          on_message(session, data);
+          callback();
+        });
+      }
+    });
 
     smtp.listen(2525, done);
   });
@@ -26,18 +36,18 @@ describe('Mailer', function () {
       html: '<h1>Hello world!</h1>'
     };
 
-    smtp.once('dataReady', (connection, cb) => {
-      assert.deepStrictEqual(connection.to, [ 'test@example.com' ]);
-      assert.strictEqual(connection.from, TEST.N.config.email.from);
-      assert.ok(connection.body.indexOf('<h1>Hello world!</h1>') !== -1);
+    on_message = (session, data) => {
+      assert.equal(session.envelope.rcptTo.length, 1);
+      assert.strictEqual(session.envelope.rcptTo[0].address, 'test@example.com');
+      assert.strictEqual(session.envelope.mailFrom.address, TEST.N.config.email.from);
+      assert.ok(data.indexOf('<h1>Hello world!</h1>') !== -1);
 
       done();
-      cb();
-    });
+    };
 
     TEST.N.mailer.send(data).catch(done);
   });
 
 
-  after(done => smtp.end(done));
+  after(done => smtp.close(done));
 });
