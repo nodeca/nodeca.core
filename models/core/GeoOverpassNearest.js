@@ -33,7 +33,7 @@ module.exports = function (N, collectionName) {
   // Indexes
   //////////////////////////////////////////////////////////////////////////////
 
-  GeoOverpassNearest.index({ hash: 'hash' });
+  GeoOverpassNearest.index({ hash: 'hashed' });
 
 
   // Generate hash field used for search

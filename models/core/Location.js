@@ -35,7 +35,7 @@ module.exports = function (N, collectionName) {
   // Indexes
   //////////////////////////////////////////////////////////////////////////////
 
-  Location.index({ hash: 'hash' });
+  Location.index({ hash: 'hashed' });
 
 
   // Generate hash field used for search

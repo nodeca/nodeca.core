@@ -35,7 +35,7 @@ module.exports = function (N, collectionName) {
   // Indexes
   //////////////////////////////////////////////////////////////////////////////
 
-  GeoNominatim.index({ hash: 'hash' });
+  GeoNominatim.index({ hash: 'hashed' });
 
 
   // Generate hash field used for search
