@@ -33,6 +33,10 @@ function add_tracker($element, position, params) {
   let steadyMin = new Steady({
     throttle,
     handler(values, done) {
+      // Calling steady.stop() removes event listener, but doesn't cancel
+      // debounced calls for events already fired.
+      if (this.stopped) return;
+
       // Steady has an inverted axis for bottom, where 0 means user sees
       // bottom boundary and positive value means further up.
       //
@@ -74,6 +78,10 @@ function add_tracker($element, position, params) {
   var steadyMax = new Steady({
     throttle,
     handler(values, done) {
+      // Calling steady.stop() removes event listener, but doesn't cancel
+      // debounced calls for events already fired.
+      if (this.stopped) return;
+
       // Steady has an inverted axis for bottom, where 0 means user sees
       // bottom boundary and positive value means further up.
       //
