@@ -106,6 +106,12 @@ MDEdit.prototype.show = function (options) {
   this.__options__.parseOptions = this.__options__.parseOptions || {};
   this.__options__.draftCustomFields = this.__options__.draftCustomFields || {};
 
+  if (this.__options__.hidePreview) {
+    N.MDEdit.__layout__.toggleClass('mdedit__m-show-preview');
+    N.MDEdit.__layout__.find('.mdedit-btn__preview')
+      .toggleClass('btn-link btn-outline-success');
+  }
+
   $('body').append(this.__layout__);
 
   // Clamp editor height
@@ -140,44 +146,53 @@ MDEdit.prototype.show = function (options) {
   this.text(options.text || '');
   this.attachments(options.attachments || []);
 
-  // Get editor height from localstore
-  this.__bag__.get('height').catch(() => 0).then(height => {
-
-    if (height) {
-      // If no prevoius editor - set `bottom` for animation
-      if (!$oldLayout) {
-        this.__layout__.css({ bottom: -height });
-      }
-
-      // Restore prevoius editor height
-      this.__layout__.height(height);
+  // Get preview flag from localstore
+  this.__bag__.get('hide_preview').catch(() => false).then(hide_preview => {
+    if (!hide_preview) {
+      N.MDEdit.__layout__.addClass('mdedit__m-show-preview');
+      N.MDEdit.__layout__.find('.mdedit-btn__preview')
+        .addClass('btn-outline-success').removeClass('btn-link');
     }
 
-    this.__layout__.trigger('show');
+    // Get editor height from localstore
+    this.__bag__.get('height').catch(() => 0).then(height => {
 
-    // If no prevoius editor - animate editor from bottom viewport botder
-    this.__layout__.animate({ bottom: 0 }, $oldLayout ? 0 : 'fast', () => {
-      // Update codemirror height
-      this.__cm__.setSize('100%', this.__layout__.find('.mdedit__edit-area').height());
+      if (height) {
+        // If no prevoius editor - set `bottom` for animation
+        if (!$oldLayout) {
+          this.__layout__.css({ bottom: -height });
+        }
 
-      let $focusItem = this.__layout__.find('[tabindex=1]');
-
-      if ($focusItem.length !== 0) {
-        // Focus to element with tabindex = 1 if exists
-        $focusItem.focus();
-      } else {
-        // Or focus to editor window
-        this.__cm__.focus();
+        // Restore prevoius editor height
+        this.__layout__.height(height);
       }
 
-      // Hide previous editor
-      if ($oldLayout) {
-        $oldLayout.trigger('hide');
-        $oldLayout.trigger('hidden');
-        $oldLayout.remove();
-      }
+      this.__layout__.trigger('show');
 
-      this.__layout__.trigger('shown');
+      // If no prevoius editor - animate editor from bottom viewport botder
+      this.__layout__.animate({ bottom: 0 }, $oldLayout ? 0 : 'fast', () => {
+        // Update codemirror height
+        this.__cm__.setSize('100%', this.__layout__.find('.mdedit__edit-area').height());
+
+        let $focusItem = this.__layout__.find('[tabindex=1]');
+
+        if ($focusItem.length !== 0) {
+          // Focus to element with tabindex = 1 if exists
+          $focusItem.focus();
+        } else {
+          // Or focus to editor window
+          this.__cm__.focus();
+        }
+
+        // Hide previous editor
+        if ($oldLayout) {
+          $oldLayout.trigger('hide');
+          $oldLayout.trigger('hidden');
+          $oldLayout.remove();
+        }
+
+        this.__layout__.trigger('shown');
+      });
     });
   });
 
@@ -450,10 +465,29 @@ N.wire.on('mdedit.cancel', () => N.MDEdit.hide());
 
 // Toggle preview on small screens
 //
-N.wire.on('mdedit.preview', () => {
+N.wire.on('mdedit.preview_sm', () => {
   N.MDEdit.__layout__.toggleClass('mdedit__m-preview_mode');
+
+  let previewMode = N.MDEdit.__layout__.hasClass('mdedit__m-preview_mode');
+
+  N.MDEdit.__layout__.find('.mdedit-btn__preview-sm')
+    .toggleClass('btn-link', !previewMode)
+    .toggleClass('btn-outline-success', previewMode);
+});
+
+
+// Toggle preview on large screens
+//
+N.wire.on('mdedit.preview', () => {
+  N.MDEdit.__layout__.toggleClass('mdedit__m-show-preview');
+
+  let showPreview = N.MDEdit.__layout__.hasClass('mdedit__m-show-preview');
+
   N.MDEdit.__layout__.find('.mdedit-btn__preview')
-    .toggleClass('btn-link btn-outline-success');
+    .toggleClass('btn-link', !showPreview)
+    .toggleClass('btn-outline-success', showPreview);
+
+  N.MDEdit.__bag__.set('hide_preview', !showPreview);
 });
 
 

@@ -205,17 +205,11 @@
 //
 // Responsiveness
 //
-.mdedit-btn__preview
+.mdedit__preview
   display none
+  border 1px dashed rgba(0, 0, 0, .3)
 
 @media (max-width: $grid-breakpoints.md - 1)
-  // Hide preview by default on narrow screen
-  .mdedit__preview
-    display none
-    border 1px dashed rgba(0, 0, 0, .3)
-  .mdedit-btn__preview
-    display inline-block
-
   // Show if preview mode activated
   .mdedit__m-preview_mode
     .mdedit__preview
@@ -224,3 +218,10 @@
     .mdedit__editor
     .mdedit-attachments
       display none
+
+@media (min-width: $grid-breakpoints.md)
+  // Show if preview mode activated
+  .mdedit__m-show-preview
+    .mdedit__preview
+      display block
+      margin 0
