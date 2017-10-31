@@ -150,8 +150,6 @@ MDEdit.prototype.show = function (options) {
   this.__bag__.get('hide_preview').catch(() => false).then(hide_preview => {
     if (!hide_preview) {
       N.MDEdit.__layout__.addClass('mdedit__m-show-preview');
-      N.MDEdit.__layout__.find('.mdedit-btn__preview')
-        .addClass('btn-outline-success').removeClass('btn-link');
     }
 
     // Get editor height from localstore
@@ -482,10 +480,6 @@ N.wire.on('mdedit.preview', () => {
   N.MDEdit.__layout__.toggleClass('mdedit__m-show-preview');
 
   let showPreview = N.MDEdit.__layout__.hasClass('mdedit__m-show-preview');
-
-  N.MDEdit.__layout__.find('.mdedit-btn__preview')
-    .toggleClass('btn-link', !showPreview)
-    .toggleClass('btn-outline-success', showPreview);
 
   N.MDEdit.__bag__.set('hide_preview', !showPreview);
 });
