@@ -118,8 +118,8 @@ MDEdit.prototype.show = function (options) {
   $(window).off('resize.nd.mdedit').on('resize.nd.mdedit', _.debounce(() => {
     let winHeight = $(window).height();
 
-    if (this.__layout__.height() > winHeight && winHeight >= this.__minHeight__) {
-      this.__layout__.height(winHeight);
+    if (this.__layout__.outerHeight() > winHeight && winHeight >= this.__minHeight__) {
+      this.__layout__.outerHeight(winHeight);
       this.__cm__.setSize('100%', this.__layout__.find('.mdedit__edit-area').height());
     }
   }, 50, { maxWait: 50 }));
