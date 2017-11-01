@@ -162,7 +162,7 @@ MDEdit.prototype.show = function (options) {
         }
 
         // Restore prevoius editor height
-        this.__layout__.height(height);
+        this.__layout__.outerHeight(height);
       }
 
       this.__layout__.trigger('show');
@@ -398,16 +398,16 @@ N.wire.on('mdedit:init', function initResize() {
   N.MDEdit.__minHeight__ = parseInt(N.MDEdit.__layout__.css('minHeight'), 10);
   N.MDEdit.__layout__.css('minHeight', 0);
 
-  N.MDEdit.__layout__.height(N.MDEdit.__layout__.height());
+  N.MDEdit.__layout__.outerHeight(N.MDEdit.__layout__.outerHeight());
 
-  if (N.MDEdit.__layout__.height() > winHeight && winHeight >= N.MDEdit.__minHeight__) {
-    N.MDEdit.__layout__.height(winHeight);
+  if (N.MDEdit.__layout__.outerHeight() > winHeight && winHeight >= N.MDEdit.__minHeight__) {
+    N.MDEdit.__layout__.outerHeight(winHeight);
     N.MDEdit.__cm__.setSize('100%', N.MDEdit.__layout__.find('.mdedit__edit-area').height());
   }
 
   N.MDEdit.__layout__.find('.mdedit__resizer').on('mousedown touchstart', function (event) {
     let clickStart = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
-    let currentHeight = parseInt(N.MDEdit.__layout__.height(), 10);
+    let currentHeight = parseInt(N.MDEdit.__layout__.outerHeight(), 10);
 
     N.MDEdit.__layout__.addClass('mdedit__m-resizing');
 
@@ -425,7 +425,7 @@ N.wire.on('mdedit:init', function initResize() {
         newHeight = newHeight < N.MDEdit.__minHeight__ ? N.MDEdit.__minHeight__ : newHeight;
 
         N.MDEdit.__bag__.set('height', newHeight);
-        N.MDEdit.__layout__.height(newHeight);
+        N.MDEdit.__layout__.outerHeight(newHeight);
         N.MDEdit.__cm__.setSize('100%', N.MDEdit.__layout__.find('.mdedit__edit-area').height());
       }, 20, { maxWait: 20 }));
 
