@@ -52,8 +52,10 @@ N.wire.once(module.apiPath, function microedit_once() {
       .catch(err => {
         if (typeof err === 'string') {
           $form
-            .find('.microedit__input-container')
-            .addClass('has-danger')
+            .find('.microedit__input')
+            .addClass('is-invalid');
+
+          $form
             .find('.microedit__error')
             .text(err);
 
