@@ -2,12 +2,12 @@
 
  @font-face {
   font-family: 'nodeca';
-  src: url('../font/nodeca.eot?57076542');
-  src: url('../font/nodeca.eot?57076542#iefix') format('embedded-opentype'),
-       url('../font/nodeca.woff2?57076542') format('woff2'),
-       url('../font/nodeca.woff?57076542') format('woff'),
-       url('../font/nodeca.ttf?57076542') format('truetype'),
-       url('../font/nodeca.svg?57076542#nodeca') format('svg');
+  src: url('../font/nodeca.eot?92629088');
+  src: url('../font/nodeca.eot?92629088#iefix') format('embedded-opentype'),
+       url('../font/nodeca.woff2?92629088') format('woff2'),
+       url('../font/nodeca.woff?92629088') format('woff'),
+       url('../font/nodeca.ttf?92629088') format('truetype'),
+       url('../font/nodeca.svg?92629088#nodeca') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -17,7 +17,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'nodeca';
-    src: url('../font/nodeca.svg?57076542#nodeca') format('svg');
+    src: url('../font/nodeca.svg?92629088#nodeca') format('svg');
   }
 }
 */
