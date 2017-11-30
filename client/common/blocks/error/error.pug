@@ -1,2 +1,5 @@
 #content
-  p [#{self.err.code}] #{self.err.message}
+  != self.partial('@common.blocks.navbar.logo_apps')
+
+  .layout__container.container-fluid.space-top
+    p [#{self.err.code}] #{self.err.message}
