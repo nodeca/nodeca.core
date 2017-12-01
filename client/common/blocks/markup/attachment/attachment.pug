@@ -1,0 +1,57 @@
+- var mTypes = '$$ JSON.stringify(N.models.users.MediaInfo.types) $$'
+- var have_size = self.width && self.height
+
+if self.is_placeholder
+  //- Client only, no data fetched yet, so showing placeholder
+  span.attach.attach-img.attach__m-placeholder(
+    class= 'attach__m-' + self.size
+    class= self.size === 'sm' ? 'thumb thumb__m-responsive' : ''
+  )
+
+else if self.type === mTypes.IMAGE || !self.type
+  if self.media_id === '000000000000000000000000'
+    span.attach.attach-img.thumb.thumb__m-responsive.thumb__m-broken(
+      class= 'attach__m-' + self.size
+      data-nd-media-id=self.media_id
+      data-nd-orig=self.href
+      title= self.title
+    )
+
+  else if self.size === 'sm'
+    a.attach.attach-img.thumb.thumb__m-responsive(
+      class= 'attach__m-' + self.size
+      href=self.href
+      data-nd-media-id=self.media_id
+      data-nd-orig=self.href
+    )
+      img.thumb__image(
+        src=    self.src
+        alt=    self.alt
+        title=  self.title
+        width=  have_size ? self.width : null
+        height= have_size ? self.height : null
+      )
+
+  else
+    span.attach.attach-img(
+      class= 'attach__m-' + self.size
+      data-nd-media-id=self.media_id
+      data-nd-orig=self.href
+      style=have_size ? "width: " + self.width + "px" : null
+    )
+      if have_size
+        span.attach__spacer(
+          style="padding-bottom: " + (self.height / self.width * 100).toFixed(4) + "%"
+        )
+
+      img(src=self.src, alt=self.alt, title=self.title)
+      a.attach__link-control.icon.icon-link(href=self.href)
+
+else if self.type === mTypes.BINARY
+  a.attach.attach-bin.thumb.thumb__m-responsive(
+    href=self.href
+    data-nd-media-id=self.media_id
+    data-nd-orig=self.href
+  )
+    span.thumb__icon.icon.icon-binary
+    span.thumb__content= self.text
