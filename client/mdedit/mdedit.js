@@ -71,6 +71,7 @@ function MDEdit() {
 // - attachments (Array) - optional, attachments, default empty array. Can be overwritten by draft
 // - toolbar (String) - optional, name of toolbar config, default `default`
 // - draftKey (String) - optional, unique key to store draft, don't use drafts by default
+// - contentFooter (Element) - optional, insert widget after the last editor line
 // - draftCustomFields (Object) - optional, custom fields to store in draft:
 //   ```
 //   {
@@ -187,6 +188,23 @@ MDEdit.prototype.show = function (options) {
           $oldLayout.trigger('hide');
           $oldLayout.trigger('hidden');
           $oldLayout.remove();
+        }
+
+        // Add footer after the list line of the editor
+        //
+        // To achieve this, we add an invisible line, make it read-only
+        // (so user can't add content below) and add a line widget after it.
+        //
+        if (this.__options__.contentFooter) {
+          let line = this.__cm__.lineCount();
+
+          this.__contentFooter__ = this.__cm__.addLineWidget(line - 1, this.__options__.contentFooter);
+
+          this.__cm__.markText(
+            { line: line - 2, ch: Infinity },
+            { line: line - 1, ch: Infinity },
+            { inclusiveRight: true, collapsed: true, readOnly: true, atomic: true }
+          );
         }
 
         this.__layout__.trigger('shown');
@@ -350,7 +368,22 @@ MDEdit.prototype.__state_load__ = function () {
 // Get/set text
 //
 MDEdit.prototype.text = function (text) {
-  if (typeof text === 'undefined') return this.__cm__.getValue();
+  // Fake hidden last line to prevent inserting text below footer
+  const FOOTER_TEXT = '\n'; // '\narbitrary text here'
+
+  if (typeof text === 'undefined') {
+    let result = this.__cm__.getValue();
+
+    if (this.__options__.contentFooter && result.endsWith(FOOTER_TEXT)) {
+      result = result.slice(0, result.length - FOOTER_TEXT.length);
+    }
+
+    return result;
+  }
+
+  if (this.__options__.contentFooter) {
+    text += FOOTER_TEXT;
+  }
 
   this.__cm__.setValue(text);
   this.__cm__.setCursor(this.__cm__.lineCount(), 0);
@@ -498,6 +531,13 @@ N.wire.on('mdedit.collapse', function collapse() {
   } else {
     $layout.addClass('mdedit__m-collapsed');
   }
+});
+
+
+// Update footer width
+//
+N.wire.on('mdedit.content_footer_update', function cm_footer_widget_update() {
+  N.MDEdit.__contentFooter__.changed();
 });
 
 
