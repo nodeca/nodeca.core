@@ -534,10 +534,16 @@ N.wire.on('mdedit.collapse', function collapse() {
 });
 
 
-// Update footer width
+// Remove and re-add footer, we can't just call changed() because codemirror
+// adds the height difference twice (bug?).
 //
 N.wire.on('mdedit.content_footer_update', function cm_footer_widget_update() {
-  N.MDEdit.__contentFooter__.changed();
+  let line = N.MDEdit.__cm__.lineCount();
+  let scroll = N.MDEdit.__cm__.getScrollInfo();
+
+  N.MDEdit.__contentFooter__.clear();
+  N.MDEdit.__contentFooter__ = N.MDEdit.__cm__.addLineWidget(line - 1, N.MDEdit.__options__.contentFooter);
+  N.MDEdit.__cm__.scrollTo(scroll.left, scroll.top);
 });
 
 
