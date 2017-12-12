@@ -541,7 +541,8 @@ N.wire.on('mdedit.content_footer_update', function cm_footer_widget_update() {
   let line = N.MDEdit.__cm__.lineCount();
   let scroll = N.MDEdit.__cm__.getScrollInfo();
 
-  N.MDEdit.__contentFooter__.clear();
+  if (N.MDEdit.__contentFooter__) N.MDEdit.__contentFooter__.clear();
+
   N.MDEdit.__contentFooter__ = N.MDEdit.__cm__.addLineWidget(line - 1, N.MDEdit.__options__.contentFooter);
   N.MDEdit.__cm__.scrollTo(scroll.left, scroll.top);
 });
