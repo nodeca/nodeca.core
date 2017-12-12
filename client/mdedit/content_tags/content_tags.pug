@@ -1,0 +1,12 @@
+.mdedit-content-tags(
+  class=self.tags.length === 0 ? 'mdedit-content-tags__m-empty' : ''
+  data-on-click=self.apiPath + ':tags_edit'
+)
+  if self.tags.length
+    .mdedit-content-tags__header= self.t('tags')
+
+    ul.mdedit-content-tags__list
+      each tag in self.tags
+        li.mdedit-content-tags__item= tag
+  else
+    .mdedit-content-tags__header= self.t('click_to_add_tags')
