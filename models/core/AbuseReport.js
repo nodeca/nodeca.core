@@ -20,6 +20,9 @@ module.exports = function (N, collectionName) {
     // Report text
     text: String,
 
+    // Flag defining whether this report was created automatically
+    auto_reported: Boolean,
+
     // Parser options
     params_ref: Schema.ObjectId,
 
@@ -28,6 +31,9 @@ module.exports = function (N, collectionName) {
   }, {
     versionKey: false
   });
+
+  // Duplicate check for auto-created abuse reports
+  AbuseReport.index({ src: 1, auto_reported: 1 }, { sparse: true });
 
 
   N.wire.on('init:models', function emit_init_AbuseReport() {
