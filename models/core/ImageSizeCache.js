@@ -37,7 +37,11 @@ module.exports = function (N, collectionName) {
       wUnits:   String, // width unit (`px`, `em`, etc.)
       hUnits:   String, // height unit (`px`, `em`, etc.)
       length:   Number  // file size in bytes
-    }
+    },
+
+    // timestamps of start and end of last request, for debugging
+    ts_begin:   Date,
+    ts_end:     Date
   }, {
     versionKey: false
   });
