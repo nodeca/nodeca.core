@@ -212,20 +212,9 @@ module.exports = function (N, collectionName) {
     // connect to database
     let options = {
       promiseLibrary: require('bluebird'),
-      server: {
-        poolSize: 10,
-        socketOptions: {
-          connectTimeoutMS: 30000,
-          keepAlive: 1
-        }
-      },
-      replset: {
-        poolSize: 10,
-        socketOptions: {
-          connectTimeoutMS: 30000,
-          keepAlive: 1
-        }
-      }
+      poolSize: 10,
+      connectTimeoutMS: 30000,
+      keepAlive: 1
     };
 
     let mongoPath = N.config.database.mongo_files_tmp || N.config.database.mongo;
