@@ -21,10 +21,6 @@ module.exports = function (N, collectionName) {
   let UrlTracker = new Schema({
     url:     String,
 
-    // random number from 0-1, used to split urls into chunks without using
-    // expensive count() requests
-    rand:    Number,
-
     // status (see above)
     status:  Number,
 
@@ -55,10 +51,8 @@ module.exports = function (N, collectionName) {
   // note: it *MUST* be hashed, otherwise it'll trigger "key too large to index" error
   UrlTracker.index({ url: 'hashed' });
 
-  // used to fetch url chunks
-  UrlTracker.index({ rand: 1 });
-
-  // used to retry errored urls (change ERROR status with PENDING)
+  // - get urls by status
+  // - retry errored urls (change ERROR status with PENDING)
   UrlTracker.index({ status: 1 });
 
 

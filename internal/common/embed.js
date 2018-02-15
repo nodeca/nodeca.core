@@ -4,6 +4,8 @@
 //
 // - url       (String)   - link to content
 // - types     ([String]) - suitable format list, in priority order ('block', 'inline')
+// - bulk      (Boolean)  - we use separate relimit for bulk requests to avoid
+//                          them delaying requests triggered by user
 // - cacheOnly (Boolean)  - use cache only
 //
 // Out:
@@ -22,6 +24,13 @@ const Unshort     = require('url-unshort');
 const embedza_pkg = require('embedza/package.json');
 const unshort_pkg = require('url-unshort/package.json');
 const memoize     = require('promise-memoize');
+const Relimit     = require('relimit');
+const url         = require('url');
+const limits      = require('nodeca.core/lib/app/relimit_limits');
+
+// total connection count should be around 100 to avoid timeouts,
+// divided between two relimiters (normal and bulk)
+const MAX_CONNECTIONS = 50;
 
 
 module.exports = function (N, apiPath) {
@@ -31,10 +40,53 @@ module.exports = function (N, apiPath) {
   let userAgentEmbedza = `${embedza_pkg.name}/${embedza_pkg.version} (Nodeca; +${rootUrl})`;
   let userAgentUnshort = `${unshort_pkg.name}/${unshort_pkg.version} (Nodeca; +${rootUrl})`;
 
+  function normalize(item) {
+    return (url.parse(item.url).hostname || '');
+  }
+
+  function create_relimit() {
+    let relimit = new Relimit({
+      scheduler: (N.config.database || {}).redis,
+      rate(item) {
+        return limits.rate(normalize(item));
+      },
+      consume(item) {
+        if (this.stat().active >= MAX_CONNECTIONS) return false;
+
+        let domain = normalize(item);
+
+        if (this.stat(domain).active >= limits.max_connections(domain)) {
+          return false;
+        }
+
+        return true;
+      },
+      normalize,
+      async process(item) {
+        await item.fn();
+      }
+    });
+
+    return function wrap(request_fn) {
+      return function (...args) {
+        return new Promise((resolve, reject) => {
+          relimit.push({
+            url: args[0],
+            fn: () => {
+              return request_fn.apply(this, args).then(resolve, reject);
+            }
+          });
+        });
+      };
+    };
+  }
+
+  let relimit = { normal: create_relimit(), bulk: create_relimit() };
+
   // Init url-unshort instance
   //
-  function unshortCreate(cacheOnly) {
-    let instance = new Unshort({
+  function create_unshort_template() {
+    return new Unshort({
       cache: {
         get: key => N.models.core.UnshortCache.get(key),
         set: (key, val) => N.models.core.UnshortCache.set(key, val)
@@ -45,23 +97,13 @@ module.exports = function (N, apiPath) {
         }
       }
     });
-
-    // If we should read data only from cache - overwrite `request` method by stub
-    if (cacheOnly) {
-      // return 503 status code because it's guaranteed not to be cached
-      instance.request = () => Promise.reject({
-        statusCode: 503
-      });
-    }
-
-    return instance;
   }
 
 
   // Init embedza instance
   //
-  function embedzaCreate(cacheOnly) {
-    let instance = new Embedza({
+  function create_embedza_template() {
+    return new Embedza({
       cache: {
         get: key => N.models.core.EmbedzaCache.get(key),
         set: (key, val) => N.models.core.EmbedzaCache.set(key, val)
@@ -73,20 +115,39 @@ module.exports = function (N, apiPath) {
         }
       }
     });
-
-    // If we should read data only from cache - overwrite `request` method by stub
-    if (cacheOnly) {
-      instance.request = function (__, callback) {
-        callback(null, {});
-      };
-    }
-
-    return instance;
   }
 
-  let unshort = { normal: unshortCreate(false), cached: unshortCreate(true) };
-  let embedza = { normal: embedzaCreate(false), cached: embedzaCreate(true) };
 
+  // Initialize unshort instances (normal, normal_bulk, cached)
+  //
+  let unshort = {};
+
+  unshort.normal = create_unshort_template();
+  unshort.normal.request = relimit.normal(unshort.normal.request);
+
+  unshort.normal_bulk = create_unshort_template();
+  unshort.normal_bulk.request = relimit.bulk(unshort.normal_bulk.request);
+
+  unshort.cached = create_unshort_template();
+  unshort.cached.request = () => Promise.reject({ statusCode: 503 });
+
+
+  // Initialize embedza instances (normal, normal_bulk, cached)
+  //
+  let embedza = {};
+
+  embedza.normal = create_embedza_template();
+  embedza.normal.request = relimit.normal(embedza.normal.request);
+
+  embedza.normal_bulk = create_embedza_template();
+  embedza.normal_bulk.request = relimit.bulk(embedza.normal_bulk.request);
+
+  embedza.cached = create_embedza_template();
+  embedza.cached.request = () => Promise.reject({ statusCode: 503 });
+
+
+  // Allow to extend unshort or embedza with custom rules
+  //
   N.wire.emit('init:embed', { unshort, embedza });
 
 
@@ -98,7 +159,11 @@ module.exports = function (N, apiPath) {
     let url;
 
     try {
-      url = await unshort[data.cacheOnly ? 'cached' : 'normal'].expand(data.url);
+      let unshort_type = data.cacheOnly ? 'cached'      :
+                         data.bulk      ? 'normal_bulk' :
+                                          'normal';
+
+      url = await unshort[unshort_type].expand(data.url);
       tracker_data.unshort_used = !!url;
     } catch (err) {
       // In case of connection/parse errors leave link as is
@@ -142,7 +207,11 @@ module.exports = function (N, apiPath) {
     let result;
 
     try {
-      result = await embedza[data.cacheOnly ? 'cached' : 'normal'].render(
+      let embedza_type = data.cacheOnly ? 'cached'      :
+                         data.bulk      ? 'normal_bulk' :
+                                          'normal';
+
+      result = await embedza[embedza_type].render(
           data.canonical || data.url,
           data.types);
 
