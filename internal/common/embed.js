@@ -264,10 +264,16 @@ module.exports = function (N, apiPath) {
   // Keep track of this url
   //
   N.wire.after(apiPath, { priority: 100 }, async function track_url(data) {
+    // don't track anything during rebuild (all errors will be 503 regardless)
+    if (data.cacheOnly) return;
+
     let tracker_data = data[tracker_data_key] || {};
     let update_data = { $set: {}, $unset: {}, $inc: { retries: 1 } };
 
     let err = tracker_data.unshort_error || tracker_data.embedza_error;
+
+    update_data.$set.uses_unshort = Boolean(tracker_data.unshort_used || tracker_data.unshort_error);
+    update_data.$set.uses_embedza = Boolean(tracker_data.embedza_used || tracker_data.embedza_error);
 
     if (err) {
       // retry all errors except:
@@ -281,13 +287,9 @@ module.exports = function (N, apiPath) {
       update_data.$set.status         = N.models.core.UrlTracker.statuses[is_fatal ? 'ERROR_FATAL' : 'ERROR_RETRY'];
       update_data.$set.error          = err.message;
       update_data.$set.error_code     = err.statusCode || err.code;
-      update_data.$unset.uses_unshort = true;
-      update_data.$unset.uses_embedza = true;
 
     } else if (tracker_data.unshort_used || tracker_data.embedza_used) {
       update_data.$set.status       = N.models.core.UrlTracker.statuses.SUCCESS;
-      update_data.$set.uses_unshort = !!tracker_data.unshort_used;
-      update_data.$set.uses_embedza = !!tracker_data.embedza_used;
       update_data.$unset.error      = true;
       update_data.$unset.error_code = true;
 
@@ -295,6 +297,11 @@ module.exports = function (N, apiPath) {
       // neither unshort nor embedza returned results,
       // so we don't need to update tracker that's already created by a parser
       return;
+    }
+
+    // delete empty $unset - causes request error
+    for (let k of Object.keys(update_data)) {
+      if (_.isEmpty(update_data[k])) delete update_data[k];
     }
 
     await N.models.core.UrlTracker.update(
