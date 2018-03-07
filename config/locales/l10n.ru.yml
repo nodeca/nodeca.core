@@ -7,6 +7,7 @@ i18n:
         date: '%e %b %Y'
         time: '%H:%M'
         datetime: '%e %B %Y, %H:%M'
+        date_numeric: '%d.%m.%Y'
 
         compact:
           default:  '%=b %Y'
