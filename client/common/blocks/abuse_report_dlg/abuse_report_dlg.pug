@@ -15,7 +15,7 @@
                   option(value=message)=title
 
           .form-group
-            textarea.abuse-report-dlg__message.form-control(name='message' rows='5' tabindex='2' placeholder=self.t('placeholder'))
+            textarea.abuse-report-dlg__message.form-control(name='message' rows='5' tabindex='2' placeholder=self.placeholder || self.t('placeholder'))
 
         .modal-footer
           button.btn.btn-secondary(type='button' tabindex='3' data-dismiss='modal')=self.t('cancel')

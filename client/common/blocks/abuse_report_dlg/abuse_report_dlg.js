@@ -1,5 +1,6 @@
 // Popup dialog to report moderator
 //
+// - placeholder - custom placeholder for textarea
 // - messages - array of messages string (first line is title)
 //
 'use strict';
