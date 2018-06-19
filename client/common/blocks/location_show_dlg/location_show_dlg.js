@@ -35,7 +35,7 @@ N.wire.on(module.apiPath, function location_show_dlg(data) {
     map = leaflet.map($('.location-show-dlg__map')[0]);
 
     if (latitude && longitude) {
-      map.setView([ latitude, longitude ], 10);
+      map.setView([ latitude, longitude ], 14);
 
       // copied from leaflet.Icon.Default.prototype.options with icon urls replaced
       let icon = leaflet.icon({
