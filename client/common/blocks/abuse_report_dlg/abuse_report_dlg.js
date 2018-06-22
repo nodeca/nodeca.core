@@ -16,6 +16,10 @@ N.wire.once(module.apiPath, function init_handlers() {
   // Submit button handler
   //
   N.wire.on(module.apiPath + ':submit', function submit_abuse_report_dlg(form) {
+    form.$this.addClass('was-validated');
+
+    if (form.$this[0].checkValidity() === false) return;
+
     params.message = form.fields.message;
     result = params;
     $dialog.modal('hide');
