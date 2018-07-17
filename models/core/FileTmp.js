@@ -1,6 +1,5 @@
 // File store for temporary (or frequently modified) files.
-// Needed to optimize defragmentation. Unlike main File store, image
-// thumbnail names are not supported here (not needed)
+// Needed to optimize defragmentation.
 //
 // DB settings shouls be in:
 //
@@ -22,6 +21,9 @@ const grid      = require('gridfs-stream');
 const pump      = require('util').promisify(require('pump'));
 const ObjectId  = mongoose.Types.ObjectId;
 
+function escapeRegexp(source) {
+  return String(source).replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
+}
 
 function tryParseObjectId(string) {
   try {
@@ -59,6 +61,18 @@ module.exports = function (N, collectionName) {
   let gfs;
 
   /*
+   * There are 2 type of files:
+   *
+   * - original files (http://mysite.com/files/0acd8213789h4e38a9e67b23)
+   * - thumbnails     (http://mysite.com/files/0acd8213789h4e38a9e67b23_small)
+   *
+   * Original files are fetched by _id and have `filename` empty.
+   * Thumbnails are fetched by `filename`, that contains from
+   * 'original_id' + '_' + 'preview size'.
+   *
+   * That's optimal for possible migration to other KV storages. Also that
+   * simplifies delete for multiple previews at once.
+   *
    * See full db structures here http://docs.mongodb.org/manual/reference/gridfs/
    *
    * Schema:
@@ -69,7 +83,7 @@ module.exports = function (N, collectionName) {
    *   uploadDate
    *   md5
    *
-   *   filename     (optional)
+   *   filename     (optional) XXX or XXX_size
    *   contentType
    *   aliases      ???
    *   metadata:
@@ -101,12 +115,22 @@ module.exports = function (N, collectionName) {
    * Params:
    *
    * - name (ObjectId|String) - `_id` of root file or `filename` for preview
+   * - all (Boolean) - true: delete all related files too
    */
-  File.remove = File.prototype.remove = async function (name) {
+  File.remove = File.prototype.remove = async function (name, all) {
     let id = name.toHexString ? name : tryParseObjectId(name);
 
     // The same as above, but via promise
     if (id) {
+      if (all) {
+        let files = await gfs.files.find({ filename: new RegExp('^' + escapeRegexp(String(name))) }).toArray();
+
+        if (!files.length) return;
+
+        let names = files.map(file => file.filename);
+
+        return await gfs.remove({ filename: names });
+      }
       return await gfs.remove({ _id: id }).then(result => result);
     }
     return await gfs.remove({ filename: name }).then(result => result);
