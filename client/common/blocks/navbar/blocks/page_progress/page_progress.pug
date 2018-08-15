@@ -2,7 +2,7 @@
 //- create dropdown menu
 mixin _page_progress_dropdown_menu(jump_path)
   form.dropdown-menu.page-progress__menu(data-on-submit=jump_path)
-    - var pgmpid = 'pgmid' + ~~(Math.random()*100000000);
+    - var pgmpid = 'pgmid' + self.get_label_uid()
 
     label.input(for=pgmpid)= self.t('jump_to')
 
