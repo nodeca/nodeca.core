@@ -6,11 +6,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
 script: make test-ci
 services:
-  - redis
+  - redis-server
   - mongodb
-addons:
-  apt:
-    packages:
-      - redis-server
 sudo: false
 dist: trusty
