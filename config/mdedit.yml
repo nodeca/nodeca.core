@@ -57,7 +57,7 @@ mdedit:
         mac: 'Cmd-L'
       command: cmdLink
       priority: 40
-      depend: links
+      depend: link
 
     image:
       css_class: icon icon-picture
@@ -67,14 +67,14 @@ mdedit:
         mac: 'Cmd-G'
       command: cmdImage
       priority: 50
-      depend: images
+      depend: image
 
     attach:
       css_class: icon icon-attach
       tooltip: "@mdedit.toolbar.attach"
       command: cmdAttach
       priority: 60
-      depend: attachments
+      depend: attachment
 
     ol:
       css_class: icon icon-list-numbered
@@ -84,7 +84,7 @@ mdedit:
         mac: 'Cmd-O'
       command: cmdOl
       priority: 80
-      depend: lists
+      depend: list
 
     ul:
       css_class: icon icon-list-bullet
@@ -94,7 +94,7 @@ mdedit:
         mac: 'Cmd-U'
       command: cmdUl
       priority: 90
-      depend: lists
+      depend: list
 
     emoji:
       css_class: icon icon-emoji

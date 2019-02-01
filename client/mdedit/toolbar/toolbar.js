@@ -23,7 +23,7 @@ N.wire.once('init:mdedit', function () {
     var buttons = _.reduce(N.MDEdit.__options__.toolbar, function (result, btn) {
 
       // If parser plugin inactive - remove button
-      if (N.MDEdit.__options__.parseOptions[btn.depend] === false) {
+      if (btn.depend && !N.MDEdit.__options__.parseOptions[btn.depend]) {
         return result;
       }
 
