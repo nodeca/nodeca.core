@@ -20,6 +20,28 @@ mdedit:
       priority: 100
     help: true
 
+  # Toolbar configuration for editing posts created by other users.
+  #
+  # Same as default, but it excludes attachment button, so moderators can't
+  # attach photos from their own albums (attachment plugin is still enabled
+  # so existing attaches can be rendered)
+  #
+  as_moderator:
+    bold: true
+    italic: true
+    separator1:
+      priority: 30
+    link: true
+    image: true
+    separator2:
+      priority: 70
+    ol: true
+    ul: true
+    emoji: true
+    separator3:
+      priority: 100
+    help: true
+
 
   # buttons templates
 
