@@ -61,7 +61,7 @@ module.exports = function (N, collectionName) {
       return N.redis.setexAsync('embedza:' + key, 60 * 60, JSON.stringify(value));
     }
 
-    return this.update({ key }, { value: JSON.stringify(value) }, { upsert: true });
+    return this.updateOne({ key }, { value: JSON.stringify(value) }, { upsert: true });
   };
 
 

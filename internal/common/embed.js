@@ -304,7 +304,7 @@ module.exports = function (N, apiPath) {
       if (_.isEmpty(update_data[k])) delete update_data[k];
     }
 
-    await N.models.core.UrlTracker.update(
+    await N.models.core.UrlTracker.updateOne(
       { url: data.url },
       update_data,
       { upsert: false }

@@ -32,7 +32,7 @@ module.exports = function (N, collectionName) {
 
 
   UnshortCache.statics.set = function (key, value) {
-    return this.update({ key }, { value }, { upsert: true });
+    return this.updateOne({ key }, { value }, { upsert: true });
   };
 
 
