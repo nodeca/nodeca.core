@@ -1,7 +1,7 @@
 // File store for user attachments: images with tumbnails & other files.
 // Supports image with thumbnails removal in single call.
 //
-// DB settings shouls be in:
+// DB settings should be in:
 //
 // - N.config.database.mongo_files  (if you need separate db)
 // - N.config.database.mongo        (fallback to main db)
@@ -12,12 +12,12 @@
 'use strict';
 
 
+const _         = require('lodash');
 const fs        = require('fs');
 const mime      = require('mime-types').lookup;
 
 const stream    = require('readable-stream');
 const mongoose  = require('mongoose');
-const grid      = require('gridfs-stream');
 const pump      = require('util').promisify(require('pump'));
 const ObjectId  = mongoose.Types.ObjectId;
 
@@ -106,7 +106,7 @@ module.exports = function (N, collectionName) {
     let id = name.toHexString ? name : tryParseObjectId(name);
     let condition = id ? { _id: id } : { filename: name };
 
-    return gfs.files.findOne(condition).then(result => result);
+    return gfs.find(condition).next();
   };
 
   /*
@@ -123,17 +123,19 @@ module.exports = function (N, collectionName) {
     // The same as above, but via promise
     if (id) {
       if (all) {
-        let files = await gfs.files.find({ filename: new RegExp('^' + escapeRegexp(String(name))) }).toArray();
+        let files = await gfs.find({ filename: new RegExp('^' + escapeRegexp(String(name))) }).toArray();
 
-        if (!files.length) return;
-
-        let names = files.map(file => file.filename);
-
-        return await gfs.remove({ filename: names });
+        for (let file of files) await gfs.delete(file._id);
+        return;
       }
-      return await gfs.remove({ _id: id }).then(result => result);
+
+      let file = await gfs.find({ _id: id }).next();
+      if (file) await gfs.delete(id);
+      return;
     }
-    return await gfs.remove({ filename: name }).then(result => result);
+
+    let file = await gfs.find({ filename: name }).next();
+    if (file) await gfs.delete(file._id);
   };
 
 
@@ -152,17 +154,15 @@ module.exports = function (N, collectionName) {
    *     - origName (String) - original file name (used in downloads)
    */
   File.createWriteStream = File.prototype.createWriteStream = function (opt) {
-    let options = Object.assign({}, opt); // protect opt from modifications
+    let options = _.omit(opt, '_id', 'filename');
 
-    let _id = options._id || new ObjectId(null);
+    let _id = opt._id || new ObjectId(null);
     if (_id.toHexString) _id = tryParseObjectId(_id);
 
     if (!_id) throw new Error('File.put: invalid _id passed');
 
-    options._id = _id;
-
     // if filename NOT set - that's original file (in other case that's thumbnail)
-    options.filename = options.filename || options._id.toHexString();
+    let filename = opt.filename || _id.toHexString();
 
     // if no contentType - try to guess from original file name
     if (!options.contentType) {
@@ -178,11 +178,7 @@ module.exports = function (N, collectionName) {
       }
     }
 
-    // This 2 lines required to properly set `contentType` field
-    options.content_type = options.contentType;
-    options.mode = 'w';
-
-    return gfs.createWriteStream(options);
+    return gfs.openUploadStreamWithId(_id, filename, options);
   };
 
 
@@ -207,12 +203,10 @@ module.exports = function (N, collectionName) {
     if (!input) throw new Error('File.put: unknown source data');
 
     let output = File.createWriteStream(opt);
-    let info;
-
-    output.on('close', i => { info = i; });
 
     await pump(input, output);
-    return info;
+
+    return { _id: output.id };
   };
 
 
@@ -225,9 +219,10 @@ module.exports = function (N, collectionName) {
   //
   File.createReadStream = File.prototype.createReadStream = function (name) {
     let id = name.toHexString ? name : tryParseObjectId(name);
-    let options = id ? { _id: id } : { filename: name };
 
-    return gfs.createReadStream(options);
+    return id ?
+           gfs.openDownloadStream(id) :
+           gfs.openDownloadStreamByName(name);
   };
 
 
@@ -252,7 +247,7 @@ module.exports = function (N, collectionName) {
     let conn = mongoose.createConnection(mongoPath, options);
 
     conn.once('open', function () {
-      gfs = grid(conn.db, mongoose.mongo);
+      gfs = new mongoose.mongo.GridFSBucket(conn.db);
       N.wire.emit('init:models.' + collectionName, File, callback);
     });
   });

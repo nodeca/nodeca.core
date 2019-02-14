@@ -3,6 +3,7 @@
 
 const assert   = require('assert');
 const fs       = require('fs');
+const Mongoose = require('mongoose');
 const path     = require('path');
 
 const fileName    = path.join(__dirname, 'fixtures', 'lorem.jpg');
@@ -44,9 +45,49 @@ describe('FileTmp model test', function () {
   });
 
 
+  it('put(file) + remove(all)', async function () {
+    let origId = new Mongoose.Types.ObjectId();
+
+    // Put file
+    let f1Info = await file.put(fileName, { _id: origId, metadata: { origName: fileBase } });
+
+    // Put file's preview
+    let f2Info = await file.put(fileName, { filename: origId + '_sm', metadata: { origName: fileBase } });
+
+    // Check file exists
+    let i = await file.getInfo(f1Info._id);
+
+    assert.equal(i.contentType, 'image/jpeg');
+
+    // Check preview exists
+    i = await file.getInfo(f2Info._id);
+
+    assert.equal(i.contentType, 'image/jpeg');
+
+    // Remove file + preview
+    await file.remove(f1Info._id, true);
+
+    // Check file not exists
+    i = await file.getInfo(f1Info._id);
+
+    assert.equal(i, null);
+
+    // Check preview not exists
+    i = await file.getInfo(f2Info._id);
+
+    assert.equal(i, null);
+  });
+
+
   it('remove for not existing file', async function () {
     await file.remove('012345678901234567890123'); // by _id
     await file.remove('not_existing_file.txt');
+  });
+
+
+  it('remove(all) for not existing file', async function () {
+    await file.remove('012345678901234567890123', true); // by _id
+    await file.remove('not_existing_file.txt', true);
   });
 
 

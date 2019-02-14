@@ -17,7 +17,9 @@ describe('FileTmp (GridFS) http requests test', function () {
   let info;
 
   before(async function () {
-    info = await file.put(fileName, { metadata: { origName: fileBase } });
+    let { _id } = await file.put(fileName, { metadata: { origName: fileBase } });
+
+    info = await file.getInfo(_id);
   });
 
   it('GET', function () {
