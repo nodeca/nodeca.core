@@ -16,32 +16,32 @@ const file = TEST.N.models.core.FileTmp;
 describe('FileTmp model test', function () {
 
   it('createReadStream()', async function () {
-    let info = await file.put(fileName, { metadata: { origName: fileBase } });
+    let id = await file.put(fileName, { metadata: { origName: fileBase } });
 
     let chunks = [];
 
     await new Promise(resolve => {
-      file.createReadStream(info._id)
+      file.createReadStream(id)
         .on('data', data => { chunks.push(data); })
         .on('end', () => resolve());
     });
 
     assert.deepEqual(Buffer.concat(chunks), fileContent);
 
-    await file.remove(info._id);
+    await file.remove(id);
   });
 
 
   it('put(file) + remove()', async function () {
-    let info = await file.put(fileName, { metadata: { origName: fileBase } });
+    let id = await file.put(fileName, { metadata: { origName: fileBase } });
 
-    let i = await file.getInfo(info._id);
+    let i = await file.getInfo(id);
 
     assert.equal(i.contentType, 'image/jpeg');
     assert.equal(i.metadata.origName, 'lorem.jpg');
-    assert.equal(i.filename, info._id.toHexString());
+    assert.equal(i.filename, id.toHexString());
 
-    await file.remove(info._id);
+    await file.remove(id);
   });
 
 
@@ -49,31 +49,31 @@ describe('FileTmp model test', function () {
     let origId = new Mongoose.Types.ObjectId();
 
     // Put file
-    let f1Info = await file.put(fileName, { _id: origId, metadata: { origName: fileBase } });
+    let f1Id = await file.put(fileName, { _id: origId, metadata: { origName: fileBase } });
 
     // Put file's preview
-    let f2Info = await file.put(fileName, { filename: origId + '_sm', metadata: { origName: fileBase } });
+    let f2Id = await file.put(fileName, { filename: origId + '_sm', metadata: { origName: fileBase } });
 
     // Check file exists
-    let i = await file.getInfo(f1Info._id);
+    let i = await file.getInfo(f1Id);
 
     assert.equal(i.contentType, 'image/jpeg');
 
     // Check preview exists
-    i = await file.getInfo(f2Info._id);
+    i = await file.getInfo(f2Id);
 
     assert.equal(i.contentType, 'image/jpeg');
 
     // Remove file + preview
-    await file.remove(f1Info._id, true);
+    await file.remove(f1Id, true);
 
     // Check file not exists
-    i = await file.getInfo(f1Info._id);
+    i = await file.getInfo(f1Id);
 
     assert.equal(i, null);
 
     // Check preview not exists
-    i = await file.getInfo(f2Info._id);
+    i = await file.getInfo(f2Id);
 
     assert.equal(i, null);
   });
@@ -94,27 +94,27 @@ describe('FileTmp model test', function () {
   it('put(stream)', async function () {
     let stream = fs.createReadStream(fileName);
 
-    let info = await file.put(stream, { metadata: { origName: fileBase } });
+    let id = await file.put(stream, { metadata: { origName: fileBase } });
 
-    let i = await file.getInfo(info._id);
+    let i = await file.getInfo(id);
 
     assert.equal(i.contentType, 'image/jpeg');
     assert.equal(i.metadata.origName, 'lorem.jpg');
-    assert.equal(i.filename, info._id.toHexString());
+    assert.equal(i.filename, id.toHexString());
 
-    await file.remove(info._id);
+    await file.remove(id);
   });
 
 
   it('put(buffer)', async function () {
-    let info = await file.put(fileContent, { metadata: { origName: fileBase } });
+    let id = await file.put(fileContent, { metadata: { origName: fileBase } });
 
-    let i = await file.getInfo(info._id);
+    let i = await file.getInfo(id);
 
     assert.equal(i.contentType, 'image/jpeg');
     assert.equal(i.metadata.origName, 'lorem.jpg');
-    assert.equal(i.filename, info._id.toHexString());
+    assert.equal(i.filename, id.toHexString());
 
-    await file.remove(info._id);
+    await file.remove(id);
   });
 });

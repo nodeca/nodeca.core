@@ -206,7 +206,7 @@ module.exports = function (N, collectionName) {
 
     await pump(input, output);
 
-    return { _id: output.id };
+    return output.id;
   };
 
 
