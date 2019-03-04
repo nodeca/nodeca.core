@@ -82,21 +82,13 @@ N.wire.once('init:mdedit', function () {
 
     N.parser.md2html({
       text: N.MDEdit.text(),
-      attachments: N.MDEdit.attachments().map(function (attach) {
-        return attach.media_id;
-      }),
       options: N.MDEdit.__options__.parseOptions,
       rpc_cache: N.MDEdit.__cache__
     })
       .then(result => {
         if (!N.MDEdit.__layout__) return;
 
-        N.MDEdit.__layout__.find('.mdedit__preview').html(N.runtime.render('mdedit.preview', {
-          user_hid: N.runtime.user_hid,
-          html: result.html,
-          attachments: result.tail
-        }));
-
+        N.MDEdit.__layout__.find('.mdedit__preview').html(result.html);
         N.MDEdit.__scrollMap__ = null;
       })
       // It should never happen

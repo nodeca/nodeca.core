@@ -11,8 +11,7 @@ describe('Parser', function () {
     it('should highlight code', function () {
       let data = {
         text: '```js\nvar a = 1;\n```',
-        options: true, // enable all plugins
-        attachments: []
+        options: true // enable all plugins
       };
 
       return TEST.N.parser.md2html(data).then(res => {
@@ -28,8 +27,7 @@ describe('Parser', function () {
     it('should render footnotes', function () {
       let data = {
         text: 't1[^1] t2[^1] t3^[i1]\n\n[^1]: i2\n\nt4 [^2]\n\n[^2]: i3[^textref]\n\n[^textref]: i4',
-        options: true, // enable all plugins
-        attachments: []
+        options: true // enable all plugins
       };
 
       return TEST.N.parser.md2html(data).then(res => {
@@ -63,7 +61,7 @@ describe('Parser', function () {
       ];
 
       return Promise.all(assets.map(asset =>
-        TEST.N.parser.md2html({ text: asset[0], options: true, attachments: [] }).then(res => {
+        TEST.N.parser.md2html({ text: asset[0], options: true }).then(res => {
           assert.strictEqual(res.text_length, asset[1], `Broken asset: "${asset[0]}"`);
         })
       ));

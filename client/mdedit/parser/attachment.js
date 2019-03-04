@@ -87,7 +87,7 @@ N.wire.once('init:parser', function attachment_plugin_init() {
           $attach.data('nd-media-size', size);
         });
 
-        // Fetch all images and calculate attach tail
+        // Fetch all images
         //
         var refs = [];
 
@@ -95,11 +95,7 @@ N.wire.once('init:parser', function attachment_plugin_init() {
           refs.push($(this).data('nd-media-id'));
         });
 
-        var tail_ids = data.params.attachments.filter(function (media_id) {
-          return refs.indexOf(String(media_id)) === -1;
-        });
-
-        var attachments = get_attachments(data, tail_ids.concat(refs));
+        var attachments = get_attachments(data, refs);
 
         data.ast.find('[data-nd-media-id]').each(function () {
           var $attach = $(this);
@@ -117,16 +113,6 @@ N.wire.once('init:parser', function attachment_plugin_init() {
             $attach.data('nd-media-placeholder', true);
           }
         });
-
-        data.result.tail = tail_ids.map(function (media_id) {
-          if (!attachments[media_id]) { return null; }
-
-          return _.omitBy({
-            media_id,
-            type:      attachments[media_id].type,
-            file_name: attachments[media_id].file_name
-          }, _.isUndefined);
-        }).filter(Boolean);
 
         callback();
       });

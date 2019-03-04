@@ -1,15 +1,30 @@
 'use strict';
 
+const _ = require('lodash');
+
 N.wire.once('init:mdedit', function () {
-  N.MDEdit.commands.cmdAttach = function () {
+  N.MDEdit.commands.cmdAttach = function (editor) {
     // TODO: move this method to nodeca.users
 
-    let data = {
-      selected: this.attachments().slice()
-    };
+    let data = {};
+    let tpl = _.template('![<%= alt %>](<%= url %>)');
 
     N.wire.emit('users.blocks.media_select_dlg', data, () => {
-      this.attachments(data.selected);
+      if (!data.selected.length) return;
+
+      let str = data.selected.map(media => {
+        let url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: media.media_id });
+
+        return tpl({ alt: '', url });
+      }).join(' ');
+
+      if (editor.somethingSelected()) {
+        editor.replaceSelection(str);
+      } else {
+        editor.replaceRange(str, editor.getCursor(), editor.getCursor());
+      }
+
+      editor.focus();
     });
   };
 });

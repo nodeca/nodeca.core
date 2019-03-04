@@ -47,7 +47,6 @@ let compileToolbarConfig = _.memoize(function (name) {
 function MDEdit() {
   this.emojis           = EMOJIS;
   this.commands         = {};
-  this.__attachments__  = [];
   this.__options__      = null;
   this.__layout__       = null;
   this.__minHeight__    = 0;
@@ -68,7 +67,6 @@ function MDEdit() {
 // - parseOptions (Object) - optional, object with plugins config like
 //   `{ images: true, links: true, attachments: false }`, default `{}`
 // - text (String) - optional, text, default empty string. Can be overwritten by draft
-// - attachments (Array) - optional, attachments, default empty array. Can be overwritten by draft
 // - toolbar (String) - optional, name of toolbar config, default `default`
 // - draftKey (String) - optional, unique key to store draft, don't use drafts by default
 // - contentFooter (Element) - optional, insert widget after the last editor line
@@ -145,7 +143,6 @@ MDEdit.prototype.show = function (options) {
   N.wire.emit('mdedit:init');
 
   this.text(options.text || '');
-  this.attachments(options.attachments || []);
 
   // Get preview flag from localstore
   this.__bag__.get('hide_preview').catch(() => false).then(hide_preview => {
@@ -216,7 +213,6 @@ MDEdit.prototype.show = function (options) {
   // Load draft if needed
   //
   this.text(options.text || '');
-  this.attachments(options.attachments || []);
 
   const markStateChanged = () => { this.__state_changed__ = true; };
 
@@ -288,7 +284,6 @@ MDEdit.prototype.__state_save__ = function () {
 
     let draft = {
       text:         this.text(),
-      attachments:  this.attachments(),
       cursor:       cm.getCursor(),
       scrollTop:    cm.getScrollInfo().top
     };
@@ -342,25 +337,7 @@ MDEdit.prototype.__state_load__ = function () {
 
         return draft;
       })
-      .catch(() => {}) // Suppress storage errors
-      .then(draft => {
-        if (!draft) return;
-        //
-        // Check and load attachments
-        //
-        let attachmentsExist = draft.attachments && draft.attachments.length;
-
-        if (!attachmentsExist) return;
-
-        let checkParams = { media_ids: _.map(draft.attachments, 'media_id') };
-
-        return N.io.rpc('common.attachments_check', checkParams)
-          .then(res => {
-            let attachments = draft.attachments.filter(attach => res.media_ids.indexOf(attach.media_id) !== -1);
-            this.attachments(attachments || []);
-          });
-      })
-      .catch(() => {}); // Suppress RPC errors
+      .catch(() => {}); // Suppress storage errors
   });
 };
 
@@ -389,23 +366,6 @@ MDEdit.prototype.text = function (text) {
   this.__cm__.setCursor(this.__cm__.lineCount(), 0);
 
   N.wire.emit('mdedit:update.text');
-};
-
-
-// Get/set attachments
-//
-MDEdit.prototype.attachments = function (attachments) {
-  if (!attachments) return this.__attachments__;
-
-  this.__attachments__ = attachments;
-
-  if (this.__attachments__.length === 0) {
-    this.__layout__.addClass('mdedit__m-no-attachments');
-  } else {
-    this.__layout__.removeClass('mdedit__m-no-attachments');
-  }
-
-  N.wire.emit('mdedit:update.attachments');
 };
 
 
@@ -530,6 +490,70 @@ N.wire.on('mdedit.collapse', function collapse() {
   // Collapse
   } else {
     $layout.addClass('mdedit__m-collapsed');
+  }
+});
+
+
+// Dragdrop file to editor
+//
+N.wire.on('mdedit:dd', function mdedit_dd(data) {
+  // TODO: move this method to nodeca.users
+
+  let $layout = N.MDEdit.__layout__;
+  let x0, y0, x1, y1, ex, ey, uploaderData;
+
+  switch (data.event.type) {
+    case 'dragenter':
+      $layout.addClass('mdedit__m-active');
+      break;
+    case 'dragleave':
+      // 'dragleave' occurs when user move cursor over child HTML element
+      // track this situation and don't remove 'active' class
+      // http://stackoverflow.com/questions/10867506/
+      x0 = $layout.offset().left;
+      y0 = $layout.offset().top;
+      x1 = x0 + $layout.outerWidth();
+      y1 = y0 + $layout.outerHeight();
+      ex = data.event.originalEvent.pageX;
+      ey = data.event.originalEvent.pageY;
+
+      if (ex > x1 || ex < x0 || ey > y1 || ey < y0) {
+        $layout.removeClass('mdedit__m-active');
+      }
+      break;
+    case 'drop':
+      $layout.removeClass('mdedit__m-active');
+
+      if (data.files && data.files.length) {
+
+        uploaderData = {
+          files: data.files,
+          rpc: [ 'users.media.upload' ],
+          config: 'users.uploader_config',
+          uploaded: null
+        };
+
+        N.wire.emit('users.uploader:add', uploaderData, function () {
+          let tpl = _.template('![<%= alt %>](<%= url %>)');
+          let editor = N.MDEdit.__cm__;
+
+          let str = uploaderData.uploaded.map(media => {
+            let url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: media.media_id });
+
+            return tpl({ alt: '', url });
+          }).join(' ');
+
+          if (editor.somethingSelected()) {
+            editor.replaceSelection(str);
+          } else {
+            editor.replaceRange(str, editor.getCursor(), editor.getCursor());
+          }
+
+          editor.focus();
+        });
+      }
+      break;
+    default:
   }
 });
 

@@ -9,7 +9,6 @@
 - text (String) - text in markdown
 - imports (Array) - list of urls user has access to (optional, rebuild mode)
 - user_info (Object) - for permission checks (needed if `imports` is not present)
-- attachments (Array) - list of attachment ids
 - options (Object) - object with plugins config
   - links (Boolean)
   - images (Boolean)
@@ -21,17 +20,12 @@
 - text (String) - text for search index
 - imports (Array) - list of urls used to create this post
 - import_users (Array) - list of users needed to display this post
-- tail (Array)
-  - media_id (String)
-  - file_name (String)
-  - type (Number)
 
 ### `.md2preview(params)`
 
 **params:**
 
 - text (String) - text in markdown
-- attachments (Array) - list of attachment ids
 - link2text (Boolean) - replace links with spans
 - limit (Number) - limit maximum text length
 
@@ -88,10 +82,6 @@
 | footnote | `<sup class="footnote-ref">...</sup>` + `<hr class="footnotes-sep"><section class="footnotes">...</section>` |
 | quote | `<blockquote class="quote"><div class="quote__content">{{content}}</div></blockquote>` |
 
-
-**Attachments**:
-
-Not presented in AST, only in option `attachments`. Out in `tail` array.
 
 **Links expand:**
 
