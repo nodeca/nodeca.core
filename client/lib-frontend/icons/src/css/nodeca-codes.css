@@ -55,6 +55,8 @@
 .icon-to-bottom:before { content: '\e82d'; } /* '' */
 .icon-menu:before { content: '\e82e'; } /* '' */
 .icon-preview:before { content: '\e82f'; } /* '' */
+.icon-delivery:before { content: '\e830'; } /* '' */
+.icon-interchange:before { content: '\e831'; } /* '' */
 .icon-posts:before { content: '\e83f'; } /* '' */
 .icon-replies:before { content: '\e840'; } /* '' */
 .icon-reply:before { content: '\e841'; } /* '' */
