@@ -50,6 +50,7 @@ function wrapOptions(options) {
 }
 
 
+/* eslint-disable no-redeclare */
 function Notification(options) {
   let type = options.type || DEFAULT_TYPE;
 

@@ -17,6 +17,7 @@
 
 const _ = require('lodash');
 
+/* eslint-disable no-redeclare */
 var N;
 
 
@@ -174,9 +175,7 @@ RpcCache.prototype.__tick__ = function () {
 
 
 module.exports = function (_N) {
-  /* eslint-disable no-undef */
   N = _N;
-  /* eslint-enable no-undef */
 
   return RpcCache;
 };
