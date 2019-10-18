@@ -534,7 +534,8 @@ N.wire.once('navigate.done', { priority: 999 }, function navigate_click_handler(
 });
 
 
-// Insert new content into the current page
+// Insert new content into the current page, allowing it to be modified
+// by other hooks in navigate.done (that change quotes, avatars, etc).
 //
 //   options.$        - content to insert
 //   options.$before  - insert before this element
@@ -543,7 +544,7 @@ N.wire.once('navigate.done', { priority: 999 }, function navigate_click_handler(
 //
 // Only one of `$before`, `$after` and `$replace` options should be present.
 //
-N.wire.after('navigate.update', { priority: 999 }, function navigate_update(options) {
+N.wire.after('navigate.content_update', { priority: 999 }, function navigate_update(options) {
   if (options.$replace) {
     options.$replace.replaceWith(options.$);
 
@@ -553,6 +554,4 @@ N.wire.after('navigate.update', { priority: 999 }, function navigate_update(opti
   } else if (options.$after) {
     options.$after.after(options.$);
   }
-
-  return N.wire.emit('navigate.update.done', options);
 });

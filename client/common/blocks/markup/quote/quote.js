@@ -42,7 +42,7 @@ N.wire.once('navigate.done', function () {
       quote.addClass('quote__m-expanded');
       quote.attr('data-short-content', quote_content.html());
 
-      return N.wire.emit('navigate.update', {
+      return N.wire.emit('navigate.content_update', {
         $: $content,
         locals: res,
         $replace: quote_content
@@ -82,7 +82,7 @@ N.wire.once('navigate.done', function () {
 
 // Add localized titles to control buttons
 //
-N.wire.on([ 'navigate.done', 'navigate.update' ], function translate_titles(data) {
+N.wire.on([ 'navigate.done', 'navigate.content_update' ], function translate_titles(data) {
   (data.$ || $(document)).find('.quote__controls [data-i18n-title]').each(function () {
     let $tag = $(this);
 
@@ -94,7 +94,7 @@ N.wire.on([ 'navigate.done', 'navigate.update' ], function translate_titles(data
 
 // Replace user nick name (in case it's changed and we didn't rebuild posts yet)
 //
-N.wire.on([ 'navigate.done', 'navigate.update' ], function replace_nick(data) {
+N.wire.on([ 'navigate.done', 'navigate.content_update' ], function replace_nick(data) {
   let users;
 
   if (data.locals) {
