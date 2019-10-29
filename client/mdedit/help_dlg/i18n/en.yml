@@ -119,6 +119,11 @@ en-US:
           <td>this is a text[^1]<br /><br />[^1]: with a footnote</td>
           <td>this is a text<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup></p><hr class="footnotes-sep"><section class="footnotes"><ol class="footnotes-list"><li id="fn1" class="footnote-item"><p>with a footnote <a href="#fnref1" class="footnote-backref">↩</a></p></li></ol></section></td>
         </tr>
+        <tr>
+          <td>cut in blog entries</td>
+          <td>text before cut<br />--cut--<br />text after cut</td>
+          <td>text over line<br /><a href="#">read more</a></td>
+        </tr>
       </table>
     </div>
 
