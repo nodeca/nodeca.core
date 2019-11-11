@@ -82,32 +82,22 @@ N.wire.once('navigate.done', function () {
 
 // Add localized titles to control buttons
 //
-N.wire.on([ 'navigate.done', 'navigate.content_update' ], function translate_titles(data) {
-  (data.$ || $(document)).find('.quote__controls [data-i18n-title]').each(function () {
+function translate_titles(selector) {
+  selector.find('.quote__controls [data-i18n-title]').each(function () {
     let $tag = $(this);
 
     $tag.attr('title', N.runtime.t('common.blocks.markup.quote.' + $tag.attr('data-i18n-title')));
     $tag.removeAttr('data-i18n-title');
   });
-});
+}
 
 
 // Replace user nick name (in case it's changed and we didn't rebuild posts yet)
 //
-N.wire.on([ 'navigate.done', 'navigate.content_update' ], function replace_nick(data) {
-  let users;
-
-  if (data.locals) {
-    // page generated on client-side, so we have all the locals
-    users = data.locals.users;
-  } else {
-    // page generated on server-side with users provided through page_data
-    users = N.runtime.page_data.users;
-  }
-
+function replace_nick(selector, users) {
   if (!users) return;
 
-  (data.$ || $(document)).find('.quote__author-name[data-user-id]').each(function () {
+  selector.find('.quote__author-name[data-user-id]').each(function () {
     let $tag = $(this);
     let user_id = $tag.attr('data-user-id');
 
@@ -117,4 +107,19 @@ N.wire.on([ 'navigate.done', 'navigate.content_update' ], function replace_nick(
 
     $tag.removeAttr('data-user-id');
   });
+}
+
+
+N.wire.once('navigate.done', function fix_quotes(data) {
+  if (!data.first_load) return; // already handled by content_update
+
+  // page generated on server-side with users provided through page_data
+  translate_titles($(document));
+  replace_nick($(document), N.runtime.page_data.users);
+});
+
+
+N.wire.on('navigate.content_update', function fix_quotes(data) {
+  translate_titles(data.$);
+  replace_nick(data.$, data.locals.users);
 });
