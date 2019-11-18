@@ -1,8 +1,17 @@
 each button in self.buttons
-  button.mdedit-toolbar__item(
-    class=button.css_class
-    title=button.tooltip ? self.t(button.tooltip) : ''
-    data-command=button.command ? button.command : ''
-    data-on-click='mdedit.toolbar:click'
-    tabindex=-1
-  )
+  if button.link
+    a.mdedit-toolbar__item(
+      class=button.css_class
+      title=button.tooltip ? self.t(button.tooltip) : ''
+      href=button.link[0] === '@' ? N.router.linkTo(button.link.slice(1)) : button.link
+      target='_blank'
+      tabindex=-1
+    )
+  else
+    button.mdedit-toolbar__item(
+      class=button.css_class
+      title=button.tooltip ? self.t(button.tooltip) : ''
+      data-command=button.command ? button.command : ''
+      data-on-click='mdedit.toolbar:click'
+      tabindex=-1
+    )

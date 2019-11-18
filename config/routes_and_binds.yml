@@ -24,6 +24,9 @@ router:
     common.sitemap:
       "/sitemap.xml": ~
 
+    common.faq_markup:
+      "/faq/markup": ~
+
   bin:
     core.assets:
       "/assets/{path}":

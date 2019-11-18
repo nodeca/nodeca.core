@@ -1,5 +1,6 @@
 en-US:
-  title: Markup help
+  breadcrumbs_category: FAQ
+  breadcrumbs_title: Markup
   text: |
     md:
     <div class="table-responsive">

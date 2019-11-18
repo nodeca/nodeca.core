@@ -131,5 +131,5 @@ mdedit:
       bind_key:
         win: 'F1'
         mac: 'F1'
-      command: cmdHelp
+      link: "@common.faq_markup"
       priority: 110
