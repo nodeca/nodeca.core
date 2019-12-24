@@ -3,7 +3,8 @@
 'use strict';
 
 
-var _ = require('lodash');
+const _   = require('lodash');
+const bag = require('bagjs')({ prefix: 'nodeca' });
 
 
 N.wire.on('navigate.done', function navbar_menu_change_active(target) {
@@ -33,4 +34,22 @@ N.wire.on('navigate.done', function navbar_menu_change_active(target) {
   if ($(active).data('autoselect') !== 0) {
     $(active).addClass('_active');
   }
+});
+
+
+// Restore hidden sidebar state
+//
+N.wire.once('navigate.done', function toggle_sidebar_on_load() {
+  return bag.get('acp_hide_sidebar').then(hidden => {
+    $('body').toggleClass('show-sidebar', !hidden);
+  })
+  .catch(() => {}); // Suppress storage errors
+});
+
+
+// Toggle sidebar visibility
+//
+N.wire.on(module.apiPath + ':toggle_sidebar', function toggle_sidebar() {
+  $('body').toggleClass('show-sidebar');
+  bag.set('acp_hide_sidebar', !$('body').hasClass('show-sidebar'));
 });

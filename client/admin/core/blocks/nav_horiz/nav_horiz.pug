@@ -30,6 +30,9 @@ mixin _create_submenus(submenu, localizationPrefix)
 
 nav.navbar.navbar-light.bg-light.fixed-top.navbar-expand
   ul.navbar__hovered.nav.navbar-nav
+    li.nav-item
+      a.nav-link(href='#', data-on-click='admin.core.blocks.sidebar_menu:toggle_sidebar')!= '&#9776;'
+
     each item in sortedItems(self.runtime.navbar)
       - var info = item.info;
       if (info.submenu)
