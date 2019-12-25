@@ -324,6 +324,13 @@ fsm.onlink = function (event, from, to, params) {
     return;
   }
 
+  // Public pages and admin pages have different layouts,
+  // so we need to refresh the page when moving from one to the other.
+  if ((options.apiPath.indexOf('admin.') === 0) !== (lastPageData.apiPath.indexOf('admin.') === 0)) {
+    window.location = options.href + options.anchor;
+    return;
+  }
+
   // Fallback for old browsers.
   if (!window.history || !window.history.pushState) {
     window.location = options.href + options.anchor;
@@ -394,6 +401,13 @@ fsm.onhistoryNav = function (event, from) {
   // It's an external link or 404 error if route is not matched. So perform
   // regular page requesting via HTTP.
   if (!options.apiPath) {
+    window.location = options.href + options.anchor;
+    return;
+  }
+
+  // Public pages and admin pages have different layouts,
+  // so we need to refresh the page when moving from one to the other.
+  if ((options.apiPath.indexOf('admin.') === 0) !== (lastPageData.apiPath.indexOf('admin.') === 0)) {
     window.location = options.href + options.anchor;
     return;
   }
