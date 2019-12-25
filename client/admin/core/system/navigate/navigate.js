@@ -256,7 +256,11 @@ function render(data, scroll) {
 
       document.title = data.locals.head.title;
 
-      $('#content').replaceWith(content);
+      return N.wire.emit('navigate.content_update', {
+        $: content,
+        locals: data.locals,
+        $replace: $('#content')
+      });
     })
     .then(() => N.wire.emit('navigate.done', data))
     .then(() => N.wire.emit('navigate.done:' + data.apiPath, data))
