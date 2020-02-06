@@ -28,7 +28,7 @@ module.exports = function (N, collectionName) {
     data => N.models.core.MessageParams.findOneAndUpdate(
               { data },
               { $setOnInsert: { data } },
-              { 'new': true, upsert: true }
+              { new: true, upsert: true }
             ).then(found => found._id)
   );
 

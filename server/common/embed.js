@@ -23,7 +23,7 @@ module.exports = function (N, apiPath) {
       uniqueItems: true,
       items: {
         type: 'string',
-        'enum': [ 'block', 'inline' ]
+        enum: [ 'block', 'inline' ]
       }
     }
   });

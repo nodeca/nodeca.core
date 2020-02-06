@@ -18,7 +18,7 @@ module.exports = function (N, collectionName) {
 
     locale:     String,
 
-    ts:         { type: Date, 'default': Date.now },
+    ts:         { type: Date, default: Date.now },
 
     result:     String,
 

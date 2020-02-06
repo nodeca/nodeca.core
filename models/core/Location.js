@@ -13,7 +13,7 @@ module.exports = function (N, collectionName) {
     hash:          String,
 
     location:      [ Number, Number ],
-    ts:            { type: Date, 'default': Date.now },
+    ts:            { type: Date, default: Date.now },
 
     // resolved location name, null if not resolved
     name:          String,

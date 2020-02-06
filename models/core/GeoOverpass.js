@@ -16,7 +16,7 @@ module.exports = function (N, collectionName) {
 
     location:   [ Number, Number ],
 
-    ts:         { type: Date, 'default': Date.now },
+    ts:         { type: Date, default: Date.now },
 
     result:     String,
 

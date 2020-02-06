@@ -17,7 +17,7 @@ module.exports = function (N, collectionName) {
     let query = this.findOneAndUpdate(
       { key: name },
       { $inc: { value: 1 } },
-      { 'new': true, upsert: true }
+      { new: true, upsert: true }
     );
 
     if (!callback) {

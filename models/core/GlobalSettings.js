@@ -11,7 +11,7 @@ var Schema   = Mongoose.Schema;
 
 module.exports = function (N, collectionName) {
   var GlobalSettings = new Schema({
-    data: { type: Schema.Types.Mixed, 'default': {} }
+    data: { type: Schema.Types.Mixed, default: {} }
   });
 
 
