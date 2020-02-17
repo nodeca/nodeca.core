@@ -239,7 +239,8 @@ module.exports = function (N, collectionName) {
       // see https://mongoosejs.com/docs/deprecations.html for details
       useNewUrlParser: true,
       useFindAndModify: false,
-      useCreateIndex: true
+      useCreateIndex: true,
+      useUnifiedTopology: true
     };
 
     let mongoPath = N.config.database.mongo_files || N.config.database.mongo;
