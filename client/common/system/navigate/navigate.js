@@ -532,10 +532,8 @@ N.wire.once('navigate.done', { priority: 999 }, function navigate_click_handler(
 
     let href = $this.attr('href');
 
-    if (href.indexOf('data:') === 0) {
-      // Skip data URIs.
-      return;
-    }
+    if (!href) return; // Skip links without href
+    if (href.indexOf('data:') === 0) return; // Skip data URIs.
 
     if (href === '#') {
       // Prevent clicks on special "button"-links.
