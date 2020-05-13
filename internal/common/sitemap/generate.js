@@ -4,7 +4,6 @@
 
 const _        = require('lodash');
 const eos      = require('end-of-stream');
-const pump     = require('pump');
 const pumpify  = require('pumpify');
 const through2 = require('through2');
 const zlib     = require('zlib');
@@ -178,7 +177,8 @@ module.exports = function (N, apiPath) {
     await Promise.all(data.streams.map(stream_info => new Promise((resolve, reject) => {
       let out_stream = SiteMapStream(stream_info.name, files);
 
-      pump(stream_info.stream, out_stream, err => (err ? reject(err) : resolve()));
+      stream_info.stream.pipe(out_stream);
+      eos(out_stream, err => (err ? reject(err) : resolve()));
       out_stream.resume();
     })));
 
