@@ -27,8 +27,8 @@ bundles:
   vendor.pikaday:
     - vendor.pikaday
 
-  vendor.pica:
-    - vendor.pica
+  vendor.image-blob-reduce:
+    - vendor.image-blob-reduce
 
   vendor.typeahead:
     - vendor.typeahead
@@ -97,9 +97,9 @@ packages:
 
     entries: client/vendor/pikaday
 
-  vendor.pica:
+  vendor.image-blob-reduce:
     vendor:
-      - pica
+      - image-blob-reduce
 
   vendor.typeahead:
     vendor:
