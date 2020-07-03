@@ -2,7 +2,6 @@
 
 
 const assert  = require('assert');
-const Promise = require('bluebird');
 
 
 describe('Parser', function () {
