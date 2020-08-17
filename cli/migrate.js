@@ -7,7 +7,7 @@
 
 
 exports.parserParameters  = {
-  addHelp:      true,
+  add_help:     true,
   help:         'run migrations',
   description:  'Without args show new migrations. With ' +
                 ' `--all` run all migrations.'
@@ -18,7 +18,7 @@ module.exports.commandLineArguments = [
     args: [ '--all' ],
     options: {
       help:   'run all migrations',
-      action: 'storeTrue'
+      action: 'store_true'
     }
   }
 ];
