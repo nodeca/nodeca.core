@@ -16,9 +16,9 @@ const _         = require('lodash');
 const fs        = require('fs');
 const mime      = require('mime-types').lookup;
 
-const stream    = require('readable-stream');
+const stream    = require('stream');
 const mongoose  = require('mongoose');
-const pump      = require('util').promisify(require('pump'));
+const pipeline  = require('util').promisify(stream.pipeline);
 const ObjectId  = mongoose.Types.ObjectId;
 
 function escapeRegexp(source) {
@@ -43,10 +43,7 @@ function getStream(src) {
 
   } else if (Buffer.isBuffer(src)) {
     // buffer passed
-    let streamBuffer = new stream.Transform();
-    streamBuffer.push(src);
-    streamBuffer.end();
-    return streamBuffer;
+    return stream.Readable.from([ src ], { objectMode: false });
 
   } else if (src.readable) {
     return src;
@@ -204,7 +201,7 @@ module.exports = function (N, collectionName) {
 
     let output = File.createWriteStream(opt);
 
-    await pump(input, output);
+    await pipeline(input, output);
 
     return output.id;
   };
