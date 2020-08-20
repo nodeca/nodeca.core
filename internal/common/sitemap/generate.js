@@ -3,9 +3,7 @@
 'use strict';
 
 const _        = require('lodash');
-const eos      = require('end-of-stream');
-const pumpify  = require('pumpify');
-const through2 = require('through2');
+const stream   = require('stream');
 const zlib     = require('zlib');
 
 // limit urls per sitemap file, sitemap specification sets 50k limit
@@ -46,39 +44,43 @@ function get_changefreq(time) {
 module.exports = function (N, apiPath) {
   /* eslint-disable new-cap */
   function SiteMapFile() {
-    return through2({ writableObjectMode: true }, function (chunk, encoding, callback) {
-      if (!this.date) this.date = Date.now();
+    return stream.Transform({
+      writableObjectMode: true,
+      transform(chunk, encoding, callback) {
+        if (!this.date) this.date = Date.now();
 
-      if (!chunk.loc) {
-        callback(new Error('sitemap_generate: no location specified for url entry'));
-        return;
+        if (!chunk.loc) {
+          callback(new Error('sitemap_generate: no location specified for url entry'));
+          return;
+        }
+
+        if (!this.header_written) {
+          this.push(FILE_HEADER);
+          this.header_written = true;
+        }
+
+        let data = '<url>\n';
+
+        data += `  <loc>${_.escape(chunk.loc)}</loc>\n`;
+
+        if (chunk.lastmod) {
+          data += `  <lastmod>${_.escape(chunk.lastmod.toISOString())}</lastmod>\n`;
+          data += `  <changefreq>${_.escape(chunk.changefreq || get_changefreq(+chunk.lastmod))}</changefreq>\n`;
+        }
+
+        if (chunk.priority) {
+          data += `  <priority>${_.escape(chunk.priority)}</priority>\n`;
+        }
+
+        data += '</url>\n';
+
+        this.push(data);
+        callback();
+      },
+      flush(callback) {
+        this.push(FILE_FOOTER);
+        callback();
       }
-
-      if (!this.header_written) {
-        this.push(FILE_HEADER);
-        this.header_written = true;
-      }
-
-      let data = '<url>\n';
-
-      data += `  <loc>${_.escape(chunk.loc)}</loc>\n`;
-
-      if (chunk.lastmod) {
-        data += `  <lastmod>${_.escape(chunk.lastmod.toISOString())}</lastmod>\n`;
-        data += `  <changefreq>${_.escape(chunk.changefreq || get_changefreq(+chunk.lastmod))}</changefreq>\n`;
-      }
-
-      if (chunk.priority) {
-        data += `  <priority>${_.escape(chunk.priority)}</priority>\n`;
-      }
-
-      data += '</url>\n';
-
-      this.push(data);
-      callback();
-    }, function (callback) {
-      this.push(FILE_FOOTER);
-      callback();
     });
   }
 
@@ -87,55 +89,34 @@ module.exports = function (N, apiPath) {
     N.logger.info('Writing sitemap file: ' + filename);
 
     N.models.core.FileTmp.remove(filename)
+      .catch(() => { /* ignore error */ })
       .then(() => {
-        callback(null, pumpify.obj(
-          SiteMapFile(),
+        let file_stream = SiteMapFile();
+
+        stream.pipeline(
+          file_stream,
           zlib.createGzip(),
           N.models.core.FileTmp.createWriteStream({
             filename,
             contentType: 'application/x-gzip'
-          })
-        ));
-      }, err => callback(err));
+          }),
+          () => {}
+        );
+
+        callback(null, file_stream);
+      }).catch(err => callback(err));
   }
 
 
   function SiteMapStream(name, files) {
-    return through2({ writableObjectMode: true }, function write(chunk, encoding, callback) {
-      if (!this.initialized) {
-        // initialization
-        this.url_count   = 0;
-        this.file_no     = 0;
-        this.initialized = true;
-
-        let filename = `sitemap-${name}-${_.padStart(++this.file_no, 3, '0')}.xml.gz`;
-
-        files.push(filename);
-
-        create_new_file(filename, (err, stream) => {
-          if (err) {
-            callback(err);
-            return;
-          }
-
-          this.stream = stream;
-
-          this.url_count++;
-          this.stream.write(chunk, encoding, callback);
-        });
-        return;
-      }
-
-      if (this.url_count >= MAX_URLS) {
-        this.stream.end();
-
-        eos(this.stream, err => {
-          if (err) {
-            callback(err);
-            return;
-          }
-
-          this.url_count = 0;
+    return stream.Transform({
+      writableObjectMode: true,
+      transform(chunk, encoding, callback) {
+        if (!this.initialized) {
+          // initialization
+          this.url_count   = 0;
+          this.file_no     = 0;
+          this.initialized = true;
 
           let filename = `sitemap-${name}-${_.padStart(++this.file_no, 3, '0')}.xml.gz`;
 
@@ -150,18 +131,49 @@ module.exports = function (N, apiPath) {
             this.stream = stream;
 
             this.url_count++;
-            this.stream.write(chunk, callback);
+            this.stream.write(chunk, encoding, callback);
           });
-        });
-        return;
+          return;
+        }
+
+        if (this.url_count >= MAX_URLS) {
+          this.stream.end();
+
+          stream.finished(this.stream, err => {
+            if (err) {
+              callback(err);
+              return;
+            }
+
+            this.url_count = 0;
+
+            let filename = `sitemap-${name}-${_.padStart(++this.file_no, 3, '0')}.xml.gz`;
+
+            files.push(filename);
+
+            create_new_file(filename, (err, stream) => {
+              if (err) {
+                callback(err);
+                return;
+              }
+
+              this.stream = stream;
+
+              this.url_count++;
+              this.stream.write(chunk, callback);
+            });
+          });
+          return;
+        }
+
+        this.url_count++;
+        this.stream.write(chunk, callback);
+      },
+      flush(callback) {
+        this.stream.end();
+
+        stream.finished(this.stream, callback);
       }
-
-      this.url_count++;
-      this.stream.write(chunk, callback);
-    }, function finish(callback) {
-      this.stream.end();
-
-      eos(this.stream, callback);
     });
   }
 
@@ -177,8 +189,7 @@ module.exports = function (N, apiPath) {
     await Promise.all(data.streams.map(stream_info => new Promise((resolve, reject) => {
       let out_stream = SiteMapStream(stream_info.name, files);
 
-      stream_info.stream.pipe(out_stream);
-      eos(out_stream, err => (err ? reject(err) : resolve()));
+      stream.pipeline(stream_info.stream, out_stream, err => (err ? reject(err) : resolve()));
       out_stream.resume();
     })));
 
