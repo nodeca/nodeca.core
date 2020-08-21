@@ -22,9 +22,6 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage', class=self.offline_m
 
       var shims = [];
 
-      if (!window.requestAnimationFrame || !window.cancelAnimationFrame)
-        shims.push('$$ JSON.stringify(asset_url("raf.js")) $$');
-
       NodecaLoader.loadAssets.init(
         !{JSON.stringify(self.head.assets)},
         '!{self.apiPath.split(".").shift()}',

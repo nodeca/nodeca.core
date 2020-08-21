@@ -62,7 +62,6 @@ packages:
       - jquery
       - event-wire
       - steady # scroll tracker
-      - raf.js
       - faye/src/faye_browser
       - tabex
       # template helpers
