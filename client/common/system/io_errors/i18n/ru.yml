@@ -1,0 +1,5 @@
+ru-RU:
+  system_error: 'Ошибка #{code}'
+  invalid_csrf_token: Токен безопасности истёк. Пожалуйста, попробуйте ещё раз.
+  application_fuckup: Ошибка приложения. Попробуйте позже.
+  communication_timeout: Проблемы с соединением. Попробуйте позже.

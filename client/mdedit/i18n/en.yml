@@ -6,7 +6,7 @@ en-US:
     quote: Quote
     spoiler: Spoiler
     image: Insert external image by link
-    attach: Add image from albums
+    attach: Add image from an album
     ol: Numbered list
     ul: Bulleted list
     emoji: Emoji
@@ -16,7 +16,7 @@ en-US:
 
     cut_text: enter cut text here
 
-  drop_help: Drag photos to editor to upload or click <span class="icon icon-attach"></span> to select from albums
+  drop_help: Drag photos to editor to upload, or click <span class="icon icon-attach"></span> to select from albums
   cancel: Cancel
   submit: Submit
   preview: Preview

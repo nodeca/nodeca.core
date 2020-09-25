@@ -1,0 +1,148 @@
+ru-RU:
+  breadcrumbs_category: ЧаВО
+  breadcrumbs_title: Разметка
+  text: |
+    md:
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <tr>
+          <th>Описание</th>
+          <th>Пример</th>
+          <th>Результат</th>
+        </tr>
+        <tr>
+          <td>заголовок</td>
+          <td>## большой<br />### средний<br />#### мелкий</td>
+          <td><h2>большой</h2><h3>средний</h3><h4>мелкий</h5></td>
+        </tr>
+        <tr>
+          <td>жирный текст</td>
+          <td>__жирный текст__</td>
+          <td><b>жирный текст</b></td>
+        </tr>
+        <tr>
+          <td>курсивный текст</td>
+          <td>_курсивный текст_</td>
+          <td><i>курсивный текст</i></td>
+        </tr>
+        <tr>
+          <td>ссылка</td>
+          <td>[текст ссылки]&#x200b;(http://&#x200b;google.com/)</td>
+          <td><a href="http://google.com/">текст ссылки</a></td>
+        </tr>
+        <tr>
+          <td>картинка</td>
+          <td>![альт-текст]&#x200b;(http://&#x200b;www.w3.org&#x200b;/Icons&#x200b;/w3c_home)</td>
+          <td><img src="http://www.w3.org/Icons/w3c_home" alt="альт-текст" /></td>
+        </tr>
+        <tr>
+          <td>нумерованный список</td>
+          <td>1. яблоко<br />2. банан<br />3. ананас</td>
+          <td><ol><li>яблоко</li><li>банан</li><li>ананас</li></ol></td>
+        </tr>
+        <tr>
+          <td>маркированный список</td>
+          <td>- яблоко<br />- банан<br />- ананас</td>
+          <td><ul><li>яблоко</li><li>банан</li><li>ананас</li></ul></td>
+        </tr>
+        <tr>
+          <td>горизонтальная линия</td>
+          <td>текст над линией<br /> - - - -<br />текст под линией</td>
+          <td>текст над линией<hr />текст под линией</td>
+        </tr>
+        <tr>
+          <td>цитата</td>
+          <td>http://reference<br />> цитата<br />> текст</td>
+          <td>
+            <blockquote class="quote">
+              <footer class="quote__title"><cite>автор</cite>:</footer>
+              <div class="quote__content">цитата<br />текст</div>
+            </blockquote>
+          </td>
+        </tr>
+        <tr>
+          <td>цитата (другой вариант)</td>
+          <td>```quote http://reference<br />цитата<br />текст<br />```</td>
+          <td>
+            <blockquote class="quote">
+              <footer class="quote__title"><cite>автор</cite>:</footer>
+              <div class="quote__content">цитата<br />текст</div>
+            </blockquote>
+          </td>
+        </tr>
+        <tr>
+          <td>спойлер</td>
+          <td>```spoiler нажми сюда<br />текст<br />```</td>
+          <td>
+            <div class="spoiler">
+              <div class="spoiler__title"><span class="spoiler__icon-collapse icon icon-collapse-alt icon-space-after"></span><span class="spoiler__icon-expand icon icon-expand-alt icon-space-after"></span>нажми сюда</div>
+              <div class="spoiler__inner"><div class="spoiler__content"><p>текст</p></div></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>нижний индекс</td>
+          <td>CH~3~CH~2~OH</td>
+          <td>CH<sub>3</sub>CH<sub>2</sub>OH</td>
+        </tr>
+        <tr>
+          <td>верхний индекс</td>
+          <td>E^2^ = (mc^2^)^2^ + (pc)^2^2</td>
+          <td>E<sup>2</sup> = (mc<sup>2</sup>)<sup>2</sup> + (pc)<sup>2</sup></td>
+        </tr>
+        <tr>
+          <td>блок кода</td>
+          <td>```js<br />let f = (n) =><br />  n < 2 ?<br />  n :<br />  f(n-1)<br />   + f(n-2)<br />```</td>
+          <td><pre><code class="js"><span class="hljs-keyword">let</span> f = (n) =&gt;
+      n &lt; <span class="hljs-number">2</span> ?
+      n :
+      f(n-<span class="hljs-number">1</span>)
+        + f(n-<span class="hljs-number">2</span>)</code></pre></td>
+        </tr>
+        <tr>
+          <td>таблица</td>
+          <td>
+            | 1820 | 1920 | 2000 |<br />
+            | --- | --- | --- |<br />
+            | 35000 | 15000 | 17 |<br />
+            | 14.2 | 14.9 | 15.8 |
+          </td>
+          <td>
+            <table class="table table-striped">
+              <tr><th>1820</th><th>1920</th><th>2000</th></tr>
+              <tr><td>35000</td><td>15000</td><td>17</td></tr>
+              <tr><td>14.2</td><td>14.9</td><td>15.8</td></tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>примечание</td>
+          <td>это — текст[^1]<br /><br />[^1]: с примечанием</td>
+          <td>это — текст<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup></p><hr class="footnotes-sep"><section class="footnotes"><ol class="footnotes-list"><li id="fn1" class="footnote-item"><p>с примечанием <a href="#fnref1" class="footnote-backref">↩</a></p></li></ol></section></td>
+        </tr>
+        <tr>
+          <td>кат в блогах</td>
+          <td>текст перед катом<br />--cut--<br />текст под катом</td>
+          <td>текст перед катом<br /><a href="#">читать далее</a></td>
+        </tr>
+      </table>
+    </div>
+
+    ### Аттачи и их размеры.
+
+    Все аттачи (картинки из альбомов пользователя) сохраняются в трёх размерах:
+
+    - __sm__ - маленький (по умолчанию)
+    - __md__ - средний
+    - __orig__ - оригинал (или макс разрешённый)
+
+    Если вы вставите картинку, используя ссылку на неё из вашего альбома, она будет
+    вставлена как миниатюра со ссылкой на оригинал. Вы можете изменить размер картинки,
+    используя `md` и `orig` модификаторы в альт-тексте:
+
+    - `![](http://example.com/member25/media/55c2)` - обычная вставка аттача, миниатюра.
+    - `![md](http://example.com/member25/media/55c2)` - средний размер картинки.
+    - `![orig](http://example.com/member25/media/55c2)` - максимальный размер картинки.
+
+    Если вам нужно вставить свой текст в `alt` аттрибуте, можно использовать `|` для отделения размера:
+    `![Альт-текст|md](http://example.com/member25/media/55c2)`.

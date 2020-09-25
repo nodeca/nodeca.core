@@ -123,27 +123,26 @@ en-US:
         <tr>
           <td>cut in blog entries</td>
           <td>text before cut<br />--cut--<br />text after cut</td>
-          <td>text over line<br /><a href="#">read more</a></td>
+          <td>text before cut<br /><a href="#">read more</a></td>
         </tr>
       </table>
     </div>
 
     ### Attachments and sizes.
 
-    All attachments (images from user albums) a stored in 3 sizes:
+    All attachments (images from user albums) are stored in three sizes:
 
     - __sm__ - small (default)
     - __md__ - medium
     - __orig__ - original (or max allowed)
 
-    If you insert image tag and use adress of photo page in your album, it will
+    If you insert image tag and use address of photo page in your album, it will
     be inserted as thumbnail with link to original. You can change image size
-    by `md` and `orig` modifiers in `alt` tag:
+    using `md` and `orig` modifiers in alt text:
 
-    - `![](http://example.com/member25/media/55c2)` - default attachment code,
-      small thumbnail.
-    - `![md](http://example.com/member25/media/55c2)` - display medium image.
-    - `![orig](http://example.com/member25/media/55c2)` - display max allowed image.
+    - `![](http://example.com/member25/media/55c2)` - default attachment code, thumbnail.
+    - `![md](http://example.com/member25/media/55c2)` - medium image.
+    - `![orig](http://example.com/member25/media/55c2)` - max allowed image.
 
     If you need to place text in `alt` attribute, use `|` to separate size name:
     `![Alt text|md](http://example.com/member25/media/55c2)`.
