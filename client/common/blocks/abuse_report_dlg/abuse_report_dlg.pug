@@ -5,7 +5,7 @@
         .modal-header
           h4.modal-title=self.t('title')
           button.close(type='button' tabindex='-1' data-dismiss='modal') &times;
-        .modal-body
+        .modal-body.abuse-report-dlg__controls
           if self.messages.length
             .form-group
               select.form-control.custom-select(data-on-change='common.blocks.abuse_report_dlg:quick_fill' tabindex='1')
@@ -14,7 +14,10 @@
                   - var title = message.split('\n').shift(); // first line
                   option(value=message)=title
 
-          .form-group
+          .form-group.abuse-report-dlg__loading-placeholder(style='display: none')
+            span.icon.icon-loading-placeholder
+
+          .form-group.abuse-report-dlg__default-control
             textarea.abuse-report-dlg__message.form-control(
               name='message'
               rows='5'

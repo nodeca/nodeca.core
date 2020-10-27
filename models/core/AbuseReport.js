@@ -20,6 +20,9 @@ module.exports = function (N, collectionName) {
     // Report text
     text: String,
 
+    // Additional data for custom forms
+    data: Schema.Types.Mixed,
+
     // Flag defining whether this report was created automatically
     auto_reported: Boolean,
 
