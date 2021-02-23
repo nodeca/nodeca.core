@@ -16,10 +16,10 @@ module.exports = function (N) {
       }
 
       // Fetch session ID from token record
-      let sessionID = await N.redis.getAsync('token_live:' + data.message.token);
+      let sessionID = await N.redis.get('token_live:' + data.message.token);
 
       // Fetch session
-      let rawData = await N.redis.getAsync('sess:' + sessionID);
+      let rawData = await N.redis.get('sess:' + sessionID);
 
       // If session not found
       if (!rawData) {

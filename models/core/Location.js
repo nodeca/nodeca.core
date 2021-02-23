@@ -83,7 +83,7 @@ module.exports = function (N, collectionName) {
     }
 
     if (locations_to_resolve.length) {
-      await N.redis.rpushAsync.apply(N.redis,
+      await N.redis.rpush.apply(N.redis,
         [ fast ? 'geo:location:fast' : 'geo:location' ].concat(locations_to_resolve));
 
       N.queue.geo_location_resolve().run();

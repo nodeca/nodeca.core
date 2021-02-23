@@ -193,6 +193,6 @@ module.exports = function (N, apiPath) {
       out_stream.resume();
     })));
 
-    await N.redis.setAsync('sitemap', JSON.stringify({ files, date: Date.now() }));
+    await N.redis.set('sitemap', JSON.stringify({ files, date: Date.now() }));
   });
 };

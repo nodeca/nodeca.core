@@ -27,7 +27,7 @@ module.exports = function (N, collectionName) {
   EmbedzaCache.statics.get = function (key) {
     // Get image dimensions cache from redis instead of mongodb
     if (key.indexOf('image#') === 0) {
-      return N.redis.getAsync('embedza:' + key).then(cache => {
+      return N.redis.get('embedza:' + key).then(cache => {
         if (cache) {
           try {
             cache = JSON.parse(cache);
@@ -58,7 +58,7 @@ module.exports = function (N, collectionName) {
     // Store image dimensions cache in redis instead of mongodb
     if (key.indexOf('image#') === 0) {
       // Will expire after one hour
-      return N.redis.setexAsync('embedza:' + key, 60 * 60, JSON.stringify(value));
+      return N.redis.setex('embedza:' + key, 60 * 60, JSON.stringify(value));
     }
 
     return this.updateOne({ key }, { value: JSON.stringify(value) }, { upsert: true });

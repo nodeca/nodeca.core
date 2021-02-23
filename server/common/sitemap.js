@@ -12,7 +12,7 @@ module.exports = function (N, apiPath) {
   });
 
   N.wire.on(apiPath, async function print_sitemap_index(env) {
-    let sitemap_data = await N.redis.getAsync('sitemap');
+    let sitemap_data = await N.redis.get('sitemap');
     let content;
 
     if (sitemap_data) {

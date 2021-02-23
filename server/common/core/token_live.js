@@ -48,6 +48,6 @@ module.exports = function (N, apiPath) {
 
     // - save token here because we couldn't know session_id earlier
     // - if same record already exists redis will only update TTL
-    await N.redis.setexAsync('token_live:' + env.session.token_live, ttl, env.session_id);
+    await N.redis.setex('token_live:' + env.session.token_live, ttl, env.session_id);
   });
 };
