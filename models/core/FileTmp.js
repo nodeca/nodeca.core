@@ -227,7 +227,6 @@ module.exports = function (N, collectionName) {
 
     // connect to database
     let options = {
-      promiseLibrary: require('bluebird'),
       poolSize: 10,
       connectTimeoutMS: 30000,
       keepAlive: 1,
