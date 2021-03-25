@@ -30,14 +30,9 @@ module.exports = function (N, collectionName) {
     // http status (e.g. 403) or system code (e.g. 'ETIMEDOUT')
     error_code: Schema.Types.Mixed,
 
-    // probe results (only if status=SUCCESS)
-    value: {
-      width:    Number, // width factor
-      height:   Number, // height factor
-      wUnits:   String, // width unit (`px`, `em`, etc.)
-      hUnits:   String, // height unit (`px`, `em`, etc.)
-      length:   Number  // file size in bytes
-    },
+    // image size data (probe-image-size results as is, only if status=SUCCESS),
+    // https://github.com/nodeca/probe-image-size
+    value:      Schema.Types.Mixed,
 
     // timestamps of start and end of last request, for debugging
     ts_begin:   Date,
