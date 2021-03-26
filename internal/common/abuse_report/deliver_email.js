@@ -5,8 +5,8 @@
 // - report - N.models.core.AbuseReport
 // - recipients - { user_id: user_info }
 // - locals - rendering data
-// - email_templates - { body, subject } - i18n path
-//
+// - subject_email
+// - template
 //
 'use strict';
 
@@ -21,10 +21,10 @@ module.exports = function (N) {
   // Send abuse report via email
   //
   N.wire.on('internal:common.abuse_report.deliver', async function send_via_email(params) {
-    if (!params.email_templates) {
+    if (!params.template) {
       let type_name = _.invert(_.get(N, 'shared.content_type', {}))[params.report.type];
 
-      N.logger.warn(`Abuse report (${type_name}): email templates not specified`);
+      N.logger.warn(`Abuse report (${type_name}): template not specified`);
       return;
     }
 
@@ -56,10 +56,18 @@ module.exports = function (N) {
 
       let from = `"${encode(nick)} @ ${encode(params.locals.project_name)}" <${N.config.email.from}>`;
 
-      let subject = render(N, params.email_templates.subject, params.locals, helpers);
-      let body = render(N, params.email_templates.body, params.locals, helpers);
+      let subject = helpers.t(params.subject_email, params.locals);
+      let text = render(N, params.template, params.locals, helpers);
 
-      return N.mailer.send({ from, to, subject, html: body })
+      let options = await N.models.core.MessageParams.getParams(params.report.params_ref);
+
+      let { html } = await N.parser.md2html({
+        text,
+        options,
+        user_info
+      });
+
+      return N.mailer.send({ from, to, subject, text, html })
         .catch(err => {
           // don't return an error here
           N.logger.error('Cannot send email to %s: %s', to, err.message || err);
