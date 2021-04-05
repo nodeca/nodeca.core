@@ -201,6 +201,10 @@ module.exports = function (N, collectionName) {
 
     let output = File.createWriteStream(opt);
 
+    // workaround for https://github.com/Automattic/mongoose/issues/10107
+    // TODO: remove this when mongodb@3.6.6 gets released
+    output.once('finish', () => output.destroy());
+
     await pipeline(input, output);
 
     return output.id;
