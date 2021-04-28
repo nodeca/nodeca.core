@@ -29,16 +29,17 @@ mixin _create_submenus(submenu, localizationPrefix)
 
 
 nav.navbar.navbar-light.bg-light.fixed-top.navbar-expand
-  ul.navbar__hovered.nav.navbar-nav
-    li.nav-item
-      a.nav-link(href='#', data-on-click='admin.core.blocks.sidebar_menu:toggle_sidebar')!= '&#9776;'
+  .container-fluid
+    ul.navbar__hovered.nav.navbar-nav
+      li.nav-item
+        a.nav-link(href='#', data-on-click='admin.core.blocks.sidebar_menu:toggle_sidebar')!= '&#9776;'
 
-    each item in sortedItems(self.runtime.navbar)
-      - var info = item.info;
-      if (info.submenu)
-        li.nav-item.dropdown(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
-          a.nav-link(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
-          +_create_submenus(info.submenu, localizationPrefix + item.name + '.')
-      else
-        li.nav-item(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
-          a.nav-link(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
+      each item in sortedItems(self.runtime.navbar)
+        - var info = item.info;
+        if (info.submenu)
+          li.nav-item.dropdown(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
+            a.nav-link(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
+            +_create_submenus(info.submenu, localizationPrefix + item.name + '.')
+        else
+          li.nav-item(data-api-path=info.to, data-autoselect=(info.autoselect === false ? 0 : 1))
+            a.nav-link(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
