@@ -83,8 +83,9 @@ module.exports = function (N, collectionName) {
     }
 
     if (locations_to_resolve.length) {
-      await N.redis.rpush.apply(N.redis,
-        [ fast ? 'geo:location:fast' : 'geo:location' ].concat(locations_to_resolve));
+      await N.redis.zadd.apply(N.redis,
+        [ fast ? 'geo:location:fast' : 'geo:location', 'NX' ]
+          .concat(...locations_to_resolve.map(l => [ Date.now(), l ])));
 
       N.queue.geo_location_resolve().run();
     }
