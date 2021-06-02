@@ -1,9 +1,6 @@
-//- Close button differs from one on frontend,
-//- to minimize custom fonts use. Be careful,
-//- don't override this template.
 .notification.alert.alert-dismissible.fade(
   class='notification-' + self.style
 )
-  button.close(type='button' data-bs-dismiss='alert' aria-label='Close')
-    span(aria-hidden='true') &times;
+  button.btn-close.notification-close-default(type='button' data-bs-dismiss='alert' aria-label='Close')
+  button.btn-close.btn-close-white.notification-close-white(type='button' data-bs-dismiss='alert' aria-label='Close')
   .notification__text!= self.message

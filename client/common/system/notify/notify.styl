@@ -33,8 +33,6 @@
 .notification
   position: relative;
 
-  padding .75rem 1.25rem
-  border-radius 3px
   border-left 3px solid transparent
   box-shadow 0px 2px 8px #a0a0a0
 
@@ -51,15 +49,6 @@
   a
     font-weight bold
     text-decoration underline
-
-  .close
-    position relative
-    padding .25rem .75rem
-    top -.25rem
-    right -.75rem
-    margin -0.15rem -0.25rem -0.25rem -0.75rem
-    opacity .2
-    font-size 1rem
 
   // OFF state
   &.fade
@@ -89,6 +78,16 @@
   color $brand-primary - 10%
   a
     color $brand-primary - 10%
+
+.notification-close-white
+  display none
+
+.notification-danger
+  .notification-close-default
+    display none
+
+  .notification-close-white
+    display block
 
 
 .notifications-container
