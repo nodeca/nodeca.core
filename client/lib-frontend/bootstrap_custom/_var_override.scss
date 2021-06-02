@@ -2,21 +2,27 @@
 // to automatically keep new vars on bootstrap updates
 // -----------------------------------------------------
 
-// set colors
-$theme-colors: (
-  primary:   #4a7fb5, // overridden
-  secondary: lighten(#4a7fb5, 42%), // overridden (derived from primary color)
-  success:   #a4cf5b, // overridden
-  info:      #17a2b8, // default ($cyan)
-  warning:   #ffc107, // default ($yellow)
-  danger:    #de5e5d, // overridden
-  light:     #f8f9fa, // default ($gray-100)
-  dark:      #343a40  // default ($gray-800)
-);
+// set theme colors
+$primary:   #4a7fb5;
+$secondary: lighten(#4a7fb5, 42%); // overridden (derived from primary color)
+$success:   #a4cf5b; // overridden
+$info:      #17a2b8; // default ($cyan)
+$warning:   #ffc107; // default ($yellow)
+$danger:    #de5e5d; // overridden
+$light:     #f8f9fa; // default ($gray-100)
+$dark:      #343a40; // default ($gray-800)
+
+// set contrast ratio when color changes from light to dark,
+// need at most 4 for primary (#4a7fb5) to be contrasted with white
+$min-contrast-ratio:         3;
 
 // set text color
-$body-color:                     #2b2b2b;
-$body-color-secondary:           #c6cbd1;
+$body-color:                 #2b2b2b;
+$body-color-secondary:       #c6cbd1;
 
 // override navbar item color
-$navbar-dark-active-color:       rgba(#fff, .75);
+$navbar-dark-active-color:   rgba(#fff, .75);
+
+// override link decoration
+$link-decoration:            none;
+$link-hover-decoration:      underline;

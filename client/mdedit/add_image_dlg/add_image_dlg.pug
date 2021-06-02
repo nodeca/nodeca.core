@@ -3,12 +3,12 @@
     .modal-content
       .modal-header
         h4.modal-title= self.t('title')
-        button.close(type='button' tabindex='-1' data-dismiss='modal') &times;
+        button.btn-close(type='button' tabindex='-1' data-bs-dismiss='modal')
       .modal-body
         input.add-image-dialog__input.form-control(
           type='text'
           placeholder=self.t('input_desc')
         )
       .modal-footer
-        button.btn.btn-secondary(type='button' data-dismiss='modal')= self.t('cancel')
+        button.btn.btn-secondary(type='button' data-bs-dismiss='modal')= self.t('cancel')
         button.add-image-dialog__apply.btn.btn-primary(type='submit')= self.t('ok')

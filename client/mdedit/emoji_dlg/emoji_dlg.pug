@@ -3,7 +3,7 @@
     .modal-content
       .modal-header
         h4.modal-title= self.t('title')
-        button.close(type='button' tabindex='-1' data-dismiss='modal') &times;
+        button.btn-close(type='button' tabindex='-1' data-bs-dismiss='modal')
       .modal-body
         ul.emoji-dlg__list.clearfix
           each data, emoji in self.emojis
@@ -11,4 +11,4 @@
               a.emoji-dlg__item-link(href='#' data-value=data.name title=data.aliases.join(' '))
                 span.emoji(class='emoji-' + data.name)=emoji
       .modal-footer
-        button.btn.btn-secondary(type='button' data-dismiss='modal')= self.t('cancel')
+        button.btn.btn-secondary(type='button' data-bs-dismiss='modal')= self.t('cancel')

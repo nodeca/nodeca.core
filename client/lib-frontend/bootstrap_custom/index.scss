@@ -1,14 +1,19 @@
 // Modify this file to use custom colors, font-sizes, etc
 @import "var_override";
 
+
+// Configuration
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
-//@import "bootstrap/scss/print";
+@import "bootstrap/scss/utilities";
+
+// Layout & components
+@import "bootstrap/scss/root";
 @import "bootstrap/scss/reboot";
 @import "bootstrap/scss/type";
 @import "bootstrap/scss/images";
-@import "bootstrap/scss/code";
+@import "bootstrap/scss/containers";
 @import "bootstrap/scss/grid";
 @import "bootstrap/scss/tables";
 @import "bootstrap/scss/forms";
@@ -16,43 +21,47 @@
 @import "bootstrap/scss/transitions";
 @import "bootstrap/scss/dropdown";
 @import "bootstrap/scss/button-group";
-@import "bootstrap/scss/input-group";
-@import "bootstrap/scss/custom-forms";
 @import "bootstrap/scss/nav";
 @import "bootstrap/scss/navbar";
 @import "bootstrap/scss/card";
+//@import "bootstrap/scss/accordion";
 //@import "bootstrap/scss/breadcrumb";
 @import "bootstrap/scss/pagination";
 @import "bootstrap/scss/badge";
-//@import "bootstrap/scss/jumbotron";
 @import "bootstrap/scss/alert";
 @import "bootstrap/scss/progress";
-//@import "bootstrap/scss/media";
 @import "bootstrap/scss/list-group";
 @import "bootstrap/scss/close";
+//@import "bootstrap/scss/toasts";
 @import "bootstrap/scss/modal";
 @import "bootstrap/scss/tooltip";
 @import "bootstrap/scss/popover";
 @import "bootstrap/scss/carousel";
-@import "bootstrap/scss/utilities";
+//@import "bootstrap/scss/spinners";
+//@import "bootstrap/scss/offcanvas";
+
+// Helpers
+@import "bootstrap/scss/helpers";
+
+// Utilities
+@import "bootstrap/scss/utilities/api";
 
 // add xs-sized button
 $input-btn-padding-x-xs:     .4rem;
 $input-btn-padding-y-xs:     .2rem;
 $input-btn-border-radius-xs: .15rem;
-$line-height-xs:             1.25;
 $font-size-xs:               .75rem !default;
 
 .btn-xs {
-  @include button-size($input-btn-padding-y-xs, $input-btn-padding-x-xs, $font-size-xs, $line-height-xs, $input-btn-border-radius-xs);
+  @include button-size($input-btn-padding-y-xs, $input-btn-padding-x-xs, $font-size-xs, $input-btn-border-radius-xs);
 }
 
 // override secondary button color (bootstrap button text colors are either white or black)
 .btn-secondary {
-  color: theme-color("primary");
+  color: $primary;
 
   &:hover {
-    color: theme-color("primary");
+    color: $primary;
   }
 }
 

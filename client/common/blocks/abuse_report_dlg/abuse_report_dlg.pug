@@ -4,7 +4,7 @@
       form(novalidate, data-on-submit='common.blocks.abuse_report_dlg:submit')
         .modal-header
           h4.modal-title=self.t('title')
-          button.close(type='button' tabindex='-1' data-dismiss='modal') &times;
+          button.btn-close(type='button' tabindex='-1' data-bs-dismiss='modal')
         .modal-body.abuse-report-dlg__controls
           if self.messages.length
             .form-group
@@ -27,5 +27,5 @@
             )
 
         .modal-footer
-          button.btn.btn-secondary(type='button' tabindex='3' data-dismiss='modal')=self.t('cancel')
+          button.btn.btn-secondary(type='button' tabindex='3' data-bs-dismiss='modal')=self.t('cancel')
           button.btn.btn-danger(type='submit' tabindex='4')=self.t('ok')

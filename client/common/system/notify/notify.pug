@@ -1,6 +1,6 @@
 .notification.alert.alert-dismissible.fade(
   class='notification-' + self.style
 )
-  button.close(type='button' data-dismiss='alert' aria-label='Close')
+  button.close(type='button' data-bs-dismiss='alert' aria-label='Close')
     span.icon.icon-x.icon-only(aria-hidden='true')
   .notification__text!= self.message
