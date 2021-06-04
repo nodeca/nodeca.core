@@ -5,12 +5,12 @@
         h4.modal-title= self.t('title')
         button.btn-close(type='button' tabindex='-1' data-bs-dismiss='modal')
       .modal-body
-        .form-group
+        .mb-3
           input.add-link-dialog__text.form-control(
             type='text'
             placeholder=self.t('text_desc')
           )
-        .form-group
+        .mb-3
           input.add-link-dialog__link.form-control(
             type='text'
             placeholder=self.t('link_desc')

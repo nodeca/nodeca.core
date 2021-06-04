@@ -1,7 +1,7 @@
 //- NOTE: ReCaptcha markup is hidden by default.
 //- You must control it's visibility manually via Knockout bindings.
 
-.form-group.recaptcha-control(data-bind='visible: visible', style="display: none")
+.recaptcha-control.mb-3(data-bind='visible: visible', style="display: none")
   label(for="recaptcha_response_field")= self.t('captcha')
   .recaptcha-container
     #recaptcha_div

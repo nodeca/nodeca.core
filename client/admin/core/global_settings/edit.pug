@@ -15,7 +15,7 @@
       fieldset
         legend(data-bind="text: $root.categoryNames[$data]")
         // ko foreach: $root.categorySettings[$data]
-        .form-group.row
+        .row.mb-3
           label.col-form-label.col-md-3(data-bind="text: localizedName, attr: { 'for': id }")
           .controls.col-md-6
             // ko if: 'string' === type
@@ -29,11 +29,11 @@
             // ko if: 'boolean' === type
             .switch
               input(type="checkbox", data-bind="checked: value, attr: { id: id }")
-              label(data-yes=self.t('setting.yes'), data-no=self.t('setting.no'), data-bind="attr: { 'for': id }"): i
+              label.form-label(data-yes=self.t('setting.yes'), data-no=self.t('setting.no'), data-bind="attr: { 'for': id }"): i
             // /ko
 
             // ko if: 'dropdown' === type
-            select.form-control.custom-select(data-bind="options: valueOptions, optionsText: 'title', optionsValue: 'value', value: value, attr: { id: id }")
+            select.form-control.form-select(data-bind="options: valueOptions, optionsText: 'title', optionsValue: 'value', value: value, attr: { id: id }")
             // /ko
 
             // ko if: 'combobox' === type
@@ -51,7 +51,7 @@
 
       // /ko
 
-      .form-group.row
+      .row.mb-3
         .col-md-9.ml-md-auto
           .form-actions
             button.btn.btn-primary(type="submit", data-bind="enable: $root.isDirty")= self.t('save')

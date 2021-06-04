@@ -7,17 +7,17 @@
           button.btn-close(type='button' tabindex='-1' data-bs-dismiss='modal')
         .modal-body.abuse-report-dlg__controls
           if self.messages.length
-            .form-group
-              select.form-control.custom-select(data-on-change='common.blocks.abuse_report_dlg:quick_fill' tabindex='1')
+            .mb-3
+              select.form-control.form-select(data-on-change='common.blocks.abuse_report_dlg:quick_fill' tabindex='1')
                 option(value='')=self.t('templates_help')
                 each message in self.messages
                   - var title = message.split('\n').shift(); // first line
                   option(value=message)=title
 
-          .form-group.abuse-report-dlg__loading-placeholder(style='display: none')
+          .abuse-report-dlg__loading-placeholder.mb-3(style='display: none')
             span.icon.icon-loading-placeholder
 
-          .form-group.abuse-report-dlg__default-control
+          .abuse-report-dlg__default-control
             textarea.abuse-report-dlg__message.form-control(
               name='message'
               rows='5'
