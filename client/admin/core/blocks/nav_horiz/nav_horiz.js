@@ -10,7 +10,7 @@ N.wire.on('navigate.done', function navbar_menu_change_active(target) {
   var targetPath = target.apiPath.split('.'), tabs, active;
 
   tabs = $('.navbar__hovered').find('[data-api-path]');
-  tabs.removeClass('active');
+  tabs.removeClass('show');
 
   // Select the most specific tab - with the longest API path match.
   active = _.maxBy(tabs, function (tab) {
@@ -27,6 +27,7 @@ N.wire.on('navigate.done', function navbar_menu_change_active(target) {
 
   // if autoselection not disabled - add highlighting class
   if ($(active).data('autoselect') !== 0) {
-    $(active).addClass('active');
+    // need to use either .nav-item.show or .nav-item>.nav-link.active
+    $(active).addClass('show');
   }
 });
