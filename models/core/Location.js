@@ -79,7 +79,7 @@ module.exports = function (N, collectionName) {
         locations_to_resolve.push(lonlat[0] + ':' + lonlat[1] + ':' + locale);
       }
 
-      result.push(location && location.name ? location.name : '');
+      result.push(location?.name ?? '');
     }
 
     if (locations_to_resolve.length) {

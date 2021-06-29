@@ -70,7 +70,7 @@ module.exports.run = async function (N, args) {
   if (args.app) {
     if (!_.find(applications, app => app.name === args.app)) {
       let msg = `Invalid application name: ${args.app}\n` +
-          'Valid apps are:  ' + _.map(applications, app => app.name).join(', ');
+          'Valid apps are:  ' + applications.map(app => app.name).join(', ');
 
       throw msg;
     }

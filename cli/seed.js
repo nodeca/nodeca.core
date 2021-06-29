@@ -95,7 +95,7 @@ module.exports.run = async function (N, args) {
 
   function get_app_path(app_name) {
     let app = N.apps.some(a => a.name === app_name);
-    return app ? app.root : null;
+    return app?.root;
   }
 
   await N.wire.emit('init:models', N);

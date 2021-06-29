@@ -75,7 +75,7 @@ function Notification(options) {
 
   this.$element = $(N.runtime.render(module.apiPath, {
     message: options.message || '',
-    style: (DEFAULT_OPTIONS[type] || {}).style
+    style: DEFAULT_OPTIONS[type]?.style
   }));
 
   // get container, where to insert notice

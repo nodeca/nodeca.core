@@ -34,9 +34,7 @@ module.exports = function (N, collectionName) {
 
   // Store parameter set to the database and return its id
   //
-  MessageParams.statics.setParams = function (params) {
-    params = params || {};
-
+  MessageParams.statics.setParams = function (params = {}) {
     let sorted = {};
 
     Object.keys(params).sort().forEach(k => { sorted[k] = params[k]; });

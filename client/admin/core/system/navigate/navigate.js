@@ -332,7 +332,7 @@ fsm.onlink = function (event, from, to, params) {
   }
 
   // Fallback for old browsers.
-  if (!window.history || !window.history.pushState) {
+  if (!window.history?.pushState) {
     window.location = options.href + options.anchor;
     return;
   }
@@ -425,7 +425,7 @@ fsm.onhistoryNav = function (event, from) {
 ///////////////////////////////////////////////////////////////////////////////
 // statechange handler
 
-if (window.history && window.history.pushState) {
+if (window.history?.pushState) {
   // called on back/forward buttons and go() js method call
   // TODO: check if this works correctly if we're changing url for popups
   window.addEventListener('popstate', () => { fsm.historyNav(); });
@@ -532,10 +532,8 @@ N.wire.once('navigate.done', { priority: 999 }, function navigate_click_handler(
 
     let href = $this.attr('href');
 
-    if (href.indexOf('data:') === 0) {
-      // Skip data URIs.
-      return;
-    }
+    if (!href) return; // Skip links without href
+    if (href.indexOf('data:') === 0) return; // Skip data URIs.
 
     if (href === '#') {
       // Prevent clicks on special "button"-links.

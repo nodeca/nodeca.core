@@ -37,7 +37,7 @@ module.exports = function (N, apiPath) {
 
     res.tabs.sort((a, b) => a.priority - b.priority);
 
-    res.tabs = _.map(res.tabs, 'name');
+    res.tabs = res.tabs.map(x => x.name);
 
     //
     // Collect groups per tab.

@@ -29,7 +29,7 @@ N.wire.once('init:parser', function link_expand_plugin_init() {
           let result = data.params.rpc_cache.get('common.embed', { url, types });
 
           // Switch url destination if it's been unshortened
-          if (result && result.canonical) {
+          if (result?.canonical) {
             $tag.attr('href', result.canonical);
           }
 

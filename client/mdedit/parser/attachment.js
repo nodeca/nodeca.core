@@ -1,20 +1,20 @@
 'use strict';
 
 
-var _ = require('lodash');
+const _ = require('lodash');
 
 
 // Get attachments and cache them
 //
 function get_attachments(data, ids) {
-  var cache = data.params.rpc_cache.sandbox.attachments;
+  let cache = data.params.rpc_cache.sandbox.attachments;
 
   if (!cache) {
     cache = data.params.rpc_cache.sandbox.attachments = {};
   }
 
-  var attachments = {};
-  var pending = [];
+  let attachments = {};
+  let pending = [];
 
   _(ids).uniq().sort().forEach(function (id) {
     if (!cache.hasOwnProperty(id)) {
@@ -25,11 +25,11 @@ function get_attachments(data, ids) {
     }
   });
 
-  var result = data.params.rpc_cache.get('common.content.attachments', {
+  let result = data.params.rpc_cache.get('common.content.attachments', {
     ids: pending
   });
 
-  if (result && result.attachments) {
+  if (result?.attachments) {
     pending.forEach(function (id) {
       attachments[id] = cache[id] = result.attachments[id];
     });
@@ -53,8 +53,8 @@ N.wire.once('init:parser', function attachment_plugin_init() {
 
         // find all images that point to an attachment and set data-nd-media-id attr
         data.ast.find('.image').each(function () {
-          var $attach = $(this);
-          var match = _.find(N.router.matchAll($attach.attr('src')), function (match) {
+          let $attach = $(this);
+          let match = _.find(N.router.matchAll($attach.attr('src')), function (match) {
             return match.meta.methods.get === 'users.media';
           });
 
@@ -66,9 +66,9 @@ N.wire.once('init:parser', function attachment_plugin_init() {
           //  - ![md](link)
           //  - ![arbitrary text|md](link)
           //
-          var alt = $attach.attr('alt') || '';
-          var pos = alt.lastIndexOf('|');
-          var size;
+          let alt = $attach.attr('alt') || '';
+          let pos = alt.lastIndexOf('|');
+          let size;
 
           if (pos !== -1) {
             size = alt.slice(pos + 1).trim();
@@ -89,17 +89,17 @@ N.wire.once('init:parser', function attachment_plugin_init() {
 
         // Fetch all images
         //
-        var refs = [];
+        let refs = [];
 
         data.ast.find('[data-nd-media-id]').map(function () {
           refs.push($(this).data('nd-media-id'));
         });
 
-        var attachments = get_attachments(data, refs);
+        let attachments = get_attachments(data, refs);
 
         data.ast.find('[data-nd-media-id]').each(function () {
-          var $attach = $(this);
-          var media_id = $attach.data('nd-media-id');
+          let $attach = $(this);
+          let media_id = $attach.data('nd-media-id');
 
           // attachments[media_id] could be:
           //  - object { type, file_name } - if attachment exists

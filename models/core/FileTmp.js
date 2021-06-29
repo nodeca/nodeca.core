@@ -163,7 +163,7 @@ module.exports = function (N, collectionName) {
 
     // if no contentType - try to guess from original file name
     if (!options.contentType) {
-      let origName = (options.metadata || {}).origName;
+      let origName = options.metadata?.origName;
 
       if (!origName) {
         throw new Error('File.put: ContentType or metadata.origName must be set');

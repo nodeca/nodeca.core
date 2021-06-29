@@ -46,7 +46,7 @@ module.exports = function (N, apiPath) {
 
   function create_relimit() {
     let relimit = new Relimit({
-      scheduler: (N.config.database || {}).redis,
+      scheduler: N.config.database?.redis,
       rate(item) {
         return limits.rate(normalize(item));
       },

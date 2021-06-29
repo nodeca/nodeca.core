@@ -251,7 +251,7 @@ MDEdit.prototype.hide = function (options) {
   clearInterval(this.__state_monitor__);
 
   // Remove draft if needed
-  if ((options || {}).removeDraft && this.__options__.draftKey) {
+  if (options?.removeDraft && this.__options__.draftKey) {
     this.__bag__.remove(`mdedit_${this.__options__.draftKey}`)
       .catch(() => {}); // Suppress storage errors
   }
@@ -524,7 +524,7 @@ N.wire.on('mdedit:dd', function mdedit_dd(data) {
     case 'drop':
       $layout.removeClass('mdedit__m-active');
 
-      if (data.files && data.files.length) {
+      if (data.files?.length) {
 
         uploaderData = {
           files: data.files,
