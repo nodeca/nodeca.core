@@ -23,22 +23,21 @@ const DRAFTS_EXPIRE = 7 * 24 * 60 * 60; // 7 days
 //
 let compileToolbarConfig = _.memoize(function (name) {
   let buttonName;
+  let result = [];
 
-  return _.reduce(TOOLBAR[name], function (result, buttonParams, key) {
-    if (!buttonParams) {
-      return result;
-    }
+  for (let [ key, buttonParams ] of Object.entries(TOOLBAR[name])) {
+    if (!buttonParams) continue;
 
     buttonName = key.indexOf('separator') === 0 ? 'separator' : key;
 
     if (buttonParams === true) {
       result.push(TOOLBAR.buttons[buttonName]);
     } else {
-      result.push(_.defaults({}, buttonParams, TOOLBAR.buttons[buttonName]));
+      result.push(Object.assign({}, TOOLBAR.buttons[buttonName], buttonParams));
     }
+  }
 
-    return result;
-  }, []).sort((a, b) => a.priority - b.priority);
+  return result.sort((a, b) => a.priority - b.priority);
 });
 
 

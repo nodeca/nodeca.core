@@ -36,7 +36,7 @@ const MAX_CONNECTIONS = 50;
 module.exports = function (N, apiPath) {
   const tracker_data_key = Symbol('tracker_data');
 
-  let rootUrl = _.get(N.config, 'bind.default.mount', 'http://localhost') + '/';
+  let rootUrl = (N.config.bind?.default?.mount || 'http://localhost') + '/';
   let userAgentEmbedza = `${embedza_pkg.name}/${embedza_pkg.version} (Nodeca; +${rootUrl})`;
   let userAgentUnshort = `${unshort_pkg.name}/${unshort_pkg.version} (Nodeca; +${rootUrl})`;
 

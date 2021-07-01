@@ -1,24 +1,21 @@
 'use strict';
 
 
-const _ = require('lodash');
-
-
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdEmoji = function (editor) {
-    let emojis = _.reduce(N.MDEdit.emojis.named, (acc, emoji, name) => {
-      if (!acc[emoji]) {
-        acc[emoji] = {
+    let emojis = {};
+
+    for (let [ name, emoji ] of Object.entries(N.MDEdit.emojis.named)) {
+      if (!emojis[emoji]) {
+        emojis[emoji] = {
           name,
           aliases: [ ':' + name + ':' ].concat(N.MDEdit.emojis.aliases[name] || [])
         };
 
       } else {
-        acc[emoji].aliases.push(':' + name + ':');
+        emojis[emoji].aliases.push(':' + name + ':');
       }
-
-      return acc;
-    }, {});
+    }
 
     let $emojiDialog = $(N.runtime.render('mdedit.emoji_dlg', { emojis }));
 

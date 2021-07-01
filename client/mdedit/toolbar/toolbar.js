@@ -1,9 +1,6 @@
 'use strict';
 
 
-var _ = require('lodash');
-
-
 N.wire.once('init:mdedit', function () {
 
   // Set initial value
@@ -20,22 +17,17 @@ N.wire.once('init:mdedit', function () {
     }
 
     // Get actual buttons
-    var buttons = _.reduce(N.MDEdit.__options__.toolbar, function (result, btn) {
+    let buttons = [];
 
+    for (let btn of N.MDEdit.__options__.toolbar) {
       // If parser plugin inactive - remove button
-      if (btn.depend && !N.MDEdit.__options__.parseOptions[btn.depend]) {
-        return result;
-      }
+      if (btn.depend && !N.MDEdit.__options__.parseOptions[btn.depend]) continue;
 
       // If duplicate separator - remove it
-      if (btn.separator && result.length > 0 && result[result.length - 1].separator) {
-        return result;
-      }
+      if (btn.separator && buttons.length > 0 && buttons[buttons.length - 1].separator) continue;
 
-      result.push(btn);
-
-      return result;
-    }, []);
+      buttons.push(btn);
+    }
 
     // If first item is separator - remove
     if (buttons.length > 0 && buttons[0].separator) {
@@ -51,19 +43,15 @@ N.wire.once('init:mdedit', function () {
     $toolbar.html(N.runtime.render('mdedit.toolbar', { buttons }));
 
     // Process hotkeys for editor
-    N.MDEdit.__toolbarHotkeys__ = buttons.reduce(function (result, button) {
-      if (!button.command || !button.bind_key || !N.MDEdit.commands[button.command]) {
-        return result;
+    N.MDEdit.__toolbarHotkeys__ = {};
+
+    for (let button of buttons) {
+      if (!button.command || !button.bind_key || !N.MDEdit.commands[button.command]) continue;
+
+      for (let bindKey of Object.values(button.bind_key)) {
+        N.MDEdit.__toolbarHotkeys__[bindKey] = () => { N.MDEdit.commands[button.command](N.MDEdit.__cm__); };
       }
-
-      _.forEach(button.bind_key, function (bindKey) {
-        result[bindKey] = function () {
-          N.MDEdit.commands[button.command](N.MDEdit.__cm__);
-        };
-      });
-
-      return result;
-    }, {});
+    }
 
     // Enable active button's hotkeys
     N.MDEdit.__cm__.addKeyMap(N.MDEdit.__toolbarHotkeys__);
@@ -73,7 +61,7 @@ N.wire.once('init:mdedit', function () {
   // Toolbar button click
   //
   N.wire.on('mdedit.toolbar:click', function toolbar_click(data) {
-    var command = N.MDEdit.commands[data.$this.data('command')].bind(N.MDEdit);
+    let command = N.MDEdit.commands[data.$this.data('command')].bind(N.MDEdit);
 
     if (command) {
       command(N.MDEdit.__cm__);

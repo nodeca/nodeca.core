@@ -1,11 +1,11 @@
 // Request data with delay and cache result
 //
-//   var cache = new RpcCache();
+//   let cache = new RpcCache();
 //
 //   cache.trackStart();
 //
 //   $tags.forEach(function ($tag) {
-//     var res = cache.get('common.embed', { link: $tag.attr('href'), type: 'block' });
+//     let res = cache.get('common.embed', { link: $tag.attr('href'), type: 'block' });
 //
 //     if (res) { /* ... */ }
 //   });
@@ -15,10 +15,8 @@
 'use strict';
 
 
-const _ = require('lodash');
-
 /* eslint-disable no-redeclare */
-var N;
+let N;
 
 
 // - delay (Number) - optional, delay before make request to actualize request, default 3000 ms
@@ -114,23 +112,21 @@ RpcCache.prototype.trackStop = function () {
   // If `trackStop()` called without `trackStart()` - skip
   if (!this.__trackedUpdate__) return;
 
-  let tracked = this.__tracked__;
+  let tracked = {};
 
   // Remove requests if not added in tracker
-  tracked = _.reduce(tracked, (acc, v, k) => {
+  for (let [ k, v ] of Object.entries(this.__tracked__)) {
     if (this.__trackedUpdate__[k]) {
-      acc[k] = v;
+      tracked[k] = v;
     }
-
-    return acc;
-  }, {});
+  }
 
   // Add new requests
-  _.forEach(this.__trackedUpdate__, (v, k) => {
+  for (let [ k, v ] of Object.entries(this.__trackedUpdate__)) {
     if (!tracked[k]) {
       tracked[k] = v;
     }
-  });
+  }
 
   this.__tracked__ = tracked;
   this.__trackedUpdate__ = null;
@@ -144,8 +140,9 @@ RpcCache.prototype.trackStop = function () {
 // Update timer tick
 //
 RpcCache.prototype.__tick__ = function () {
-  _.forEach(this.__tracked__, (v, k) => {
+  for (let [ k, v ] of Object.entries(this.__tracked__)) {
     // If request timeout is over
+    /* eslint-disable no-loop-func */
     if (v[2] + this.__delay__ < Date.now()) {
       // Remove request from tracked
       delete this.__tracked__[k];
@@ -164,7 +161,7 @@ RpcCache.prototype.__tick__ = function () {
           }
         });
     }
-  });
+  }
 
   // If no more tracked data - stop timer
   if (Object.keys(this.__tracked__).length === 0) {

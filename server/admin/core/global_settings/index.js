@@ -1,13 +1,10 @@
 'use strict';
 
 
-const _ = require('lodash');
-
-
 function fetchGroupInfo(N, name) {
-  let settingsCount = _.filter(N.config.setting_schemas.global, {
-    group_key: name
-  }).length;
+  let settingsCount = Object.values(N.config.setting_schemas.global)
+                            .filter(x => x.group_key === name)
+                            .length;
 
   return { name, settingsCount };
 }
@@ -28,12 +25,12 @@ module.exports = function (N, apiPath) {
     // Collect tabs, i.e. groups without `parent`.
     //
 
-    _.forEach(N.config.setting_groups, (config, name) => {
+    for (let [ name, config ] of Object.entries(N.config.setting_groups)) {
       if (config.parent === null) {
         res.tabs.push({ name, priority: config.priority });
         res.groups[name] = [];
       }
-    });
+    }
 
     res.tabs.sort((a, b) => a.priority - b.priority);
 
@@ -43,14 +40,14 @@ module.exports = function (N, apiPath) {
     // Collect groups per tab.
     //
 
-    _.forEach(res.tabs, tab => {
-      _.forEach(N.config.setting_groups, (config, name) => {
+    for (let tab of res.tabs) {
+      for (let [ name, config ] of Object.entries(N.config.setting_groups)) {
         if (tab === config.parent) {
           res.groups[tab].push(fetchGroupInfo(N, name));
         }
-      });
+      }
 
       res.groups[tab].sort((a, b) => a.priority - b.priority);
-    });
+    }
   });
 };
