@@ -184,7 +184,7 @@ module.exports.run = async function (N, args) {
   //
   console.log('Available seeds:\n');
 
-  _.forEach(seed_list, function (seed, idx) {
+  seed_list.forEach(function (seed, idx) {
     console.log(`  ${idx + 1}. ${seed.name}: ${path.basename(seed.seed_path)}`);
   });
 

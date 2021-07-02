@@ -94,7 +94,7 @@ module.exports.run = async function (N, args) {
     testedApps = applications;
   }
 
-  _.forEach(testedApps, app => {
+  for (let app of testedApps) {
     glob.sync('**', { cwd: app.root + '/test' })
       // skip files when
       // - filename starts with _, e.g.: /foo/bar/_baz.js
@@ -110,7 +110,7 @@ module.exports.run = async function (N, args) {
           mocha.files.push(`${app.root}/test/${file}`);
         }
       });
-  });
+  }
 
   await new Promise((resolve, reject) => {
     mocha.run(err => (err ? reject(err) : resolve()));

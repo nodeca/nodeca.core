@@ -34,7 +34,7 @@ N.wire.once('init:mdedit', function () {
       var emojis = {};
 
       // Filter emijis by text (but not more than 5)
-      _.forEach(N.MDEdit.emojis.named, (val, name) => {
+      for (let [ name, val ] of Object.entries(N.MDEdit.emojis.named)) {
         if (name.indexOf(text) !== -1) {
           emojis[name] = val;
         } else {
@@ -42,7 +42,7 @@ N.wire.once('init:mdedit', function () {
         }
 
         if (Object.keys(emojis).length >= 5) return false; // break;
-      });
+      }
 
       // If nothing found - hide popup
       if (Object.keys(emojis).length === 0) {

@@ -25,7 +25,7 @@ module.exports = function (N, apiPath) {
 
   N.wire.before(apiPath, async function prepare_setting_schemas(env) {
     let config = N.config.setting_schemas.global;
-    let keys = _.keys(config);
+    let keys = Object.keys(config);
 
     for (let i = 0; i < keys.length; i++) {
       let name = keys[i];
@@ -36,7 +36,7 @@ module.exports = function (N, apiPath) {
       }
 
       // Expose static schemas as is
-      if (!_.isFunction(schema.values)) {
+      if (typeof schema.values !== 'function') {
         env.res.setting_schemas[name] = schema;
         continue;
       }
@@ -61,13 +61,13 @@ module.exports = function (N, apiPath) {
     });
 
     let settings = await N.settings.getStore('global').get(
-      _.keys(env.res.setting_schemas),
+      Object.keys(env.res.setting_schemas),
       {},
       { skipCache: true }
     );
 
-    _.forEach(settings, function (result, name) {
+    for (let [ name, result ] of Object.entries(settings)) {
       env.res.setting_values[name] = result.value;
-    });
+    }
   });
 };

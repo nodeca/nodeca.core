@@ -11,7 +11,6 @@
 'use strict';
 
 
-const _       = require('lodash');
 const encode  = require('emailjs-mime-codec').mimeWordEncode;
 const render  = require('nodeca.core/lib/system/render/common');
 
@@ -22,7 +21,7 @@ module.exports = function (N) {
   //
   N.wire.on('internal:common.abuse_report.deliver', async function send_via_email(params) {
     if (!params.template) {
-      let type_name = _.invert(_.get(N, 'shared.content_type', {}))[params.report.type];
+      let type_name = Object.entries(N.shared?.content_type || {}).find(([ , v ]) => v === params.report.type)?.[0];
 
       N.logger.warn(`Abuse report (${type_name}): template not specified`);
       return;
@@ -39,7 +38,7 @@ module.exports = function (N) {
       return acc;
     }, {});
 
-    await Promise.all(_.values(params.recipients).map(async user_info => {
+    await Promise.all(Object.values(params.recipients).map(async user_info => {
       let to = emails[user_info.user_id];
 
       if (!to) return; // continue
