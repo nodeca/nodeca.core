@@ -1,9 +1,6 @@
 'use strict';
 
 
-const _ = require('lodash');
-
-
 module.exports = function (N, apiPath) {
   N.validate(apiPath, {
     group: { type: 'string', required: false }
@@ -42,7 +39,7 @@ module.exports = function (N, apiPath) {
       }
 
       // If schema `values` is a function, we need to compute it.
-      schema = _.clone(schema); // Keep original schema untouched.
+      schema = Object.assign({}, schema); // Keep original schema untouched.
 
       // Replace the function with computed values.
       schema.values = await schema.values();

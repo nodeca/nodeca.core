@@ -1,7 +1,6 @@
 'use strict';
 
 
-const _  = require('lodash');
 const ko = require('knockout');
 
 
@@ -16,7 +15,7 @@ let isDirty          = null;
 function submit() {
   let payload = {};
 
-  settingModels.forEach(setting => {
+  for (let setting of settingModels) {
     if (setting.value.isDirty()) {
       if (setting.type === 'number') {
         payload[setting.name] = Number(setting.value());
@@ -24,7 +23,7 @@ function submit() {
         payload[setting.name] = setting.value();
       }
     }
-  });
+  }
 
   N.io.rpc('admin.core.global_settings.update', { settings: payload }).then(() => {
     settingModels.forEach(function (setting) { setting.value.markClean(); });
@@ -45,7 +44,7 @@ function SettingModel(name, schema, value) {
   this.localizedName = t(tName);
   this.localizedHelp = t.exists(tHelp) ? t(tHelp) : '';
 
-  this.valueOptions = _.map(schema.values, option => ({
+  this.valueOptions = (schema.values || []).map(option => ({
     name: option.name,
     value: option.value,
     title: t.exists('@' + option.title) ? t('@' + option.title) : option.name
@@ -70,7 +69,7 @@ N.wire.on('navigate.done:' + module.apiPath, function global_settings_edit_init(
   settingModels    = [];
 
   // Collect category keys and prepare setting models.
-  _.forEach(inputSchemas, function (schema, name) {
+  for (let [ name, schema ] of Object.entries(inputSchemas)) {
     let key   = schema.category_key,
         model = new SettingModel(name, schema, inputValues[name]);
 
@@ -85,28 +84,30 @@ N.wire.on('navigate.done:' + module.apiPath, function global_settings_edit_init(
 
     categorySettings[key].push(model);
     settingModels.push(model);
-  });
+  }
 
   // Sort categories using category setting priorities.
   categoryKeys = categoryKeys.sort(key => {
     let priority = 0;
 
-    _.forEach(categorySettings[key], setting => { priority += setting.priority; });
+    for (let setting of Object.values(categorySettings[key])) {
+      priority += setting.priority;
+    }
 
     return -priority;
   });
 
   // Sort settings within categories.
-  _.forEach(categorySettings, (settings, key) => {
+  for (let [ key, settings ] of Object.entries(categorySettings)) {
     categorySettings[key] = settings.sort((a, b) => {
       if (a.priority === b.priority) {
         return a.name.localeCompare(b.name);
       }
       return a.priority - b.priority;
     });
-  });
+  }
 
-  isDirty = ko.computed(() => _.some(settingModels, setting => setting.value.isDirty()));
+  isDirty = ko.computed(() => settingModels.some(setting => setting.value.isDirty()));
 
   ko.applyBindings({
     categoryKeys,

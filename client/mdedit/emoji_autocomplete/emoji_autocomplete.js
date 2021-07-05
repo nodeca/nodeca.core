@@ -1,9 +1,6 @@
 'use strict';
 
 
-var _ = require('lodash');
-
-
 N.wire.once('init:mdedit', function () {
 
   // Init emojis select popup.
@@ -88,7 +85,7 @@ N.wire.once('init:mdedit', function () {
       var line = N.MDEdit.__cm__.getDoc().getLine(curEnd.line);
 
       // Find nearest ':' symbol before cursor
-      var curBegin = { ch: _.lastIndexOf(line, ':', curEnd.ch), line: curEnd.line };
+      var curBegin = { ch: line.lastIndexOf(':', curEnd.ch), line: curEnd.line };
 
       if (curBegin.ch === -1) {
         curBegin.ch = 0;

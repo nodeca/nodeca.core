@@ -98,7 +98,7 @@ MDEdit.prototype.show = function (options) {
   let $oldLayout = this.__layout__;
 
   this.__layout__ = $(N.runtime.render('mdedit'));
-  this.__options__ = _.clone(options);
+  this.__options__ = Object.assign({}, options);
 
   this.__options__.toolbar = compileToolbarConfig(this.__options__.toolbar || 'default');
   this.__options__.parseOptions = this.__options__.parseOptions || {};

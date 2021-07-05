@@ -1,9 +1,6 @@
 'use strict';
 
 
-const _ = require('lodash');
-
-
 module.exports = function (N, apiPath) {
   N.validate(apiPath, {
     settings: { type: 'object', required: true }
@@ -13,9 +10,9 @@ module.exports = function (N, apiPath) {
   N.wire.on(apiPath, async function global_settings_update(env) {
     let settings = {};
 
-    _.forEach(env.params.settings, (value, name) => {
+    for (let [ name, value ] of Object.entries(env.params.settings)) {
       settings[name] = { value };
-    });
+    }
 
     try {
       await N.settings.getStore('global').set(settings, {});

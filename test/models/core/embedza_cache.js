@@ -2,7 +2,6 @@
 
 
 const assert   = require('assert');
-const _        = require('lodash');
 
 
 describe('Embedza Cache test', function () {
@@ -36,7 +35,7 @@ describe('Embedza Cache test', function () {
   // We use hashed indice for workaround.
   // Need to test that hack works :)
   it('Use long key (> 1024 chars)', async function () {
-    let key = _.fill(new Array(2000), 'a').join('');
+    let key = new Array(2000).fill('a').join('');
 
     await cache.set(key, 'long');
 
