@@ -17,13 +17,13 @@ module.exports = function (N) {
       // Fetch setting values written to the database, and use default values
       // for the others. If settings document does not exists - use default
       // setting values only.
-      _.forEach(GlobalStore.keys, function (name) {
-        if (settings && _.has(settings.data, name)) {
+      for (let name of GlobalStore.keys) {
+        if (settings && settings.data.hasOwnProperty(name)) {
           result[name] = { value: settings.data[name] };
         } else {
           result[name] = { value: GlobalStore.getDefaultValue(name) };
         }
-      });
+      }
 
       return result;
     });
@@ -42,13 +42,13 @@ module.exports = function (N) {
       return GlobalSettings.findOne().then(settings => {
         settings = settings || new GlobalSettings();
 
-        _.forEach(values, function (options, name) {
+        for (let [ name, options ] of Object.entries(values)) {
           if (options === null) {
             delete settings.data[name];
           } else {
             settings.data[name] = options.value;
           }
-        });
+        }
 
         settings.markModified('data');
 

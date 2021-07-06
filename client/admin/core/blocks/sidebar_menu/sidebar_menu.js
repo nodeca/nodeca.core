@@ -3,7 +3,6 @@
 'use strict';
 
 
-const _   = require('lodash');
 const bag = require('bagjs')({ prefix: 'nodeca' });
 
 
@@ -16,8 +15,9 @@ N.wire.on('navigate.done', function navbar_menu_change_active(target) {
   items = menus.find('[data-api-path]');
   items.removeClass('_active');
 
-  // Select the most specific tab - with the longest API path match.
-  active = _.maxBy(items, function (tab) {
+  if (!items.length) return;
+
+  function tab_score(tab) {
     var tabPath = $(tab).data('apiPath').split('.'),
         index   = -1,
         length  = Math.min(tabPath.length, targetPath.length);
@@ -26,7 +26,10 @@ N.wire.on('navigate.done', function navbar_menu_change_active(target) {
     while (index < length && tabPath[index] === targetPath[index]);
 
     return index;
-  });
+  }
+
+  // Select the most specific tab - with the longest API path match.
+  active = Array.from(items).reduce((a, b) => (tab_score(a) >= tab_score(b) ? a : b));
 
   $(active).closest('.sidebar-menu').removeClass('d-none');
 

@@ -1,9 +1,6 @@
 'use strict';
 
 
-var _ = require('lodash');
-
-
 // Update "active" tab of the navbar_menu when moving to another page.
 //
 N.wire.on('navigate.done', function navbar_menu_change_active(target) {
@@ -12,8 +9,9 @@ N.wire.on('navigate.done', function navbar_menu_change_active(target) {
   tabs = $('.navbar__hovered').find('[data-api-path]');
   tabs.removeClass('show');
 
-  // Select the most specific tab - with the longest API path match.
-  active = _.maxBy(tabs, function (tab) {
+  if (!tabs.length) return;
+
+  function tab_score(tab) {
     var tabPath = $(tab).data('apiPath').split('.'),
         index   = -1,
         length  = Math.min(tabPath.length, targetPath.length);
@@ -22,8 +20,10 @@ N.wire.on('navigate.done', function navbar_menu_change_active(target) {
     while (index < length && tabPath[index] === targetPath[index]);
 
     return index;
-  });
+  }
 
+  // Select the most specific tab - with the longest API path match.
+  active = Array.from(tabs).reduce((a, b) => (tab_score(a) >= tab_score(b) ? a : b));
 
   // if autoselection not disabled - add highlighting class
   if ($(active).data('autoselect') !== 0) {

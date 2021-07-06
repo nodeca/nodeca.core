@@ -3,7 +3,6 @@
 'use strict';
 
 
-const _            = require('lodash');
 const StateMachine = require('javascript-state-machine');
 
 let lastPageData;
@@ -73,10 +72,8 @@ function parseOptions(options) {
     // For example, static files (favicon.ico), attachments and assets
     // shouldn't be handled by the navigator.
     //
-    match = _.find(
-      N.router.matchAll(href),
-      match => _.has(match.meta.methods, 'get') && match.meta.responder !== 'bin'
-    );
+    match = N.router.matchAll(href).find(
+      m => m.meta.methods?.get && m.meta.responder !== 'bin');
 
     if (match) {
       apiPath = match.meta.methods.get;
@@ -501,7 +498,8 @@ N.wire.on('navigate.replace', function navigate_replace(options, callback) {
   let title = options.title || document.title;
   let state = options.state || null;
 
-  if (document.title !== title || normalizeURL(location.href) !== url || !_.isEqual(state, window.history.state)) {
+  if (document.title !== title || normalizeURL(location.href) !== url ||
+      JSON.stringify(state) !== JSON.stringify(window.history.state)) {
     window.history.replaceState(state, title, url);
     document.title = title;
   }

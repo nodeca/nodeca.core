@@ -4,7 +4,6 @@
 'use strict';
 
 
-const _       = require('lodash');
 const glob    = require('glob');
 const path    = require('path');
 
@@ -35,7 +34,7 @@ module.exports.commandLineArguments = [
     options: {
       dest:   'mask',
       help:   'Run only tests, containing MASK in name',
-      type:   'string',
+      type:   'str',
       default: []
     }
   }
@@ -68,7 +67,7 @@ module.exports.run = async function (N, args) {
 
   // if app set, check that it's valid
   if (args.app) {
-    if (!_.find(applications, app => app.name === args.app)) {
+    if (!applications.some(app => app.name === args.app)) {
       let msg = `Invalid application name: ${args.app}\n` +
           'Valid apps are:  ' + applications.map(app => app.name).join(', ');
 

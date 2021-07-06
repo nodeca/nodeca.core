@@ -19,7 +19,7 @@ module.exports.commandLineArguments = [
     options: {
       dest:   'mask',
       help:   'Show only channels, containing MASK in name',
-      type:   'string',
+      type:   'str',
       default: []
     }
   },

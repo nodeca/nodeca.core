@@ -54,9 +54,8 @@ N.wire.once('init:parser', function attachment_plugin_init() {
         // find all images that point to an attachment and set data-nd-media-id attr
         data.ast.find('.image').each(function () {
           let $attach = $(this);
-          let match = _.find(N.router.matchAll($attach.attr('src')), function (match) {
-            return match.meta.methods.get === 'users.media';
-          });
+          let match = N.router.matchAll($attach.attr('src')).find(match =>
+            match.meta.methods.get === 'users.media');
 
           if (!match) return;
 

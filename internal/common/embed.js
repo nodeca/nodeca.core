@@ -301,7 +301,7 @@ module.exports = function (N, apiPath) {
 
     // delete empty $unset - causes request error
     for (let k of Object.keys(update_data)) {
-      if (_.isEmpty(update_data[k])) delete update_data[k];
+      if (Object.keys(update_data[k]).length === 0) delete update_data[k];
     }
 
     await N.models.core.UrlTracker.updateOne(

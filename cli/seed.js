@@ -10,7 +10,6 @@ const fs    = require('fs');
 
 
 // 3rd-party
-const _       = require('lodash');
 const glob    = require('glob');
 
 
@@ -64,7 +63,7 @@ module.exports.commandLineArguments = [
     args: [ '-a', '--app' ],
     options: {
       help: 'application name',
-      type: 'string'
+      type: 'str'
     }
   },
   {
@@ -155,7 +154,7 @@ module.exports.run = async function (N, args) {
 
   // Execute seed by number
   //
-  if (!_.isEmpty(args.seed_numbers)) {
+  if (args.seed_numbers?.length) {
     // protect production env from accident run
     if ([ 'development', 'test' ].indexOf(env) === -1 && !args.force) {
       throw `Error: Can't run seed from ${env} environment. Please, use -f to force.`;
