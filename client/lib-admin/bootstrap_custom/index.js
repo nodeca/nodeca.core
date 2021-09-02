@@ -1,6 +1,6 @@
 'use strict';
 
-//require('bootstrap/js/dist/alert');
+require('bootstrap/js/dist/alert');
 //require('bootstrap/js/dist/button');
 //require('bootstrap/js/dist/carousel');
 require('bootstrap/js/dist/collapse');
