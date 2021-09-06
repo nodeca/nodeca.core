@@ -26,3 +26,7 @@ $navbar-dark-active-color:   rgba(#fff, .75);
 // override link decoration
 $link-decoration:            none;
 $link-hover-decoration:      underline;
+
+// disable `scroll-behavior: smooth`
+// it conflicts with our navigation: new page fails scroll to top, and other side effects
+$enable-smooth-scroll:       false;
