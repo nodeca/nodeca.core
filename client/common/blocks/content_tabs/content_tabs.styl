@@ -4,9 +4,11 @@
   display flex
   flex-wrap wrap
   gap .5rem
+  list-style-type none
+  padding 0
   margin-bottom 2rem
 
-.content-tabs-item
+.content-tabs-link
   color #71858f
   background-color $decorator-color + 50%
   display flex
@@ -19,7 +21,7 @@
   &:hover, &:active
     text-decoration none
 
-.content-tabs-item__m-active
+.content-tabs-link.active
   background-color $brand-primary
   color white
 
@@ -32,5 +34,5 @@
   align-self flex-start
   font-size .625rem
 
-.content-tabs-item__m-active .content-tabs-counter
+.content-tabs-link.active .content-tabs-counter
   color #dfdfdf
