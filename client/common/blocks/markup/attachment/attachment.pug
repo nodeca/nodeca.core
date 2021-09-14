@@ -21,6 +21,7 @@ else if self.type === mTypes.IMAGE || !self.type
     a.attach.attach-img.thumb.thumb__m-responsive(
       class= 'attach__m-' + self.size
       href=self.href
+      target='_blank'
       data-nd-media-id=self.media_id
       data-nd-orig=self.href
     )
@@ -45,11 +46,12 @@ else if self.type === mTypes.IMAGE || !self.type
         )
 
       img(src=self.src, alt=self.alt, title=self.title)
-      a.attach__link-control.icon.icon-link(href=self.href)
+      a.attach__link-control.icon.icon-link(href=self.href, target='_blank')
 
 else if self.type === mTypes.BINARY
   a.attach.attach-bin.thumb.thumb__m-responsive(
     href=self.href
+    target='_blank'
     data-nd-media-id=self.media_id
     data-nd-orig=self.href
   )
