@@ -480,6 +480,18 @@ N.wire.on('mdedit.preview', () => {
 // Collapse/expand editor
 //
 N.wire.on('mdedit.collapse', function collapse() {
+  // Check if user written something into text editor or any of the input-based custom fields
+  let isEditorEmpty = true;
+  if (N.MDEdit.text().trim()) isEditorEmpty = false;
+
+  // Collapse editor if user wrote anything, close it otherwise.
+  // This only checks editor itself, custom fields are not checked because we can't know if they exist
+  // (nodeca doesn't set `draftCustomFields` property when editing).
+  if (isEditorEmpty) {
+    N.MDEdit.hide();
+    return;
+  }
+
   let $layout = N.MDEdit.__layout__;
 
   // Expand
