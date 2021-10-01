@@ -17,13 +17,13 @@ en-US:
         </tr>
         <tr>
           <td>bold text</td>
-          <td>__bold text__</td>
-          <td><b>bold text</b></td>
+          <td>__bold text__ and **more bold**</td>
+          <td><b>bold text</b> and <b>more bold</b></td>
         </tr>
         <tr>
           <td>italic text</td>
-          <td>_italic text_</td>
-          <td><i>italic text</i></td>
+          <td>_italic text_ and *more italic*</td>
+          <td><i>italic text</i> and <i>more italic</i></td>
         </tr>
         <tr>
           <td>link</td>
@@ -128,9 +128,9 @@ en-US:
       </table>
     </div>
 
-    ### Attachments and sizes.
+    ### Insert media and set image size
 
-    All attachments (images from user albums) are stored in three sizes:
+    When you upload media, all images are stored in three sizes:
 
     - __sm__ - small (default)
     - __md__ - medium
@@ -138,11 +138,11 @@ en-US:
 
     If you insert image tag and use address of photo page in your album, it will
     be inserted as thumbnail with link to original. You can change image size
-    using `md` and `orig` modifiers in alt text:
+    using `md` and `orig` modifiers:
 
     - `![](http://example.com/member25/media/55c2)` - default attachment code, thumbnail.
     - `![md](http://example.com/member25/media/55c2)` - medium image.
     - `![orig](http://example.com/member25/media/55c2)` - max allowed image.
 
-    If you need to place text in `alt` attribute, use `|` to separate size name:
+    If you need to place text in `alt` attribute, use `|` to separate size modifier:
     `![Alt text|md](http://example.com/member25/media/55c2)`.
