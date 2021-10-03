@@ -41,7 +41,7 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage', class=self.offline_m
 
     != self.content
 
-    .layout__container.container-fluid
+    footer.layout__container.container-fluid.page-footer
       != self.partial('@common.blocks.footer', { locales: self.enabled_locales })
 
       .nojs-alert.js-hide

@@ -12,27 +12,26 @@
     return result.sort(compare);
   }
 
-footer.page-footer.clearfix
-  ul.page-footer-nav
-    each item in sortedItems(self.runtime.footer || {})
-      - var info = item.info;
-      li.page-footer-nav__item
-        a.page-footer-nav__item-link(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
+ul.page-footer-nav
+  each item in sortedItems(self.runtime.footer || {})
+    - var info = item.info;
+    li.page-footer-nav__item
+      a.page-footer-nav__item-link(href=self.link_to(info.to))= self.t(localizationPrefix + item.name)
 
-    li.page-footer-nav__item.dropup
-      - var menu_rnd_id = 'rnd' + self.get_label_uid()
+  li.page-footer-nav__item.dropup
+    - var menu_rnd_id = 'rnd' + self.get_label_uid()
 
-      a.page-footer-nav__item-link.dropdown-toggle(
-        href='#'
-        id=menu_rnd_id
-        aria-haspopup='true'
-        aria-expanded='false'
-        data-bs-toggle='dropdown'
-      ) Language
+    a.page-footer-nav__item-link.dropdown-toggle(
+      href='#'
+      id=menu_rnd_id
+      aria-haspopup='true'
+      aria-expanded='false'
+      data-bs-toggle='dropdown'
+    ) Language
 
-      .dropdown-menu.dropdown-menu-start(aria-labelledby=menu_rnd_id)
-        each locale in self.locales
-          button.dropdown-item(
-            data-on-click='common.set_language'
-            data-locale=locale
-          )= self.t('language.' + locale)
+    .dropdown-menu.dropdown-menu-start(aria-labelledby=menu_rnd_id)
+      each locale in self.locales
+        button.dropdown-item(
+          data-on-click='common.set_language'
+          data-locale=locale
+        )= self.t('language.' + locale)

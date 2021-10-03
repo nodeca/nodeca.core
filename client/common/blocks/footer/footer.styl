@@ -3,20 +3,24 @@
 
 // Page footer styles
 //
+
 .page-footer
-  line-height 1.25rem
-  border-top 1px solid $decorator-color
+  // Use padding to allow solid background without holes
+  padding-top 2rem
 
 .page-footer-nav
+  display flex
+  gap 2rem
+  border-top 1px solid $decorator-color
   margin 0
   padding .7rem 0
+  list-style none
 
 .page-footer-nav__item
-  font-size $font-size-sm
-  margin-right 2em
-  display inline-block
-  position relative
-.page-footer-nav__item-link
   color $body-color-secondary
+  font-size $font-size-sm
+
+.page-footer-nav__item-link
+  color inherit
   &:hover
     text-decoration none
