@@ -107,6 +107,22 @@ module.exports = function (N, collectionName) {
   };
 
   /*
+   * Remove all files older than 7 days.
+   */
+  File.gc = File.prototype.gc = async function () {
+    let low_threshold  = new ObjectId(Date.now() / 1000 - 7 * 24 * 60 * 60);
+    let high_threshold = new ObjectId(Date.now() / 1000 + 7 * 24 * 60 * 60);
+
+    let files = []
+      .concat(await gfs.find({ _id: { $lt: low_threshold } }).toArray())
+      .concat(await gfs.find({ _id: { $gt: high_threshold } }).toArray());
+
+    for (let file of files) {
+      await gfs.delete(file._id);
+    }
+  };
+
+  /*
    * Remove file + all previews if exist
    *
    * Params:

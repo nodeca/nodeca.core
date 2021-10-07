@@ -1,3 +1,4 @@
 cron:
   ping_live_emit: '* * * * * *' # every second
   sitemap_generate: 0 32 */4 * * * # every 4 hours
+  filetmp_cleanup: 0 16 * * * * # every hour
