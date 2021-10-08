@@ -1,9 +1,8 @@
 nav.navbar-primary.navbar.navbar-dark.bg-primary.fixed-top.navbar-expand-md
   .navbar-inner.layout__container.container-fluid
-    .navbar-untoggleable
-      ul.navbar-nav.navbar__m-hide-on-search
-        li.nav-item
-          a.navbar__level-up.nav-link.icon.icon-level-up(href=self.level_up)
+    .navbar-persistent
+      .navbar-nav.navbar__m-hide-on-search
+        a.navbar__level-up.nav-link.icon.icon-level-up(href=self.level_up)
 
       != self.partial('@common.blocks.navbar.blocks.page_progress', self.progress)
 

@@ -21,20 +21,10 @@
   text-transform uppercase
   margin-right $spacer * 2
 
-.navbar-untoggleable
-  flex-direction row
-  flex-wrap nowrap
+.navbar-persistent
   display flex
-  .navbar-nav
-    flex-direction row;
-    .nav-link
-      padding-right .5rem
-      padding-left .5rem
-  > .container
-    display flex
-    flex-wrap nowrap
-    align-items center
-
+  flex-wrap nowrap
+  flex-direction row
 
 .navbar__level-up
   padding-left .8rem !important
@@ -76,7 +66,7 @@
       opacity 1
 
 .navbar-alt__title
-  padding .425rem 1rem .425rem 0
+  padding-right 1rem
   shortable()
 
 .navbar-alt .btn
