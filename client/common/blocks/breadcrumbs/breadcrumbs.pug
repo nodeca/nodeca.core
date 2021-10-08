@@ -8,15 +8,15 @@ mixin breadcrumb_step(tail)
   - var item = tail[0];
   if !!item.route
     //- link
-    li.breadcrumbs__item
+    span.breadcrumbs__item
       a.breadcrumbs__link(href=self.link_to(item.route, item.params))= item.text
   else
     //- text only
-    li.breadcrumbs__item= item.text
+    span.breadcrumbs__item= item.text
   if tail.length > 1
     //- next sublevel
     +breadcrumb_step(tail.slice(1))
 
 
-ul.breadcrumbs(itemprop='breadcrumb', itemscope, itemtype='http://schema.org/Breadcrumb')
+.breadcrumbs(itemprop='breadcrumb', itemscope, itemtype='http://schema.org/Breadcrumb')
   +breadcrumb_step(self.breadcrumbs)

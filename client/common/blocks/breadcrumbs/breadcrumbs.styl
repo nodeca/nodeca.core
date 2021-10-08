@@ -2,31 +2,17 @@
 
 .breadcrumbs-container
   font-size $font-size-sm
-  height $breadcrumbs-height
+  //height $breadcrumbs-height
   line-height $breadcrumbs-height
   background-color $breadcrumbs-bg
   margin-bottom 1.5rem
 
-.breadcrumbs-controls
-  display inline-block
-  overflow hidden
-  vertical-align top
-
-  .btn + .btn
-    margin-left .3rem
-
 .breadcrumbs
-  margin 0
-  max-width 100%
-  white-space nowrap
-  overflow hidden
-  list-style none
-  padding 0
-  display inline-block
+  //display inline-block
+  shortable()
 
 .breadcrumbs__item
   color $breadcrumbs-color
-  display inline-block
   &:before
     content '/'
     color $breadcrumbs-color
@@ -48,7 +34,6 @@
 .breadcrumbs__link
   color $breadcrumbs-color
   text-decoration none
-  line-height $breadcrumbs-height
 
 // Collapse list midle elements on narrow screens
 //
@@ -57,9 +42,8 @@
     display none
     &:first-child
     &:last-child
-      display inline-block
+      display inline
 
   .breadcrumbs__item + .breadcrumbs__item + .breadcrumbs__item:last-child
-    display inline-block
     &:before
       content '/ ... /'
