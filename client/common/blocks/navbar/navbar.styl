@@ -3,15 +3,6 @@
 
 .navbar
   box-shadow 0 1px 3px rgba(0, 0, 0, 0.05)
-  // We use .container-fluid inside, it has padding already
-  padding-left 0
-  padding-right 0
-
-// TODO: remove after fixes in bootstrap
-.navbar-nav .nav-link
-  padding-top .425rem
-  padding-bottom .425rem
-
 
 // Override toggler style
 .navbar-dark .navbar-toggler
@@ -19,23 +10,16 @@
   border-color transparent
   color $navbar-dark-color
   padding .5rem
-  //margin-right -.5rem
 
 .navbar .page-actions
   margin-left auto
 
 .navbar__right
   margin-left auto
-  margin-right -.5rem
 
 .navbar-brand
   text-transform uppercase
   margin-right $spacer * 2
-
-.navbar-nav .nav-item
-  // override bootstrap default margin
-  & + .nav-item
-    margin-left $spacer * 1
 
 .navbar-untoggleable
   flex-direction row
@@ -50,16 +34,6 @@
     display flex
     flex-wrap nowrap
     align-items center
-
-
-@media (max-width: $grid-breakpoints.sm - 1)
-  .navbar-collapse
-    // reset spacing between items
-    .navbar-nav .nav-item
-      margin-left 0
-
-  .navbar__right
-    margin-right 0
 
 
 .navbar__level-up

@@ -30,3 +30,5 @@ $link-hover-decoration:      underline;
 // disable `scroll-behavior: smooth`
 // it conflicts with our navigation: new page fails scroll to top, and other side effects
 $enable-smooth-scroll:       false;
+
+$navbar-nav-link-padding-x:  1rem;
