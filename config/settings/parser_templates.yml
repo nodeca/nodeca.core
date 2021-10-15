@@ -25,7 +25,7 @@ setting_schemas:
       priority: 10
       type: boolean
       as: heading
-      default: true
+      default: false
 
     markup_image:
       priority: 10
