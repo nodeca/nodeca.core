@@ -32,6 +32,19 @@ const limits      = require('nodeca.core/lib/app/relimit_limits');
 // divided between two relimiters (normal and bulk)
 const MAX_CONNECTIONS = 50;
 
+function timeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        let err = new Error('Promise timed out');
+        err.code = 'ETIMEDOUT';
+        reject(err);
+      }, ms);
+    })
+  ]);
+}
+
 
 module.exports = function (N, apiPath) {
   const tracker_data_key = Symbol('tracker_data');
@@ -163,7 +176,7 @@ module.exports = function (N, apiPath) {
                          data.bulk      ? 'normal_bulk' :
                                           'normal';
 
-      url = await unshort[unshort_type].expand(data.url);
+      url = await timeout(unshort[unshort_type].expand(data.url), 130000);
       tracker_data.unshort_used = !!url;
     } catch (err) {
       // In case of connection/parse errors leave link as is
@@ -211,9 +224,9 @@ module.exports = function (N, apiPath) {
                          data.bulk      ? 'normal_bulk' :
                                           'normal';
 
-      result = await embedza[embedza_type].render(
+      result = await timeout(embedza[embedza_type].render(
           data.canonical || data.url,
-          data.types);
+          data.types), 130000);
 
       tracker_data.embedza_used = !!result;
     } catch (err) {
