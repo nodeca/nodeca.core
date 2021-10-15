@@ -1,8 +1,6 @@
 @charset "UTF-8";
 
- 
 .icon-edit:before { content: '\270e'; } /* '✎' */
-.icon-track-muted:before { content: '\2716'; } /* '✖' */
 .icon-info:before { content: '\e705'; } /* '' */
 .icon-location:before { content: '\e724'; } /* '' */
 .icon-chevron-big-left:before { content: '\e765'; } /* '' */
@@ -34,7 +32,7 @@
 .icon-ignore:before { content: '\e818'; } /* '' */
 .icon-right-open:before { content: '\e819'; } /* '' */
 .icon-help:before { content: '\e81a'; } /* '' */
-.icon-track-tracking:before { content: '\e81b'; } /* '' */
+.icon-track-muted:before { content: '\e81b'; } /* '' */
 .icon-list-bullet:before { content: '\e81c'; } /* '' */
 .icon-list-numbered:before { content: '\e81d'; } /* '' */
 .icon-quote:before { content: '\e81e'; } /* '' */
@@ -51,12 +49,13 @@
 .icon-more:before { content: '\e829'; } /* '' */
 .icon-pin:before { content: '\e82a'; } /* '' */
 .icon-track-normal:before { content: '\e82b'; } /* '' */
-.icon-track-watching:before { content: '\e82c'; } /* '' */
+.icon-track-tracking:before { content: '\e82c'; } /* '' */
 .icon-to-bottom:before { content: '\e82d'; } /* '' */
 .icon-menu:before { content: '\e82e'; } /* '' */
 .icon-preview:before { content: '\e82f'; } /* '' */
 .icon-delivery:before { content: '\e830'; } /* '' */
 .icon-interchange:before { content: '\e831'; } /* '' */
+.icon-track-watching:before { content: '\e832'; } /* '' */
 .icon-posts:before { content: '\e83f'; } /* '' */
 .icon-replies:before { content: '\e840'; } /* '' */
 .icon-reply:before { content: '\e841'; } /* '' */
