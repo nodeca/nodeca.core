@@ -11,11 +11,6 @@ en-US:
           <th>Result</th>
         </tr>
         <tr>
-          <td>title text</td>
-          <td>## big<br />### medium<br />#### small</td>
-          <td><h2>big</h2><h3>medium</h3><h4>small</h5></td>
-        </tr>
-        <tr>
           <td>bold text</td>
           <td>__bold text__ and **more bold**</td>
           <td><b>bold text</b> and <b>more bold</b></td>
@@ -121,9 +116,14 @@ en-US:
           <td>this is a text<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup></p><hr class="footnotes-sep"><section class="footnotes"><ol class="footnotes-list"><li id="fn1" class="footnote-item"><p>with a footnote <a href="#fnref1" class="footnote-backref">↩</a></p></li></ol></section></td>
         </tr>
         <tr>
-          <td>cut in blog entries</td>
+          <td>cut (in blog entries)</td>
           <td>text before cut<br />--cut--<br />text after cut</td>
           <td>text before cut<br /><a href="#">read more</a></td>
+        </tr>
+        <tr>
+          <td>headers (if allowed)</td>
+          <td>## big<br />### medium<br />#### small</td>
+          <td><h2>big</h2><h3>medium</h3><h4>small</h5></td>
         </tr>
       </table>
     </div>

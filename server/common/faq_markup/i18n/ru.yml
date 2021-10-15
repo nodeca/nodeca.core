@@ -11,11 +11,6 @@ ru-RU:
           <th>Результат</th>
         </tr>
         <tr>
-          <td>заголовок</td>
-          <td>## большой<br />### средний<br />#### мелкий</td>
-          <td><h2>большой</h2><h3>средний</h3><h4>мелкий</h5></td>
-        </tr>
-        <tr>
           <td>жирный текст</td>
           <td>__жирный текст__ и **еще жирный**</td>
           <td><b>жирный текст</b> и <b>еще жирный</b></td>
@@ -121,9 +116,14 @@ ru-RU:
           <td>это — текст<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup></p><hr class="footnotes-sep"><section class="footnotes"><ol class="footnotes-list"><li id="fn1" class="footnote-item"><p>с примечанием <a href="#fnref1" class="footnote-backref">↩</a></p></li></ol></section></td>
         </tr>
         <tr>
-          <td>кат в блогах</td>
+          <td>кат (в блогах)</td>
           <td>текст перед катом<br />--cut--<br />текст под катом</td>
           <td>текст перед катом<br /><a href="#">читать далее</a></td>
+        </tr>
+        <tr>
+          <td>заголовки (если разрешены)</td>
+          <td>## большой<br />### средний<br />#### мелкий</td>
+          <td><h2>большой</h2><h3>средний</h3><h4>мелкий</h5></td>
         </tr>
       </table>
     </div>
