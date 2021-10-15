@@ -31,7 +31,7 @@ describe('Parser', function () {
 
       return TEST.N.parser.md2html(data).then(res => {
         assert.strictEqual(
-          res.html,
+          res.html.replace(/[0-9a-f]{8}-/g, ''),
           '<p>t1<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a>' +
           '</sup> t2<sup class="footnote-ref"><a href="#fn1" id="fnref1:1">[1]' +
           '</a></sup> t3<sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]' +
