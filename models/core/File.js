@@ -18,7 +18,7 @@ const mime      = require('mime-types').lookup;
 
 const stream    = require('stream');
 const mongoose  = require('mongoose');
-const pipeline  = require('util').promisify(stream.pipeline);
+const { pipeline } = require('stream/promises');
 const ObjectId  = mongoose.Types.ObjectId;
 
 function escapeRegexp(source) {
