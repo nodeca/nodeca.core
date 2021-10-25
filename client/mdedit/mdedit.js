@@ -41,6 +41,20 @@ let compileToolbarConfig = _.memoize(function (name) {
 });
 
 
+// Allow to scroll page to the end when editor is opened (add extra padding)
+//
+function adjustContentMargin(options) {
+  let $footer = $('.page-footer');
+
+  if (options?.clear) {
+    $footer.css('padding-bottom', 0);
+    return;
+  }
+
+  $footer.css('padding-bottom', N.MDEdit.__layout__.outerHeight());
+}
+
+
 // Editor init
 //
 function MDEdit() {
@@ -164,6 +178,8 @@ MDEdit.prototype.show = function (options) {
 
       this.__layout__.trigger('show');
 
+      adjustContentMargin();
+
       // If no prevoius editor - animate editor from bottom viewport botder
       this.__layout__.animate({ bottom: 0 }, $oldLayout ? 0 : 'fast', () => {
         // Update codemirror height
@@ -257,6 +273,7 @@ MDEdit.prototype.hide = function (options) {
 
   setTimeout(() => {
     $layout.trigger('hide');
+    adjustContentMargin({ clear: true });
     $layout.animate({ bottom: -$layout.height() }, 'fast', () => {
       this.__layout__ = null;
       $layout.trigger('hidden');
@@ -407,6 +424,7 @@ N.wire.on('mdedit:init', function initResize() {
       .on('mouseup.nd.mdedit touchend.nd.mdedit', function () {
         $body.off('.nd.mdedit');
         N.MDEdit.__layout__.removeClass('mdedit__m-resizing');
+        adjustContentMargin();
       })
       .on('mousemove.nd.mdedit touchmove.nd.mdedit', _.debounce(function (event) {
         let point = event.originalEvent.touches ? event.originalEvent.touches[0] : event,
@@ -502,6 +520,8 @@ N.wire.on('mdedit.collapse', function collapse() {
   } else {
     $layout.addClass('mdedit__m-collapsed');
   }
+
+  adjustContentMargin();
 });
 
 
