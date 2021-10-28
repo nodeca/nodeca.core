@@ -17,9 +17,13 @@
   z-index 1040
 
   .CodeMirror
-    // height before init to avoid bugs in FF with real size calc
+    //- height before init to avoid bugs in FF with real size calc
     height 1px
     font-family inherit
+
+  .CodeMirror pre.CodeMirror-line
+  .CodeMirror pre.CodeMirror-line-like
+    padding 0 6px
 
 .mdedit__resizer
   cursor row-resize
