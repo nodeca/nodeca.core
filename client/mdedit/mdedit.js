@@ -82,7 +82,6 @@ function MDEdit() {
 // - text (String) - optional, text, default empty string. Can be overwritten by draft
 // - toolbar (String) - optional, name of toolbar config, default `default`
 // - draftKey (String) - optional, unique key to store draft, don't use drafts by default
-// - contentFooter (Element) - optional, insert widget after the last editor line
 // - draftCustomFields (Object) - optional, custom fields to store in draft:
 //   ```
 //   {
@@ -200,23 +199,6 @@ MDEdit.prototype.show = function (options) {
           $oldLayout.trigger('hide');
           $oldLayout.trigger('hidden');
           $oldLayout.remove();
-        }
-
-        // Add footer after the list line of the editor
-        //
-        // To achieve this, we add an invisible line, make it read-only
-        // (so user can't add content below) and add a line widget after it.
-        //
-        if (this.__options__.contentFooter) {
-          let line = this.__cm__.lineCount();
-
-          this.__contentFooter__ = this.__cm__.addLineWidget(line - 1, this.__options__.contentFooter);
-
-          this.__cm__.markText(
-            { line: line - 2, ch: Infinity },
-            { line: line - 1, ch: Infinity },
-            { inclusiveRight: true, collapsed: true, readOnly: true, atomic: true }
-          );
         }
 
         this.__layout__.trigger('shown');
@@ -361,21 +343,9 @@ MDEdit.prototype.__state_load__ = function () {
 // Get/set text
 //
 MDEdit.prototype.text = function (text) {
-  // Fake hidden last line to prevent inserting text below footer
-  const FOOTER_TEXT = '\n'; // '\narbitrary text here'
-
   if (typeof text === 'undefined') {
     let result = this.__cm__.getValue();
-
-    if (this.__options__.contentFooter && result.endsWith(FOOTER_TEXT)) {
-      result = result.slice(0, result.length - FOOTER_TEXT.length);
-    }
-
     return result;
-  }
-
-  if (this.__options__.contentFooter) {
-    text += FOOTER_TEXT;
   }
 
   this.__cm__.setValue(text);
@@ -586,20 +556,6 @@ N.wire.on('mdedit:dd', function mdedit_dd(data) {
       break;
     default:
   }
-});
-
-
-// Remove and re-add footer, we can't just call changed() because codemirror
-// adds the height difference twice (bug?).
-//
-N.wire.on('mdedit.content_footer_update', function cm_footer_widget_update() {
-  let line = N.MDEdit.__cm__.lineCount();
-  let scroll = N.MDEdit.__cm__.getScrollInfo();
-
-  if (N.MDEdit.__contentFooter__) N.MDEdit.__contentFooter__.clear();
-
-  N.MDEdit.__contentFooter__ = N.MDEdit.__cm__.addLineWidget(line - 1, N.MDEdit.__options__.contentFooter);
-  N.MDEdit.__cm__.scrollTo(scroll.left, scroll.top);
 });
 
 
