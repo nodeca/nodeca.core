@@ -366,6 +366,22 @@ MDEdit.prototype.parseOptions = function (parseOptions) {
 };
 
 
+// Insert quote into editor
+//
+MDEdit.prototype.insertQuote = function (html, href = null) {
+  let editor = N.MDEdit.__cm__;
+  let insertion = '\n```quote' + (href ? ` ${href}` : '') + '\n' + html + '\n```\n';
+
+  if (editor.somethingSelected()) {
+    editor.replaceSelection(insertion);
+  } else {
+    editor.replaceRange(insertion, editor.getCursor(), editor.getCursor());
+  }
+
+  editor.focus();
+};
+
+
 // Add editor resize handler
 //
 N.wire.on('mdedit:init', function initResize() {
