@@ -382,6 +382,60 @@ MDEdit.prototype.insertQuote = function (html, href = null) {
 };
 
 
+// Returns `true` if editor is created (opened or collapsed)
+//
+MDEdit.prototype.exists = function () {
+  return !!this.__layout__;
+};
+
+
+// Collapse/expand editor;
+// if an editor without text is to be collapsed, it's hidden instead
+//
+MDEdit.prototype.toggle = function (value) {
+  let doExpand;
+
+  if (value === true) {
+    doExpand = true;
+  } else if (value === false) {
+    doExpand = false;
+  } else {
+    doExpand = this.__layout__.hasClass('mdedit__m-collapsed');
+  }
+
+  // Check if user written something into text editor or any of the input-based custom fields
+  let isEditorEmpty = true;
+  if (this.text().trim()) isEditorEmpty = false;
+
+  // Collapse editor if user wrote anything, close it otherwise.
+  // This only checks editor itself, custom fields are not checked because we can't know if they exist
+  // (nodeca doesn't set `draftCustomFields` property when editing).
+  if (!doExpand && isEditorEmpty) {
+    this.hide();
+    return;
+  }
+
+  // Expand
+  if (doExpand) {
+    this.__layout__.removeClass('mdedit__m-collapsed');
+
+  // Collapse
+  } else {
+    this.__layout__.addClass('mdedit__m-collapsed');
+  }
+
+  adjustContentMargin();
+};
+
+
+// Resolves when editor is fully loaded
+//
+MDEdit.prototype.ready = function () {
+  // TODO
+  return Promise.resolve();
+};
+
+
 // Add editor resize handler
 //
 N.wire.on('mdedit:init', function initResize() {
@@ -483,31 +537,8 @@ N.wire.on('mdedit.preview', () => {
 
 // Collapse/expand editor
 //
-N.wire.on('mdedit.collapse', function collapse() {
-  // Check if user written something into text editor or any of the input-based custom fields
-  let isEditorEmpty = true;
-  if (N.MDEdit.text().trim()) isEditorEmpty = false;
-
-  // Collapse editor if user wrote anything, close it otherwise.
-  // This only checks editor itself, custom fields are not checked because we can't know if they exist
-  // (nodeca doesn't set `draftCustomFields` property when editing).
-  if (isEditorEmpty) {
-    N.MDEdit.hide();
-    return;
-  }
-
-  let $layout = N.MDEdit.__layout__;
-
-  // Expand
-  if ($layout.hasClass('mdedit__m-collapsed')) {
-    $layout.removeClass('mdedit__m-collapsed');
-
-  // Collapse
-  } else {
-    $layout.addClass('mdedit__m-collapsed');
-  }
-
-  adjustContentMargin();
+N.wire.on('mdedit.toggle', function toggle() {
+  N.MDEdit.toggle();
 });
 
 

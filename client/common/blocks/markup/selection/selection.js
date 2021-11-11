@@ -146,7 +146,10 @@ N.wire.once('navigate.done', function markup_selection_init() {
 
   N.wire.on(module.apiPath + ':quote', function selection_quote(data) {
     // check if editor is opened
-    if (!N.MDEdit?.__layout__) throw 'CANCELED';
+    if (!N.MDEdit?.exists()) throw 'CANCELED';
+
+    // expand editor if it's collapsed
+    N.MDEdit.toggle(true);
 
     N.MDEdit.insertQuote(data.contents.innerText, data.markup_node.dataset.ndSrc);
   });
