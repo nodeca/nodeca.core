@@ -13,7 +13,8 @@ else if self.type === mTypes.IMAGE || !self.type
     span.attach.attach-img.thumb.thumb__m-responsive.thumb__m-broken(
       class= 'attach__m-' + self.size
       data-nd-media-id=self.media_id
-      data-nd-orig=self.href
+      data-nd-image-orig=self.href
+      data-nd-image-size=self.size
       title= self.title
     )
 
@@ -23,7 +24,8 @@ else if self.type === mTypes.IMAGE || !self.type
       href=self.href
       target='_blank'
       data-nd-media-id=self.media_id
-      data-nd-orig=self.href
+      data-nd-image-orig=self.href
+      data-nd-image-size=self.size
     )
       img.thumb__image(
         src=    self.src
@@ -37,7 +39,8 @@ else if self.type === mTypes.IMAGE || !self.type
     span.attach.attach-img(
       class= 'attach__m-' + self.size
       data-nd-media-id=self.media_id
-      data-nd-orig=self.href
+      data-nd-image-orig=self.href
+      data-nd-image-size=self.size
       style=have_size ? "width: " + self.width + "px" : null
     )
       if have_size
@@ -53,7 +56,7 @@ else if self.type === mTypes.BINARY
     href=self.href
     target='_blank'
     data-nd-media-id=self.media_id
-    data-nd-orig=self.href
+    data-nd-image-orig=self.href
   )
     span.thumb__icon.icon.icon-binary
     span.thumb__content= self.text

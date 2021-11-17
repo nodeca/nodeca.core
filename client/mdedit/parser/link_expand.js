@@ -37,7 +37,7 @@ N.wire.once('init:parser', function link_expand_plugin_init() {
 
           let replacement = $(result.html);
 
-          replacement.attr('data-nd-orig', url);
+          replacement.attr('data-nd-link-orig', url);
 
           if (is_auto) {
             if (result.type === 'block') {
