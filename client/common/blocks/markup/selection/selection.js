@@ -34,6 +34,24 @@ function get_markup_node(selection) {
 }
 
 
+function clone_range(range, top_node) {
+  let contents = range.cloneContents();
+  let ancestor = range.commonAncestorContainer;
+
+  while (ancestor && ancestor !== top_node) {
+    if (ancestor.nodeType === Node.ELEMENT_NODE) {
+      let _contents = contents;
+      contents = ancestor.cloneNode();
+      contents.appendChild(_contents);
+    }
+
+    ancestor = ancestor.parentNode;
+  }
+
+  return contents;
+}
+
+
 function close_selection_menu() {
   if (!popper) return;
 
@@ -139,7 +157,7 @@ N.wire.once('navigate.done', function markup_selection_init() {
     data.contents = document.createElement('div');
 
     for (let i = 0; i < data.selection.rangeCount; i++) {
-      data.contents.appendChild(data.selection.getRangeAt(i).cloneContents());
+      data.contents.appendChild(clone_range(data.selection.getRangeAt(i), data.markup_node));
     }
   });
 

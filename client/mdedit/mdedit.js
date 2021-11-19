@@ -7,6 +7,7 @@ const CodeMirror = require('codemirror');
 const _          = require('lodash');
 const bag        = require('bagjs');
 const RpcCache   = require('./_lib/rpc_cache')(N);
+const md_writer  = require('nodeca.core/lib/parser/md_writer');
 
 
 // Require markdown highlighter (mode) for CodeMirror
@@ -373,7 +374,8 @@ MDEdit.prototype.parseOptions = function (parseOptions) {
 //
 MDEdit.prototype.insertQuote = function (element, href = null) {
   let editor = N.MDEdit.__cm__;
-  let insertion = '\n```quote' + (href ? ` ${href}` : '') + '\n' + element.innerText + '\n```\n';
+  let writer = new md_writer.NodecaMarkdownWriter();
+  let insertion = writer.format_quote(writer.convert(element), href).replace(/^\n*/g, '\n');
 
   if (editor.somethingSelected()) {
     editor.replaceSelection(insertion);
