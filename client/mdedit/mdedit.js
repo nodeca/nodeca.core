@@ -106,6 +106,7 @@ function MDEdit() {
 // - `hidden.nd.mdedit` - on editor hide
 // - `submit.nd.mdedit` - on done button press (if you want to prevent editor closing - call `event.preventDefault()`)
 // - `change.nd.mdedit` - on update preview, you can save drafts on this event
+// - `ready.nd.mdedit` - after draft is loaded
 //
 MDEdit.prototype.show = function (options) {
   let $oldLayout = this.__layout__;
@@ -215,6 +216,8 @@ MDEdit.prototype.show = function (options) {
 
   this.__state_load__()
     .then(() => {
+      this.__layout__.trigger('ready');
+
       // Setup update handlers
       this.__layout__.on(
         'change.nd.mdedit input.nd.mdedit',
@@ -368,9 +371,9 @@ MDEdit.prototype.parseOptions = function (parseOptions) {
 
 // Insert quote into editor
 //
-MDEdit.prototype.insertQuote = function (html, href = null) {
+MDEdit.prototype.insertQuote = function (element, href = null) {
   let editor = N.MDEdit.__cm__;
-  let insertion = '\n```quote' + (href ? ` ${href}` : '') + '\n' + html + '\n```\n';
+  let insertion = '\n```quote' + (href ? ` ${href}` : '') + '\n' + element.innerText + '\n```\n';
 
   if (editor.somethingSelected()) {
     editor.replaceSelection(insertion);
@@ -425,14 +428,6 @@ MDEdit.prototype.toggle = function (value) {
   }
 
   adjustContentMargin();
-};
-
-
-// Resolves when editor is fully loaded
-//
-MDEdit.prototype.ready = function () {
-  // TODO
-  return Promise.resolve();
 };
 
 

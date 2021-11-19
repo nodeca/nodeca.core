@@ -151,6 +151,6 @@ N.wire.once('navigate.done', function markup_selection_init() {
     // expand editor if it's collapsed
     N.MDEdit.toggle(true);
 
-    N.MDEdit.insertQuote(data.contents.innerText, data.markup_node.dataset.ndSrc);
+    N.MDEdit.insertQuote(data.contents, data.markup_node.dataset.ndSrc);
   });
 });
