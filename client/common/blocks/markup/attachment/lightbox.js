@@ -10,6 +10,10 @@ const glightbox = require('glightbox');
 N.wire.once('navigate.done', function () {
 
   $(document).on('click', '.attach-img', function () {
+    // existing on-click handlers have priority
+    // (this solves conflict with hiding heavy content)
+    if ($(this).data('on-click')) return;
+
     let $container = $(this).closest('.markup');
     let nodes;
 
