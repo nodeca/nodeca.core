@@ -143,7 +143,9 @@ MDEdit.prototype.show = function (options) {
     lineWrapping: true,
     lineNumbers: false,
     tabindex: 2,
-    mode: 'markdown'
+    mode: 'markdown',
+    inputStyle: 'contenteditable',
+    spellcheck: true
   });
 
   // Set initial CodeMirror options
