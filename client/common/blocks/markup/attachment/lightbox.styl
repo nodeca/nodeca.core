@@ -3,3 +3,10 @@
 .gslide-image img
   // glightbox default `min-width: 200px` zooms in and crops tall images (e.g. 40x400)
   min-width auto
+
+html.glightbox-open
+  // avoid "overflow: hidden" set by glightbox;
+  // changing overflow on html tag can jump the page to the top:
+  // https://stackoverflow.com/questions/15019510/setting-overflow-y-hidden-causes-the-page-to-jump-to-the-top-in-firefox
+  // see also https://github.com/biati-digital/glightbox/issues/22
+  overflow initial
