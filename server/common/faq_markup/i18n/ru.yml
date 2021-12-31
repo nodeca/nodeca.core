@@ -21,6 +21,11 @@ ru-RU:
           <td><i>курсивный текст</i> и <i>еще курсив</i></td>
         </tr>
         <tr>
+          <td>перечеркнутый текст</td>
+          <td>~~перечеркнутый текст~~</td>
+          <td><s>перечеркнутый текст</s></td>
+        </tr>
+        <tr>
           <td>ссылка</td>
           <td>[текст ссылки]&#x200b;(http://&#x200b;google.com/)</td>
           <td><a href="http://google.com/">текст ссылки</a></td>
@@ -87,12 +92,8 @@ ru-RU:
         </tr>
         <tr>
           <td>блок кода</td>
-          <td>```js<br />let f = (n) =><br />  n < 2 ?<br />  n :<br />  f(n-1)<br />   + f(n-2)<br />```</td>
-          <td><pre><code class="js"><span class="hljs-keyword">let</span> f = (n) =&gt;
-      n &lt; <span class="hljs-number">2</span> ?
-      n :
-      f(n-<span class="hljs-number">1</span>)
-        + f(n-<span class="hljs-number">2</span>)</code></pre></td>
+          <td>```js<br />const a = 2<br />let b = a * 3<br />```</td>
+          <td><pre><code class="js"><span class="hljs-keyword">const</span> a = <span class="hljs-number">2</span><br /><span class="hljs-keyword">const</span> b = a * <span class="hljs-number">3</span></td>
         </tr>
         <tr>
           <td>таблица</td>

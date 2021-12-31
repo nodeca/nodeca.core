@@ -21,6 +21,11 @@ en-US:
           <td><i>italic text</i> and <i>more italic</i></td>
         </tr>
         <tr>
+          <td>crossed out text</td>
+          <td>~~crossed out text~~</td>
+          <td><s>crossed out text</s></td>
+        </tr>
+        <tr>
           <td>link</td>
           <td>[link text]&#x200b;(http://&#x200b;google.com/)</td>
           <td><a href="http://google.com/">link text</a></td>
