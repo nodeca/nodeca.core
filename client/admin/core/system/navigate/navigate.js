@@ -4,6 +4,7 @@
 
 
 const StateMachine = require('javascript-state-machine');
+const navbarHeight = parseInt($('body').css('margin-top'), 10) + parseInt($('body').css('padding-top'), 10);
 
 let lastPageData;
 let navigateCallback;
@@ -265,7 +266,9 @@ function render(data, scroll) {
       if (scroll && !data.no_scroll) {
         // Without this delay firefox on android fails to scroll on long pages
         setTimeout(() => {
-          $(window).scrollTop((data.anchor && $(data.anchor).length) ? $(data.anchor).offset().top : 0);
+          $(window).scrollTop(
+            (data.anchor && $(data.anchor).length) ? ($(data.anchor).offset().top - navbarHeight) : 0
+          );
         }, 50);
       }
     })
@@ -351,10 +354,13 @@ fsm.onlink = function (event, from, to, params) {
 
     // If nothing changed, but url has an anchor,
     // do nothing when moving to the same anchor.
-    // TODO: scroll to that anchor
     //
     if (options.anchor) {
       fsm.reset();
+      // Scroll to anchor
+      if ($(options.anchor).length) {
+        $(window).scrollTop($(options.anchor).offset().top - navbarHeight);
+      }
       return;
     }
 
