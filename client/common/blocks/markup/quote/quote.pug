@@ -12,10 +12,10 @@ blockquote(cite=self.href || false).quote
         = self.title
       if self.href
         .quote__controls.float-end
-          button.quote__expand.btn.btn-xs.icon.icon-expand(data-i18n-title='expand')
-          button.quote__collapse.btn.btn-xs.icon.icon-collapse(data-i18n-title='collapse')
-          a.quote__ref-local.btn.btn-xs.icon.icon-ref-local(href=self.href, data-i18n-title='jump')
-          a.quote__ref-outer.btn.btn-xs.icon.icon-ref-outer(href=self.href, data-i18n-title='jump')
+          button.quote__expand.btn.btn-sm.icon.icon-expand(data-i18n-title='expand')
+          button.quote__collapse.btn.btn-sm.icon.icon-collapse(data-i18n-title='collapse')
+          a.quote__ref-local.btn.btn-sm.icon.icon-ref-local(href=self.href, data-i18n-title='jump')
+          a.quote__ref-outer.btn.btn-sm.icon.icon-ref-outer(href=self.href, data-i18n-title='jump')
       if self.user
         cite.quote__author
           //- src is a transparent 1x1 gif
