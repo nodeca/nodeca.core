@@ -349,9 +349,18 @@ fsm.onlink = function (event, from, to, params) {
       return;
     }
 
-    // Nothing changed - finish to IDLE state
-    fsm.reset();
-    return;
+    // If nothing changed, but url has an anchor,
+    // do nothing when moving to the same anchor.
+    // TODO: scroll to that anchor
+    //
+    if (options.anchor) {
+      fsm.reset();
+      return;
+    }
+
+    // Nothing changed and anchor doesn't exist => continue to reload the page.
+    // For example, when user clicks on Tracker link in menu when already there,
+    // page should still be reloaded.
   }
 
   loadData(options, result => {
