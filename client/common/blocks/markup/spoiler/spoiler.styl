@@ -3,12 +3,13 @@
 @import "nodeca.core/client/common/_variables"
 
 .spoiler
-  border-left .125rem solid ($body-color-secondary + 55%)
+  border 1px solid $quote-border-color
+  border-left .125rem solid $quote-decorator-color
   margin-bottom 1rem
 
 .spoiler__title
   cursor pointer
-  background-color $body-bg-secondary + 50%
+  background-color $quote-bg-color
   font-size $font-size-sm
   font-weight bold
   padding .5rem 1rem
