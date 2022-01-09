@@ -20,7 +20,8 @@
 .spoiler__content
   transition margin 0.3s ease
   padding 1rem 1rem 0
-  margin-top -100%
+  // -100% is not enough with very long content (reason unknown)
+  margin-top -150%
   margin-bottom -.5rem
 
 // writing explicit paths to the content here, because
