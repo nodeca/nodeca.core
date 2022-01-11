@@ -28,7 +28,7 @@ deps-ci: ;
 
 
 test-ci:
-	git clone git://github.com/nodeca/nodeca.git ${TMP_PATH}
+	git clone https://github.com/nodeca/nodeca.git ${TMP_PATH}
 
 	test -n "${GITHUB_BRANCH}" && test "${GITHUB_BRANCH}" != "master" && \
 		cd ${TMP_PATH} && \
