@@ -5,5 +5,9 @@ nav.navbar-alt.navbar.navbar-dark.bg-primary.fixed-top.navbar-expand
     ul.navbar-nav.mr-auto
       != self.partial('@common.blocks.navbar.blocks.apps')
 
-    if self.toolbar
-      != self.partial('@' + self.toolbar)
+    ul.navbar-nav.navbar__right
+      if self.toolbar
+        != self.partial('@' + self.toolbar)
+
+      //- NOTE: This block is located in `nodeca.users`
+      != self.partial('@common.blocks.navbar_auth')

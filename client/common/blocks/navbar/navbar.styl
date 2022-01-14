@@ -81,6 +81,14 @@
   right 0
   left auto
 
+// override 1rem default padding between buttons,
+// same as `.btn + .btn` in addons.styl
+.navbar-alt .navbar-nav .nav-link
+  padding-left .4rem
+
+// increase margin between dropdown and login icon for guests
+.page-actions__dropdown + .navbar-auth__guest-login
+  margin-left .75rem
 
 //
 // Alternate header (progress bar instead of a brand).
