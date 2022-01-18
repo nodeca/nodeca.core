@@ -84,3 +84,16 @@ N.wire.on('navigate.exit', function progress_updater_teardown() {
   $(window).off('scroll', scroll_handler);
   scroll_handler = null;
 });
+
+
+// Toggle menu on small screens
+//
+N.wire.on(module.apiPath + ':toggle_menu', function navbar_toggle_menu() {
+  if ($('.navbar').hasClass('navbar__m-menu')) {
+    $('.navbar').removeClass('navbar__m-menu');
+    $('.navbar-primary .collapse').collapse('hide');
+  } else {
+    $('.navbar').addClass('navbar__m-menu');
+    $('.navbar-primary .collapse').collapse('show');
+  }
+});

@@ -11,11 +11,13 @@
   color $navbar-dark-color
   padding .5rem
 
-.navbar .page-actions
-  margin-left auto
+.navbar__middle
+  flex 1 1 0%
 
 .navbar__right
+  display flex
   margin-left auto
+  flex-grow 0
 
 .navbar-brand
   text-transform uppercase
@@ -41,6 +43,7 @@
     transition opacity .3s linear
 
 .navbar-alt
+  flex-wrap nowrap
   top -($nav-panel-height)
   background-color transparent !important
   transition top .001s linear .3s
@@ -54,9 +57,7 @@
 .page-head .hidden-page-head
   display none !important
 
-.navbar__m-secondary
-  .navbar-collapse
-    display none  // hide expanded menu
+.navbar__m-secondary:not(.navbar__m-menu)
   &.navbar-primary .navbar-inner
     opacity 0
   &.navbar-alt
@@ -71,6 +72,37 @@
 
 .navbar-alt .btn
   opacity .5
+
+.navbar-alt__title
+  display block
+
+.navbar-alt__menu
+  display none
+
+.navbar-alt__hover-toggle
+  overflow hidden
+  position relative
+
+@media (min-width: $grid-breakpoints.md)
+  .navbar-alt__title
+    display block
+    transition opacity .3s linear
+    opacity 1
+  .navbar-alt__menu
+    position absolute
+    top 0
+    transition opacity .3s linear
+    display flex
+    opacity 0
+
+  // on `md` size and above, title in alt navbar gets replaced with menu on hover
+  .navbar-alt__hover-toggle:hover
+    .navbar-alt__title
+      opacity 0
+      user-select none
+      pointer-events none
+    .navbar-alt__menu
+      opacity 1
 
 
 // Fix for dropdown positioning in alt navbar inside toolbars

@@ -1,17 +1,27 @@
-nav.navbar-alt.navbar.navbar-dark.bg-primary.fixed-top.navbar-expand
+nav.navbar-alt.navbar.navbar-dark.bg-primary.fixed-top.navbar-expand-md
   .navbar-inner.layout__container.container-fluid
     .navbar-nav
       a.navbar__level-up.nav-link.icon.icon-level-up(href=self.level_up)
 
-    .navbar-alt__title.navbar-text.mr-auto
-      if self.title
-        = self.title
-      else if self.title_html
-        != self.title_html
+    .navbar__middle.navbar-alt__hover-toggle.d-none.d-sm-block
+      .navbar-alt__title.navbar-text
+        if self.title
+          = self.title
+        else if self.title_html
+          != self.title_html
 
-    ul.navbar-nav.navbar__right
+      ul.navbar-nav.navbar-alt__menu
+        != self.partial('@common.blocks.navbar.blocks.apps')
+
+    .navbar__right
       if self.toolbar
         != self.partial('@' + self.toolbar)
 
-      //- NOTE: This block is located in `nodeca.users`
-      != self.partial('@common.blocks.navbar_auth')
+      ul.navbar-nav.navbar-collapse.collapse
+        //- NOTE: This block is located in `nodeca.users`
+        != self.partial('@common.blocks.navbar_auth')
+
+    button.navbar-toggler.navbar-toggler-right.icon.icon-menu(
+      type='button'
+      data-on-click='common.blocks.navbar:toggle_menu'
+    )
