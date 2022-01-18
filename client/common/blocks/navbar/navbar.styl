@@ -57,7 +57,7 @@
 .page-head .hidden-page-head
   display none !important
 
-.navbar__m-secondary:not(.navbar__m-menu)
+.navbar__m-secondary
   &.navbar-primary .navbar-inner
     opacity 0
   &.navbar-alt
@@ -65,6 +65,12 @@
     transition top .001s linear
     .navbar-inner
       opacity 1
+
+.navbar__m-menu.navbar__m-secondary
+  &.navbar-primary .navbar-inner
+    opacity 1
+  &.navbar-alt .navbar-inner
+    opacity 0
 
 .navbar-alt__title
   padding-right 1rem
@@ -117,10 +123,6 @@
 // same as `.btn + .btn` in addons.styl
 .navbar-alt .navbar-nav .nav-link
   padding-left .4rem
-
-// increase margin between dropdown and login icon for guests
-.page-actions__dropdown + .navbar-auth__guest-login
-  margin-left .75rem
 
 //
 // Alternate header (progress bar instead of a brand).
