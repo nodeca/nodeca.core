@@ -1,5 +1,6 @@
 @import "nodeca.core/client/common/_variables"
 
+$navbar-animation-duration = .1s
 
 .navbar
   box-shadow 0 1px 3px rgba(0, 0, 0, 0.05)
@@ -40,16 +41,16 @@
 .navbar-primary
   .navbar-inner
     opacity 1
-    transition opacity .3s linear
+    transition opacity $navbar-animation-duration linear
 
 .navbar-alt
   flex-wrap nowrap
   top -($nav-panel-height)
   background-color transparent !important
-  transition top .001s linear .3s
+  transition top .001s linear $navbar-animation-duration
   .navbar-inner
     opacity 0
-    transition opacity .3s linear
+    transition opacity $navbar-animation-duration linear
 
 .navbar-alt .hidden-nav-alt
   display none !important
@@ -92,12 +93,12 @@
 @media (min-width: $grid-breakpoints.md)
   .navbar-alt__title
     display block
-    transition opacity .3s linear
+    transition opacity $navbar-animation-duration linear
     opacity 1
   .navbar-alt__menu
     position absolute
     top 0
-    transition opacity .3s linear
+    transition opacity $navbar-animation-duration linear
     display flex
     opacity 0
 
