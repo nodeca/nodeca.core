@@ -11,6 +11,7 @@ $navbar-animation-duration = .1s
   border-color transparent
   color $navbar-dark-color
   padding .5rem
+  margin-left .4rem
 
 .navbar__middle
   flex 1 1 0%
@@ -110,20 +111,6 @@ $navbar-animation-duration = .1s
       pointer-events none
     .navbar-alt__menu
       opacity 1
-
-
-// Fix for dropdown positioning in alt navbar inside toolbars
-// (in forum, blogs, dialogs); bootstrap requires .navbar-nav class which
-// which don't always have, https://github.com/twbs/bootstrap/issues/23479
-//
-.navbar-alt .page-actions .dropdown-menu-end
-  right 0
-  left auto
-
-// override 1rem default padding between buttons,
-// same as `.btn + .btn` in addons.styl
-.navbar-alt .navbar-nav .nav-link
-  padding-left .4rem
 
 //
 // Alternate header (progress bar instead of a brand).
