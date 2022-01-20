@@ -20,7 +20,6 @@ $navbar-animation-duration = .1s
   display flex
   margin-left auto
   flex-grow 0
-  align-items center
 
 .navbar-brand
   text-transform uppercase
@@ -93,6 +92,9 @@ $navbar-animation-duration = .1s
   position relative
 
 @media (min-width: $grid-breakpoints.md)
+  .navbar__right
+    align-items center
+
   .navbar-alt__title
     display block
     transition opacity $navbar-animation-duration linear
