@@ -15,13 +15,12 @@ nav.navbar-alt.navbar.navbar-dark.bg-primary.fixed-top.navbar-expand-md
       ul.navbar-nav.navbar-alt__menu
         != self.partial('@common.blocks.navbar.blocks.apps')
 
-    .navbar__right
+    .navbar-nav.navbar-collapse.collapse.navbar__right
       if self.toolbar
         != self.partial('@' + self.toolbar)
 
-      ul.navbar-nav.navbar-collapse.collapse
-        //- NOTE: This block is located in `nodeca.users`
-        != self.partial('@common.blocks.navbar_auth')
+      //- NOTE: This block is located in `nodeca.users`
+      != self.partial('@common.blocks.navbar_auth')
 
     button.navbar-toggler.navbar-toggler-right.icon.icon-menu(
       type='button'
