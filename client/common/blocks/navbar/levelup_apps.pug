@@ -3,16 +3,17 @@ nav.navbar-primary.navbar.navbar-dark.bg-primary.fixed-top.navbar-expand-md
     .navbar-nav.navbar__m-hide-on-search
       a.navbar__level-up.nav-link.icon.icon-level-up(href=self.level_up)
 
-    button.navbar-toggler.navbar-toggler-right.icon.icon-menu(
-      type='button'
-      data-on-click='common.blocks.navbar:toggle_menu'
-    )
+    .navbar__right-mobile
+      button.navbar-toggler.navbar-toggler-right.icon.icon-menu(
+        type='button'
+        data-on-click='common.blocks.navbar:toggle_menu'
+      )
 
     .navbar-collapse.collapse
-      ul.navbar-nav.navbar__m-hide-on-search.navbar__middle
+      ul.navbar-nav.navbar__m-hide-on-search
         != self.partial('@common.blocks.navbar.blocks.apps')
 
-      .navbar-nav.navbar__right
+      .navbar__right.navbar-nav
         != self.partial('@common.blocks.navbar.search')
 
         //- NOTE: This block is located in `nodeca.users`

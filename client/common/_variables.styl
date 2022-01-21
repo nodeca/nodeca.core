@@ -65,6 +65,11 @@ shortable()
   overflow hidden
   text-overflow ellipsis
 
+// fix for shortable in navbar flexbox
+.navbar-collapse
+  min-width 0
+
+
 fix-bottom()
   & > p:last-child
   & > ul:last-child

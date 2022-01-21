@@ -4,6 +4,9 @@ $navbar-animation-duration = .1s
 
 .navbar
   box-shadow 0 1px 3px rgba(0, 0, 0, 0.05)
+  // Patch to scroll on small height
+  max-height 100vh
+  overflow auto
 
 // Override toggler style
 .navbar-dark .navbar-toggler
@@ -13,22 +16,18 @@ $navbar-animation-duration = .1s
   padding .5rem
   margin-left .4rem
 
-.navbar__middle
-  flex 1 1 0%
-
 .navbar__right
+.navbar__right-mobile
   display flex
   margin-left auto
   flex-grow 0
 
+.navbar__right-mobile
+  align-items center
+
 .navbar-brand
   text-transform uppercase
   margin-right $spacer * 2
-
-.navbar-persistent
-  display flex
-  flex-wrap nowrap
-  flex-direction row
 
 .navbar__level-up
   padding-left .8rem !important
@@ -87,13 +86,33 @@ $navbar-animation-duration = .1s
 .navbar-alt__menu
   display none
 
-.navbar-alt__hover-toggle
+
+.navbar__hover-swap-container
+  // Stretch to max free size
+  flex 1 1 0%
+  // Fix for inner shortable
+  min-width 0
   overflow hidden
   position relative
+  // Fix for inner shortable
+  min-width 0
+
+.navbar__hover-swap-container:hover
+  .navbar__hover-hide
+    opacity 0
+    user-select none
+    pointer-events none
+  .navbar__hover-show
+    opacity 1
+
 
 @media (min-width: $grid-breakpoints.md)
   .navbar__right
     align-items center
+
+  .navbar__right-mobile
+    display none
+
 
   .navbar-alt__title
     display block
@@ -105,15 +124,6 @@ $navbar-animation-duration = .1s
     transition opacity $navbar-animation-duration linear
     display flex
     opacity 0
-
-  // on `md` size and above, title in alt navbar gets replaced with menu on hover
-  .navbar-alt__hover-toggle:hover
-    .navbar-alt__title
-      opacity 0
-      user-select none
-      pointer-events none
-    .navbar-alt__menu
-      opacity 1
 
 //
 // Alternate header (progress bar instead of a brand).

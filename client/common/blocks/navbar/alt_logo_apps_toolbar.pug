@@ -2,17 +2,22 @@ nav.navbar-alt.navbar.navbar-dark.bg-primary.fixed-top.navbar-expand-md
   .navbar-inner.layout__container.container-fluid
     a.navbar-brand.navbar__m-hide-on-search(href="/") Nodeca
 
-    ul.navbar-nav.navbar__middle.navbar-collapse.collapse
-      != self.partial('@common.blocks.navbar.blocks.apps')
-
-    .navbar-nav.navbar-collapse.collapse.navbar__right
+    .navbar__right-mobile
       if self.toolbar
         != self.partial('@' + self.toolbar)
 
-      //- NOTE: This block is located in `nodeca.users`
-      != self.partial('@common.blocks.navbar_auth')
+      button.navbar-toggler.navbar-toggler-right.icon.icon-menu(
+        type='button'
+        data-on-click='common.blocks.navbar:toggle_menu'
+      )
 
-    button.navbar-toggler.navbar-toggler-right.icon.icon-menu(
-      type='button'
-      data-on-click='common.blocks.navbar:toggle_menu'
-    )
+    .navbar-collapse.collapse
+      ul.navbar-nav
+        != self.partial('@common.blocks.navbar.blocks.apps')
+
+      .navbar__right.navbar-nav
+        if self.toolbar
+          != self.partial('@' + self.toolbar)
+
+        //- NOTE: This block is located in `nodeca.users`
+        != self.partial('@common.blocks.navbar_auth')
