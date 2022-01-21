@@ -4,9 +4,13 @@ $navbar-animation-duration = .1s
 
 .navbar
   box-shadow 0 1px 3px rgba(0, 0, 0, 0.05)
-  // Patch to scroll on small height
+
+// Add scroll on small height for expanded burger menu
+// !!! Should NOT apply on collapsed state to keep dropdowns work
+.navbar.navbar__m-menu
   max-height 100vh
   overflow auto
+
 
 // Override toggler style
 .navbar-dark .navbar-toggler
