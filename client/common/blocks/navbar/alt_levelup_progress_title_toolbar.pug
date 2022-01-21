@@ -5,7 +5,7 @@ nav.navbar-alt.navbar.navbar-dark.bg-primary.fixed-top.navbar-expand-md
 
     != self.partial('@common.blocks.navbar.blocks.page_progress', self.progress)
 
-    .navbar-text.navbar-alt__title.d-none.d-sm-block.d-md-none
+    .navbar-text.navbar__title.d-none.d-sm-block.d-md-none
       if self.title
         = self.title
       else if self.title_html
@@ -22,7 +22,7 @@ nav.navbar-alt.navbar.navbar-dark.bg-primary.fixed-top.navbar-expand-md
 
     .navbar-collapse.collapse
       .navbar__hover-swap-container
-        .navbar__hover-hide.navbar-text.navbar-alt__title
+        .navbar__hover-hide.navbar-text.navbar__title
           if self.title
             = self.title
           else if self.title_html
