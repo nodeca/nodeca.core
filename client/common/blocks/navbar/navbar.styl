@@ -75,35 +75,32 @@ $navbar-animation-duration = .1s
 
 .navbar-alt__title
   padding-right 1rem
+  padding-left 1 rem
   shortable()
 
 .navbar-alt .btn
   opacity .5
-
-.navbar-alt__title
-  display block
-
-.navbar-alt__menu
-  display none
-
 
 .navbar__hover-swap-container
   // Stretch to max free size
   flex 1 1 0%
   // Fix for inner shortable
   min-width 0
-  overflow hidden
   position relative
-  // Fix for inner shortable
-  min-width 0
 
-.navbar__hover-swap-container:hover
   .navbar__hover-hide
-    opacity 0
-    user-select none
-    pointer-events none
+    transition opacity $navbar-animation-duration
   .navbar__hover-show
-    opacity 1
+    position absolute
+    top 0
+    opacity 0
+    transition opacity $navbar-animation-duration
+
+  &:hover
+    .navbar__hover-hide
+      opacity 0
+    .navbar__hover-show
+      opacity 1
 
 
 @media (min-width: $grid-breakpoints.md)
@@ -112,18 +109,6 @@ $navbar-animation-duration = .1s
 
   .navbar__right-mobile
     display none
-
-
-  .navbar-alt__title
-    display block
-    transition opacity $navbar-animation-duration linear
-    opacity 1
-  .navbar-alt__menu
-    position absolute
-    top 0
-    transition opacity $navbar-animation-duration linear
-    display flex
-    opacity 0
 
 //
 // Alternate header (progress bar instead of a brand).
