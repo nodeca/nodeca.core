@@ -12,8 +12,8 @@ nav.navbar-alt.navbar.navbar-dark.bg-primary.fixed-top.navbar-expand-md
         != self.title_html
 
     .navbar__right-burger
-      if self.toolbar
-        != self.partial('@' + self.toolbar)
+      if self.extra_buttons
+        != self.partial('@' + self.extra_buttons)
 
       button.navbar-toggler.navbar-toggler-right.icon.icon-menu(
         type='button'
@@ -32,8 +32,8 @@ nav.navbar-alt.navbar.navbar-dark.bg-primary.fixed-top.navbar-expand-md
           != self.partial('@common.blocks.navbar.blocks.apps')
 
       .navbar__right.navbar-nav
-        if self.toolbar
-          != self.partial('@' + self.toolbar)
+        if self.extra_buttons
+          != self.partial('@' + self.extra_buttons)
 
         //- NOTE: This block is located in `nodeca.users`
         != self.partial('@common.blocks.navbar_auth')
