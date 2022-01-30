@@ -14,7 +14,7 @@ N.wire.on('io.version_mismatch', function show_reload_dlg(hash) {
   //
   // - RPC
   // - live token update
-  // - live broadcasts from another tabs
+  // - broadcasts from another tabs
   //
   if (shown) return;
   shown = true;
@@ -22,7 +22,7 @@ N.wire.on('io.version_mismatch', function show_reload_dlg(hash) {
   // Broadcast error to other tabs
   // Note, we should wait async end, but dialog animation will
   // pause enougth for us. Keep code simple.
-  if (N.live) N.live.emit('local.io.version_mismatch', hash);
+  if (N.broadcast) N.broadcast.send('local.io.version_mismatch', hash);
 
 
   let $dialog = $(N.runtime.render(module.apiPath));
@@ -48,9 +48,9 @@ N.wire.on('io.version_mismatch', function show_reload_dlg(hash) {
 
 N.wire.once('navigate.done', function version_check_init() {
   // Install cross-tab reload listener
-  if (!N.live) return;
+  if (!N.broadcast) return;
 
-  N.live.on('local.io.version_mismatch', function version_check(hash) {
+  N.broadcast.on('local.io.version_mismatch', function version_check(hash) {
     N.wire.emit('io.version_mismatch', hash);
   });
 });
