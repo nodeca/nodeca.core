@@ -12,16 +12,19 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
 
   let token = null;
 
-  function token_update() {
+  async function token_update() {
     token = null;
 
-    return N.io.rpc('common.core.token_live', {}, { persistent: true }).then(
-      res => { token = res.token_live; },
-      err => {
-        // Suppress errors except reload requests
-        if (err.code === N.io.EWRONGVER) N.wire.emit('io.version_mismatch', err.hash);
-      }
-    );
+    // Pause to avoid ddos on error
+    await new Promise(r => setTimeout(r, 500));
+
+    try {
+      const res = await N.io.rpc('common.core.token_live', {}, { persistent: true });
+      token = res.token_live;
+    } catch (err) {
+      // Suppress errors except reload requests
+      if (err.code === N.io.EWRONGVER) N.wire.emit('io.version_mismatch', err.hash);
+    }
   }
 
   class FLive {
