@@ -3,7 +3,7 @@
 'use strict';
 
 
-const bag = require('bagjs')({ prefix: 'nodeca' });
+const bkv = require('bkv').shared();
 
 
 N.wire.on('navigate.done', function navbar_menu_change_active(target) {
@@ -42,11 +42,9 @@ N.wire.on('navigate.done', function navbar_menu_change_active(target) {
 
 // Restore hidden sidebar state
 //
-N.wire.once('navigate.done', function toggle_sidebar_on_load() {
-  return bag.get('acp_hide_sidebar').then(hidden => {
-    $('body').toggleClass('show-sidebar', !hidden);
-  })
-  .catch(() => {}); // Suppress storage errors
+N.wire.once('navigate.done', async function toggle_sidebar_on_load() {
+  const hidden = await bkv.get('acp_hide_sidebar');
+  $('body').toggleClass('show-sidebar', !hidden);
 });
 
 
@@ -54,5 +52,5 @@ N.wire.once('navigate.done', function toggle_sidebar_on_load() {
 //
 N.wire.on(module.apiPath + ':toggle_sidebar', function toggle_sidebar() {
   $('body').toggleClass('show-sidebar');
-  bag.set('acp_hide_sidebar', !$('body').hasClass('show-sidebar'));
+  bkv.set('acp_hide_sidebar', !$('body').hasClass('show-sidebar'));
 });

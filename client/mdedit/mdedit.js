@@ -5,7 +5,7 @@
 
 const CodeMirror = require('codemirror');
 const _          = require('lodash');
-const bag        = require('bagjs');
+const bkv        = require('bkv').shared();
 const RpcCache   = require('./_lib/rpc_cache')(N);
 const md_writer  = require('nodeca.core/lib/parser/md_writer');
 
@@ -65,7 +65,7 @@ function MDEdit() {
   this.__layout__       = null;
   this.__minHeight__    = 0;
   this.__cm__           = null;
-  this.__bag__          = bag({ prefix: 'nodeca' });
+  this.__bkv__          = bkv;
   this.__cache__        = new RpcCache();
   this.__state_changed__  = false;
   this.__state_monitor__  = null; // setInterval() result
@@ -161,13 +161,13 @@ MDEdit.prototype.show = function (options) {
   this.text(options.text || '');
 
   // Get preview flag from localstore
-  this.__bag__.get('hide_preview').catch(() => false).then(hide_preview => {
+  this.__bkv__.get('hide_preview').catch(() => false).then(hide_preview => {
     if (!hide_preview) {
       N.MDEdit.__layout__.addClass('mdedit__m-show-preview');
     }
 
     // Get editor height from localstore
-    this.__bag__.get('height').catch(() => 0).then(height => {
+    this.__bkv__.get('height').catch(() => 0).then(height => {
 
       if (height) {
         // If no prevoius editor - set `bottom` for animation
@@ -255,7 +255,7 @@ MDEdit.prototype.hide = function (options) {
 
   // Remove draft if needed
   if (options?.removeDraft && this.__options__.draftKey) {
-    this.__bag__.remove(`mdedit_${this.__options__.draftKey}`)
+    this.__bkv__.remove(`mdedit_${this.__options__.draftKey}`)
       .catch(() => {}); // Suppress storage errors
   }
 
@@ -300,7 +300,7 @@ MDEdit.prototype.__state_save__ = function () {
       else draft[fieldName] = fieldType();
     });
 
-    return this.__bag__.set(`mdedit_${this.__options__.draftKey}`, draft, DRAFTS_EXPIRE)
+    return this.__bkv__.set(`mdedit_${this.__options__.draftKey}`, draft, DRAFTS_EXPIRE)
       .catch(() => {}); // Suppress storage errors
   });
 };
@@ -315,7 +315,7 @@ MDEdit.prototype.__state_load__ = function () {
 
     this.__state_changed__ = false;
 
-    return this.__bag__.get(`mdedit_${this.__options__.draftKey}`)
+    return this.__bkv__.get(`mdedit_${this.__options__.draftKey}`)
       .then(draft => {
         if (!draft) return;
 
@@ -473,7 +473,7 @@ N.wire.on('mdedit:init', function initResize() {
         newHeight = newHeight > winHeight ? winHeight : newHeight;
         newHeight = newHeight < N.MDEdit.__minHeight__ ? N.MDEdit.__minHeight__ : newHeight;
 
-        N.MDEdit.__bag__.set('height', newHeight);
+        N.MDEdit.__bkv__.set('height', newHeight);
         N.MDEdit.__layout__.outerHeight(newHeight);
         N.MDEdit.__cm__.setSize('100%', N.MDEdit.__layout__.find('.mdedit__edit-area').height());
       }, 20, { maxWait: 20 }));
@@ -530,7 +530,7 @@ N.wire.on('mdedit.preview', () => {
 
   let showPreview = N.MDEdit.__layout__.hasClass('mdedit__m-show-preview');
 
-  N.MDEdit.__bag__.set('hide_preview', !showPreview);
+  N.MDEdit.__bkv__.set('hide_preview', !showPreview);
 });
 
 
