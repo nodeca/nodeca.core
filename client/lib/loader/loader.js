@@ -47,27 +47,11 @@
   };
 
 
-  // Simple cross-browser `forEach` iterator for arrays.
-  function forEach(array, iterator) {
-    for (var index = 0; index < array.length; index += 1) {
-      iterator(array[index], index);
-    }
-  }
-
-  // Simple cross-browser replacement for `Array.reduce`
-  function reduce(array, iterator, value) {
-    for (var index = 0; index < array.length; index += 1) {
-      value = iterator(value, array[index]);
-    }
-
-    return value;
-  }
-
   // Remove duplicates from an array preserving the order of the elements
   function uniq(array) {
     var result = [];
 
-    forEach(array, function (item) {
+    array.forEach(function (item) {
       if (result.indexOf() === -1) result.push(item);
     });
 
@@ -202,13 +186,11 @@
       loadQueue = loadQueue.concat(assets[pkgNames[i]].packagesQueue.slice(0).reverse());
     }
 
-    loadQueue = uniq(loadQueue);
-
-    forEach(loadQueue, function (dependency) {
+    uniq(loadQueue).forEach(function (dependency) {
       var alreadyLoaded, pkgDist = assets[dependency];
 
       if (pkgDist.css.length) {
-        alreadyLoaded = reduce(pkgDist.css, function (acc, css) {
+        alreadyLoaded = pkgDist.css.reduce(function (acc, css) {
           return acc || loaded[css] || scheduled[css];
         }, false);
 
@@ -219,7 +201,7 @@
       }
 
       if (pkgDist.js.length) {
-        alreadyLoaded = reduce(pkgDist.js, function (acc, js) {
+        alreadyLoaded = pkgDist.js.reduce(function (acc, js) {
           return acc || loaded[js] || scheduled[js];
         }, false);
 
@@ -238,7 +220,7 @@
     if (!resources.length) return Promise.resolve();
 
     var res_list = [];
-    forEach(resources, function (url) {
+    resources.forEach(function (url) {
       res_list.push({
         url: url,
         // storage key = file path without hash
@@ -247,15 +229,11 @@
     });
 
     return bag.require(res_list)
-      .then(null, function (err) {
+      .catch(function (err) {
         throw new Error('Asset load error (bag.js): ' + (err.message || err));
       })
       .then(function () {
-        forEach(resources, function (url) {
-          loaded[url] = true;
-        });
-
-        // initClientModules();
+        resources.forEach(function (url) { loaded[url] = true; });
 
         if (!N.wire) {
           throw new Error('Asset load error: "N.Wire" unavailable after asset load.');
@@ -277,7 +255,7 @@
         });
       })
       .then(function () {
-        return N.wire.emit('init:assets', {}).then(null, function (err) {
+        return N.wire.emit('init:assets', {}).catch(function (err) {
           throw new Error('Asset load error: "init:assets" failed. ' + (err.message || err));
         });
       });
@@ -296,10 +274,8 @@
 
     // Mark all stylesheets of the given package as loaded, since they are
     // included to head of the page.
-    forEach(assets[pkgName].packagesQueue, function (dependency) {
-      forEach(assets[dependency].css, function (file) {
-        loaded[file] = true;
-      });
+    assets[pkgName].packagesQueue.forEach(function (dependency) {
+      assets[dependency].css.forEach(function (file) { loaded[file] = true; });
     });
 
     loadAssets(pkgName, shims).then(function () {
@@ -336,28 +312,23 @@
       .then(function () { return N.wire.emit('navigate.done', page_env); })
       .then(function () { return N.wire.emit('navigate.done:' + route.meta.methods.get, page_env); })
       .then(function () { NodecaLoader.booted = true; })
-      .then(null, function (err) {
+      .catch(function (err) {
         /*eslint-disable no-console*/
         try { console.error(err); } catch (__) {}
         alert('Init error: ' + err);
       });
     })
-    .then(null, function (err) {
+    .catch(function (err) {
       alert(err.message || err);
     });
   };
 
-  // Really needed export.
+  // Helper for dynamic components load.
   NodecaLoader.loadAssets = loadAssets;
 
-
-  // Instantly executes the given `func` function passing `N` and `require`
-  // as arguments.
-  function execute(func) {
-    func.call({}, N, require);
-  }
-
-  // Really needed export.
-  NodecaLoader.execute = execute;
+  // Called from loaded nodeca packages to init content.
+  NodecaLoader.execute = function execute(fn) {
+    fn.call({}, N, require);
+  };
 
 })(window);
