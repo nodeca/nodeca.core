@@ -1,7 +1,5 @@
 /*eslint-disable no-alert, object-shorthand*/
 
-'$$ asset_body("bagjs") $$';
-
 (function (window) {
   'use strict';
 
@@ -47,24 +45,38 @@
   };
 
 
-  // Remove duplicates from an array preserving the order of the elements
-  function uniq(array) {
-    var result = [];
-
-    array.forEach(function (item) {
-      if (result.indexOf() === -1) result.push(item);
-    });
-
-    return result;
-  }
-
-  function has(obj, prop) {
-    return Object.prototype.hasOwnProperty.call(obj, prop);
-  }
+  function uniq(array) { return array.filter((x, i, a) => a.indexOf(x) === i); }
 
   // Cached non-operable function.
   function noop() {}
 
+  function get_script(source) {
+    return new Promise(function (resolve) {
+      var script = document.createElement('script');
+      script.async = false;
+
+      script.onload = script.onreadystatechange = function (_, isAbort) {
+        if (isAbort || !script.readyState || /loaded|complete/.test(script.readyState)) {
+          script.onload = script.onreadystatechange = null;
+          /* eslint-disable no-undefined */
+          script = undefined;
+          if (!isAbort) setTimeout(resolve, 0);
+        }
+      };
+
+      script.src = source;
+      document.getElementsByTagName('head')[0].appendChild(script);
+    });
+  }
+
+  function get_style(source) {
+    var link = document.createElement('link');
+    link.href = source;
+    link.type = 'text/css';
+    link.rel = 'stylesheet';
+    link.media = 'screen,print';
+    document.getElementsByTagName('head')[0].appendChild(link);
+  }
 
   // Mapping of package names to package metadata for all available packages at
   // the currect locale. The metadata is an object consists of three keys:
@@ -100,7 +112,7 @@
     for (index = 0, length = matchArray.length; index < length; index += 1) {
       match = matchArray[index];
 
-      if (has(match.meta.methods, method)) return match;
+      if (match.meta.methods[method]) return match;
     }
 
     // Not found.
@@ -112,7 +124,7 @@
   var clientModules = {};
 
   function registerClientModule(apiPath, func) {
-    if (has(clientModules, apiPath) && clientModules[apiPath].initialized) return;
+    if (clientModules[apiPath] && clientModules[apiPath].initialized) return;
 
     var module = clientModules[apiPath] = {
       initialized: true,
@@ -152,17 +164,8 @@
     );
   }
 
-
   // Really needed export.
   NodecaLoader.registerClientModule = registerClientModule;
-
-  //
-  // Configure `bag.js` loader
-  //
-  var bag = new window.Bag({
-    timeout: 20000,
-    stores: [ 'indexeddb', 'websql' ]
-  });
 
   // Load a package with all of its associated assets and dependencies.
   // `preload` parameter is an optional array of URLs which are needed to load
@@ -219,25 +222,22 @@
 
     if (!resources.length) return Promise.resolve();
 
-    var res_list = [];
-    resources.forEach(function (url) {
-      res_list.push({
-        url: url,
-        // storage key = file path without hash
-        key: url.replace(/-[0-9a-f]{32}([.][a-z]+)$/, '$1')
-      });
+    // Inject CSS
+    resources.forEach(function (file) {
+      if (/[.]css$/.test(file)) { get_style(file); }
     });
 
-    return bag.require(res_list)
-      .catch(function (err) {
-        throw new Error('Asset load error (bag.js): ' + (err.message || err));
-      })
+    // Inject JS
+    var wait_js = [];
+    resources.forEach(function (file) {
+      if (/[.]js$/.test(file)) { wait_js.push(get_script(file)); }
+    });
+
+    return Promise.all(wait_js)
       .then(function () {
         resources.forEach(function (url) { loaded[url] = true; });
 
-        if (!N.wire) {
-          throw new Error('Asset load error: "N.Wire" unavailable after asset load.');
-        }
+        if (!N.wire) { throw new Error('Asset load error: "N.Wire" unavailable.'); }
 
         // make sure DOM is loaded
         return new Promise(function (resolve) {
