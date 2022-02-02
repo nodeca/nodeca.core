@@ -5,22 +5,32 @@
 
 const faye  = require('faye/src/faye_browser');
 const EE = require('events');
+const bkv = require('bkv').shared();
+
+const STORE_KEY = 'live_token';
 
 // Emit event for connectors & add live instance to 'N' (after init `N.runtime`)
 //
 N.wire.once('navigate.done', { priority: -900 }, function live_init() {
 
   let token = null;
+  let token_not_restored = true;
 
   async function token_update() {
-    token = null;
-
+    // Once, try to load previous value from persistent store.
+    // That should help to save 1 rpc request after page reload.
+    if (token_not_restored) {
+      token = await bkv.get(STORE_KEY);
+      token_not_restored = false;
+      if (token) return;
+    }
     // Pause to avoid ddos on error
     await new Promise(r => setTimeout(r, 500));
 
     try {
       const res = await N.io.rpc('common.core.token_live', {}, { persistent: true });
       token = res.token_live;
+      await bkv.set(STORE_KEY, token);
     } catch (err) {
       // Suppress errors except reload requests
       if (err.code === N.io.EWRONGVER) N.wire.emit('io.version_mismatch', err.hash);
@@ -36,9 +46,7 @@ N.wire.once('navigate.done', { priority: -900 }, function live_init() {
 
     // Convert channel names to faye-compatible format: add '/' at start of
     // channel name and replace '.' with '!!'
-    toFayeCompatible(ch) {
-      return '/' + ch.replace(/\./g, '!!');
-    }
+    toFayeCompatible(ch) { return '/' + ch.replace(/\./g, '!!'); }
 
     init() {
       this.fayeClient = new faye.Client('/io/live');
