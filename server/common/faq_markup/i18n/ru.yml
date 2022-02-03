@@ -93,7 +93,7 @@ ru-RU:
         <tr>
           <td>блок кода</td>
           <td>```js<br />const a = 2<br />let b = a * 3<br />```</td>
-          <td><pre><code class="js"><span class="hljs-keyword">const</span> a = <span class="hljs-number">2</span><br /><span class="hljs-keyword">const</span> b = a * <span class="hljs-number">3</span></td>
+          <td><pre class="hljs"><code class="js"><span class="hljs-keyword">const</span> a = <span class="hljs-number">2</span><br /><span class="hljs-keyword">const</span> b = a * <span class="hljs-number">3</span></td>
         </tr>
         <tr>
           <td>таблица</td>
@@ -128,6 +128,19 @@ ru-RU:
         </tr>
       </table>
     </div>
+
+
+    ### Вставка видео
+
+    Ссылки на `youtube` и `vimeo` преобразуются в видеоплеер, если
+    размещены на отдельном параграфе:
+
+    <pre class="hljs"><code>параграф с текстом<br><br>https://www.youtube.com/watch?v=o0u4M6vppCI<br><br>следующий параграф</code></pre>
+
+    Если в параграфе кроме ссылки есть что-то еще, то заменится только текст ссылки:
+
+    <pre class="hljs"><code>параграф с текстом и ссылкой https://www.youtube.com/watch?v=o0u4M6vppCI</code></pre>
+
 
     ### Вставка файлов и размеры картинок
 

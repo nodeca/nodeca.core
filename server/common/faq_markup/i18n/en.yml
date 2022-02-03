@@ -92,12 +92,8 @@ en-US:
         </tr>
         <tr>
           <td>code block</td>
-          <td>```js<br />let f = (n) =><br />  n < 2 ?<br />  n :<br />  f(n-1)<br />   + f(n-2)<br />```</td>
-          <td><pre><code class="js"><span class="hljs-keyword">let</span> f = (n) =&gt;
-      n &lt; <span class="hljs-number">2</span> ?
-      n :
-      f(n-<span class="hljs-number">1</span>)
-        + f(n-<span class="hljs-number">2</span>)</code></pre></td>
+          <td>```js<br />const a = 2<br />let b = a * 3<br />```</td>
+          <td><pre class="hljs"><code class="js"><span class="hljs-keyword">const</span> a = <span class="hljs-number">2</span><br /><span class="hljs-keyword">const</span> b = a * <span class="hljs-number">3</span></td>
         </tr>
         <tr>
           <td>table</td>
@@ -132,6 +128,19 @@ en-US:
         </tr>
       </table>
     </div>
+
+
+    ### Insert video
+
+    Links to `youtube` and `vimeo` will be converted to video player, if been placed
+    on separate paragraph:
+
+    <pre class="hljs"><code>paragraph with text<br><br>https://www.youtube.com/watch?v=o0u4M6vppCI<br><br>next paragraph</code></pre>
+
+    If link in paragraph is combined with something else, then only link text will be replaced:
+
+    <pre class="hljs"><code>paragraph with text and link https://www.youtube.com/watch?v=o0u4M6vppCI</code></pre>
+
 
     ### Insert media and set image size
 
