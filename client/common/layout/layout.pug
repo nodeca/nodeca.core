@@ -17,6 +17,9 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage', class=self.offline_m
       each cssPath in self.head.stylesheets[self.apiPath.split('.').shift()]
         link(rel='stylesheet', href=cssPath)
 
+    if self.inject_headers
+      != self.inject_headers.join('\n')
+
     script(type="text/javascript").
       !{self.asset_body('nodeca.core/client/lib/loader/loader.js')}
 
@@ -27,9 +30,6 @@ html.no-js(itemscope, itemtype='http://schema.org/WebPage', class=self.offline_m
         '!{self.apiPath.split(".").shift()}',
         shims
       );
-
-    if self.inject_headers
-      != self.inject_headers.join('\n')
 
   body
     if self.inject_body_start
