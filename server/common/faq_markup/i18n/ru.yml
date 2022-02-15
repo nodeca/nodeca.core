@@ -170,3 +170,8 @@ ru-RU:
     их принудительно, добавив 2 пробела или `\` в конец строки:
 
     <pre class="hljs"><code>принудительный&blank;&blank;<br>перевод\<br>строки</code></pre>
+
+
+    ### Дополнительная информация
+
+    - <a href="https://spec.commonmark.org/" target="_blank">CommonMark</a>.

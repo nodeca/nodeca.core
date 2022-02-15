@@ -169,3 +169,8 @@ en-US:
     two spaces or `\` at line end:
 
     <pre class="hljs"><code>enforced&blank;&blank;<br>line\<br>break</code></pre>
+
+
+    ### References
+
+    - <a href="https://spec.commonmark.org/" target="_blank">CommonMark</a>.
