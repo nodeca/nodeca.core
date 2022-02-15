@@ -160,3 +160,12 @@ en-US:
 
     If you need to place text in `alt` attribute, use `|` to separate size modifier:
     `![Alt text|md](http://example.com/member25/media/55c2)`.
+
+    ### Paragraphs and line breaks
+
+    Paragraphs are separated by blank lines.
+
+    Single line breaks are disabled by default, but you can enforce those by
+    two spaces or `\` at line end:
+
+    <pre class="hljs"><code>enforced&blank;&blank;<br>line\<br>break</code></pre>
