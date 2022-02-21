@@ -161,13 +161,13 @@ MDEdit.prototype.show = function (options) {
   this.text(options.text || '');
 
   // Get preview flag from localstore
-  this.__bkv__.get('hide_preview').catch(() => false).then(hide_preview => {
+  this.__bkv__.get('hide_preview').then(hide_preview => {
     if (!hide_preview) {
       N.MDEdit.__layout__.addClass('mdedit__m-show-preview');
     }
 
     // Get editor height from localstore
-    this.__bkv__.get('height').catch(() => 0).then(height => {
+    this.__bkv__.get('height').then(height => {
 
       if (height) {
         // If no prevoius editor - set `bottom` for animation
@@ -257,8 +257,7 @@ MDEdit.prototype.hide = function (options) {
 
   // Remove draft if needed
   if (options?.removeDraft && this.__options__.draftKey) {
-    this.__bkv__.remove(`mdedit_${this.__options__.draftKey}`)
-      .catch(() => {}); // Suppress storage errors
+    this.__bkv__.remove(`mdedit_${this.__options__.draftKey}`);
   }
 
   setTimeout(() => {
@@ -302,8 +301,7 @@ MDEdit.prototype.__state_save__ = function () {
       else draft[fieldName] = fieldType();
     });
 
-    return this.__bkv__.set(`mdedit_${this.__options__.draftKey}`, draft, DRAFTS_EXPIRE)
-      .catch(() => {}); // Suppress storage errors
+    return this.__bkv__.set(`mdedit_${this.__options__.draftKey}`, draft, DRAFTS_EXPIRE);
   });
 };
 
@@ -342,8 +340,7 @@ MDEdit.prototype.__state_load__ = function () {
         if (draft.scrollTop) this.__cm__.scrollTo(draft.scrollTop);
 
         return draft;
-      })
-      .catch(() => {}); // Suppress storage errors
+      });
   });
 };
 
