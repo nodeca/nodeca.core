@@ -213,27 +213,29 @@ MDEdit.prototype.show = function (options) {
 
   // Load draft if needed
   //
-  this.text(options.text || '');
+  this.__layout__.on('show.nd.mdedit', () => {
+    this.text(options.text || '');
 
-  const markStateChanged = () => { this.__state_changed__ = true; };
+    const markStateChanged = () => { this.__state_changed__ = true; };
 
-  this.__state_load__()
-    .then(() => {
-      this.__layout__.trigger('ready');
+    this.__state_load__()
+      .then(() => {
+        this.__layout__.trigger('ready');
 
-      // Setup update handlers
-      this.__layout__.on(
-        'change.nd.mdedit input.nd.mdedit',
-        '.mdedit-header input',
-        markStateChanged
-      );
-      this.__cm__.on('cursorActivity', markStateChanged);
-      this.__cm__.on('scroll', markStateChanged);
+        // Setup update handlers
+        this.__layout__.on(
+          'change.nd.mdedit input.nd.mdedit',
+          '.mdedit-header input',
+          markStateChanged
+        );
+        this.__cm__.on('cursorActivity', markStateChanged);
+        this.__cm__.on('scroll', markStateChanged);
 
-      this.__state_monitor__ = setInterval(() => {
-        if (this.__state_changed__) this.__state_save__();
-      }, 2000);
-    });
+        this.__state_monitor__ = setInterval(() => {
+          if (this.__state_changed__) this.__state_save__();
+        }, 2000);
+      });
+  });
 
   return this.__layout__;
 };
