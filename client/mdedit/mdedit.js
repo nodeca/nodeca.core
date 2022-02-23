@@ -434,6 +434,30 @@ MDEdit.prototype.toggle = function (value) {
 };
 
 
+// Expand editor to full screen or back
+//
+MDEdit.prototype.toggle_full = function (value) {
+  let doExpand;
+
+  if (value === true) {
+    doExpand = true;
+  } else if (value === false) {
+    doExpand = false;
+  } else {
+    doExpand = this.__layout__.hasClass('mdedit__m-fullscreen');
+  }
+
+  // Expand
+  if (doExpand) {
+    this.__layout__.removeClass('mdedit__m-fullscreen');
+
+  // Collapse
+  } else {
+    this.__layout__.addClass('mdedit__m-fullscreen');
+  }
+};
+
+
 // Add editor resize handler
 //
 N.wire.on('mdedit:init', function initResize() {
@@ -537,6 +561,13 @@ N.wire.on('mdedit.preview', () => {
 //
 N.wire.on('mdedit.toggle', function toggle() {
   N.MDEdit.toggle();
+});
+
+
+// Expand editor to full screen
+//
+N.wire.on('mdedit.toggle_full', function toggle_fullscreen() {
+  N.MDEdit.toggle_full();
 });
 
 

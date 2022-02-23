@@ -47,7 +47,7 @@
 
 .mdedit-header__caption
   line-height 1em
-  margin-right 2rem
+  margin-right 3rem
   margin-bottom .375rem
   shortable()
 
@@ -126,10 +126,14 @@
   cursor auto
   margin 0 .4em
 
-.mdedit__collapser
+.mdedit__size-controls
+  display flex
   position absolute
   top 0
-  right 0px
+  right 0
+
+.mdedit__fullscreen
+.mdedit__collapser
   width 2rem
   height 2rem
   line-height 2rem
@@ -139,11 +143,27 @@
 .mdedit__collapser .icon-collapse
   display none
 
+.mdedit__fullscreen .icon-editor-small
+  display none
+
+.mdedit.mdedit__m-fullscreen
+  height auto !important
+  top 0
+  .mdedit__resizer
+    display none
+  .mdedit__fullscreen
+    .icon-editor-full
+      display none
+    .icon-editor-small
+      display block
+
 .mdedit.mdedit__m-collapsed
-  height 30px !important;
+  height 30px !important
   padding-top .5rem !important
+  top unset // needed when fullscreen editor is collapsed
   .mdedit__resizer
   .mdedit__body
+  .mdedit__fullscreen
   .mdedit-footer
   .mdedit-header__addon
     display none

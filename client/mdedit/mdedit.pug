@@ -1,9 +1,14 @@
 .mdedit(data-on-dragdrop='mdedit:dd')
   .emoji-autocomplete
 
-  .mdedit__collapser(data-on-click='mdedit.toggle')
-    .icon.icon-collapse
-    .icon.icon-expand
+  .mdedit__size-controls
+    .mdedit__fullscreen(data-on-click='mdedit.toggle_full')
+      .icon.icon-editor-full
+      .icon.icon-editor-small
+
+    .mdedit__collapser(data-on-click='mdedit.toggle')
+      .icon.icon-collapse
+      .icon.icon-expand
 
   .mdedit__resizer
 
