@@ -167,7 +167,7 @@ N.wire.once('navigate.done', function markup_selection_init() {
     if (!N.MDEdit?.exists()) throw 'CANCELED';
 
     // expand editor if it's collapsed
-    N.MDEdit.toggle(true);
+    N.MDEdit.toggle_collapse(true);
 
     N.MDEdit.insertQuote(data.contents, data.markup_node.dataset.ndSrc);
   });

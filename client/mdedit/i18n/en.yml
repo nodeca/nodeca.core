@@ -20,3 +20,10 @@ en-US:
   cancel: Cancel
   submit: Submit
   preview: Preview
+
+  toggle_collapse_on: Collapse editor
+  toggle_collapse_off: Expand editor
+  toggle_full_on: Expand to full screen
+  toggle_full_off: Stop expanding to full screen
+  toggle_narrow_on: Narrow mode
+  toggle_narrow_off: Wide mode

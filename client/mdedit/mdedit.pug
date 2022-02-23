@@ -3,12 +3,12 @@
 
   .mdedit__size-controls
     .mdedit__fullscreen(data-on-click='mdedit.toggle_full')
-      .icon.icon-editor-full
-      .icon.icon-editor-small
+      .icon.icon-editor-full(title=self.t('toggle_full_on'))
+      .icon.icon-editor-small(title=self.t('toggle_full_off'))
 
-    .mdedit__collapser(data-on-click='mdedit.toggle')
-      .icon.icon-collapse
-      .icon.icon-expand
+    .mdedit__collapser(data-on-click='mdedit.toggle_collapse')
+      .icon.icon-collapse(title=self.t('toggle_collapse_off'))
+      .icon.icon-expand(title=self.t('toggle_collapse_on'))
 
   .mdedit__resizer
 
@@ -29,6 +29,17 @@
       data-on-click='mdedit.submit'
       tabindex=3
     )= self.t('submit')
+
+    button.mdedit-btn__narrow.float-end.btn.btn-link.icon.icon-editor-narrow(
+      data-on-click='mdedit.toggle_narrow'
+      tabindex=6
+      title=self.t('toggle_narrow_on')
+    )
+    button.mdedit-btn__unnarrow.float-end.btn.btn-link.icon.icon-editor-unnarrow(
+      data-on-click='mdedit.toggle_narrow'
+      tabindex=6
+      title=self.t('toggle_narrow_off')
+    )
 
     button.mdedit-btn__preview-sm.float-end.btn.btn-link.d-sm-none.icon.icon-preview(
       data-on-click='mdedit.preview_sm'

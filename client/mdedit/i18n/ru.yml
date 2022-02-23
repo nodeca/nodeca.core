@@ -20,3 +20,10 @@ ru-RU:
   cancel: Отмена
   submit: Отправить
   preview: Предпросмотр
+
+  toggle_collapse_on: Свернуть редактор
+  toggle_collapse_off: Развернуть редактор
+  toggle_full_on: Развернуть на весь экран
+  toggle_full_off: Не развёртывать во весь экран
+  toggle_narrow_on: Сузить редактор
+  toggle_narrow_off: Расширить редактор
