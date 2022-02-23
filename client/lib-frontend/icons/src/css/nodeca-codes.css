@@ -14,13 +14,8 @@
 .icon-comment:before { content: '\e80c'; } /* '' */
 .icon-ref-local:before { content: '\e80d'; } /* '' */
 .icon-infraction:before { content: '\e80e'; } /* '' */
-.icon-github:before { content: '\e80f'; } /* '' */
 .icon-plus:before { content: '\e810'; } /* '' */
-.icon-vkontakte:before { content: '\e811'; } /* '' */
-.icon-gplus:before { content: '\e812'; } /* '' */
 .icon-video:before { content: '\e813'; } /* '' */
-.icon-twitter:before { content: '\e814'; } /* '' */
-.icon-yandex:before { content: '\e815'; } /* '' */
 .icon-binary:before { content: '\e816'; } /* '' */
 .icon-camera:before { content: '\e817'; } /* '' */
 .icon-dropdown-local:before { content: '\e818'; } /* '' */
