@@ -201,6 +201,30 @@
       ]
     },
     {
+      "uid": "e594fc6e5870b4ab7e49f52571d52577",
+      "css": "editor-full",
+      "code": 59407,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "3c24ee33c9487bbf18796ca6dffa1905",
+      "css": "editor-small",
+      "code": 59409,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "745f12abe1472d14f8f658de7e5aba66",
+      "css": "editor-narrow",
+      "code": 61696,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "fdfbd1fcbd4cb229716a810801a5f207",
+      "css": "editor-unnarrow",
+      "code": 61697,
+      "src": "fontawesome"
+    },
+    {
       "uid": "c55a3541a8956109ea573f720212a052",
       "css": "vote-up",
       "code": 59426,
