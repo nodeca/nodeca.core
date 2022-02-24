@@ -25,24 +25,29 @@
     .mdedit__preview.markup
 
   .mdedit-footer
+    .mdedit-footer__controls-right
+      button.mdedit-btn__preview-sm.btn.btn-link.d-sm-none.icon.icon-preview(
+        data-on-click='mdedit.preview_sm'
+        tabindex=5
+        title=self.t('preview')
+      )
+      button.mdedit-btn__preview-sm.btn.btn-link.d-none.d-sm-inline-block.d-md-none(
+        data-on-click='mdedit.preview_sm'
+        tabindex=5
+      )= self.t('preview')
+      button.mdedit-btn__preview.btn.btn-link.d-none.d-md-inline-block(
+        data-on-click='mdedit.preview'
+        tabindex=5
+      )= self.t('preview')
+
+      .mdedit__narrow(data-on-click='mdedit.toggle_narrow')
+        .icon.icon-editor-narrow(title=self.t('toggle_narrow_on'))
+        .icon.icon-editor-unnarrow(title=self.t('toggle_narrow_off'))
+
     button.mdedit-btn__submit.btn.btn-primary(
       data-on-click='mdedit.submit'
       tabindex=3
     )= self.t('submit')
-
-    button.mdedit-btn__preview-sm.float-end.btn.btn-link.d-sm-none.icon.icon-preview(
-      data-on-click='mdedit.preview_sm'
-      tabindex=5
-      title=self.t('preview')
-    )
-    button.mdedit-btn__preview-sm.float-end.btn.btn-link.d-none.d-sm-inline-block.d-md-none(
-      data-on-click='mdedit.preview_sm'
-      tabindex=5
-    )= self.t('preview')
-    button.mdedit-btn__preview.float-end.btn.btn-link.d-none.d-md-inline-block(
-      data-on-click='mdedit.preview'
-      tabindex=5
-    )= self.t('preview')
 
     button.mdedit-btn__cancel.btn.btn-link.d-none.d-sm-inline-block(
       data-on-click='mdedit.cancel'
@@ -53,7 +58,3 @@
       tabindex=4
       title=self.t('cancel')
     )
-
-    .mdedit__narrow(data-on-click='mdedit.toggle_narrow')
-      .icon.icon-editor-narrow(title=self.t('toggle_narrow_on'))
-      .icon.icon-editor-unnarrow(title=self.t('toggle_narrow_off'))

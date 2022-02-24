@@ -51,8 +51,10 @@
   margin-bottom .375rem
   shortable()
 
-.mdedit-footer
-  margin-right 1rem // adjust for narrow button
+.mdedit-footer__controls-right
+  float right
+  display flex
+  align-items center
 
 .mdedit-header__addon
   margin-bottom .375rem
@@ -135,11 +137,6 @@
   top 0
   right 0
 
-.mdedit__narrow
-  position absolute
-  bottom .5rem
-  right 0
-
 .mdedit__fullscreen
 .mdedit__collapser
 .mdedit__narrow
@@ -148,6 +145,9 @@
   line-height 2rem
   text-align center
   cursor pointer
+
+.mdedit__narrow
+  margin-right -1rem
 
 .mdedit__collapser .icon-collapse
   display none
