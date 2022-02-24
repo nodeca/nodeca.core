@@ -47,9 +47,12 @@
 
 .mdedit-header__caption
   line-height 1em
-  margin-right 3rem
+  margin-right 3rem // adjust for collapse buttons
   margin-bottom .375rem
   shortable()
+
+.mdedit-footer
+  margin-right 1rem // adjust for narrow button
 
 .mdedit-header__addon
   margin-bottom .375rem
@@ -132,8 +135,14 @@
   top 0
   right 0
 
+.mdedit__narrow
+  position absolute
+  bottom .5rem
+  right 0
+
 .mdedit__fullscreen
 .mdedit__collapser
+.mdedit__narrow
   width 2rem
   height 2rem
   line-height 2rem
@@ -144,6 +153,9 @@
   display none
 
 .mdedit__fullscreen .icon-editor-small
+  display none
+
+.mdedit__narrow .icon-editor-unnarrow
   display none
 
 .mdedit.mdedit__m-fullscreen
@@ -177,17 +189,14 @@
 .mdedit.mdedit__m-resizing
   transition none
 
-
-.mdedit-btn__unnarrow
-  display none
-
 .mdedit.mdedit__m-narrow
   margin-left auto
   margin-right auto
-  .mdedit-btn__narrow
-    display none
-  .mdedit-btn__unnarrow
-    display block
+  .mdedit__narrow
+    .icon-editor-narrow
+      display none
+    .icon-editor-unnarrow
+      display block
 
 $narrow-editor-border = 20px
 

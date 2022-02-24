@@ -30,17 +30,6 @@
       tabindex=3
     )= self.t('submit')
 
-    button.mdedit-btn__narrow.float-end.btn.btn-link.icon.icon-editor-narrow(
-      data-on-click='mdedit.toggle_narrow'
-      tabindex=6
-      title=self.t('toggle_narrow_on')
-    )
-    button.mdedit-btn__unnarrow.float-end.btn.btn-link.icon.icon-editor-unnarrow(
-      data-on-click='mdedit.toggle_narrow'
-      tabindex=6
-      title=self.t('toggle_narrow_off')
-    )
-
     button.mdedit-btn__preview-sm.float-end.btn.btn-link.d-sm-none.icon.icon-preview(
       data-on-click='mdedit.preview_sm'
       tabindex=5
@@ -64,3 +53,7 @@
       tabindex=4
       title=self.t('cancel')
     )
+
+    .mdedit__narrow(data-on-click='mdedit.toggle_narrow')
+      .icon.icon-editor-narrow(title=self.t('toggle_narrow_on'))
+      .icon.icon-editor-unnarrow(title=self.t('toggle_narrow_off'))
