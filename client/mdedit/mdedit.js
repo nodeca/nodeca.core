@@ -160,14 +160,16 @@ MDEdit.prototype.show = function (options) {
 
   this.text(options.text || '');
 
-  // Get preview flag from localstore
-  this.__bkv__.get('hide_preview').then(hide_preview => {
-    if (!hide_preview) {
-      N.MDEdit.__layout__.addClass('mdedit__m-show-preview');
-    }
+  // Get settings from localstore
+  Promise.all([ 'hide_preview', 'narrow_mode', 'height' ].map(arg => this.__bkv__.get(arg)))
+    .then(([ hide_preview, narrow_mode, height ]) => {
+      if (!hide_preview) {
+        N.MDEdit.__layout__.addClass('mdedit__m-show-preview');
+      }
 
-    // Get editor height from localstore
-    this.__bkv__.get('height').then(height => {
+      if (narrow_mode) {
+        N.MDEdit.__layout__.addClass('mdedit__m-narrow');
+      }
 
       if (height) {
         // If no prevoius editor - set `bottom` for animation
@@ -208,7 +210,6 @@ MDEdit.prototype.show = function (options) {
         this.__layout__.trigger('shown');
       });
     });
-  });
 
 
   // Load draft if needed
@@ -436,49 +437,16 @@ MDEdit.prototype.toggle_collapse = function (value) {
 
 // Expand editor to full screen or back
 //
-MDEdit.prototype.toggle_full = function (value) {
-  let doExpand;
-
-  if (value === true) {
-    doExpand = true;
-  } else if (value === false) {
-    doExpand = false;
-  } else {
-    doExpand = this.__layout__.hasClass('mdedit__m-fullscreen');
-  }
-
-  // Expand
-  if (doExpand) {
-    this.__layout__.removeClass('mdedit__m-fullscreen');
-
-  // Collapse
-  } else {
-    this.__layout__.addClass('mdedit__m-fullscreen');
-  }
+MDEdit.prototype.toggle_full = function () {
+  this.__layout__.toggleClass('mdedit__m-fullscreen');
 };
 
 
 // Make editor narrow
 //
-MDEdit.prototype.toggle_narrow = function (value) {
-  let doExpand;
-
-  if (value === true) {
-    doExpand = true;
-  } else if (value === false) {
-    doExpand = false;
-  } else {
-    doExpand = this.__layout__.hasClass('mdedit__m-narrow');
-  }
-
-  // Expand
-  if (doExpand) {
-    this.__layout__.removeClass('mdedit__m-narrow');
-
-  // Collapse
-  } else {
-    this.__layout__.addClass('mdedit__m-narrow');
-  }
+MDEdit.prototype.toggle_narrow = function () {
+  this.__layout__.toggleClass('mdedit__m-narrow');
+  this.__bkv__.set('narrow_mode', this.__layout__.hasClass('mdedit__m-narrow'));
 };
 
 
