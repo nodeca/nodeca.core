@@ -22,25 +22,22 @@
       .mdedit__edit-area
       .mdedit__editor-footer
 
-    .mdedit__preview.markup
+    .mdedit__preview
+      .markup
 
   .mdedit-footer
     .mdedit-footer__controls-right
-      button.mdedit-btn__preview-sm.btn.btn-link.d-sm-none.icon.icon-preview(
+      button.mdedit-btn__preview.mdedit-btn__preview-xs.btn.btn-link.icon.icon-preview(
         data-on-click='mdedit.preview_sm'
         tabindex=5
         title=self.t('preview')
       )
-      button.mdedit-btn__preview-sm.btn.btn-link.d-none.d-sm-inline-block.d-md-none(
+      button.mdedit-btn__preview.mdedit-btn__preview-sm.btn.btn-link(
         data-on-click='mdedit.preview_sm'
         tabindex=5
       )= self.t('preview')
-      button.mdedit-btn__preview.btn.btn-link.d-none.d-md-inline-block(
-        data-on-click='mdedit.preview'
-        tabindex=5
-      )= self.t('preview')
 
-      .mdedit__narrow(data-on-click='mdedit.toggle_narrow')
+      .mdedit__narrow.d-none.d-md-inline-block(data-on-click='mdedit.toggle_narrow')
         .icon.icon-editor-narrow(title=self.t('toggle_narrow_on'))
         .icon.icon-editor-unnarrow(title=self.t('toggle_narrow_off'))
 

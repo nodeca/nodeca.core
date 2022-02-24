@@ -208,30 +208,72 @@ $narrow-editor-border = 20px
   .mdedit.mdedit__m-narrow
     max-width $page-max-width - $narrow-editor-border * 2
 
-
 // Compensate visual distance between filled and link-like buttons
 .mdedit-btn__cancel
   margin-left 1.4rem !important
 
 
+// Preview button visibility
 //
-// Responsiveness
+.mdedit-btn__preview-xs
+  display block
+.mdedit-btn__preview-sm
+  display none
+
+@media (min-width: $grid-breakpoints.sm)
+  .mdedit-btn__preview-sm
+    display block
+  .mdedit-btn__preview-xs
+    display none
+
+@media (min-width: $grid-breakpoints.md)
+  .mdedit-btn__preview-sm
+    display none
+  .mdedit-btn__preview-xs
+    display none
+
+  .mdedit__m-narrow
+    .mdedit-btn__preview-sm
+      display block
+
 //
+// Editor + preview area visibility
+//
+
+// case 1: mobile screens, showing editor
+.mdedit__editor
+  display flex
 .mdedit__preview
   display none
   border 1px dashed rgba(0, 0, 0, .3)
 
-@media (max-width: $grid-breakpoints.md - 1)
-  // Show if preview mode activated
-  .mdedit__m-preview_mode
-    .mdedit__preview
-      display block
-    .mdedit__editor
-      display none
+// case 2: mobile screens, showing preview
+.mdedit__m-preview_mode
+  .mdedit__editor
+    display none
+  .mdedit__preview
+    display block
 
 @media (min-width: $grid-breakpoints.md)
-  // Show if preview mode activated
-  .mdedit__m-show-preview
+  // case 3: desktop screens, showing editor+preview
+  .mdedit
+    .mdedit__editor
+      display flex
     .mdedit__preview
       display block
       margin-left .375rem
+
+  // case 4: desktop screens, narrow mode, showing editor
+  .mdedit__m-narrow
+    .mdedit__editor
+      display flex
+    .mdedit__preview
+      display none
+      margin-left 0
+
+  // case 5: desktop screens, narrow mode, showing preview
+  .mdedit__m-narrow.mdedit__m-preview_mode
+    .mdedit__editor
+      display none
+    .mdedit__preview
+      display block

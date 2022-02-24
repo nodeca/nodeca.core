@@ -161,12 +161,8 @@ MDEdit.prototype.show = function (options) {
   this.text(options.text || '');
 
   // Get settings from localstore
-  Promise.all([ 'hide_preview', 'narrow_mode', 'height' ].map(arg => this.__bkv__.get(arg)))
-    .then(([ hide_preview, narrow_mode, height ]) => {
-      if (!hide_preview) {
-        N.MDEdit.__layout__.addClass('mdedit__m-show-preview');
-      }
-
+  Promise.all([ 'narrow_mode', 'height' ].map(arg => this.__bkv__.get(arg)))
+    .then(([ narrow_mode, height ]) => {
       if (narrow_mode) {
         N.MDEdit.__layout__.addClass('mdedit__m-narrow');
       }
@@ -532,20 +528,9 @@ N.wire.on('mdedit.preview_sm', () => {
 
   let previewMode = N.MDEdit.__layout__.hasClass('mdedit__m-preview_mode');
 
-  N.MDEdit.__layout__.find('.mdedit-btn__preview-sm')
+  N.MDEdit.__layout__.find('.mdedit-btn__preview')
     .toggleClass('btn-link', !previewMode)
     .toggleClass('btn-outline-success', previewMode);
-});
-
-
-// Toggle preview on large screens
-//
-N.wire.on('mdedit.preview', () => {
-  N.MDEdit.__layout__.toggleClass('mdedit__m-show-preview');
-
-  let showPreview = N.MDEdit.__layout__.hasClass('mdedit__m-show-preview');
-
-  N.MDEdit.__bkv__.set('hide_preview', !showPreview);
 });
 
 
