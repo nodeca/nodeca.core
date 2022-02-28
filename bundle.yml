@@ -50,6 +50,7 @@ packages:
   common:
     depends:
       - lib
+      - lib-frontend
       - l10n
     entries:
       - client/common

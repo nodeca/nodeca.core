@@ -53,7 +53,6 @@
   function get_script(source) {
     return new Promise(function (resolve) {
       var script = document.createElement('script');
-      script.async = false;
 
       script.onload = script.onreadystatechange = function (_, isAbort) {
         if (isAbort || !script.readyState || /loaded|complete/.test(script.readyState)) {
@@ -90,8 +89,14 @@
   var assets;
 
 
-  // Track loaded URLs (as keys, values are just `true`)
-  var loaded = {};
+  // Track loaded URLs of bundles (as keys, values are just `true`)
+  var loaded_urls = {};
+
+  // Track loaded packages, true/false
+  var loaded_packages = {};
+
+  // Initialization functions for those packages
+  var loaded_packages_init_fn = {};
 
 
   // Sandbox object passed as an argument to each module.
@@ -194,7 +199,7 @@
 
       if (pkgDist.css.length) {
         alreadyLoaded = pkgDist.css.reduce(function (acc, css) {
-          return acc || loaded[css] || scheduled[css];
+          return acc || loaded_urls[css] || scheduled[css];
         }, false);
 
         if (!alreadyLoaded) {
@@ -205,7 +210,7 @@
 
       if (pkgDist.js.length) {
         alreadyLoaded = pkgDist.js.reduce(function (acc, js) {
-          return acc || loaded[js] || scheduled[js];
+          return acc || loaded_urls[js] || scheduled[js];
         }, false);
 
         if (!alreadyLoaded) {
@@ -220,8 +225,6 @@
       resources = preload.concat(resources);
     }
 
-    if (!resources.length) return Promise.resolve();
-
     // Inject CSS
     resources.forEach(function (file) {
       if (/[.]css$/.test(file)) { get_style(file); }
@@ -235,7 +238,13 @@
 
     return Promise.all(wait_js)
       .then(function () {
-        resources.forEach(function (url) { loaded[url] = true; });
+        resources.forEach(function (url) { loaded_urls[url] = true; });
+
+        [ ...loadQueue ].reverse().forEach(function (pkg) {
+          if (loaded_packages[pkg]) return;
+          if (loaded_packages_init_fn[pkg]) loaded_packages_init_fn[pkg].call({}, N, require);
+          loaded_packages[pkg] = true;
+        });
 
         if (!N.wire) { throw new Error('Asset load error: "N.Wire" unavailable.'); }
 
@@ -275,7 +284,7 @@
     // Mark all stylesheets of the given package as loaded, since they are
     // included to head of the page.
     assets[pkgName].packagesQueue.forEach(function (dependency) {
-      assets[dependency].css.forEach(function (file) { loaded[file] = true; });
+      assets[dependency].css.forEach(function (file) { loaded_urls[file] = true; });
     });
 
     loadAssets(pkgName, shims).then(function () {
@@ -329,6 +338,11 @@
   // Called from loaded nodeca packages to init content.
   NodecaLoader.execute = function execute(fn) {
     fn.call({}, N, require);
+  };
+
+  // Package wrapper
+  NodecaLoader.package = function load_package(name, fn) {
+    loaded_packages_init_fn[name] = fn;
   };
 
 })(window);
