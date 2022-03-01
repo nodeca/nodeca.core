@@ -100,7 +100,7 @@
 
 
   // Sandbox object passed as an argument to each module.
-  // It should be filled via `NodecaLoader.execute`.
+  // It should be filled in `NodecaLoader.package_load`.
   var N = { loader: NodecaLoader };
 
   // For easy debugging only.
@@ -335,13 +335,8 @@
   // Helper for dynamic components load.
   NodecaLoader.loadAssets = loadAssets;
 
-  // Called from loaded nodeca packages to init content.
-  NodecaLoader.execute = function execute(fn) {
-    fn.call({}, N, require);
-  };
-
   // Package wrapper
-  NodecaLoader.package = function load_package(name, fn) {
+  NodecaLoader.package_load = function package_load(name, fn) {
     loaded_packages_init_fn[name] = fn;
   };
 
