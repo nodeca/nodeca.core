@@ -31,8 +31,8 @@ N.wire.once('init:mdedit', function () {
 
       $emojiDialog.modal('hide');
 
-      editor.replaceSelection(':' + value + ':');
-
+      editor.setRangeText(':' + value + ':', editor.selectionStart, editor.selectionEnd);
+      editor.dispatchEvent(new Event('change'));
       editor.focus();
     });
   };

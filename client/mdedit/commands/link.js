@@ -9,7 +9,9 @@ N.wire.once('init:mdedit', function () {
 
     $('body').append($linkDialog);
 
-    if (editor.somethingSelected()) {
+    let somethingSelected = (editor.selectionStart !== editor.selectionEnd);
+
+    if (somethingSelected) {
       $linkDialog.addClass('add-link-dialog__m-no-text');
     }
 
@@ -20,7 +22,7 @@ N.wire.once('init:mdedit', function () {
     });
 
     $linkDialog.on('shown.bs.modal', function () {
-      if (editor.somethingSelected()) {
+      if (somethingSelected) {
         $linkDialog.find('.add-link-dialog__link').focus();
       } else {
         $linkDialog.find('.add-link-dialog__text').focus();
@@ -34,14 +36,17 @@ N.wire.once('init:mdedit', function () {
       $linkDialog.modal('hide');
 
       // Do nothing on empty input
-      if (!url || (!editor.somethingSelected() && !text)) return;
+      if (!url || (!somethingSelected && !text)) return;
 
-      if (editor.somethingSelected()) {
-        editor.replaceSelection(tpl({ desc: editor.getSelection(), url }));
+      let replacement;
+      if (somethingSelected) {
+        replacement = tpl({ desc: editor.value.slice(editor.selectionStart, editor.selectionEnd), url });
       } else {
-        editor.replaceRange(tpl({ desc: text, url }), editor.getCursor(), editor.getCursor());
+        replacement = tpl({ desc: text, url });
       }
 
+      editor.setRangeText(replacement, editor.selectionStart, editor.selectionEnd);
+      editor.dispatchEvent(new Event('change'));
       editor.focus();
     });
   };

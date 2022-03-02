@@ -26,12 +26,8 @@ N.wire.once('init:mdedit', function () {
       // Do nothing on empty input
       if (!url) return;
 
-      if (editor.somethingSelected()) {
-        editor.replaceSelection(tpl({ alt: '', url }));
-      } else {
-        editor.replaceRange(tpl({ alt: '', url }), editor.getCursor(), editor.getCursor());
-      }
-
+      editor.setRangeText(tpl({ alt: '', url }), editor.selectionStart, editor.selectionEnd);
+      editor.dispatchEvent(new Event('change'));
       editor.focus();
     });
   };

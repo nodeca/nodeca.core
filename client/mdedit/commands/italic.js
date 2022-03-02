@@ -3,16 +3,18 @@
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdItalic = function (editor) {
     // TODO: copypaste from cmd_bold
-    if (!editor.somethingSelected()) return;
+    let selectionStart = editor.selectionStart;
+    let selectionEnd = editor.selectionEnd;
+    if (selectionStart === selectionEnd) return;
 
-    let selectionStart = editor.getCursor(true);
-    let selectionEnd = editor.getCursor(false);
     let add = '_';
+    let replacement = add + editor.value.slice(selectionStart, selectionEnd) + add;
 
-    editor.replaceSelection(add + editor.getSelection() + add);
+    editor.setRangeText(replacement, selectionStart, selectionEnd);
+    editor.dispatchEvent(new Event('change'));
 
-    selectionStart.ch += add.length;
-    selectionEnd.ch += add.length;
-    editor.setSelection(selectionStart, selectionEnd);
+    selectionStart += add.length;
+    selectionEnd += add.length;
+    editor.setSelectionRange(selectionStart, selectionEnd);
   };
 });

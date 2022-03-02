@@ -10,11 +10,7 @@ N.wire.once('init:mdedit', function () {
   // Update toolbar button list
   //
   N.wire.on([ 'mdedit:init', 'mdedit:update.options' ], function updateToolbar() {
-    var $toolbar = N.MDEdit.__layout__.find('.mdedit__toolbar');
-
-    if (N.MDEdit.__toolbarHotkeys__) {
-      N.MDEdit.__cm__.removeKeyMap(N.MDEdit.__toolbarHotkeys__);
-    }
+    let $toolbar = N.MDEdit.__layout__.find('.mdedit__toolbar');
 
     // Get actual buttons
     let buttons = [];
@@ -44,30 +40,39 @@ N.wire.once('init:mdedit', function () {
 
     // Process hotkeys for editor
     N.MDEdit.__toolbarHotkeys__ = {};
+    let keymap = {};
 
     for (let button of buttons) {
       if (!button.command || !button.bind_key || !N.MDEdit.commands[button.command]) continue;
 
       for (let bindKey of Object.values(button.bind_key)) {
-        N.MDEdit.__toolbarHotkeys__[bindKey] = () => { N.MDEdit.commands[button.command](N.MDEdit.__cm__); };
+        N.MDEdit.__toolbarHotkeys__[bindKey] = button.command;
+        keymap[bindKey] = 'mdedit.toolbar:keydown';
       }
     }
 
-    // Enable active button's hotkeys
-    N.MDEdit.__cm__.addKeyMap(N.MDEdit.__toolbarHotkeys__);
+    N.MDEdit.__layout__.data('keymap', {
+      ...N.MDEdit.__layout__.data('keymap'),
+      ...keymap
+    });
   });
 
 
   // Toolbar button click
   //
   N.wire.on('mdedit.toolbar:click', function toolbar_click(data) {
-    let command = N.MDEdit.commands[data.$this.data('command')].bind(N.MDEdit);
+    N.MDEdit.commands[data.$this.data('command')].call(N.MDEdit, N.MDEdit.__textarea__);
 
-    if (command) {
-      command(N.MDEdit.__cm__);
+    // Restore focus on editor after command execution
+    N.MDEdit.__textarea__.focus();
+  });
 
-      // Restore focus on editor after command execution
-      N.MDEdit.__cm__.focus();
-    }
+
+  // Hotkey press
+  //
+  N.wire.on('mdedit.toolbar:keydown', function toolbar_keydown(data) {
+    let command = N.MDEdit.__toolbarHotkeys__[data.key];
+
+    N.MDEdit.commands[command].call(N.MDEdit, N.MDEdit.__textarea__);
   });
 });

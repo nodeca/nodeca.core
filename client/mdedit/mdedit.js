@@ -3,18 +3,12 @@
 'use strict';
 
 
-const CodeMirror = require('codemirror');
 const _          = require('lodash');
 const bkv        = require('bkv').shared();
 const RpcCache   = require('./_lib/rpc_cache')(N);
 const md_writer  = require('nodeca.core/lib/parser/md_writer');
 
 
-// Require markdown highlighter (mode) for CodeMirror
-require('codemirror/mode/markdown/markdown');
-
-
-const TEXT_MARGIN = 5;
 const TOOLBAR = '$$ JSON.stringify(N.config.mdedit) $$';
 const EMOJIS = '$$ JSON.stringify(N.config.parser.emojis) $$';
 const DRAFTS_EXPIRE = 7 * 24 * 60 * 60; // 7 days
@@ -64,7 +58,6 @@ function MDEdit() {
   this.__options__      = null;
   this.__layout__       = null;
   this.__minHeight__    = 0;
-  this.__cm__           = null;
   this.__bkv__          = bkv;
   this.__cache__        = new RpcCache();
   this.__state_changed__  = false;
@@ -113,6 +106,7 @@ MDEdit.prototype.show = function (options) {
   let $oldLayout = this.__layout__;
 
   this.__layout__ = $(N.runtime.render('mdedit'));
+  this.__textarea__ = this.__layout__.find('.mdedit__edit-area')[0];
   this.__options__ = Object.assign({}, options);
 
   this.__options__.toolbar = compileToolbarConfig(this.__options__.toolbar || 'default');
@@ -133,28 +127,11 @@ MDEdit.prototype.show = function (options) {
 
     if (this.__layout__.outerHeight() > winHeight && winHeight >= this.__minHeight__) {
       this.__layout__.outerHeight(winHeight);
-      this.__cm__.setSize('100%', this.__layout__.find('.mdedit__edit-area').height());
     }
   }, 50, { maxWait: 50 }));
 
-  // Init CodeMirror instance
-  this.__cm__ = new CodeMirror(this.__layout__.find('.mdedit__edit-area').get(0), {
-    cursorScrollMargin: TEXT_MARGIN,
-    lineWrapping: true,
-    lineNumbers: false,
-    tabindex: 2,
-    mode: 'markdown',
-    inputStyle: 'contenteditable',
-    spellcheck: true
-  });
-
-  // Set initial CodeMirror options
-  this.__cm__.setOption('extraKeys', {
-    Esc:          () => N.wire.emit('mdedit.cancel'),
-    'Ctrl-Enter': () => N.wire.emit('mdedit.submit')
-  });
-
-  this.__cm__.on('change', () => N.wire.emit('mdedit:update.text'));
+  this.__textarea__.addEventListener('input', () => N.wire.emit('mdedit:update.text'));
+  this.__textarea__.addEventListener('change', () => N.wire.emit('mdedit:update.text'));
 
   N.wire.emit('mdedit:init');
 
@@ -183,9 +160,6 @@ MDEdit.prototype.show = function (options) {
 
       // If no prevoius editor - animate editor from bottom viewport botder
       this.__layout__.animate({ bottom: 0 }, $oldLayout ? 0 : 'fast', () => {
-        // Update codemirror height
-        this.__cm__.setSize('100%', this.__layout__.find('.mdedit__edit-area').height());
-
         let $focusItem = this.__layout__.find('[tabindex=1]');
 
         if ($focusItem.length !== 0) {
@@ -193,7 +167,7 @@ MDEdit.prototype.show = function (options) {
           $focusItem.focus();
         } else {
           // Or focus to editor window
-          this.__cm__.focus();
+          this.__textarea__.focus();
         }
 
         // Hide previous editor
@@ -225,8 +199,16 @@ MDEdit.prototype.show = function (options) {
           '.mdedit-header input',
           markStateChanged
         );
-        this.__cm__.on('cursorActivity', markStateChanged);
-        this.__cm__.on('scroll', markStateChanged);
+
+        // Need to save draft if:
+        //  - textarea value is changed (`input`, `change`)
+        //  - user scrolls the editor (`scroll`)
+        //  - cursor position changes (`keydown`, `click`)
+        this.__textarea__.addEventListener('input', markStateChanged);
+        this.__textarea__.addEventListener('change', markStateChanged);
+        this.__textarea__.addEventListener('scroll', markStateChanged);
+        this.__textarea__.addEventListener('keydown', markStateChanged);
+        this.__textarea__.addEventListener('click', markStateChanged);
 
         this.__state_monitor__ = setInterval(() => {
           if (this.__state_changed__) this.__state_save__();
@@ -282,12 +264,11 @@ MDEdit.prototype.__state_save__ = function () {
     if (!this.__options__.draftKey) return Promise.resolve();
     if (!this.__layout__) return;
 
-    let cm         = this.__cm__;
-
     let draft = {
-      text:         this.text(),
-      cursor:       cm.getCursor(),
-      scrollTop:    cm.getScrollInfo().top
+      text:            this.text(),
+      selectionStart:  this.__textarea__.selectionStart,
+      selectionEnd:    this.__textarea__.selectionEnd,
+      scrollTop:       this.__textarea__.scrollTop
     };
 
     // Collect custom fields
@@ -333,8 +314,9 @@ MDEdit.prototype.__state_load__ = function () {
         // Load text, cursor & scroll
         //
         if (draft.text) this.text(draft.text);
-        if (draft.cursor) this.__cm__.setCursor(draft.cursor);
-        if (draft.scrollTop) this.__cm__.scrollTo(draft.scrollTop);
+        if (draft.selectionStart) this.__textarea__.selectionStart = draft.selectionStart;
+        if (draft.selectionEnd) this.__textarea__.selectionEnd = draft.selectionEnd;
+        if (draft.scrollTop) this.__textarea__.scrollTop = draft.scrollTop;
 
         return draft;
       });
@@ -346,12 +328,12 @@ MDEdit.prototype.__state_load__ = function () {
 //
 MDEdit.prototype.text = function (text) {
   if (typeof text === 'undefined') {
-    let result = this.__cm__.getValue();
+    let result = this.__textarea__.value;
     return result;
   }
 
-  this.__cm__.setValue(text);
-  this.__cm__.setCursor(this.__cm__.lineCount(), 0);
+  this.__textarea__.value = text;
+  this.__textarea__.setSelectionRange(0, 0);
 
   N.wire.emit('mdedit:update.text');
 };
@@ -371,16 +353,12 @@ MDEdit.prototype.parseOptions = function (parseOptions) {
 // Insert quote into editor
 //
 MDEdit.prototype.insertQuote = function (element, href = null) {
-  let editor = N.MDEdit.__cm__;
+  let editor = N.MDEdit.__textarea__;
   let writer = new md_writer.NodecaMarkdownWriter();
   let insertion = writer.format_quote(writer.convert(element), href).replace(/^\n*/g, '\n');
 
-  if (editor.somethingSelected()) {
-    editor.replaceSelection(insertion);
-  } else {
-    editor.replaceRange(insertion, editor.getCursor(), editor.getCursor());
-  }
-
+  editor.setRangeText(insertion, editor.selectionStart, editor.selectionEnd);
+  editor.dispatchEvent(new Event('change'));
   editor.focus();
 };
 
@@ -461,7 +439,6 @@ N.wire.on('mdedit:init', function initResize() {
 
   if (N.MDEdit.__layout__.outerHeight() > winHeight && winHeight >= N.MDEdit.__minHeight__) {
     N.MDEdit.__layout__.outerHeight(winHeight);
-    N.MDEdit.__cm__.setSize('100%', N.MDEdit.__layout__.find('.mdedit__edit-area').height());
   }
 
   N.MDEdit.__layout__.find('.mdedit__resizer').on('mousedown touchstart', function (event) {
@@ -486,7 +463,6 @@ N.wire.on('mdedit:init', function initResize() {
 
         N.MDEdit.__bkv__.set('height', newHeight);
         N.MDEdit.__layout__.outerHeight(newHeight);
-        N.MDEdit.__cm__.setSize('100%', N.MDEdit.__layout__.find('.mdedit__edit-area').height());
       }, 20, { maxWait: 20 }));
 
     return false;
@@ -598,7 +574,7 @@ N.wire.on('mdedit:dd', function mdedit_dd(data) {
           .then(() => N.loader.loadAssets('users'))
           .then(() => N.wire.emit('users.uploader:add', uploaderData, function () {
             let tpl = _.template('![<%= alt %>](<%= url %>)');
-            let editor = N.MDEdit.__cm__;
+            let editor = N.MDEdit.__textarea__;
 
             let str = uploaderData.uploaded.map(media => {
               let url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: media.media_id });
@@ -606,12 +582,8 @@ N.wire.on('mdedit:dd', function mdedit_dd(data) {
               return tpl({ alt: '', url });
             }).join(' ');
 
-            if (editor.somethingSelected()) {
-              editor.replaceSelection(str);
-            } else {
-              editor.replaceRange(str, editor.getCursor(), editor.getCursor());
-            }
-
+            editor.setRangeText(str, editor.selectionStart, editor.selectionEnd);
+            editor.dispatchEvent(new Event('change'));
             editor.focus();
           }));
       }

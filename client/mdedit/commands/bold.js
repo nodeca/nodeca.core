@@ -2,16 +2,18 @@
 
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdBold = function (editor) {
-    if (!editor.somethingSelected()) return;
+    let selectionStart = editor.selectionStart;
+    let selectionEnd = editor.selectionEnd;
+    if (selectionStart === selectionEnd) return;
 
-    let selectionStart = editor.getCursor(true);
-    let selectionEnd = editor.getCursor(false);
     let add = '__';
+    let replacement = add + editor.value.slice(selectionStart, selectionEnd) + add;
 
-    editor.replaceSelection(add + editor.getSelection() + add);
+    editor.setRangeText(replacement, selectionStart, selectionEnd);
+    editor.dispatchEvent(new Event('change'));
 
-    selectionStart.ch += add.length;
-    selectionEnd.ch += add.length;
-    editor.setSelection(selectionStart, selectionEnd);
+    selectionStart += add.length;
+    selectionEnd += add.length;
+    editor.setSelectionRange(selectionStart, selectionEnd);
   };
 });

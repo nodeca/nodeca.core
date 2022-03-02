@@ -55,8 +55,8 @@ mdedit:
       css_class: icon icon-bold
       tooltip: "@mdedit.toolbar.bold"
       bind_key:
-        win: 'Ctrl-B'
-        mac: 'Cmd-B'
+        win: 'ctrl+b'
+        mac: 'meta+b'
       command: cmdBold
       priority: 10
       depend: emphasis
@@ -65,8 +65,8 @@ mdedit:
       css_class: icon icon-italic
       tooltip: "@mdedit.toolbar.italic"
       bind_key:
-        win: 'Ctrl-I'
-        mac: 'Cmd-I'
+        win: 'ctrl+i'
+        mac: 'meta+i'
       command: cmdItalic
       priority: 20
       depend: emphasis
@@ -75,8 +75,8 @@ mdedit:
       css_class: icon icon-link
       tooltip: "@mdedit.toolbar.link"
       bind_key:
-        win: 'Ctrl-L'
-        mac: 'Cmd-L'
+        win: 'ctrl+l'
+        mac: 'meta+l'
       command: cmdLink
       priority: 40
       depend: link
@@ -85,8 +85,8 @@ mdedit:
       css_class: icon icon-picture
       tooltip: "@mdedit.toolbar.image"
       bind_key:
-        win: 'Ctrl-G'
-        mac: 'Cmd-G'
+        win: 'ctrl+g'
+        mac: 'meta+g'
       command: cmdImage
       priority: 50
       depend: image
@@ -102,8 +102,8 @@ mdedit:
       css_class: icon icon-list-numbered
       tooltip: "@mdedit.toolbar.ol"
       bind_key:
-        win: 'Ctrl-O'
-        mac: 'Cmd-O'
+        win: 'ctrl+o'
+        mac: 'meta+o'
       command: cmdOl
       priority: 80
       depend: list
@@ -112,8 +112,8 @@ mdedit:
       css_class: icon icon-list-bullet
       tooltip: "@mdedit.toolbar.ul"
       bind_key:
-        win: 'Ctrl-U'
-        mac: 'Cmd-U'
+        win: 'ctrl+u'
+        mac: 'meta+u'
       command: cmdUl
       priority: 90
       depend: list
@@ -129,7 +129,7 @@ mdedit:
       css_class: icon icon-help
       tooltip: "@mdedit.toolbar.help"
       bind_key:
-        win: 'F1'
-        mac: 'F1'
+        win: 'f1'
+        mac: 'f1'
       link: "@common.faq_markup"
       priority: 110

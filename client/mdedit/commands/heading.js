@@ -2,10 +2,11 @@
 
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdHeading = function (editor) {
-    let selectionStart = editor.getCursor(true);
-    // let selectionEnd = editor.getCursor(false);
+    let lineStart = editor.value.lastIndexOf('\n', editor.selectionStart - 1) + 1;
+    let lineEnd = editor.value.indexOf('\n', lineStart);
+    if (lineEnd === -1) lineEnd = editor.value.length;
 
-    let selectedText = editor.getLine(selectionStart.line);
+    let selectedText = editor.value.slice(lineStart, lineEnd);
     let regExp = /^(#*) ?/;
     let headerStart = selectedText.match(regExp);
 
@@ -22,10 +23,12 @@ N.wire.once('init:mdedit', function () {
     }
     replace += ' ';
 
-    editor.replaceRange(
+    editor.setRangeText(
       selectedText.replace(regExp, replace),
-      { ch: 0, line: selectionStart.line },
-      { ch: selectedText.length, line: selectionStart.line }
+      lineStart,
+      lineEnd,
+      'end'
     );
+    editor.dispatchEvent(new Event('change'));
   };
 });

@@ -62,6 +62,11 @@ $quote-decorator-color  = #c1d0d7 //$body-color-secondary + 55%
 $grid-breakpoints = { xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px }
 
 
+// ported directly from bootstrap, depends on $primary
+$input-focus-border-color  = tint($brand-primary, 50%)
+$input-focus-box-shadow    = 0 0 0 .25rem alpha($brand-primary, .25)
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // Helpers
 

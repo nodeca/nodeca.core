@@ -20,12 +20,8 @@ N.wire.once('init:mdedit', function () {
           return tpl({ alt: '', url });
         }).join(' ');
 
-        if (editor.somethingSelected()) {
-          editor.replaceSelection(str);
-        } else {
-          editor.replaceRange(str, editor.getCursor(), editor.getCursor());
-        }
-
+        editor.setRangeText(str, editor.selectionStart, editor.selectionEnd);
+        editor.dispatchEvent(new Event('change'));
         editor.focus();
       }));
   };

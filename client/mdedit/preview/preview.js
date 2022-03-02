@@ -2,6 +2,7 @@
 
 
 const _ = require('lodash');
+const textarea_to_div = require('../_lib/textarea_to_div');
 
 
 N.wire.once('init:mdedit', function () {
@@ -19,15 +20,35 @@ N.wire.once('init:mdedit', function () {
         lineHeightMap = [],
         scrollMap = [],
         lineCount = 0,
+        charPos = 0,
         pos = 0,
+        div,
         line, $el, lh, i, a, b;
 
+    lh = parseInt(window.getComputedStyle(N.MDEdit.__textarea__).lineHeight, 10);
+
+    function positionToRect(start, end) {
+      let range = document.createRange();
+      range.setStart(div.childNodes[0], start);
+      range.setEnd(div.childNodes[0], end);
+
+      let divRect = div.getBoundingClientRect();
+      let textRect = range.getBoundingClientRect();
+
+      return new DOMRect(textRect.x - divRect.x, textRect.y - divRect.y, textRect.width, textRect.height);
+    }
+
+    div = textarea_to_div(N.MDEdit.__textarea__);
+    div.textContent = N.MDEdit.__textarea__.value;
+
     // Calculate wrapped lines count and fill map real->wrapped
-    lh = N.MDEdit.__cm__.defaultTextHeight();
-    N.MDEdit.__cm__.eachLine(lineHandle => {
+    for (let line of N.MDEdit.__textarea__.value.split(/\n/g)) {
       lineHeightMap.push(lineCount);
-      lineCount += Math.round(lineHandle.height / lh);
-    });
+      lineCount += Math.round(positionToRect(charPos, charPos + line.length).height / lh);
+      charPos += line.length + 1;
+    }
+
+    div.remove();
 
     // Init `scrollMap` array
     for (i = 0; i < lineCount; i++) {
@@ -100,7 +121,7 @@ N.wire.once('init:mdedit', function () {
   //
   N.wire.on('mdedit:init', function initSyncScroll() {
     let $preview = N.MDEdit.__layout__.find('.mdedit__preview');
-    let $editor = N.MDEdit.__layout__.find('.CodeMirror-scroll');
+    let $editor = N.MDEdit.__layout__.find('.mdedit__edit-area');
     let editorScroll, previewScroll;
 
     // When user resize window - remove outdated scroll map
@@ -116,8 +137,8 @@ N.wire.once('init:mdedit', function () {
       }
 
       // Get top visible editor line number
-      let lh = N.MDEdit.__cm__.defaultTextHeight();
-      let line = Math.round(N.MDEdit.__cm__.getScrollInfo().top / lh);
+      let lh = parseInt(window.getComputedStyle(N.MDEdit.__textarea__).lineHeight, 10);
+      let line = Math.round(N.MDEdit.__textarea__.scrollTop / lh);
       // Get preview offset
       let posTo = N.MDEdit.__scrollMap__[line];
 
@@ -148,7 +169,7 @@ N.wire.once('init:mdedit', function () {
         if (N.MDEdit.__scrollMap__[line] >= scrollTop) break;
       }
 
-      let lh = N.MDEdit.__cm__.defaultTextHeight();
+      let lh = parseInt(window.getComputedStyle(N.MDEdit.__textarea__).lineHeight, 10);
       let posTo = line * lh;
 
       // Remove scroll handler for editor when scroll it programmatically

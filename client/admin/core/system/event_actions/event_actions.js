@@ -153,17 +153,6 @@ N.wire.once('navigate.done', function () {
       224: 'meta'
     };
 
-    var data = {
-      // handlers can set it to "true" to allow default browser behavior
-      allow_default:     false,
-
-      // handlers can set it to "true" to allow other handlers to invoke
-      allow_propagation: false,
-
-      event,
-      $this:             $(this)
-    };
-
     var key;
 
     if (code_to_text[event.which]) {
@@ -176,6 +165,18 @@ N.wire.once('navigate.done', function () {
     if (event.altKey && key !== 'alt')     key = 'alt+' + key;
     if (event.shiftKey && key !== 'shift') key = 'shift+' + key;
     if (event.metaKey && key !== 'meta')   key = 'meta+' + key;
+
+    var data = {
+      // handlers can set it to "true" to allow default browser behavior
+      allow_default:     false,
+
+      // handlers can set it to "true" to allow other handlers to invoke
+      allow_propagation: false,
+
+      event,
+      key,
+      $this:             $(this)
+    };
 
     var map;
 

@@ -1,7 +1,26 @@
 'use strict';
 
 
+const textarea_to_div = require('../_lib/textarea_to_div');
+
+
 N.wire.once('init:mdedit', function () {
+
+  function positionToRect(start, end) {
+    let div = textarea_to_div(N.MDEdit.__textarea__);
+    div.textContent = N.MDEdit.__textarea__.value;
+
+    let range = document.createRange();
+    range.setStart(div.childNodes[0], start);
+    range.setEnd(div.childNodes[0], end);
+
+    let divRect = div.getBoundingClientRect();
+    let textRect = range.getBoundingClientRect();
+
+    div.remove();
+
+    return new DOMRect(textRect.x - divRect.x, textRect.y - divRect.y, textRect.width, textRect.height);
+  }
 
   // Init emojis select popup.
   //
@@ -19,26 +38,26 @@ N.wire.once('init:mdedit', function () {
   //   - click by emoji
   //
   N.wire.on('mdedit:init', function initEmojis() {
-    var $popup = N.MDEdit.__layout__.find('.emoji-autocomplete');
+    let $popup = N.MDEdit.__layout__.find('.emoji-autocomplete');
 
     // To check emoji start at line end (and extract emoji text)
-    var emojiAtEndRE = /(?:^|\s):([^:\s]*)$/;
+    let emojiAtEndRE = /(?:^|\s):([^:\s]*)$/;
 
 
     // Show or update popup
     //
     function showPopup(text) {
-      var emojis = {};
+      let emojis = {};
 
       // Filter emijis by text (but not more than 5)
       for (let [ name, val ] of Object.entries(N.MDEdit.emojis.named)) {
         if (name.indexOf(text) !== -1) {
           emojis[name] = val;
         } else {
-          return true; // continue
+          continue;
         }
 
-        if (Object.keys(emojis).length >= 5) return false; // break;
+        if (Object.keys(emojis).length >= 5) break;
       }
 
       // If nothing found - hide popup
@@ -55,12 +74,13 @@ N.wire.once('init:mdedit', function () {
         // Show popup
         $popup.addClass('emoji-autocomplete__m-visible');
 
-        var $cursor = N.MDEdit.__layout__.find('.CodeMirror-cursor');
-        var layoutOffset = N.MDEdit.__layout__.offset();
-        var cursorOffset = $cursor.offset();
-        var layoutPadding = parseInt(N.MDEdit.__layout__.css('padding-right'), 10);
-        var top = cursorOffset.top - layoutOffset.top - $popup.height();
-        var left = cursorOffset.left - layoutOffset.left;
+        let layoutOffset = N.MDEdit.__layout__.offset();
+        let $textarea = N.MDEdit.__layout__.find('.mdedit__edit-area');
+        let textareaOffset = $textarea.offset();
+        let cursorOffset = positionToRect(N.MDEdit.__textarea__.selectionEnd, N.MDEdit.__textarea__.selectionEnd);
+        let layoutPadding = parseInt(N.MDEdit.__layout__.css('padding-right'), 10);
+        let top = cursorOffset.y - $textarea.scrollTop() + textareaOffset.top - layoutOffset.top - $popup.height();
+        let left = cursorOffset.x - $textarea.scrollLeft() + textareaOffset.left - layoutOffset.left;
 
         // If popup outside right editor edge - attach it to right edge
         if (left + $popup.outerWidth() > layoutOffset.left + N.MDEdit.__layout__.outerWidth() - layoutPadding) {
@@ -69,7 +89,7 @@ N.wire.once('init:mdedit', function () {
 
         // If popup outside top editor edge - move it under cursor
         if (top < 0) {
-          top = cursorOffset.top - layoutOffset.top + $cursor.outerHeight();
+          top = cursorOffset.y - $textarea.scrollTop() + textareaOffset.top - layoutOffset.top + cursorOffset.height;
         }
 
         // Set popup position above cursor
@@ -81,72 +101,74 @@ N.wire.once('init:mdedit', function () {
     // Insert emoji to editor area and hide popup
     //
     function insert(emoji) {
-      var curEnd = N.MDEdit.__cm__.getCursor();
-      var line = N.MDEdit.__cm__.getDoc().getLine(curEnd.line);
+      let editor = N.MDEdit.__textarea__;
 
-      // Find nearest ':' symbol before cursor
-      var curBegin = { ch: line.lastIndexOf(':', curEnd.ch), line: curEnd.line };
+      // Find nearest ':' symbol before cursor on the current line
+      let selectionStart = Math.max(
+        editor.value.lastIndexOf('\n', editor.selectionStart - 1) + 1,
+        editor.value.lastIndexOf(':', editor.selectionStart)
+      );
+      let selectionEnd = editor.selectionEnd;
 
-      if (curBegin.ch === -1) {
-        curBegin.ch = 0;
-      }
-
-      N.MDEdit.__cm__.replaceRange(':' + emoji + ':', curBegin, curEnd);
       $popup.removeClass('emoji-autocomplete__m-visible');
-      N.MDEdit.__cm__.focus();
+
+      editor.setRangeText(':' + emoji + ':', selectionStart, selectionEnd, 'end');
+      editor.dispatchEvent(new Event('change'));
+      editor.focus();
     }
 
 
-    // Show or hide popup if text changed
-    //
-    N.MDEdit.__cm__.on('change', function (editor, changeObj) {
+    function on_text_change() {
       // Stop here if emoji disabled
       if (!N.MDEdit.__options__.parseOptions.emoji) return;
 
-      var poputShown = $popup.hasClass('emoji-autocomplete__m-visible');
-      var cursor = editor.getCursor();
+      let editor = N.MDEdit.__textarea__;
+      let popupShown = $popup.hasClass('emoji-autocomplete__m-visible');
+
       // Get line before cursor
-      var line = editor.getDoc().getLine(cursor.line).substr(0, cursor.ch);
+      let lineStart = editor.value.lastIndexOf('\n', editor.selectionStart - 1) + 1;
+      let line = editor.value.slice(lineStart, editor.selectionEnd);
 
       if (!emojiAtEndRE.test(line)) {
-        if (poputShown) {
+        if (popupShown) {
           $popup.removeClass('emoji-autocomplete__m-visible');
         }
         return;
       }
 
-      var emojiText = line.match(emojiAtEndRE)[1];
+      let emojiText = line.match(emojiAtEndRE)[1];
 
-      if (changeObj.origin === '+input') {
-        if (poputShown) {
-          // Update popup if already shown
-          showPopup(emojiText);
-        } if (emojiText === '') {
-          // Show popup if ':' typed
-          showPopup(emojiText);
-        }
-        return;
-      }
-
-      if (changeObj.origin === '+delete') {
-        // Show popup if backspace pressed and line match pattern
+      if (popupShown) {
+        // Update popup if already shown
+        showPopup(emojiText);
+      } if (emojiText === '') {
+        // Show popup if ':' typed
         showPopup(emojiText);
       }
-    });
+    }
+
+
+    // Show or hide popup if text changed
+    //
+    N.MDEdit.__textarea__.addEventListener('input', on_text_change);
 
 
     // Hide or update popup if cursor position changed (can be done with mouse, touch or left arrow)
     //
-    N.MDEdit.__cm__.on('cursorActivity', function () {
+    function on_cursor_activity() {
       if (!$popup.hasClass('emoji-autocomplete__m-visible')) return;
 
-      if (N.MDEdit.__cm__.somethingSelected()) {
+      let editor = N.MDEdit.__textarea__;
+
+      if (editor.selectionStart !== editor.selectionEnd) {
+        // something is selected
         $popup.removeClass('emoji-autocomplete__m-visible');
         return;
       }
 
-      var cursor = N.MDEdit.__cm__.getCursor();
-      var line = N.MDEdit.__cm__.getDoc().getLine(cursor.line).substr(0, cursor.ch);
+      // Get line before cursor
+      let lineStart = editor.value.lastIndexOf('\n', editor.selectionStart - 1) + 1;
+      let line = editor.value.slice(lineStart, editor.selectionEnd);
 
       if (!emojiAtEndRE.test(line)) {
         $popup.removeClass('emoji-autocomplete__m-visible');
@@ -154,7 +176,10 @@ N.wire.once('init:mdedit', function () {
       }
 
       showPopup(line.match(emojiAtEndRE)[1]);
-    });
+    }
+
+
+    N.MDEdit.__textarea__.addEventListener('click', on_cursor_activity);
 
 
     // Insert emoji to text if clicked. We should use `mousedown` instead of `click`
@@ -169,13 +194,13 @@ N.wire.once('init:mdedit', function () {
 
     // Handle keypress if popup shown
     //
-    N.MDEdit.__cm__.on('keydown', function (editor, event) {
+    N.MDEdit.__textarea__.addEventListener('keydown', function (event) {
       if (!$popup.hasClass('emoji-autocomplete__m-visible')) return;
 
       // `keyCode` for IE, `which` for others
-      var code = event.which || event.keyCode;
-      var $item;
-      var $selected;
+      let code = event.which || event.keyCode;
+      let $item;
+      let $selected;
 
       switch (code) {
         // Up - select previous popup list item
@@ -218,12 +243,15 @@ N.wire.once('init:mdedit', function () {
       }
 
       event.preventDefault();
+
+      // prevent ESC from closing editor
+      event.stopPropagation();
     });
 
 
     // Hide popup if focus lost
     //
-    N.MDEdit.__cm__.on('blur', function () {
+    N.MDEdit.__textarea__.addEventListener('blur', function () {
       // Wait 50 ms before hide popup to allow click by popup item
       setTimeout(function () {
         if (!$popup.hasClass('emoji-autocomplete__m-visible')) return;

@@ -1,4 +1,10 @@
-.mdedit(data-on-dragdrop='mdedit:dd')
+.mdedit(
+  data-on-dragdrop='mdedit:dd'
+  data-keymap= {
+    'esc':        'mdedit.cancel',
+    'ctrl+enter': 'mdedit.submit'
+  }
+)
   .emoji-autocomplete
 
   .mdedit__size-controls
@@ -19,7 +25,10 @@
 
     .mdedit__editor
       .mdedit__toolbar
-      .mdedit__edit-area
+      textarea.mdedit__edit-area(
+        tabindex=2
+        data-keymap-reset='false'
+      )
       .mdedit__editor-footer
 
     .mdedit__preview
