@@ -594,24 +594,26 @@ N.wire.on('mdedit:dd', function mdedit_dd(data) {
           uploaded: null
         };
 
-        N.wire.emit('users.uploader:add', uploaderData, function () {
-          let tpl = _.template('![<%= alt %>](<%= url %>)');
-          let editor = N.MDEdit.__cm__;
+        return Promise.resolve()
+          .then(() => N.loader.loadAssets('users'))
+          .then(() => N.wire.emit('users.uploader:add', uploaderData, function () {
+            let tpl = _.template('![<%= alt %>](<%= url %>)');
+            let editor = N.MDEdit.__cm__;
 
-          let str = uploaderData.uploaded.map(media => {
-            let url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: media.media_id });
+            let str = uploaderData.uploaded.map(media => {
+              let url = N.router.linkTo('users.media', { user_hid: N.runtime.user_hid, media_id: media.media_id });
 
-            return tpl({ alt: '', url });
-          }).join(' ');
+              return tpl({ alt: '', url });
+            }).join(' ');
 
-          if (editor.somethingSelected()) {
-            editor.replaceSelection(str);
-          } else {
-            editor.replaceRange(str, editor.getCursor(), editor.getCursor());
-          }
+            if (editor.somethingSelected()) {
+              editor.replaceSelection(str);
+            } else {
+              editor.replaceRange(str, editor.getCursor(), editor.getCursor());
+            }
 
-          editor.focus();
-        });
+            editor.focus();
+          }));
       }
       break;
     default:
