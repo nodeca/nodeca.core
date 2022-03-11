@@ -1,6 +1,9 @@
 'use strict';
 
 
+const text_field_update = require('../_lib/text_field_update');
+
+
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdEmoji = function (editor) {
     let emojis = {};
@@ -31,9 +34,7 @@ N.wire.once('init:mdedit', function () {
 
       $emojiDialog.modal('hide');
 
-      editor.setRangeText(':' + value + ':', editor.selectionStart, editor.selectionEnd);
-      editor.dispatchEvent(new Event('change'));
-      editor.focus();
+      text_field_update.insert(editor, ':' + value + ':');
     });
   };
 });

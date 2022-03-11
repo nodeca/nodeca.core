@@ -1,7 +1,8 @@
 'use strict';
 
 
-const textarea_to_div = require('../_lib/textarea_to_div');
+const textarea_to_div  = require('../_lib/textarea_to_div');
+const text_field_update = require('../_lib/text_field_update');
 
 
 N.wire.once('init:mdedit', function () {
@@ -104,17 +105,14 @@ N.wire.once('init:mdedit', function () {
       let editor = N.MDEdit.__textarea__;
 
       // Find nearest ':' symbol before cursor on the current line
-      let selectionStart = Math.max(
+      editor.selectionStart = Math.max(
         editor.value.lastIndexOf('\n', editor.selectionStart - 1) + 1,
         editor.value.lastIndexOf(':', editor.selectionStart)
       );
-      let selectionEnd = editor.selectionEnd;
 
       $popup.removeClass('emoji-autocomplete__m-visible');
 
-      editor.setRangeText(':' + emoji + ':', selectionStart, selectionEnd, 'end');
-      editor.dispatchEvent(new Event('change'));
-      editor.focus();
+      text_field_update.insert(editor, ':' + emoji + ':');
     }
 
 

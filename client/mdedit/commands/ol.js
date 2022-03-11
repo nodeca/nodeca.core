@@ -1,5 +1,9 @@
 'use strict';
 
+
+const text_field_update = require('../_lib/text_field_update');
+
+
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdOl = function (editor) {
     let lineStartRegexp = /^ *[0-9]+\. /;
@@ -17,12 +21,14 @@ N.wire.once('init:mdedit', function () {
       let selectedText = editor.value.slice(selectionStart, selectionEnd);
       let i = 1;
 
-      editor.setRangeText(selectedText.split('\n').map(function (line) {
+      editor.selectionStart = selectionStart;
+      editor.selectionEnd   = selectionEnd;
+
+      text_field_update.insert(editor, selectedText.split('\n').map(function (line) {
         if (lineStartRegexp.test(line)) return line;
 
         return i++ + '. ' + line;
-      }).join('\n'), selectionStart, selectionEnd);
-      editor.dispatchEvent(new Event('change'));
+      }).join('\n'));
 
     } else {
       let lineStart = editor.value.lastIndexOf('\n', editor.selectionStart - 1) + 1;
@@ -30,8 +36,10 @@ N.wire.once('init:mdedit', function () {
       if (lineEnd === -1) lineEnd = editor.value.length;
 
       if (!lineStartRegexp.test(editor.value.slice(lineStart, lineEnd))) {
-        editor.setRangeText('1. ', lineStart, lineStart);
-        editor.dispatchEvent(new Event('change'));
+        editor.selectionStart = lineStart;
+        editor.selectionEnd   = lineEnd;
+
+        text_field_update.insert(editor, '1. ' + editor.value.slice(lineStart, lineEnd));
       }
     }
   };

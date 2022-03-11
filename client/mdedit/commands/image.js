@@ -1,6 +1,9 @@
 'use strict';
 
-const _ = require('lodash');
+
+const _                 = require('lodash');
+const text_field_update = require('../_lib/text_field_update');
+
 
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdImage = function (editor) {
@@ -26,9 +29,7 @@ N.wire.once('init:mdedit', function () {
       // Do nothing on empty input
       if (!url) return;
 
-      editor.setRangeText(tpl({ alt: '', url }), editor.selectionStart, editor.selectionEnd);
-      editor.dispatchEvent(new Event('change'));
-      editor.focus();
+      text_field_update.insert(editor, tpl({ alt: '', url }));
     });
   };
 });

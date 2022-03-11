@@ -1,20 +1,14 @@
 'use strict';
 
+
+const text_field_update = require('../_lib/text_field_update');
+
+
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdItalic = function (editor) {
     // TODO: copypaste from cmd_bold
-    let selectionStart = editor.selectionStart;
-    let selectionEnd = editor.selectionEnd;
-    if (selectionStart === selectionEnd) return;
+    if (editor.selectionStart === editor.selectionEnd) return;
 
-    let add = '*';
-    let replacement = add + editor.value.slice(selectionStart, selectionEnd) + add;
-
-    editor.setRangeText(replacement, selectionStart, selectionEnd);
-    editor.dispatchEvent(new Event('change'));
-
-    selectionStart += add.length;
-    selectionEnd += add.length;
-    editor.setSelectionRange(selectionStart, selectionEnd);
+    text_field_update.wrapSelection(editor, '*');
   };
 });

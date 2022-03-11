@@ -3,10 +3,11 @@
 'use strict';
 
 
-const _          = require('lodash');
-const bkv        = require('bkv').shared();
-const RpcCache   = require('./_lib/rpc_cache')(N);
-const md_writer  = require('nodeca.core/lib/parser/md_writer');
+const _                 = require('lodash');
+const bkv               = require('bkv').shared();
+const RpcCache          = require('./_lib/rpc_cache')(N);
+const md_writer         = require('nodeca.core/lib/parser/md_writer');
+const text_field_update = require('./_lib/text_field_update');
 
 
 const TOOLBAR = '$$ JSON.stringify(N.config.mdedit) $$';
@@ -357,9 +358,7 @@ MDEdit.prototype.insertQuote = function (element, href = null) {
   let writer = new md_writer.NodecaMarkdownWriter();
   let insertion = writer.format_quote(writer.convert(element), href).replace(/^\n*/g, '\n');
 
-  editor.setRangeText(insertion, editor.selectionStart, editor.selectionEnd);
-  editor.dispatchEvent(new Event('change'));
-  editor.focus();
+  text_field_update.insert(editor, insertion);
 };
 
 
@@ -582,9 +581,7 @@ N.wire.on('mdedit:dd', function mdedit_dd(data) {
               return tpl({ alt: '', url });
             }).join(' ');
 
-            editor.setRangeText(str, editor.selectionStart, editor.selectionEnd);
-            editor.dispatchEvent(new Event('change'));
-            editor.focus();
+            text_field_update.insert(editor, str);
           }));
       }
       break;

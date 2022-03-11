@@ -1,5 +1,9 @@
 'use strict';
 
+
+const text_field_update = require('../_lib/text_field_update');
+
+
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdHeading = function (editor) {
     let lineStart = editor.value.lastIndexOf('\n', editor.selectionStart - 1) + 1;
@@ -23,12 +27,8 @@ N.wire.once('init:mdedit', function () {
     }
     replace += ' ';
 
-    editor.setRangeText(
-      selectedText.replace(regExp, replace),
-      lineStart,
-      lineEnd,
-      'end'
-    );
-    editor.dispatchEvent(new Event('change'));
+    editor.selectionStart = lineStart;
+    editor.selectionEnd   = lineEnd;
+    text_field_update.insert(editor, selectedText.replace(regExp, replace));
   };
 });

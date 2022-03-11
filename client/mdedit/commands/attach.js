@@ -1,6 +1,9 @@
 'use strict';
 
-const _ = require('lodash');
+
+const _                 = require('lodash');
+const text_field_update = require('../_lib/text_field_update');
+
 
 N.wire.once('init:mdedit', function () {
   N.MDEdit.commands.cmdAttach = function (editor) {
@@ -20,9 +23,7 @@ N.wire.once('init:mdedit', function () {
           return tpl({ alt: '', url });
         }).join(' ');
 
-        editor.setRangeText(str, editor.selectionStart, editor.selectionEnd);
-        editor.dispatchEvent(new Event('change'));
-        editor.focus();
+        text_field_update.insert(editor, str);
       }));
   };
 });
