@@ -51,7 +51,7 @@ N.wire.once('init:mdedit', function () {
 
       // Filter emijis by text (but not more than 5)
       for (let [ name, val ] of Object.entries(N.MDEdit.emojis.named)) {
-        if (name.indexOf(text) !== -1) {
+        if (name.startsWith(text)) {
           emojis[name] = val;
         } else {
           continue;
