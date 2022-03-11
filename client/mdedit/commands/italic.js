@@ -7,7 +7,7 @@ N.wire.once('init:mdedit', function () {
     let selectionEnd = editor.selectionEnd;
     if (selectionStart === selectionEnd) return;
 
-    let add = '_';
+    let add = '*';
     let replacement = add + editor.value.slice(selectionStart, selectionEnd) + add;
 
     editor.setRangeText(replacement, selectionStart, selectionEnd);
