@@ -134,6 +134,20 @@ MDEdit.prototype.show = function (options) {
   this.__textarea__.addEventListener('input', () => N.wire.emit('mdedit:update.text'));
   this.__textarea__.addEventListener('change', () => N.wire.emit('mdedit:update.text'));
 
+  this.__textarea__.addEventListener('keydown', () => {
+    let textarea = this.__textarea__;
+
+    if (textarea.selectionStart === textarea.value.length) {
+      // if we are on the last line, scroll editor all the way down
+      // (without this editor will have few px of padding left to scroll)
+      //
+      // need to check difference because scrollTop can be fractional
+      if (Math.abs(textarea.scrollHeight - textarea.clientHeight - textarea.scrollTop) >= 1) {
+        textarea.scrollTop = textarea.scrollHeight - textarea.clientHeight;
+      }
+    }
+  });
+
   N.wire.emit('mdedit:init');
 
   this.text(options.text || '');
