@@ -138,14 +138,29 @@ N.wire.once('init:mdedit', function () {
 
       // Get top visible editor line number
       let lh = parseInt(window.getComputedStyle(N.MDEdit.__textarea__).lineHeight, 10);
-      let line = Math.round(N.MDEdit.__textarea__.scrollTop / lh);
+
+      let editorScrollTop     = N.MDEdit.__textarea__.scrollTop;
+      let editorClientHeight  = N.MDEdit.__textarea__.clientHeight;
+      let editorScrollHeight  = N.MDEdit.__textarea__.scrollHeight;
+      let previewClientHeight = $preview[0].clientHeight;
+
+      let interpCoef = editorScrollTop / (editorScrollHeight - N.MDEdit.__textarea__.clientHeight);
+      let editorScrollTopInterpolated = (
+        editorScrollTop * (1 - interpCoef) +
+        (editorScrollTop + editorClientHeight) * interpCoef
+      );
+
+      let line = Math.round(editorScrollTopInterpolated / lh);
+      if (line >= N.MDEdit.__scrollMap__.length) line = N.MDEdit.__scrollMap__.length - 1;
       // Get preview offset
       let posTo = N.MDEdit.__scrollMap__[line];
 
       // Remove scroll handler for preview when scroll it programmatically
       $preview.off('scroll.nd.mdedit');
 
-      $preview.stop(true).animate({ scrollTop: posTo }, 'fast', 'linear', function () {
+      $preview.stop(true).animate({
+        scrollTop: posTo - previewClientHeight * interpCoef
+      }, 'fast', 'linear', function () {
         // Restore scroll handler after 50 ms delay to avoid non-user scroll events
         setTimeout(function () {
           $preview.on('scroll.nd.mdedit', previewScroll);
