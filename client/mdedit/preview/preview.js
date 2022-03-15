@@ -122,7 +122,7 @@ N.wire.once('init:mdedit', function () {
   N.wire.on('mdedit:init', function initSyncScroll() {
     let $preview = N.MDEdit.__layout__.find('.mdedit__preview');
     let $editor = N.MDEdit.__layout__.find('.mdedit__edit-area');
-    let editorScroll, previewScroll;
+    let editorScroll, previewScroll, editorShowCursor;
 
     // When user resize window - remove outdated scroll map
     $(window).on('resize.nd.mdedit', function () {
@@ -144,7 +144,7 @@ N.wire.once('init:mdedit', function () {
       let editorScrollHeight  = N.MDEdit.__textarea__.scrollHeight;
       let previewClientHeight = $preview[0].clientHeight;
 
-      let interpCoef = editorScrollTop / (editorScrollHeight - N.MDEdit.__textarea__.clientHeight);
+      let interpCoef = editorScrollTop / (editorScrollHeight - editorClientHeight);
       let editorScrollTopInterpolated = (
         editorScrollTop * (1 - interpCoef) +
         (editorScrollTop + editorClientHeight) * interpCoef
@@ -169,6 +169,29 @@ N.wire.once('init:mdedit', function () {
     }, 50, { maxWait: 50 });
 
 
+    // When user types in editor, scroll to corresponding text in preview
+    //
+    editorShowCursor = _.debounce(function () {
+      if (!N.MDEdit.__scrollMap__) {
+        buildScrollMap();
+      }
+
+      let line = (N.MDEdit.__textarea__.value.slice(0, N.MDEdit.__textarea__.selectionStart).match(/\n/g) || []).length;
+
+      let paragraph = N.MDEdit.__layout__.find(`.mdedit__preview > [data-line="${line}"]`)[0];
+      if (!paragraph) return;
+
+      let parentRect = N.MDEdit.__layout__.find('.mdedit__preview')[0].getBoundingClientRect();
+      let paragraphRect = paragraph.getBoundingClientRect();
+
+      if (paragraphRect.top - parentRect.top < 0) {
+        paragraph.scrollIntoView(true);
+      } else if (paragraphRect.height <= parentRect.height && paragraphRect.bottom > parentRect.bottom) {
+        paragraph.scrollIntoView(false);
+      }
+    }, 50, { maxWait: 50 });
+
+
     // Preview scroll handler
     //
     previewScroll = _.debounce(function () {
@@ -176,16 +199,26 @@ N.wire.once('init:mdedit', function () {
         buildScrollMap();
       }
 
-      let scrollTop = $preview.scrollTop();
+      let previewScrollTop    = $preview[0].scrollTop;
+      let previewClientHeight = $preview[0].clientHeight;
+      let previewScrollHeight = $preview[0].scrollHeight;
+      let editorClientHeight  = N.MDEdit.__textarea__.clientHeight;
+
+      let interpCoef = previewScrollTop / (previewScrollHeight - previewClientHeight);
+      let previewScrollTopInterpolated = (
+        previewScrollTop * (1 - interpCoef) +
+        (previewScrollTop + previewClientHeight) * interpCoef
+      );
+
       let line;
 
       // Get editor line number by preview offset
       for (line = 0; line < N.MDEdit.__scrollMap__.length; line++) {
-        if (N.MDEdit.__scrollMap__[line] >= scrollTop) break;
+        if (N.MDEdit.__scrollMap__[line] >= previewScrollTopInterpolated) break;
       }
 
       let lh = parseInt(window.getComputedStyle(N.MDEdit.__textarea__).lineHeight, 10);
-      let posTo = line * lh;
+      let posTo = line * lh - editorClientHeight * interpCoef;
 
       // Remove scroll handler for editor when scroll it programmatically
       $editor.off('scroll.nd.mdedit');
@@ -202,5 +235,6 @@ N.wire.once('init:mdedit', function () {
     // Bind events
     $editor.on('scroll.nd.mdedit', editorScroll);
     $preview.on('scroll.nd.mdedit', previewScroll);
+    $editor.on('input.nd.mdedit', editorShowCursor);
   });
 });
