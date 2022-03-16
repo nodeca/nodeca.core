@@ -4,6 +4,9 @@
 //html
 //body
 //  height 100%
+:root
+  --page-max-width $page-max-width
+
 body
   min-height 100vh
 
@@ -22,7 +25,7 @@ body
   flex-direction column
 
 .layout__container
-  max-width $page-max-width
+  max-width var(--page-max-width)
   width 100%
 
 .layout__container.space-top
