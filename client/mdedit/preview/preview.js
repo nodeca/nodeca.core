@@ -109,7 +109,7 @@ N.wire.once('init:mdedit', function () {
       .then(result => {
         if (!N.MDEdit.__layout__) return;
 
-        N.MDEdit.__layout__.find('.mdedit__preview').html(result.html);
+        N.MDEdit.__layout__.find('.mdedit__preview > .markup').html(result.html);
         N.MDEdit.__scrollMap__ = null;
       })
       // It should never happen
