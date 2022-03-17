@@ -69,3 +69,13 @@ $font-size-xs:               .75rem !default;
 .btn-outline-secondary {
   @include button-outline-variant(#bbb);
 }
+
+// add specific tint for breadcrumbs buttons
+.btn-breadcrumbs {
+  @include button-variant(
+    $background: lighten($primary, 5%),
+    $border: lighten($primary, 5%),
+    $color: $navbar-dark-color,
+    $hover-color: $navbar-dark-hover-color,
+  );
+}
