@@ -39,7 +39,7 @@ N.wire.once('init:mdedit', function () {
     }
 
     div = textarea_to_div(N.MDEdit.__textarea__);
-    div.textContent = N.MDEdit.__textarea__.value;
+    div.textContent = N.MDEdit.__textarea__.value || ' ';
 
     // Calculate wrapped lines count and fill map real->wrapped
     for (let line of N.MDEdit.__textarea__.value.split(/\n/g)) {
@@ -60,7 +60,7 @@ N.wire.once('init:mdedit', function () {
     scrollMap[0] = 0;
 
     // Get mapped lines offsets and fill mapped lines numbers
-    N.MDEdit.__layout__.find('.mdedit__preview > [data-line]').each(function () {
+    N.MDEdit.__layout__.find('.mdedit__preview > .markup > [data-line]').each(function () {
       $el = $(this);
       line = lineHeightMap[$el.data('line')];
 
@@ -94,6 +94,35 @@ N.wire.once('init:mdedit', function () {
   }
 
 
+  // When user types in editor, scroll to corresponding text in preview
+  //
+  function editorShowCursor() {
+    if (!N.MDEdit.__scrollMap__) {
+      buildScrollMap();
+    }
+
+    let line = (N.MDEdit.__textarea__.value.slice(0, N.MDEdit.__textarea__.selectionStart).match(/\n/g) || []).length;
+    let paragraph;
+
+    while (line >= 0) {
+      paragraph = N.MDEdit.__layout__.find(`.mdedit__preview > .markup > [data-line="${line}"]`)[0];
+      if (paragraph) break;
+      line--;
+    }
+
+    if (!paragraph) return;
+
+    let parentRect = N.MDEdit.__layout__.find('.mdedit__preview')[0].getBoundingClientRect();
+    let paragraphRect = paragraph.getBoundingClientRect();
+
+    if (paragraphRect.top - parentRect.top < 0) {
+      paragraph.scrollIntoView(true);
+    } else if (paragraphRect.height <= parentRect.height && paragraphRect.bottom > parentRect.bottom) {
+      paragraph.scrollIntoView(false);
+    }
+  }
+
+
   // Update preview and save draft
   //
   N.wire.on('mdedit:update.*', _.debounce(function updatePreview() {
@@ -111,6 +140,7 @@ N.wire.once('init:mdedit', function () {
 
         N.MDEdit.__layout__.find('.mdedit__preview > .markup').html(result.html);
         N.MDEdit.__scrollMap__ = null;
+        editorShowCursor();
       })
       // It should never happen
       .catch(err => N.wire.emit('notify', err.message));
@@ -122,7 +152,7 @@ N.wire.once('init:mdedit', function () {
   N.wire.on('mdedit:init', function initSyncScroll() {
     let $preview = N.MDEdit.__layout__.find('.mdedit__preview');
     let $editor = N.MDEdit.__layout__.find('.mdedit__edit-area');
-    let editorScroll, previewScroll, editorShowCursor;
+    let editorScroll, previewScroll;
 
     // When user resize window - remove outdated scroll map
     $(window).on('resize.nd.mdedit', function () {
@@ -169,29 +199,6 @@ N.wire.once('init:mdedit', function () {
     }, 50, { maxWait: 50 });
 
 
-    // When user types in editor, scroll to corresponding text in preview
-    //
-    editorShowCursor = _.debounce(function () {
-      if (!N.MDEdit.__scrollMap__) {
-        buildScrollMap();
-      }
-
-      let line = (N.MDEdit.__textarea__.value.slice(0, N.MDEdit.__textarea__.selectionStart).match(/\n/g) || []).length;
-
-      let paragraph = N.MDEdit.__layout__.find(`.mdedit__preview > [data-line="${line}"]`)[0];
-      if (!paragraph) return;
-
-      let parentRect = N.MDEdit.__layout__.find('.mdedit__preview')[0].getBoundingClientRect();
-      let paragraphRect = paragraph.getBoundingClientRect();
-
-      if (paragraphRect.top - parentRect.top < 0) {
-        paragraph.scrollIntoView(true);
-      } else if (paragraphRect.height <= parentRect.height && paragraphRect.bottom > parentRect.bottom) {
-        paragraph.scrollIntoView(false);
-      }
-    }, 50, { maxWait: 50 });
-
-
     // Preview scroll handler
     //
     previewScroll = _.debounce(function () {
@@ -235,6 +242,5 @@ N.wire.once('init:mdedit', function () {
     // Bind events
     $editor.on('scroll.nd.mdedit', editorScroll);
     $preview.on('scroll.nd.mdedit', previewScroll);
-    $editor.on('input.nd.mdedit', editorShowCursor);
   });
 });
