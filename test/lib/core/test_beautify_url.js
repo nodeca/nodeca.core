@@ -16,4 +16,9 @@ describe('beautify_url', function () {
   it('should show common 2nd level domains', function () {
     assert.equal(beautify('https://whatever.example.co.uk/foobarbazquux?query=string', 20), '…example.co.uk/fooba…');
   });
+
+  it('should show 4-letter 3rd level domains', function () {
+    assert.equal(beautify('https://blog.chromium.org/2019/10/no-more-mixed-messages-about-https.html', 40),
+      'blog.chromium.org/…/no-more-mixed-messag…');
+  });
 });
