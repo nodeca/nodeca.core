@@ -26,8 +26,11 @@ N.wire.once('navigate.done', function () {
     let elements = [];
 
     nodes.forEach(node => {
+      let media_id = $(node).data('nd-media-id');
+      if (!media_id) return;
+
       elements.push({
-        href: N.router.linkTo('core.gridfs', { bucket: $(node).data('nd-media-id') }),
+        href: N.router.linkTo('core.gridfs', { bucket: media_id }),
         type: 'image'
       });
     });
