@@ -231,16 +231,7 @@ module.exports = function (N, collectionName) {
 
     // connect to database
     let options = {
-      poolSize: 10,
-      connectTimeoutMS: 30000,
-      keepAlive: 1,
-
-      // fix deprecation warnings appearing in mongodb driver,
-      // see https://mongoosejs.com/docs/deprecations.html for details
-      useNewUrlParser: true,
-      useFindAndModify: false,
-      useCreateIndex: true,
-      useUnifiedTopology: true
+      connectTimeoutMS: 30000
     };
 
     let mongoPath = N.config.database.mongo_files || N.config.database.mongo;

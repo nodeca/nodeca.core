@@ -38,7 +38,7 @@ describe('FileTmp (GridFS) http requests test', function () {
   it('GET with ETag', function () {
     return request
       .get(router.linkTo('core.gridfs_tmp', { bucket: info._id }))
-      .set('If-None-Match', info.md5)
+      .set('If-None-Match', info._id)
       .expect(304, {});
   });
 

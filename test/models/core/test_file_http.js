@@ -37,7 +37,7 @@ describe('File (GridFS) http requests test', function () {
   it('GET with ETag', function () {
     return request
       .get(router.linkTo('core.gridfs', { bucket: info._id }))
-      .set('If-None-Match', info.md5)
+      .set('If-None-Match', info._id)
       .expect(304, {});
   });
 
