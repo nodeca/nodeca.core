@@ -1,0 +1,20 @@
+- var filesize_mb = self.filesize / 1048576;
+if filesize_mb >= 1
+  span(data-nd-image-orig=self.src)
+    - var size_str = filesize_mb.toFixed(filesize_mb >= 10 ? 0 : 1)
+    a.link.link-ext.link-auto(
+      href=self.src
+      title=self.title
+      data-nd-link-orig=self.src
+      target='_blank'
+      rel='nofollow noopener'
+    )= self.beautify(self.src, 40)
+    = ` (${size_str} MB)`
+
+else if self.width && self.height && self.units
+  span.image(style='width: ' + self.width + self.units, data-nd-image-orig=self.src)
+    img(src=self.src, alt=self.alt, title=self.title, referrerpolicy='no-referrer')
+    span.image__spacer(style='padding-bottom: ' + (self.height/self.width*100).toFixed(4) + '%')
+
+else
+  img.image(data-nd-image-orig=self.src, src=self.src, alt=self.alt, title=self.title, referrerpolicy='no-referrer')
