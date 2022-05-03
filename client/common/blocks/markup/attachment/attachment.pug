@@ -5,12 +5,11 @@ if self.is_placeholder
   //- Client only, no data fetched yet, so showing placeholder
   span.attach.attach-img.attach__m-placeholder(
     class= 'attach__m-' + self.size
-    class= self.size === 'sm' ? 'thumb thumb__m-responsive' : ''
   )
 
 else if self.type === mTypes.IMAGE || !self.type
   if self.media_id === '000000000000000000000000'
-    span.attach.attach-img.thumb.thumb__m-responsive.thumb__m-broken(
+    span.attach.attach-img.attach__m-broken(
       class= 'attach__m-' + self.size
       data-nd-media-id=self.media_id
       data-nd-image-orig=self.href
@@ -19,7 +18,7 @@ else if self.type === mTypes.IMAGE || !self.type
     )
 
   else if self.size === 'sm'
-    a.attach.attach-img.thumb.thumb__m-responsive(
+    a.attach.attach-img(
       class= 'attach__m-' + self.size
       href=self.href
       target='_blank'
@@ -27,7 +26,7 @@ else if self.type === mTypes.IMAGE || !self.type
       data-nd-image-orig=self.href
       data-nd-image-size=self.size
     )
-      img.thumb__image(
+      img.attach__image(
         src=    self.src
         alt=    self.alt
         title=  self.title
@@ -52,11 +51,11 @@ else if self.type === mTypes.IMAGE || !self.type
       a.attach__link-control.icon.icon-link(href=self.href, target='_blank')
 
 else if self.type === mTypes.BINARY
-  a.attach.attach-bin.thumb.thumb__m-responsive(
+  a.attach.attach-bin.attach__m-sm(
     href=self.href
     target='_blank'
     data-nd-media-id=self.media_id
     data-nd-image-orig=self.href
   )
-    span.thumb__icon.icon.icon-binary
-    span.thumb__content= self.text
+    span.attach__icon.icon.icon-binary
+    span.attach__content= self.text
