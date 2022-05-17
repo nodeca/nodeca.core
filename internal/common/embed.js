@@ -294,8 +294,7 @@ module.exports = function (N, apiPath) {
       //  - 429 - rate limit
       //  - 408 - request timeout
       //  - EINVAL - bad urls like http://1234
-      let is_fatal = err.statusCode && !String(+err.statusCode).match(/^(5..|429|408)$/) ||
-                     err.code === 'EINVAL';
+      let is_fatal = Unshort.isErrorFatal(err);
 
       update_data.$set.status         = N.models.core.UrlTracker.statuses[is_fatal ? 'ERROR_FATAL' : 'ERROR_RETRY'];
       update_data.$set.error          = err.message;
