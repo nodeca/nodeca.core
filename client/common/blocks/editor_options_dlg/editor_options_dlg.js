@@ -5,6 +5,7 @@
 // - no_mlinks         (Boolean) - don't convert medialinks
 // - no_emojis         (Boolean) - don't convert emoticons
 // - no_quote_collapse (Boolean) - don't collapse content inside quotes
+// - breaks            (Boolean) - convert softbreaks (\n) to linebreaks (<br>)
 //
 'use strict';
 
@@ -47,6 +48,7 @@ N.wire.on(module.apiPath + ':submit', function submit_posting_options_dlg(data) 
   options.no_mlinks         = !data.fields.mlinks;
   options.no_emojis         = !data.fields.emojis;
   options.no_quote_collapse = !data.fields.quote_collapse;
+  options.breaks            = !!data.fields.breaks;
 
   result = options;
 

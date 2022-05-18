@@ -18,6 +18,10 @@
             label.form-check-label
               input.form-check-input(type='checkbox' tabindex='3' checked=!self.no_quote_collapse name='quote_collapse')
               = ' ' + self.t('quote_collapse')
+          .form-check
+            label.form-check-label
+              input.form-check-input(type='checkbox' tabindex='4' checked=self.breaks name='breaks')
+              = ' ' + self.t('breaks')
 
         .modal-footer
             button.btn.btn-secondary(type='button' tabindex='4' data-bs-dismiss='modal')= self.t('cancel')

@@ -3,5 +3,6 @@ en-US:
   medialinks: Convert media links
   emojis: Convert emoticons
   quote_collapse: Collapse content inside quotes
+  breaks: Keep single newlines as is (not recommended)
   ok: OK
   cancel: Cancel

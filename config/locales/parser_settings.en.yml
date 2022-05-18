@@ -22,3 +22,4 @@ i18n:
           markup_sup: Enable superscripts
           markup_table: Enable tables
           markup_quote_collapse: Collapse content inside quotes
+          markup_breaks: Keep single newlines as is

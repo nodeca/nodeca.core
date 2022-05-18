@@ -116,3 +116,9 @@ setting_schemas:
       type: boolean
       as: quote_collapse
       default: true
+
+    markup_breaks:
+      priority: 10
+      type: boolean
+      as: breaks
+      default: false
