@@ -1,0 +1,71 @@
+// Quote style definitions
+
+@import "nodeca.core/client/common/_variables"
+
+
+.quote
+  background-color $quote-bg-color
+  border-radius 0 .125rem .125rem 0
+  color $quote-color
+  border 1px solid $quote-border-color
+  border-left .1875rem solid $quote-decorator-color
+  padding 1rem
+
+.quote__title
+  font-size $font-size-sm
+  margin-top -.5rem
+  margin-right -.5px
+  padding .5rem 0
+
+.quote__author
+  font-style normal
+
+.quote__author-avatar
+  width 18px
+  height 18px
+  margin-right .375rem
+  border-radius 2px
+  box-shadow 0 0 1px $body-color-secondary
+  opacity .7
+
+.quote__controls
+  margin-top -.3125rem
+  margin-right -.375rem
+  .btn
+    background-color transparent
+    margin-left 0
+
+.quote__collapse
+  display none
+
+.quote__ref-local
+  display none
+
+
+.quote__collapse
+.quote__expand
+.quote__ref-local
+.quote__ref-outer
+  color $body-color + 40%
+  &:hover
+    color $body-color
+
+.quote__m-expanded
+.quote__m-expanded > .quote__title > .quote__controls
+  & > .quote__expand
+    display none
+  & > .quote__collapse
+    display inline-block
+
+.quote__m-local > .quote__title > .quote__controls
+  & > .quote__ref-outer
+    display none
+  & > .quote__ref-local
+    display inline-block
+
+.quote__content
+  & > p:last-child
+    margin-bottom 0
+
+  .link
+    color $link-color + 10%

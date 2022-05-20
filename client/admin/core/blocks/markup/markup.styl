@@ -1,0 +1,59 @@
+// Common markup styles for all messages
+
+@import "nodeca.core/client/common/_variables"
+
+.markup
+  // Avoid layout width break by long strings
+  overflow auto
+
+  // Fix for overflow to not cut attachments shadows
+  padding-left 3px
+  margin-left -3px
+  padding-right 3px
+  margin-right -3px
+
+  //font-family $font-family-sans-serif-wide
+
+  // External images
+  .image
+    max-width 100%
+    display inline-block
+    border-radius 2px
+    position relative
+    // protect from hidden images
+    min-width 10px
+    min-height 10px
+    background-color #ccc
+
+    & > img
+      max-width 100%
+      border-radius 2px
+      position absolute
+
+  .image__spacer
+    display block
+
+  .link
+    text-decoration underline
+
+  .link-banned
+    color $link-color
+
+  pre code
+    white-space unset
+
+  .ez-block
+    margin-bottom 1rem
+    border-radius 2px
+
+  .ez-player
+    max-width 600px
+
+  .ez-player-container
+    border-radius 2px
+
+  .emoji
+    font-size 1.25em
+    line-height 1em
+    vertical-align middle
+    color $body-color-secondary
