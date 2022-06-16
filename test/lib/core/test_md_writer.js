@@ -246,6 +246,12 @@ describe('MarkdownWriter', function () {
     expect('<a href="a@b://c">a@b://c</a>', '[a@b://c](a@b://c)\n');
   });
 
+  it('should convert non-valid previous autolinks to plain links', function () {
+    // https://rcopen.com/forum/f49/topic570584/24
+    // eslint-disable-next-line max-len
+    expect('<a href="httpS://%D0%B1%D0%BB%D0%B0-%D0%B1%D0%BB%D0%B0-%D0%B1%D0%BB%D0%B0" class="link link-ext link-auto" data-nd-link-type="linkify" data-nd-link-orig="httpS://%D0%B1%D0%BB%D0%B0-%D0%B1%D0%BB%D0%B0-%D0%B1%D0%BB%D0%B0" target="_blank" rel="nofollow noopener">httpS://%D0%B1%D0%BB%D0%B0-%D0%B1%D0%BB%D0%B0-%D0%B1%D0%BB%D0%B0</a>', '<httpS://%D0%B1%D0%BB%D0%B0-%D0%B1%D0%BB%D0%B0-%D0%B1%D0%BB%D0%B0>\n');
+  });
+
   it('mixes of inline and block tags', function () {
     expect('abc<hr>def', 'abc\n\n---\n\ndef\n');
     expect('<hr><h1>abc</h1><em>foo</em><s>bar</s><hr>', '---\n\n# abc\n\n_foo_~~bar~~\n\n---\n');
