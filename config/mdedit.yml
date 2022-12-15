@@ -16,8 +16,9 @@ mdedit:
     ol: true
     ul: true
     emoji: true
+    quote: true
     separator3:
-      priority: 100
+      priority: 120
     help: true
 
   # Toolbar configuration for editing posts created by other users.
@@ -38,8 +39,9 @@ mdedit:
     ol: true
     ul: true
     emoji: true
+    quote: true
     separator3:
-      priority: 100
+      priority: 120
     help: true
 
 
@@ -125,6 +127,16 @@ mdedit:
       priority: 100
       depend: emoji
 
+    quote:
+      css_class: icon icon-quote
+      tooltip: "@mdedit.toolbar.quote"
+      bind_key:
+        win: 'ctrl+q'
+        mac: 'ctrl+q'
+      command: cmdQuote
+      priority: 110
+      depend: quote
+
     help:
       css_class: icon icon-help
       tooltip: "@mdedit.toolbar.help"
@@ -132,4 +144,4 @@ mdedit:
         win: 'f1'
         mac: 'f1'
       link: "@common.faq_markup"
-      priority: 110
+      priority: 130
